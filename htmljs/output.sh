@@ -1,13 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
 OUTDIR="cheader"
-DISTDIR="dist"
 
 if [ ! -d $OUTDIR ]; then
     echo "$OUTDIR not found!"
     mkdir "$OUTDIR"
 fi
-rm $OUTDIR/*.h
+rm -f $OUTDIR/*.h
 
 htmlfiles=(index_s.htm.gz control_s.htm.gz config.htm.gz setup.htm.gz logging.htm.gz gravity.htm.gz pressure.htm.gz \
 classic-index.htm.gz classic-config.htm.gz classic-setup.htm.gz classic-gdc.htm.gz classic-log.htm.gz)
@@ -32,13 +31,12 @@ for ((index=0; index<${#htmlfiles[@]}; index++)); do
    output="$OUTDIR/${lang}_${outfiles[$index]}.h"
    variable=${variables[$index]}
    #echo "input: $input output file: $output with variables $variable "
-   xxd -i  "$input" > $output 
+   xxd -i "$input" > "$output"
    echo "processing $output"
-   sed -i "s/unsigned char .\+\[\]/const unsigned char $variable\[\] PROGMEM/" $output
+   sed -i "s/unsigned char .\+\[\]/const unsigned char $variable\[\] PROGMEM/" "$output"
 done
 }
 
-for lang in "${languages[@]}"
-do
-gen_C_file $lang
+for lang in "${languages[@]}"; do
+   gen_C_file "$lang"
 done

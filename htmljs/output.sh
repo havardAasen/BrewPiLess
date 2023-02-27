@@ -1,12 +1,11 @@
 #!/bin/bash
 
-OUTDIR="cheader"
+OUTDIR="../wdoc"
 
 if [ ! -d $OUTDIR ]; then
     echo "$OUTDIR not found!"
     mkdir "$OUTDIR"
 fi
-rm -f $OUTDIR/*.h
 
 htmlfiles=(index_s.htm.gz control_s.htm.gz config.htm.gz setup.htm.gz logging.htm.gz gravity.htm.gz gravity_e32.htm.gz pressure.htm.gz backup.htm.gz)
 

@@ -1,0 +1,35 @@
+name: Build PlatformIO project
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ${{ runner.os }}-pio
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install PlatformIO Core
+        run: pip install --upgrade platformio
+
+      - name: Build ESP32
+        run: pio run -e esp32 -e esp32-dev
+
+      - name: Build ESP8266
+        run: pio run -e esp8266
+
+      - name: Build Thorrax
+        run: pio run -e thorrax
+
+      - name: Build D1 mini pro
+        run: pio run -e d1pro
+
+      - name: Build Sonoff
+        run: pio run -e sonoff

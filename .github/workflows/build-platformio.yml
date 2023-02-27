@@ -3,6 +3,9 @@ on: [push, pull_request]
 
 jobs:
   build:
+    strategy:
+      matrix:
+        environment: [esp32, esp32-dev, esp8266, d1pro, thorrax, sonoff]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -19,17 +22,9 @@ jobs:
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
 
-      - name: Build ESP32
-        run: pio run -e esp32 -e esp32-dev
-
-      - name: Build ESP8266
-        run: pio run -e esp8266
-
-      - name: Build Thorrax
-        run: pio run -e thorrax
-
-      - name: Build D1 mini pro
-        run: pio run -e d1pro
-
-      - name: Build Sonoff
-        run: pio run -e sonoff
+      - name: Build ${{ matrix.environment }}
+        run: pio run -e ${{ matrix.environment }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.environment }}.bin
+          path: .pio/build/${{ matrix.environment }}/firmware.bin

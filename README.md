@@ -1,5 +1,8 @@
 # BrewPiLess
- **Note: Beer Profile exteds to maximum 10 steps. Your setting might lost. There is an utility, /extra/backup.htm. You can upload this file and use it to backup/restore the settings.**
+
+**Note: Beer Profile extends to maximum 10 steps. Your setting might be lost.
+For information about creating and restoring a backup look at
+[Software Backup](docs/42.SoftwareBackup.md).**
 
 ## Features
  * I2C LCD support.

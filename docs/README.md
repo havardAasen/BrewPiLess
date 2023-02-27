@@ -8,6 +8,7 @@
 * [Flash layout and New Frontend](30.FlashLayoutAndNewUI.md)
 * [Software Installation](40.SoftwareInstallation.md)
   * [Software Configuration](41.SoftwareConfiguration.md)
+  * [Software Backup](42.SoftwareBackup.md)
 * [WiFi Setup](50.WiFiSetupV31.md)
 * [System Setup](60.SystemSetup.md)
   * [SoftAP mode](61.SoftAPMode.md)

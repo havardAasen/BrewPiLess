@@ -5,7 +5,7 @@ jobs:
   build:
     strategy:
       matrix:
-        environment: [esp32, esp32-dev, esp8266, d1pro, thorrax, sonoff]
+        environment: [classic, thorrax, sonoff]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

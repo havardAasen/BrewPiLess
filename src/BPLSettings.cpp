@@ -1002,7 +1002,7 @@ String BPLSettings::jsonMqttRemoteControlSettings(void){
 
 }
 #if ARDUINOJSON_VERSION_MAJOR == 6
-static char *copyIfExist(JsonDocument root,const char* key,uint16_t &offset,char* ptr,char* base){
+static char *copyIfExist(JsonDocument &root,const char* key,uint16_t &offset,char* ptr,char* base){
 #else
 static char *copyIfExist(JsonObject& root,const char* key,uint16_t &offset,char* ptr,char* base){
 #endif

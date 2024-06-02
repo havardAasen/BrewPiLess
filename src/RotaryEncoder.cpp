@@ -128,7 +128,7 @@ static void btnInit(void){
 // avoid using digitalRead, supposedly quicker.
 static unsigned char buttonStatus=0;
 
-ICACHE_RAM_ATTR static boolean btnDetect(void)
+IRAM_ATTR static boolean btnDetect(void)
 {
 	uint32_t currentTimeInMS=millis();
 
@@ -236,12 +236,12 @@ ICACHE_RAM_ATTR static boolean btnDetect(void)
 }
 static bool _buttonStatusChanged=false;
 
-ICACHE_RAM_ATTR static void processbuttons(){
+IRAM_ATTR static void processbuttons(){
 	if(btnDetect()){
 		_buttonStatusChanged = true;
 	}
 }
-ICACHE_RAM_ATTR static void isr_upChanged(void) {
+IRAM_ATTR static void isr_upChanged(void) {
 	if (digitalRead(UpButtonPin) == 0){
 		buttonStatus |= ButtonUpMask;
 	}else{
@@ -250,7 +250,7 @@ ICACHE_RAM_ATTR static void isr_upChanged(void) {
 	processbuttons();
 }
 
-ICACHE_RAM_ATTR static void isr_downChanged(void) {
+IRAM_ATTR static void isr_downChanged(void) {
 	if (digitalRead(DownButtonPin) == 0){
 		buttonStatus |= ButtonDownMask;
 	}else{

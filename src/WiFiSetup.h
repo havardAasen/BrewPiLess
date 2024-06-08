@@ -3,14 +3,6 @@
 
 #include <DNSServer.h>
 
-#define WiFiStateConnected 0
-#define WiFiStateModeChangePending 1
-#define WiFiStateConnecting 2
-#define WiFiStateDisconnected 3
-#define WiFiStateDisconnectPending 4
-#define WiFiStateChangeConnectPending 5
-#define WiFiStateConnectionRecovering 6
-
 
 #define TIME_WAIT_TO_CONNECT 20000
 #define TIME_RECONNECT_TIMEOUT 20000
@@ -19,6 +11,18 @@
 class WiFiSetupClass
 {
 private:
+	enum class WiFiState {
+		connected,
+		mode_change_pending,
+		connecting,
+		disconnected,
+		disconnect_pending,
+		change_connect_pending,
+		connection_recovering,
+		connection_recovering_pending,
+		unknown,
+	};
+
 	enum class WiFiScan {
 		none,
 		pending,
@@ -26,7 +30,7 @@ private:
 	};
 
 public:
-	WiFiSetupClass():_wifiState(WiFiStateConnected),_wifiScan(WiFiScan::none),_apMode(false),_switchToAp(true),_autoReconnect(true),
+	WiFiSetupClass():_wifiState(WiFiState::connected),_wifiScan(WiFiScan::none),_apMode(false),_switchToAp(true),_autoReconnect(true),
 		 _maxReconnect(5),_eventHandler(NULL),_targetSSID(NULL),_targetPass(NULL),_ip(INADDR_NONE),_gw(INADDR_NONE),_nm(INADDR_NONE){}
 
 	void begin(WiFiMode mode, char const *ssid,const char *passwd=NULL);
@@ -51,8 +55,8 @@ public:
 	String status(void);
 private:
 	WiFiMode _mode;
+	WiFiState _wifiState;
 	WiFiScan _wifiScan;
-	byte _wifiState;
 	bool _apMode;
 	bool _switchToAp;
 	bool _autoReconnect;

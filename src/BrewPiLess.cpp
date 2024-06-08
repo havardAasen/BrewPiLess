@@ -595,9 +595,10 @@ public:
 					if(theSettings.dejsonPressureMonitorSettings(request->getParam("data",true)->value())){
 						theSettings.save();
 						request->send(200,"application/json","{}");
-					}else
+					}else{
 						DBG_PRINTF("invalid Json\n");
 						request->send(402);
+					}
 				}else{
 					DBG_PRINTF("no data\n");
 					request->send(401);

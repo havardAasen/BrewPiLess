@@ -452,13 +452,13 @@ public:
   			}
 	 	}else if(request->method() == HTTP_GET &&  request->url() == TIME_PATH){
 			AsyncResponseStream *response = request->beginResponseStream("application/json");
-			response->printf("{\"t\":\"%s\",\"e\":%lu,\"o\":%d}",TimeKeeper.getDateTimeStr(),TimeKeeper.getTimeSeconds(),TimeKeeper.getTimezoneOffset());
+			response->printf("{\"t\":\"%s\",\"e\":%lld,\"o\":%d}",TimeKeeper.getDateTimeStr(),TimeKeeper.getTimeSeconds(),TimeKeeper.getTimezoneOffset());
 			request->send(response);
 		}else if(request->method() == HTTP_POST &&  request->url() == TIME_PATH){
 			if(request->hasParam("time", true)){
 				  AsyncWebParameter* tvalue = request->getParam("time", true);
 				  time_t time=(time_t)tvalue->value().toInt();
-  				DBG_PRINTF("Set Time:%lu from:%s\n",time,tvalue->value().c_str());
+  				DBG_PRINTF("Set Time:%llu from:%s\n",time,tvalue->value().c_str());
 	 			TimeKeeper.setCurrentTime(time);
 			 }
 			 if(request->hasParam("off", true)){
@@ -802,7 +802,7 @@ void greeting(std::function<void(const char*)> sendFunc)
 	String ptcstate= parasiteTempController.getSettings();
 
 	sprintf(buf,"A:{\"nn\":\"%s\",\"ver\":\"%s\",\"rssi\":%d,\
-				\"tm\":%lu,\"off\":%ld, \"log\":\"%s\",\"cap\":{%s},\"ptcs\":%s}"
+				\"tm\":%lld,\"off\":%ld, \"log\":\"%s\",\"cap\":{%s},\"ptcs\":%s}"
 		,syscfg->titlelabel,BPL_VERSION,WiFi.RSSI(),
 		TimeKeeper.getTimeSeconds(),(long int)TimeKeeper.getTimezoneOffset(),
 		logname, capstate.c_str(),ptcstate.c_str());

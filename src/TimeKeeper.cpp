@@ -33,7 +33,7 @@ void TimeKeeperClass::begin(void)
 	_referenceSeconds += 300; // add 5 minutes.
   	_referenceSystemTime = millis();
 	_lastSaved=_referenceSeconds;
-	DBG_PRINTF("Load saved time:%ld\n",_referenceSeconds);
+	DBG_PRINTF("Load saved time:%lld\n",_referenceSeconds);
 }
 
 void TimeKeeperClass::begin(char* server1,char* server2,char* server3)

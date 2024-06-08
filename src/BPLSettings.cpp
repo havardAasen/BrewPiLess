@@ -553,7 +553,7 @@ bool BPLSettings::dejsonBeerProfile(String json)
 	const char *uintStr=root["u"];
 	tempSchedule->unit=  *uintStr;
 
-	DBG_PRINTF("Load finished, st:%ld, unit:%c, _numberOfSteps:%d\n",tempSchedule->startDay,
+	DBG_PRINTF("Load finished, st:%lld, unit:%c, _numberOfSteps:%d\n",tempSchedule->startDay,
 	tempSchedule->unit,tempSchedule->numberOfSteps);
 
 	return true;

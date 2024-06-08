@@ -206,7 +206,7 @@ float BrewProfile::tempByTimeGravity(time_t time,Gravity gravity)
 {
 	if(time < _schedule->startDay) return INVALID_CONTROL_TEMP;
 
-	DBG_PRINTF("currentStep:%d, timeEnterCurrentSTep:%ld, time:%ld\n",_status->currentStep,_status->timeEnterCurrentStep,time);
+	DBG_PRINTF("currentStep:%d, timeEnterCurrentSTep:%lld, time:%lld\n",_status->currentStep,_status->timeEnterCurrentStep,time);
 
 	if(	_status->startingDate ==0 
 	   || _status->startingDate != _schedule->startDay
@@ -215,7 +215,7 @@ float BrewProfile::tempByTimeGravity(time_t time,Gravity gravity)
 	}
 	if(_status->currentStep >= _schedule->numberOfSteps) return INVALID_CONTROL_TEMP;
 
-	DBG_PRINTF("tempByTimeGravity:now:%ld, step:%d, type=%c, last elapsed:%ld\n",time,
+	DBG_PRINTF("tempByTimeGravity:now:%lld, step:%d, type=%c, last elapsed:%lld\n",time,
 		_status->currentStep,_schedule->steps[_status->currentStep].condition,time - _status->timeEnterCurrentStep);
 
     if(checkCondition(time,gravity)){

@@ -141,19 +141,11 @@ bool BPLSettings::dejsonSystemConfiguration(String json){
 
     const int BUFFER_SIZE = JSON_OBJECT_SIZE(15);
 	
-	#if ARDUINOJSON_VERSION_MAJOR == 6
 	DynamicJsonDocument root(BUFFER_SIZE +json.length());
 
 	auto error = deserializeJson(root,json);
 
 	if(!error)
-	#else
-
- 	StaticJsonBuffer<BUFFER_SIZE> jsonBuffer;
-	JsonObject& root = jsonBuffer.parseObject(json.c_str());
-
-    if (root.success())
-	#endif
 	{
         stringNcopy(syscfg->titlelabel,root[KeyPageTitle],32);
         stringNcopy(syscfg->hostnetworkname,root[KeyHostName],32);
@@ -170,12 +162,7 @@ bool BPLSettings::dejsonSystemConfiguration(String json){
 }
     // encod json
 String BPLSettings::jsonSystemConfiguration(void){
-	#if ARDUINOJSON_VERSION_MAJOR == 6
 	DynamicJsonDocument root(1024);
-	#else
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& root = jsonBuffer.createObject();
-	#endif
 
     SystemConfiguration *syscfg=&_data.syscfg;
 
@@ -195,11 +182,7 @@ String BPLSettings::jsonSystemConfiguration(void){
 	root[KeyDNS] = IPAddress(syscfg->dns).toString();
 
     String ret;
-	#if ARDUINOJSON_VERSION_MAJOR == 6
 	serializeJson(root,ret);
-	#else
-    root.printTo(ret);
-	#endif
 
     return ret;
 }
@@ -222,18 +205,9 @@ String BPLSettings::jsonSystemConfiguration(void){
 
  bool BPLSettings::dejsonGravityConfig(char* json)
 {
-		#if ARDUINOJSON_VERSION_MAJOR == 6
 		StaticJsonDocument<JSON_OBJECT_SIZE(16) + 256> root;
 		auto error = deserializeJson(root,json);
-		if (error)
-
-		#else
-    	const int BUFFER_SIZE = JSON_OBJECT_SIZE(16);
-		StaticJsonBuffer<BUFFER_SIZE> jsonBuffer;
-		JsonObject& root = jsonBuffer.parseObject(json);
-		if (!root.success())
-		#endif
-		{
+		if (error) {
   			DBG_PRINTF("Invalid JSON config\n");
   			return false;
 		}
@@ -270,13 +244,7 @@ String BPLSettings::jsonSystemConfiguration(void){
 String BPLSettings::jsonGravityConfig(void){
 		// save to file
 
-		#if ARDUINOJSON_VERSION_MAJOR == 6
 		DynamicJsonDocument root(1024);
-		#else
-    	const int BUFFER_SIZE = JSON_OBJECT_SIZE(16);
-		StaticJsonBuffer<BUFFER_SIZE> jsonBuffer;
-		JsonObject& root = jsonBuffer.createObject();
-		#endif
 
         GravityDeviceConfiguration *gdc = &_data.gdc;
 
@@ -296,11 +264,7 @@ String BPLSettings::jsonGravityConfig(void){
 		root[KeyUsePlato] = gdc->usePlato;
 	 String ret;
 
-	#if ARDUINOJSON_VERSION_MAJOR == 6
 	serializeJson(root,ret);
-	#else
-    root.printTo(ret);
-	#endif
     return ret;
 }	
 
@@ -427,17 +391,9 @@ void makeTime(time_t timeInput, struct tm &tm){
 bool BPLSettings::dejsonBeerProfile(String json)
 {
 	const int PROFILE_JSON_BUFFER_SIZE = JSON_ARRAY_SIZE(15) + 7*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 3*JSON_OBJECT_SIZE(4) + 5*JSON_OBJECT_SIZE(6);
-	#if ARDUINOJSON_VERSION_MAJOR == 6
 	DynamicJsonDocument root(PROFILE_JSON_BUFFER_SIZE + json.length());
 	auto error = deserializeJson(root,json);
-	if(error)
-	#else
-	DynamicJsonBuffer jsonBuffer(PROFILE_JSON_BUFFER_SIZE);
-	JsonObject& root = jsonBuffer.parseObject(json.c_str());
-
-	if(!root.success())
-	#endif
-	{
+	if (error) {
 		DBG_PRINTF("JSON parsing failed json size:%d\n",PROFILE_JSON_BUFFER_SIZE);
 		return false;
 	}
@@ -447,11 +403,7 @@ bool BPLSettings::dejsonBeerProfile(String json)
 		DBG_PRINTF("JSON file not include necessary fields\n");
 		return false;
 	}
-	#if ARDUINOJSON_VERSION_MAJOR == 6
 	if (!root.as<JsonVariant>()["t"].is<JsonArray>()){
-	#else
-	if (!root["t"].is<JsonArray&>()){
-	#endif
 		DBG_PRINTF("JSON t is not array\n");		
 		return false;
 	}
@@ -480,21 +432,13 @@ bool BPLSettings::dejsonBeerProfile(String json)
 	//_startDay = mktime(&tmStart);
 
 	tempSchedule->startDay= tm_to_timet(&tmStart);
-	#if ARDUINOJSON_VERSION_MAJOR == 6
 	JsonArray schedule = root["t"];
-	#else
-	JsonArray& schedule = root["t"];
-	#endif
 	tempSchedule->numberOfSteps=schedule.size();
 	if(tempSchedule->numberOfSteps > MaximumSteps) tempSchedule->numberOfSteps=MaximumSteps;
 
 	for(int i=0;i< tempSchedule->numberOfSteps ;i++){
 		ScheduleStep *step = &tempSchedule->steps[i];
-		#if ARDUINOJSON_VERSION_MAJOR == 6
 		JsonObject	 entry= schedule[i];
-		#else
-		JsonObject&	 entry= schedule[i];
-		#endif
 		//{"c":"g","d":6,"t":12,"g":1.026},{"c":"r","d":1}
 		const char* constr= entry["c"];
 		step->condition = *constr;
@@ -555,15 +499,7 @@ bool BPLSettings::dejsonBeerProfile(String json)
 
 String BPLSettings::jsonBeerProfile(void)
 {
-
-	#if ARDUINOJSON_VERSION_MAJOR == 6
-		DynamicJsonDocument root(1024);
-	#else
- 	const int PROFILE_JSON_BUFFER_SIZE = JSON_ARRAY_SIZE(15) + 7*JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 3*JSON_OBJECT_SIZE(4) + 5*JSON_OBJECT_SIZE(6);
-	DynamicJsonBuffer jsonBuffer(PROFILE_JSON_BUFFER_SIZE);
-	JsonObject& root = jsonBuffer.createObject();
-	#endif
-
+	DynamicJsonDocument root(1024);
 	BeerTempSchedule *tempSchedule = & _data.tempSchedule;
 
 	//start date
@@ -580,11 +516,7 @@ String BPLSettings::jsonBeerProfile(void)
 	char unitBuffer[4];
 	sprintf(unitBuffer,"%c",tempSchedule->unit);
 	root["u"]=unitBuffer;
-	#if ARDUINOJSON_VERSION_MAJOR == 6
 	JsonArray steps=root.createNestedArray("t");
-	#else
-	JsonArray& steps=root.createNestedArray("t");
-	#endif
 
 	char conditionBuf[MaximumSteps][4];
 	char pertages[MaximumSteps][16];
@@ -592,11 +524,7 @@ String BPLSettings::jsonBeerProfile(void)
 
 	for(int i=0;i< tempSchedule->numberOfSteps;i++){
 		ScheduleStep *s_step= & tempSchedule->steps[i];
-		#if ARDUINOJSON_VERSION_MAJOR == 6
 		JsonObject jstep = steps.createNestedObject();
-		#else
-		JsonObject& jstep = steps.createNestedObject();
-		#endif
 		// condition
 		//jstep["c"] =(char) s_step->condition;
 		sprintf(conditionBuf[i],"%c", s_step->condition);
@@ -646,11 +574,7 @@ String BPLSettings::jsonBeerProfile(void)
 	}// end of for
 	
 	String ret;
-	#if ARDUINOJSON_VERSION_MAJOR == 6
 	serializeJson(root,ret);
-	#else
-    root.printTo(ret);
-	#endif
 
     return ret;
 }
@@ -668,26 +592,16 @@ bool BPLSettings::dejsonRemoteLogging(String json)
 	RemoteLoggingInformation *logInfo = remoteLogInfo();
 	logInfo->enabled=false;
 
-#if ARDUINOJSON_VERSION_MAJOR == 6
 	DynamicJsonDocument root(JSON_OBJECT_SIZE(10)+ json.length());
 	auto error = deserializeJson(root,json);
 	if(error
-#else
-	const int GSLOG_JSON_BUFFER_SIZE = JSON_OBJECT_SIZE(10);
-	DynamicJsonBuffer jsonBuffer(GSLOG_JSON_BUFFER_SIZE);
-	JsonObject& root = jsonBuffer.parseObject(json.c_str());
-
-	if(!root.success()
-#endif	
 		|| !root.containsKey("enabled")
 		|| !root.containsKey("format")
 		|| !root.containsKey("url")
 		|| !root.containsKey("type")
 		|| !root.containsKey("method")
 		|| !root.containsKey("period")){
-#if ARDUINOJSON_VERSION_MAJOR == 6	
 		DBG_PRINTF("dejsonRemoteLogging error:%s",error.c_str());
-#endif
 		return false;
 	}
 
@@ -724,14 +638,7 @@ bool BPLSettings::dejsonRemoteLogging(String json)
 
 String BPLSettings::jsonRemoteLogging(void)
 {
-	
-#if ARDUINOJSON_VERSION_MAJOR == 6
 	DynamicJsonDocument root(512);
-#else
-    const int GSLOG_JSON_BUFFER_SIZE = JSON_OBJECT_SIZE(10);
-	DynamicJsonBuffer jsonBuffer(GSLOG_JSON_BUFFER_SIZE);
-	JsonObject& root = jsonBuffer.createObject();
-#endif
 
 	RemoteLoggingInformation *logInfo = remoteLogInfo();
 	root["enabled"] = logInfo->enabled;
@@ -747,11 +654,7 @@ String BPLSettings::jsonRemoteLogging(void)
 	root["type"]=(logInfo->contentType)? logInfo->contentType:"";
 
 	String ret;
-	#if ARDUINOJSON_VERSION_MAJOR == 6
 	serializeJson(root,ret);
-	#else
-    root.printTo(ret);
-	#endif
     return ret;
 }
 
@@ -775,15 +678,9 @@ void BPLSettings::defaultParasiteTempControlSettings(void)
 }
 
 bool BPLSettings::dejsonParasiteTempControlSettings(String json){
-#if ARDUINOJSON_VERSION_MAJOR == 6
 	DynamicJsonDocument root(JSON_OBJECT_SIZE(10) + json.length());
 	auto error = deserializeJson(root,json);
 	if(error
-#else
-    DynamicJsonBuffer jsonBuffer(JSON_OBJECT_SIZE(10));
-	JsonObject& root = jsonBuffer.parseObject(json.c_str());
-	if(!root.success()
-#endif
 		|| !root.containsKey(SetTempKey)
 		|| !root.containsKey(TrigerTempKey)
 		|| !root.containsKey(MinCoolKey)
@@ -809,14 +706,7 @@ String BPLSettings::jsonParasiteTempControlSettings(bool enabled){
     // using string operation for simpler action?
     const int BUFFER_SIZE = 2*JSON_ARRAY_SIZE(6) + JSON_OBJECT_SIZE(9);
 
-	#if ARDUINOJSON_VERSION_MAJOR == 6
-		DynamicJsonDocument root(BUFFER_SIZE + 512);
-	#else
-
-    StaticJsonBuffer<BUFFER_SIZE> jsonBuffer;
-    JsonObject& root = jsonBuffer.createObject();
-	#endif
-
+	DynamicJsonDocument root(BUFFER_SIZE + 512);
     root[EnableKey]= enabled;
     
 	ParasiteTempControlSettings *ps=parasiteTempControlSettings();
@@ -826,11 +716,7 @@ String BPLSettings::jsonParasiteTempControlSettings(bool enabled){
     root[MinCoolKey] = ps->minCoolingTime /  1000;
     root[MinIdleKey]=  ps->minIdleTime / 1000;
     String ret;
-	#if ARDUINOJSON_VERSION_MAJOR == 6
 	serializeJson(root,ret);
-	#else
-    root.printTo(ret);
-	#endif
     return ret;
 }
 
@@ -845,18 +731,9 @@ String BPLSettings::jsonParasiteTempControlSettings(bool enabled){
 
 bool BPLSettings::dejsonPressureMonitorSettings(String json){
 
-#if ARDUINOJSON_VERSION_MAJOR == 6
 	DynamicJsonDocument root(JSON_OBJECT_SIZE(10) + json.length());
 	auto error = deserializeJson(root,json);
 	if(error
-#else
-
-    DynamicJsonBuffer jsonBuffer(JSON_OBJECT_SIZE(10));
-	JsonObject& root = jsonBuffer.parseObject(json.c_str());
-	DBG_PRINTF("PM json:\"%s\"\n",json.c_str());
-	DBG_PRINTF("success:%d\n",root.success());
-	if(!root.success()
-#endif
 		|| !root.containsKey(PressureMonitorModeKey)
 		|| !root.containsKey(ConversionAKey)
 		|| !root.containsKey(ConversionBKey)){
@@ -872,26 +749,14 @@ bool BPLSettings::dejsonPressureMonitorSettings(String json){
 String BPLSettings::jsonPressureMonitorSettings(void){
     const int BUFFER_SIZE = JSON_OBJECT_SIZE(9);
 
-	#if ARDUINOJSON_VERSION_MAJOR == 6
-	
 	DynamicJsonDocument root(BUFFER_SIZE +512);
-	
-	#else
-
-    StaticJsonBuffer<BUFFER_SIZE> jsonBuffer;
-    JsonObject& root = jsonBuffer.createObject();
-	#endif
 
 	PressureMonitorSettings *settings=pressureMonitorSettings();
 	root[PressureMonitorModeKey]=settings->mode;
 	root[ConversionAKey]=settings->fa;
 	root[ConversionBKey]=settings->fb;
     String ret;
-	#if ARDUINOJSON_VERSION_MAJOR == 6
 	serializeJson(root,ret);
-	#else
-    root.printTo(ret);
-	#endif
     return ret;
 
 }
@@ -918,14 +783,7 @@ String BPLSettings::jsonPressureMonitorSettings(void){
 
 String BPLSettings::jsonMqttRemoteControlSettings(void){
 
-	#if ARDUINOJSON_VERSION_MAJOR == 6
-		DynamicJsonDocument root(1024);
-	#else
-    const int BUFFER_SIZE = JSON_OBJECT_SIZE(12);
-
-    DynamicJsonBuffer jsonBuffer(BUFFER_SIZE);
-    JsonObject& root = jsonBuffer.createObject();
-	#endif
+	DynamicJsonDocument root(1024);
 	MqttRemoteControlSettings *settings=mqttRemoteControlSettings();
 	
 	root[EnableRemoteControlKey] = (settings->mode == MqttModeControl || settings->mode == MqttModeBothControlLoggging)? 1:0;
@@ -985,21 +843,13 @@ String BPLSettings::jsonMqttRemoteControlSettings(void){
 	}
 
     String ret;
-	#if ARDUINOJSON_VERSION_MAJOR == 6
 	serializeJson(root,ret);
-	#else
-    root.printTo(ret);
-	#endif
 
 	DBG_PRINTF("json:--\n%s\n--\n",ret.c_str());
     return ret;
 
 }
-#if ARDUINOJSON_VERSION_MAJOR == 6
 static char *copyIfExist(JsonDocument &root,const char* key,uint16_t &offset,char* ptr,char* base){
-#else
-static char *copyIfExist(JsonObject& root,const char* key,uint16_t &offset,char* ptr,char* base){
-#endif
 	if(root.containsKey(key)){
 		const char* str=root[key];
 		size_t length = strlen(str) +1;
@@ -1024,22 +874,13 @@ static char *copyIfExist(JsonObject& root,const char* key,uint16_t &offset,char*
 
 bool BPLSettings::dejsonMqttRemoteControlSettings(String json){
 
-#if ARDUINOJSON_VERSION_MAJOR == 6
 	DynamicJsonDocument root(JSON_OBJECT_SIZE(15) +json.length());
 	auto error = deserializeJson(root,json);
 	if(error
-#else
-
-    DynamicJsonBuffer jsonBuffer(JSON_OBJECT_SIZE(10));
-	JsonObject& root = jsonBuffer.parseObject(json.c_str());
-	if(!root.success()
-#endif
 		|| !root.containsKey(EnableRemoteControlKey)
 		|| !root.containsKey(ServerPort)){
 
-#if ARDUINOJSON_VERSION_MAJOR == 6	
 		DBG_PRINTF("dejsonMqttRemoteControlSettings error:%s",error.c_str());
-#endif
 
         return false;
     }

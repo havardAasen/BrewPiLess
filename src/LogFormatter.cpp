@@ -144,13 +144,7 @@ size_t nonNullJson(char* buffer,size_t size)
 {
 	const int JSON_BUFFER_SIZE = JSON_OBJECT_SIZE(15);
 	
-	#if ARDUINOJSON_VERSION_MAJOR == 6
 	DynamicJsonDocument root(JSON_BUFFER_SIZE +size);
-	#else
-
-	DynamicJsonBuffer jsonBuffer(JSON_BUFFER_SIZE);
-	JsonObject& root = jsonBuffer.createObject();
-	#endif
 
 	uint8_t state, mode;
 	float beerSet,fridgeSet;
@@ -183,9 +177,5 @@ size_t nonNullJson(char* buffer,size_t size)
 		float tilt=externalData.tiltValue();
 		root[KeyTilt]=tilt;
 	}
-	#if ARDUINOJSON_VERSION_MAJOR == 6
 	return	serializeJson(root,buffer,size);
-	#else
-	return root.printTo(buffer,size);
-	#endif
 }

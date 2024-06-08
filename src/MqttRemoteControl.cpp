@@ -40,7 +40,7 @@ MqttRemoteControl::MqttRemoteControl(){
         this->_onConnect();
     });
     _client.onDisconnect([this](AsyncMqttClientDisconnectReason reason){
-        DBG_PRINTF("\n***MQTT:disc:%d\n",reason);
+        DBG_PRINTF("\n***MQTT:disc:%d\n", static_cast<int>(reason));
         this->_onDisconnect();
     });
     _client.onMessage([this](char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total){

@@ -291,54 +291,57 @@ String WiFiSetupClass::scanWifi(void) {
     DBG_PRINTF("Scan done");
     if (n == 0) {
     	DBG_PRINTF("No networks found");
-    } else {
-      	//sort networks by RSSI
-      	int indices[n];
-      	for (int i = 0; i < n; i++) {
-        	indices[i] = i;
-    	}
-      	// bubble sort
-      	for (int i = 0; i < n; i++) {
-        	for (int j = i + 1; j < n; j++) {
-          		if (WiFi.RSSI(indices[j]) > WiFi.RSSI(indices[i])) {
-            		std::swap(indices[i], indices[j]);
-          		}	
-        	}
-      	}
-
-	    // remove duplicates ( must be RSSI sorted )
-        String cssid;
-        for (int i = 0; i < n; i++) {
-        	if (indices[i] == -1) continue;
-          	cssid = WiFi.SSID(indices[i]);
-          	for (int j = i + 1; j < n; j++) {
-            	if (cssid == WiFi.SSID(indices[j])) {
-              		DBG_PRINTF("DUP AP: ");
-					DBG_PRINTF(WiFi.SSID(indices[j]).c_str());
-              		indices[j] = -1; // set dup aps to index -1
-            	}
-          	}
-        }
-		
-      	//display networks in page
-		bool comma=false; // i==0 might not the "first", might be duplicated.
-      	for (int i = 0; i < n; i++) {
-        	if (indices[i] == -1) continue; // skip dups
-        	DBG_PRINTLN(WiFi.SSID(indices[i]));
-	        DBG_PRINTLN(WiFi.RSSI(indices[i]));
-        	//int quality = getRSSIasQuality(WiFi.RSSI(indices[i]));
-			String item=String("{\"ssid\":\"") + WiFi.SSID(indices[i]) + 
-			String("\",\"rssi\":") + WiFi.RSSI(indices[i]) +
-			String(",\"enc\":") +  String((WiFi.encryptionType(indices[i]) != ENC_TYPE_NONE)? "1":"0")
-			+ String("}");
-			if(comma){
-				rst += ",";	
-			}else{
-				comma=true;
-			}
-			rst += item;
-      	}
+		rst += "]}";
+		return rst;
     }
+
+	//sort networks by RSSI
+	int indices[n];
+	for (int i = 0; i < n; i++) {
+		indices[i] = i;
+	}
+	// bubble sort
+	for (int i = 0; i < n; i++) {
+		for (int j = i + 1; j < n; j++) {
+			if (WiFi.RSSI(indices[j]) > WiFi.RSSI(indices[i])) {
+				std::swap(indices[i], indices[j]);
+			}
+		}
+	}
+
+	// remove duplicates ( must be RSSI sorted )
+	String cssid;
+	for (int i = 0; i < n; i++) {
+		if (indices[i] == -1) continue;
+		cssid = WiFi.SSID(indices[i]);
+		for (int j = i + 1; j < n; j++) {
+			if (cssid == WiFi.SSID(indices[j])) {
+				DBG_PRINTF("DUP AP: ");
+				DBG_PRINTF(WiFi.SSID(indices[j]).c_str());
+				indices[j] = -1; // set dup aps to index -1
+			}
+		}
+	}
+
+	//display networks in page
+	bool comma=false; // i==0 might not the "first", might be duplicated.
+	for (int i = 0; i < n; i++) {
+		if (indices[i] == -1) continue; // skip dups
+		DBG_PRINTLN(WiFi.SSID(indices[i]));
+		DBG_PRINTLN(WiFi.RSSI(indices[i]));
+		//int quality = getRSSIasQuality(WiFi.RSSI(indices[i]));
+		String item=String("{\"ssid\":\"") + WiFi.SSID(indices[i]) +
+		String("\",\"rssi\":") + WiFi.RSSI(indices[i]) +
+		String(",\"enc\":") +  String((WiFi.encryptionType(indices[i]) != ENC_TYPE_NONE)? "1":"0")
+		+ String("}");
+		if(comma){
+			rst += ",";
+		}else{
+			comma=true;
+		}
+		rst += item;
+	}
+
 	rst += "]}";
 	DBG_PRINTF("scan result:%s\n",rst.c_str());
 	return rst;

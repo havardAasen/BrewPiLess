@@ -4,8 +4,6 @@
 #include <DNSServer.h>
 
 
-#define TIME_WAIT_TO_CONNECT 20000
-#define TIME_RECONNECT_TIMEOUT 20000
 #define    DNS_PORT  53
 
 class WiFiSetupClass

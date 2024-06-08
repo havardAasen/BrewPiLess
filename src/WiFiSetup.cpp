@@ -267,9 +267,9 @@ bool WiFiSetupClass::stayConnected(void)
   } // end of connected
 
 	
-	if(_wifiScanState == WiFiScanStatePending){
+	if(_wifiScan == WiFiScan::pending){
 		String nets=scanWifi();
-		_wifiScanState = WiFiScanStateNone;
+		_wifiScan = WiFiScan::none;
 		if(_eventHandler) _eventHandler(nets.c_str());
 	}
 
@@ -277,8 +277,8 @@ bool WiFiSetupClass::stayConnected(void)
 }
 
 bool WiFiSetupClass::requestScanWifi(void) {
-	if(_wifiScanState == WiFiScanStateNone){
-		_wifiScanState = WiFiScanStatePending;
+	if(_wifiScan == WiFiScan::none){
+		_wifiScan = WiFiScan::pending;
 		return true;
 	}
 	return false;

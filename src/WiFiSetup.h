@@ -12,19 +12,21 @@
 #define WiFiStateConnectionRecovering 6
 
 
-#define WiFiScanStateNone 0
-#define WiFiScanStatePending 1
-#define WiFiScanStateScanning 2
-
-
 #define TIME_WAIT_TO_CONNECT 20000
 #define TIME_RECONNECT_TIMEOUT 20000
 #define    DNS_PORT  53
 
 class WiFiSetupClass
 {
+private:
+	enum class WiFiScan {
+		none,
+		pending,
+		scanning,
+	};
+
 public:
-	WiFiSetupClass():_wifiState(WiFiStateConnected),_wifiScanState(WiFiScanStateNone),_apMode(false),_switchToAp(true),_autoReconnect(true),
+	WiFiSetupClass():_wifiState(WiFiStateConnected),_wifiScan(WiFiScan::none),_apMode(false),_switchToAp(true),_autoReconnect(true),
 		 _maxReconnect(5),_eventHandler(NULL),_targetSSID(NULL),_targetPass(NULL),_ip(INADDR_NONE),_gw(INADDR_NONE),_nm(INADDR_NONE){}
 
 	void begin(WiFiMode mode, char const *ssid,const char *passwd=NULL);
@@ -49,8 +51,8 @@ public:
 	String status(void);
 private:
 	WiFiMode _mode;
+	WiFiScan _wifiScan;
 	byte _wifiState;
-	byte _wifiScanState;
 	bool _apMode;
 	bool _switchToAp;
 	bool _autoReconnect;

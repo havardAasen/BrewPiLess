@@ -888,8 +888,8 @@ function initctrl() {
                 }
                 if (typeof c["cap"] != "undefined")
                     Capper.status(c["cap"]);
-                if (typeof c["ptcs"] != "undefined")
-                    PTC.config(c.ptcs);
+                if (typeof c["ptc"] != "undefined")
+                    PTC.config(c.ptc);
             },
             C: function(c) { ccparameter(c); },
             B: rcvBeerProfile

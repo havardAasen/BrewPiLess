@@ -4,8 +4,6 @@
 #include <DNSServer.h>
 
 
-#define    DNS_PORT  53
-
 class WiFiSetupClass
 {
 private:
@@ -76,6 +74,10 @@ private:
 	IPAddress _gw;
 	IPAddress _nm;
 	IPAddress _dns;
+
+	static constexpr int dns_port = 53;
+	static constexpr int time_for_rescue_AP_mode = 60000;
+	static constexpr int time_for_recover_network = 120000;
 
 	void setupApService(void);
 	void enterBackupApMode();

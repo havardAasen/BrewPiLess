@@ -6,8 +6,6 @@
 
 WiFiSetupClass WiFiSetup;
 
-#define TimeForRescueAPMode 60000
-#define TimeForRecoverNetwork 120000
 
 #if SerialDebug == true
 #define DebugOut(a) DebugPort.print(a)
@@ -57,7 +55,7 @@ void WiFiSetupClass::setupApService(void)
 {
 	dnsServer.reset(new DNSServer());
 	dnsServer->setErrorReplyCode(DNSReplyCode::NoError);
-	dnsServer->start(DNS_PORT, "*", WiFi.softAPIP());
+	dnsServer->start(dns_port, "*", WiFi.softAPIP());
 	delay(500);
 }
 
@@ -232,7 +230,7 @@ bool WiFiSetupClass::stayConnected(void)
 				return true;
 			}else if (_wifiState==WiFiState::connection_recovering){
 				// if sta mode, turn on AP mode
-				if(millis() - _time > TimeForRescueAPMode){
+				if(millis() - _time > time_for_rescue_AP_mode){
 					DBG_PRINTF("Stop recovering\n");
 					_time = millis();
 					_wifiState =WiFiState::disconnected;
@@ -242,9 +240,9 @@ bool WiFiSetupClass::stayConnected(void)
 						WiFi.mode(WIFI_AP_STA);
 						createNetwork();
 					} // _mode == WIFI_STA
-				} // millis() - _time > TimeForRescueAPMode
+				} // millis() - _time > time_for_rescue_AP_mode
 			} else if(_wifiState==WiFiState::disconnected){ // _wifiState == WiFiState::ConnectionRecovering
-				if( millis() -  _time  > TimeForRecoverNetwork){
+				if( millis() -  _time  > time_for_recover_network){
   					DBG_PRINTF("Start recovering\n");
 						WiFi.setAutoConnect(true);
 						_wifiState = WiFiState::connection_recovering;

@@ -10,11 +10,9 @@ WiFiSetupClass WiFiSetup;
 #if SerialDebug == true
 #define DebugOut(a) DebugPort.print(a)
 #define DBG_PRINTF(...) DebugPort.printf(__VA_ARGS__)
-#define DBG_PRINTLN(a) DebugPort.println(a)
 #else
 #define DebugOut(a)
 #define DBG_PRINTF(...)
-#define DBG_PRINTLN(a) 
 #endif
 
 #if SerialDebug
@@ -288,9 +286,9 @@ String WiFiSetupClass::scanWifi(void) {
 	
 	DBG_PRINTF("Scan Networks...\n");
 	int n = WiFi.scanNetworks();
-    DBG_PRINTF("Scan done");
+    DBG_PRINTF("Scan done\n");
     if (n == 0) {
-    	DBG_PRINTF("No networks found");
+    	DBG_PRINTF("No networks found\n");
 		rst += "]}";
 		return rst;
     }
@@ -316,8 +314,7 @@ String WiFiSetupClass::scanWifi(void) {
 		cssid = WiFi.SSID(indices[i]);
 		for (int j = i + 1; j < n; j++) {
 			if (cssid == WiFi.SSID(indices[j])) {
-				DBG_PRINTF("DUP AP: ");
-				DBG_PRINTF(WiFi.SSID(indices[j]).c_str());
+				DBG_PRINTF("Duplicated AP: %s\n", WiFi.SSID(indices[j]).c_str());
 				indices[j] = -1; // set dup aps to index -1
 			}
 		}
@@ -327,8 +324,7 @@ String WiFiSetupClass::scanWifi(void) {
 	bool comma=false; // i==0 might not the "first", might be duplicated.
 	for (int i = 0; i < n; i++) {
 		if (indices[i] == -1) continue; // skip dups
-		DBG_PRINTLN(WiFi.SSID(indices[i]));
-		DBG_PRINTLN(WiFi.RSSI(indices[i]));
+		DBG_PRINTF("SSID: %s, RSSI: %d\n", WiFi.SSID(indices[i]).c_str(), WiFi.RSSI(indices[i]));
 		//int quality = getRSSIasQuality(WiFi.RSSI(indices[i]));
 		String item=String("{\"ssid\":\"") + WiFi.SSID(indices[i]) +
 		String("\",\"rssi\":") + WiFi.RSSI(indices[i]) +

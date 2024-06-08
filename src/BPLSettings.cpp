@@ -577,7 +577,7 @@ String BPLSettings::jsonBeerProfile(void)
 	//2016-07-01T05:22:33.351Z
 	struct tm * ptm;
 	ptm = localtime(& tempSchedule->startDay);
-	char timeBuf[32];
+	char timeBuf[128];
 	sprintf(timeBuf,"%d-%02d-%02dT%02d:%02d:%02d.0Z",ptm->tm_year+1900,ptm->tm_mon+1,ptm->tm_mday,
 		ptm->tm_hour,ptm->tm_min,ptm->tm_sec);
 	root["s"]=timeBuf;

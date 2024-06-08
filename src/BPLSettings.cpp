@@ -3,6 +3,7 @@
 #include <string.h>
 #include <IPAddress.h>
 #include <FS.h>
+#include <LittleFS.h>
 #include <ESP8266WiFi.h>
 
 #include "Config.h"
@@ -33,7 +34,7 @@ void BPLSettings::load()
 		 offsetof(Settings,remoteLogginInfo),offsetof(Settings,autoCapSettings),
 		 offsetof(Settings,parasiteTempControlSettings));
 
-	fs::File f = SPIFFS.open(BPLSettingFileName, "r");
+	fs::File f = LittleFS.open(BPLSettingFileName, "r");
 	if(!f){
 		setDefault();
 		return;
@@ -52,7 +53,7 @@ void BPLSettings::load()
 
 void BPLSettings::save()
 {
-	fs::File f = SPIFFS.open(BPLSettingFileName, "w");
+	fs::File f = LittleFS.open(BPLSettingFileName, "w");
     if(!f){
 		DBG_PRINTF("error open configuratoin file\n");
 		return;

@@ -7,6 +7,7 @@
 #endif
 #include <ArduinoOTA.h>
 #include <FS.h>
+#include <LittleFS.h>
 
 //#include <Hash.h>
 
@@ -212,7 +213,7 @@ class BrewPiWebHandler: public AsyncWebHandler
 	void handleFileList(AsyncWebServerRequest *request) {
 		if(request->hasParam("dir",true)){
         	String path = request->getParam("dir",true)->value();
-          	Dir dir = SPIFFS.openDir(path);
+          	Dir dir = LittleFS.openDir(path);
           	path = String();
           	String output = "[";
           	while(dir.next()){
@@ -236,7 +237,7 @@ class BrewPiWebHandler: public AsyncWebHandler
 
 	void handleFileDelete(AsyncWebServerRequest *request){
 		if(request->hasParam("path", true)){
-        	ESP.wdtDisable(); SPIFFS.remove(request->getParam("path", true)->value()); ESP.wdtEnable(10);
+        	ESP.wdtDisable(); LittleFS.remove(request->getParam("path", true)->value()); ESP.wdtEnable(10);
             request->send(200, "", "DELETE: "+request->getParam("path", true)->value());
         } else
           request->send(404);
@@ -247,7 +248,7 @@ class BrewPiWebHandler: public AsyncWebHandler
 			&& request->hasParam("content", true)){
         	ESP.wdtDisable();
     		String file=request->getParam("path", true)->value();
-    		File fh= SPIFFS.open(file, "w");
+    		File fh= LittleFS.open(file, "w");
     		if(!fh){
     			request->send(500);
     			return;
@@ -264,20 +265,20 @@ class BrewPiWebHandler: public AsyncWebHandler
 
     bool fileExists(String path)
     {
-	    if(SPIFFS.exists(path)) return true;
+	    if(LittleFS.exists(path)) return true;
 	    bool dum;
 	    unsigned int dum2;
 
 	    if(getEmbeddedFile(path.c_str(),dum,dum2)) return true;
-		if(path.endsWith(CHART_LIB_PATH) && SPIFFS.exists(CHART_LIB_PATH)) return true;
+		if(path.endsWith(CHART_LIB_PATH) && LittleFS.exists(CHART_LIB_PATH)) return true;
 		// safari workaround.
 		if(path.endsWith(".js")){
 			String pathWithJgz = path.substring(0,path.lastIndexOf('.')) + ".jgz";
 			 //DBG_PRINTF("checking with:%s\n",pathWithJgz.c_str());
-			 if(SPIFFS.exists(pathWithJgz)) return true;
+			 if(LittleFS.exists(pathWithJgz)) return true;
 		}
 		String pathWithGz = path + ".gz";
-		if(SPIFFS.exists(pathWithGz)) return true;
+		if(LittleFS.exists(pathWithGz)) return true;
 		return false;
     }
 
@@ -303,8 +304,8 @@ class BrewPiWebHandler: public AsyncWebHandler
 		//workaround for safari
 		if(path.endsWith(".js")){
 			String pathWithJgz = path.substring(0,path.lastIndexOf('.')) + ".jgz";
-			if(SPIFFS.exists(pathWithJgz)){
-				AsyncWebServerResponse * response = request->beginResponse(SPIFFS, pathWithJgz,"application/javascript");
+			if(LittleFS.exists(pathWithJgz)){
+				AsyncWebServerResponse * response = request->beginResponse(LittleFS, pathWithJgz,"application/javascript");
 				response->addHeader("Content-Encoding", "gzip");
 				response->addHeader("Cache-Control","max-age=2592000");
 				request->send(response);
@@ -313,12 +314,12 @@ class BrewPiWebHandler: public AsyncWebHandler
 			}
 		}
 		String pathWithGz = path + ".gz";
-		if(SPIFFS.exists(pathWithGz)){
+		if(LittleFS.exists(pathWithGz)){
 #if 0
-			AsyncWebServerResponse * response = request->beginResponse(SPIFFS, pathWithGz,getContentType(path));
+			AsyncWebServerResponse * response = request->beginResponse(LittleFS, pathWithGz,getContentType(path));
 			// AsyncFileResonse will add "content-disposion" header, result in "download" of Safari, instead of "render" 
 #else
-			File file=SPIFFS.open(pathWithGz,"r");
+			File file=LittleFS.open(pathWithGz,"r");
 			if(!file){
 				request->send(500);
 				return;
@@ -331,8 +332,8 @@ class BrewPiWebHandler: public AsyncWebHandler
 			return;
 		}
 		  
-		if(SPIFFS.exists(path)){
-			//request->send(SPIFFS, path);
+		if(LittleFS.exists(path)){
+			//request->send(LittleFS, path);
 			bool nocache=false;
 			for(byte i=0;i< sizeof(nocache_list)/sizeof(const char*);i++){
 				if(path.equals(nocache_list[i])){
@@ -342,7 +343,7 @@ class BrewPiWebHandler: public AsyncWebHandler
 			}
 
 
-			AsyncWebServerResponse *response = request->beginResponse(SPIFFS, path);
+			AsyncWebServerResponse *response = request->beginResponse(LittleFS, path);
 			if(nocache)
 				response->addHeader("Cache-Control","no-cache");
 			else
@@ -631,7 +632,7 @@ public:
 	 		if(request->url().equals("/")){
 				SystemConfiguration *syscfg=theSettings.systemConfiguration();
 		 		if(!syscfg->passwordLcd){
-		 			sendFile(request,path); //request->send(SPIFFS, path);
+		 			sendFile(request,path); //request->send(LittleFS, path);
 		 			return;
 		 		}
 		 	}
@@ -648,7 +649,7 @@ public:
 	 	    if(syscfg->passwordLcd && !request->authenticate(syscfg->username, syscfg->password))
 	        return request->requestAuthentication();
 
-	 		sendFile(request,path); //request->send(SPIFFS, path);
+	 		sendFile(request,path); //request->send(LittleFS, path);
 		}
 	 }
 
@@ -681,7 +682,7 @@ public:
 				String path=request->url();
 	 			if(path.endsWith("/")) path +=DEFAULT_INDEX_FILE;
 	 			//DBG_PRINTF("request:%s\n",path.c_str());
-				if(fileExists(path)) return true; //if(SPIFFS.exists(path)) return true;
+				if(fileExists(path)) return true; //if(LittleFS.exists(path)) return true;
 				//DBG_PRINTF("request:%s not found\n",path.c_str());
 			}
 	 	}else if(request->method() == HTTP_DELETE && request->url() == DELETE_PATH){
@@ -1078,8 +1079,8 @@ public:
 				int index=request->getParam("dl")->value().toInt();
 				char buf[36];
 				brewLogger.getFilePath(buf,index);
-				if(SPIFFS.exists(buf)){
-					request->send(SPIFFS,buf,"application/octet-stream",true);
+				if(LittleFS.exists(buf)){
+					request->send(LittleFS,buf,"application/octet-stream",true);
 				}else{
 					request->send(404);
 				}
@@ -1593,11 +1594,11 @@ void setup(void){
 
 	//0.Initialize file system
 	//start SPI Filesystem
-  	if(!SPIFFS.begin()){
+  	if(!LittleFS.begin()){
   		// TO DO: what to do?
-  		DBG_PRINTF("SPIFFS.being() failed!\n");
+  		DBG_PRINTF("LittleFS.being() failed!\n");
   	}else{
-  		DBG_PRINTF("SPIFFS.being() Success.\n");
+  		DBG_PRINTF("LittleFS.being() Success.\n");
   	}
 
 
@@ -1675,13 +1676,13 @@ void setup(void){
 	webServer->addHandler(&externalDataHandler);
 
 	webServer->addHandler(&networkConfig);
-	//3.1.2 SPIFFS is part of the serving pages
-	//server.serveStatic("/", SPIFFS, "/","public, max-age=259200"); // 3 days
+	//3.1.2 LittleFS is part of the serving pages
+	//server.serveStatic("/", LittleFS, "/","public, max-age=259200"); // 3 days
 
 
 	webServer->on("/fs",[](AsyncWebServerRequest *request){
 		FSInfo fs_info;
-		SPIFFS.info(fs_info);
+		LittleFS.info(fs_info);
 		request->send(200,"","totalBytes:" +String(fs_info.totalBytes) +
 		" usedBytes:" + String(fs_info.usedBytes)+" blockSize:" + String(fs_info.blockSize)
 		+" pageSize:" + String(fs_info.pageSize)

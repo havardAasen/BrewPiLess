@@ -1,3 +1,5 @@
+#include <LittleFS.h>
+
 #include "BrewPiProxy.h"
 #include "BrewLogger.h"
 
@@ -32,7 +34,7 @@ BrewLogger::BrewLogger(void){
 	String BrewLogger::fsinfo(void)
 	{
 		FSInfo fs_info;
-		SPIFFS.info(fs_info);
+		LittleFS.info(fs_info);
 		String ret=String("{\"size\":") + String(fs_info.totalBytes)
 			+",\"used\":"  + String(fs_info.usedBytes)
 			+",\"block\":" + String(fs_info.blockSize)
@@ -82,7 +84,7 @@ BrewLogger::BrewLogger(void){
 		// multiple access issue
 		char buff[36];
 		sprintf(buff,"%s/%s",LOG_PATH,_pFileInfo->files[index].name);
-		SPIFFS.remove(buff);
+		LittleFS.remove(buff);
 		DBG_PRINTF("remove %d: %s\n",index,buff);
 		int i;
 		for(i=index+1;i<MAX_LOG_FILE_NUMBER;i++){
@@ -105,7 +107,7 @@ BrewLogger::BrewLogger(void){
 		char buff[36];
 		sprintf(buff,"%s/%s",LOG_PATH,_pFileInfo->logname);
 
-		_logFile=SPIFFS.open(buff,"a+");
+		_logFile=LittleFS.open(buff,"a+");
 		if(! _logFile){
             DBG_PRINTF("resume failed\n");
             return false;
@@ -256,7 +258,7 @@ BrewLogger::BrewLogger(void){
 		char buff[36];
 		sprintf(buff,"%s/%s",LOG_PATH,filename);
 
-		_logFile=SPIFFS.open(buff,"a+");
+		_logFile=LittleFS.open(buff,"a+");
 
 		if(!_logFile){
 			DBG_PRINTF("Error open temp file\n");
@@ -626,7 +628,7 @@ BrewLogger::BrewLogger(void){
 	void BrewLogger::checkspace(void)
 	{
 		FSInfo fs_info;
-		SPIFFS.info(fs_info);
+		LittleFS.info(fs_info);
 
 		_fsspace = fs_info.totalBytes - fs_info.usedBytes;
 		if(_fsspace > fs_info.blockSize * 2){

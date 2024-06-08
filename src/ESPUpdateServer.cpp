@@ -4,6 +4,7 @@
 #include <ESP8266HTTPUpdateServer.h>
 #include <ESP8266mDNS.h>
 #include <FS.h>
+#include <LittleFS.h>
 #include <ArduinoJson.h>
 #include "Config.h"
 #include "ExternalData.h"
@@ -150,10 +151,10 @@ static bool handleFileRead(String path){
   if(path.endsWith("/")) path += "index.htm";
   String contentType = getResponseContentType(path);
   String pathWithGz = path + ".gz";
-  if(SPIFFS.exists(pathWithGz) || SPIFFS.exists(path)){
-    if(SPIFFS.exists(pathWithGz))
+  if(LittleFS.exists(pathWithGz) || LittleFS.exists(path)){
+    if(LittleFS.exists(pathWithGz))
       path += ".gz";
-    File file = SPIFFS.open(path, "r");
+    File file = LittleFS.open(path, "r");
     /*size_t sent = */ server.streamFile(file, contentType);
     file.close();
     return true;
@@ -168,7 +169,7 @@ static void handleFileUpload(void){
     String filename = upload.filename;
     if(!filename.startsWith("/")) filename = "/"+filename;
     DBG_PRINT("handleFileUpload Name: "); DBG_PRINTLN(filename);
-    fsUploadFile = SPIFFS.open(filename, "w");
+    fsUploadFile = LittleFS.open(filename, "w");
     filename = String();
   } else if(upload.status == UPLOAD_FILE_WRITE){
     //DBG_PRINT("handleFileUpload Data: "); DBG_PRINTLN(upload.currentSize);
@@ -187,9 +188,9 @@ static void handleFileDelete(void){
   DBG_PRINTLN("handleFileDelete: " + path);
   if(path == "/")
     return server.send(500, "text/plain", "BAD PATH");
-  if(!SPIFFS.exists(path))
+  if(!LittleFS.exists(path))
     return server.send(404, "text/plain", "FileNotFound");
-  SPIFFS.remove(path);
+  LittleFS.remove(path);
   server.send(200, "text/plain", "");
   path = String();
 }
@@ -201,9 +202,9 @@ static void handleFileCreate(void){
   DBG_PRINTLN("handleFileCreate: " + path);
   if(path == "/")
     return server.send(500, "text/plain", "BAD PATH");
-  if(SPIFFS.exists(path))
+  if(LittleFS.exists(path))
     return server.send(500, "text/plain", "FILE EXISTS");
-  File file = SPIFFS.open(path, "w");
+  File file = LittleFS.open(path, "w");
   if(file)
     file.close();
   else
@@ -217,7 +218,7 @@ static void handleFileList(void) {
 
   String path = server.arg("dir");
   DBG_PRINTLN("handleFileList: " + path);
-  Dir dir = SPIFFS.openDir(path);
+  Dir dir = LittleFS.openDir(path);
   path = String();
 
   String output = "[";
@@ -261,7 +262,7 @@ void ESPUpdateServer_setup(const char* user, const char* pass){
   server.on("/edit", HTTP_POST, [](){ server.send(200, "text/plain", ""); }, handleFileUpload);
 
   //called when the url is not defined here
-  //use it to load content from SPIFFS
+  //use it to load content from LittleFS
   server.onNotFound([](){
     if(!handleFileRead(server.uri()))
       server.send(404, "text/plain", "FileNotFound");
@@ -286,7 +287,7 @@ void ESPUpdateServer_setup(const char* user, const char* pass){
       server.sendHeader("Content-Encoding", "gzip");
 	    server.send_P(200,"text/html",spiffsformating_html,sizeof(spiffsformating_html));
       theSettings.preFormat();
-      SPIFFS.format();      
+      LittleFS.format();
       theSettings.postFormat();
   });
 

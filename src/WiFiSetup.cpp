@@ -33,7 +33,7 @@ void WiFiSetupClass::setMode(WiFiMode mode)
 	if(mode == _mode)
 		return;
 
-	DBG_PRINTF("WiFi: Change mode from: %d to %d\n", _mode, mode);	
+	DBG_PRINTF("WiFi: Change mode from: %d to %d\n", _mode, mode);
 	_mode = mode;
 	_wifiState = WiFiState::mode_change_pending;
 }
@@ -49,6 +49,8 @@ void WiFiSetupClass::createNetwork(){
 		WiFi.softAP(_apName, _apPassword);
 	else
 		WiFi.softAP(_apName);
+
+	DBG_PRINTF("WiFi: Create network [%s]\n", _apName);
 }
 
 void WiFiSetupClass::setupApService(void)

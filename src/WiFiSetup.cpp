@@ -28,10 +28,12 @@ void WiFiSetupClass::staConfig(IPAddress ip,IPAddress gw, IPAddress nm,IPAddress
 	_dns=dns;
 }
 
-void WiFiSetupClass::setMode(WiFiMode mode){
-	DBG_PRINTF("WiFi mode from:%d to %d\n",_mode,_mode);	
+void WiFiSetupClass::setMode(WiFiMode mode)
+{
+	if(mode == _mode)
+		return;
 
-	if(mode == _mode) return;
+	DBG_PRINTF("WiFi: Change mode from: %d to %d\n", _mode, mode);	
 	_mode = mode;
 	_wifiState = WiFiState::mode_change_pending;
 }

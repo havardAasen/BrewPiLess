@@ -636,7 +636,7 @@ BrewLogger::BrewLogger(void){
 		}else{
 			_fsspace=0;
 		}
-		DBG_PRINTF("SPIFFS space:%d\n",_fsspace);
+		DBG_PRINTF("LittleFS space:%d\n",_fsspace);
 	}
 
 	void BrewLogger::volatileHeader(char *buf)

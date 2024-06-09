@@ -4,6 +4,10 @@
 #include "Config.h"
 #include "WiFiSetup.h"
 
+#include <algorithm>
+#include <numeric>
+#include <vector>
+
 WiFiSetupClass WiFiSetup;
 
 
@@ -285,56 +289,34 @@ String WiFiSetupClass::scanWifi(void) {
 	String rst="{\"list\":[";
 	
 	DBG_PRINTF("Scan Networks...\n");
-	int n = WiFi.scanNetworks();
+	const int available_networks = WiFi.scanNetworks();
     DBG_PRINTF("Scan done\n");
-    if (n == 0) {
+    if (available_networks == 0) {
     	DBG_PRINTF("No networks found\n");
 		rst += "]}";
 		return rst;
     }
 
-	//sort networks by RSSI
-	int indices[n];
-	for (int i = 0; i < n; i++) {
-		indices[i] = i;
-	}
-	// bubble sort
-	for (int i = 0; i < n; i++) {
-		for (int j = i + 1; j < n; j++) {
-			if (WiFi.RSSI(indices[j]) > WiFi.RSSI(indices[i])) {
-				std::swap(indices[i], indices[j]);
-			}
-		}
-	}
+	std::vector<int> networks(available_networks);
+	std::iota(networks.begin(), networks.end(), 0);
+	std::sort(networks.begin(), networks.end(), [](int a, int b)
+			  { return WiFi.SSID(a) > WiFi.SSID(b); });
+	const auto end_unique = std::unique(networks.begin(), networks.end(), [](int a, int b)
+										{ return WiFi.SSID(a) == WiFi.SSID(b); });
+	networks.erase(end_unique, networks.end());
+	std::sort(networks.begin(), networks.end(), [](int a, int b)
+			  { return WiFi.RSSI(a) > WiFi.RSSI(b); });
 
-	// remove duplicates ( must be RSSI sorted )
-	String cssid;
-	for (int i = 0; i < n; i++) {
-		if (indices[i] == -1) continue;
-		cssid = WiFi.SSID(indices[i]);
-		for (int j = i + 1; j < n; j++) {
-			if (cssid == WiFi.SSID(indices[j])) {
-				DBG_PRINTF("Duplicated AP: %s\n", WiFi.SSID(indices[j]).c_str());
-				indices[j] = -1; // set dup aps to index -1
-			}
-		}
-	}
-
-	//display networks in page
-	bool comma=false; // i==0 might not the "first", might be duplicated.
-	for (int i = 0; i < n; i++) {
-		if (indices[i] == -1) continue; // skip dups
-		DBG_PRINTF("SSID: %s, RSSI: %d\n", WiFi.SSID(indices[i]).c_str(), WiFi.RSSI(indices[i]));
-		//int quality = getRSSIasQuality(WiFi.RSSI(indices[i]));
-		String item=String("{\"ssid\":\"") + WiFi.SSID(indices[i]) +
-		String("\",\"rssi\":") + WiFi.RSSI(indices[i]) +
-		String(",\"enc\":") +  String((WiFi.encryptionType(indices[i]) != ENC_TYPE_NONE)? "1":"0")
-		+ String("}");
-		if(comma){
+	bool comma = false;
+	for (auto network : networks) {
+		DBG_PRINTF("SSID: %s, RSSI: %d\n", WiFi.SSID(network).c_str(), WiFi.RSSI(network));
+		String item = String("{\"ssid\":\"") + WiFi.SSID(network) +
+					  String("\",\"rssi\":") + WiFi.RSSI(network) +
+					  String(",\"enc\":") + String((WiFi.encryptionType(network) != ENC_TYPE_NONE) ? "1" : "0") + String("}");
+		if (comma)
 			rst += ",";
-		}else{
-			comma=true;
-		}
+		else
+			comma = true;
 		rst += item;
 	}
 

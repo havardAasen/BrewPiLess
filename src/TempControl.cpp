@@ -76,7 +76,7 @@ uint16_t TempControl::lastCoolTime;
 uint16_t TempControl::waitTime;
 #endif
 
-void TempControl::init(void){
+void TempControl::init(){
 	state=IDLE;
 	cs.mode = MODE_OFF;
 
@@ -103,7 +103,7 @@ void TempControl::init(void){
 	lastCoolTime = 0;
 }
 
-void TempControl::reset(void){
+void TempControl::reset(){
 	doPosPeakDetect=false;
 	doNegPeakDetect=false;
 }
@@ -115,7 +115,7 @@ void updateSensor(TempSensor* sensor) {
 	}
 }
 
-void TempControl::updateTemperatures(void){
+void TempControl::updateTemperatures(){
 
 	updateSensor(beerSensor);
 	updateSensor(fridgeSensor);
@@ -127,7 +127,7 @@ void TempControl::updateTemperatures(void){
 	}
 }
 
-void TempControl::updatePID(void){
+void TempControl::updatePID(){
 	static unsigned char integralUpdateCounter = 0;
 	if(tempControl.modeIsBeer()){
 		if(cs.beerSetting == INVALID_TEMP){
@@ -207,7 +207,7 @@ void TempControl::updatePID(void){
 	}
 }
 
-void TempControl::updateState(void){
+void TempControl::updateState(){
 	//update state
 	bool stayIdle = false;
 	bool newDoorOpen = door->sense();
@@ -387,7 +387,7 @@ void TempControl::updateEstimatedPeak(uint16_t timeLimit, temperature estimator,
 	cv.estimatedPeak = fridgeSensor->readFastFiltered() + estimatedOvershoot;
 }
 
-void TempControl::updateOutputs(void) {
+void TempControl::updateOutputs() {
 	if (cs.mode==MODE_TEST)
 		return;
 
@@ -401,7 +401,7 @@ void TempControl::updateOutputs(void) {
 }
 
 
-void TempControl::detectPeaks(void){
+void TempControl::detectPeaks(){
 	//detect peaks in fridge temperature to tune overshoot estimators
 	LOG_ID_TYPE detected = 0;
 	temperature peak, estimate, error, oldEstimator, newEstimator;
@@ -512,15 +512,15 @@ void TempControl::decreaseEstimator(temperature * estimator, temperature error){
 	eepromManager.storeTempSettings();
 }
 
-uint16_t TempControl::timeSinceCooling(void){
+uint16_t TempControl::timeSinceCooling(){
 	return ticks.timeSince(lastCoolTime);
 }
 
-uint16_t TempControl::timeSinceHeating(void){
+uint16_t TempControl::timeSinceHeating(){
 	return ticks.timeSince(lastHeatTime);
 }
 
-uint16_t TempControl::timeSinceIdle(void){
+uint16_t TempControl::timeSinceIdle(){
 	return ticks.timeSince(lastIdleTime);
 }
 
@@ -559,7 +559,7 @@ void TempControl::loadSettings(eptr_t offset){
 	setMode(cs.mode, true);		// force the mode update
 }
 
-void TempControl::loadDefaultConstants(void){
+void TempControl::loadDefaultConstants(){
 	memcpy_P((void*) &tempControl.cc, (void*) &tempControl.ccDefaults, sizeof(ControlConstants));
 	initFilters();
 }
@@ -591,7 +591,7 @@ void TempControl::setMode(char newMode, bool force){
 	}
 }
 
-temperature TempControl::getBeerTemp(void){
+temperature TempControl::getBeerTemp(){
 	if(beerSensor->isConnected()){
 		return beerSensor->readFastFiltered();
 	}
@@ -600,11 +600,11 @@ temperature TempControl::getBeerTemp(void){
 	}
 }
 
-temperature TempControl::getBeerSetting(void){
+temperature TempControl::getBeerSetting(){
 	return cs.beerSetting;
 }
 
-temperature TempControl::getFridgeTemp(void){
+temperature TempControl::getFridgeTemp(){
 	if(fridgeSensor->isConnected()){
 		return fridgeSensor->readFastFiltered();
 	}
@@ -613,7 +613,7 @@ temperature TempControl::getFridgeTemp(void){
 	}
 }
 
-temperature TempControl::getFridgeSetting(void){
+temperature TempControl::getFridgeSetting(){
 	return cs.fridgeSetting;
 }
 
@@ -642,10 +642,10 @@ void TempControl::setFridgeTemp(temperature newTemp){
 	eepromManager.storeTempSettings();
 }
 
-bool TempControl::stateIsCooling(void){
+bool TempControl::stateIsCooling(){
 	return (state==COOLING || state==COOLING_MIN_TIME);
 }
-bool TempControl::stateIsHeating(void){
+bool TempControl::stateIsHeating(){
 	return (state==HEATING || state==HEATING_MIN_TIME);
 }
 

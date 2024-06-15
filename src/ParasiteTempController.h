@@ -11,7 +11,7 @@ public:
     void run();
     void init();
 
-    String getSettings(void);
+    String getSettings();
     bool updateSettings(String json);
     
     void setTemperatureRange(float lower,float upper);
@@ -34,7 +34,7 @@ protected:
     uint32_t _lastSensorValidTime;
 
     void _setCooling(bool cool);
-    bool checkSettings(void);
+    bool checkSettings();
 };
 
 extern ParasiteTempController parasiteTempController;

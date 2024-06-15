@@ -61,29 +61,29 @@ class BrewLogger
 {
 
 public:
-	BrewLogger(void);
+	BrewLogger();
 	
-	bool begin(void);
+	bool begin();
 
-	String fsinfo(void);
-	const char* currentLog(void);
+	String fsinfo();
+	const char* currentLog();
 
-	String loggingStatus(void);
+	String loggingStatus();
 	void rmLog(int index);
-	bool isLogging(void){ return _recording; }
+	bool isLogging(){ return _recording; }
 
 	bool startSession(const char *filename,bool calibrating);
-	void endSession(void);
+	void endSession();
 	bool resumeSession();
 
-	void loop(void);
-	void logData(void);
+	void loop();
+	void logData();
 
 	size_t beginCopyAfter(size_t last);
 	size_t read(uint8_t *buffer, size_t maxLen, size_t index);
 	void getFilePath(char* buf,int index);
 	// read data
-	size_t volatileDataOffset(void);
+	size_t volatileDataOffset();
 	size_t volatileDataAvailable(size_t start,size_t offset);
 	size_t readVolatileData(uint8_t *buffer, size_t maxLen, size_t index);
 	// add data
@@ -92,10 +92,10 @@ public:
 	void addTiltAngle(float tilt);
 	void addCorrectionTemperature(float temp);
 	void addTiltInWater(float tilt,float reading);
-	bool isCalibrating(void){ return _calibrating;}
+	bool isCalibrating(){ return _calibrating;}
 	void addIgnoredCalPointMask(uint32_t mask);
 	//format file system
-	void onFormatFS(void);
+	void onFormatFS();
 private:
 	size_t _fsspace;
 	uint32_t  _tempLogPeriod;
@@ -134,15 +134,15 @@ private:
 	#define VolatileDataHeaderSize 7
 	uint16_t  _headData[VolatileDataHeaderSize];
 
-	void resetTempData(void);
-	void checkspace(void);
+	void resetTempData();
+	void checkspace();
 
 	void volatileHeader(char *buf);
 
 	void startLog(bool fahrenheit,bool calibrating);
-	void startVolatileLog(void);
-	int freeBufferSpace(void);
-	void dropData(void);
+	void startVolatileLog();
+	int freeBufferSpace();
+	void dropData();
 	int volatileLoggingAlloc(int size);
 	int allocByte(byte size);
 	void writeBuffer(int idx,uint8_t data);
@@ -151,10 +151,10 @@ private:
 	void addMode(char mode);
 	void addState(char state);
 	uint16_t convertTemperature(float temp);
-	void addResumeTag(void);
+	void addResumeTag();
 
-	void loadIdxFile(void);
-	void saveIdxFile(void);
+	void loadIdxFile();
+	void saveIdxFile();
 };
 
 extern BrewLogger brewLogger;

@@ -40,7 +40,7 @@ void BrewPiProxy::begin(void (*readString)(const char*))
 	_readString=readString;
 }
 
-void BrewPiProxy::loop(void)
+void BrewPiProxy::loop()
 {
 	while(brewPiTxBuffer.available()){
 		char ch=brewPiTxBuffer.read();
@@ -106,7 +106,7 @@ void BrewPiProxy::getAllStatus(uint8_t *pState,uint8_t *pMode,float *pBeerTemp,f
 	*pMode = (uint8_t) tempControl.getMode();
 }
 
-bool BrewPiProxy::ambientSensorConnected(void)
+bool BrewPiProxy::ambientSensorConnected()
 {
 	return tempControl.ambientSensor->isConnected();
 }

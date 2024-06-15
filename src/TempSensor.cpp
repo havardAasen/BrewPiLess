@@ -87,21 +87,21 @@ void TempSensor::update()
 	}
 }
 
-temperature TempSensor::readFastFiltered(void){
+temperature TempSensor::readFastFiltered(){
 	return fastFilter.readOutput(); //return most recent unfiltered value
 }
 
-temperature TempSensor::readSlope(void){
+temperature TempSensor::readSlope(){
 	// return slope per hour.
 	temperature_precise doublePrecision = slopeFilter.readOutputDoublePrecision();
 	return doublePrecision>>16; // shift to single precision
 }
 
-temperature TempSensor::detectPosPeak(void){
+temperature TempSensor::detectPosPeak(){
 	return slowFilter.detectPosPeak();
 }
 
-temperature TempSensor::detectNegPeak(void){
+temperature TempSensor::detectNegPeak(){
 	return slowFilter.detectNegPeak();
 }
 

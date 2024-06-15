@@ -124,7 +124,7 @@ void settingSelected() {
 	}
 }
 
-void Menu::pickSettingToChangeLoop(void) {
+void Menu::pickSettingToChangeLoop() {
 	rotaryEncoder.setRange(0, 0, 2); // mode setting, beer temp, fridge temp
 	blinkLoop(
 		settingChanged,
@@ -167,7 +167,7 @@ void selectMode() {
 	}
 }
 
-void Menu::pickMode(void) {
+void Menu::pickMode() {
 	char oldSetting = tempControl.getMode();
 	uint8_t startValue=0;
 	const char* LOOKUP = "bfpo";
@@ -179,7 +179,7 @@ void Menu::pickMode(void) {
 }
 
 typedef void (* PrintAnnotation)(const char * annotation, ...);
-typedef void (* DisplayUpdate)(void);
+typedef void (* DisplayUpdate)();
 typedef temperature (* ReadTemp)();
 typedef void (* WriteTemp)(temperature);
 
@@ -246,13 +246,13 @@ void pickTempSetting(ReadTemp readTemp, WriteTemp writeTemp, const char* tempNam
 	// Time Out. Setting is not written
 }
 
-void Menu::pickFridgeSetting(void){
+void Menu::pickFridgeSetting(){
 	// TODO - Fix this
 	//pickTempSetting(tempControl.getFridgeSetting, tempControl.setFridgeTemp, PSTR("Fridge"), piLink.printFridgeAnnotation, 2);
 	pickTempSetting(tempControl.getFridgeSetting, tempControl.setFridgeTemp, "Fridge", piLink.printFridgeAnnotation, 2);
 }
 
-void Menu::pickBeerSetting(void){
+void Menu::pickBeerSetting(){
 	// TODO - Fix This
 	pickTempSetting(tempControl.getBeerSetting, tempControl.setBeerTemp, "Beer", piLink.printBeerAnnotation, 1);
 }

@@ -257,63 +257,63 @@ public:
     // system configuration
     SystemConfiguration* systemConfiguration();
     bool dejsonSystemConfiguration(String json);
-    String jsonSystemConfiguration(void);
+    String jsonSystemConfiguration();
     // time info
-    TimeInformation* timeInformation(void){ return &_data.timeinfo;}
+    TimeInformation* timeInformation(){ return &_data.timeinfo;}
     // gravity device
-    GravityDeviceConfiguration* GravityConfig(void){return &_data.gdc; }
+    GravityDeviceConfiguration* GravityConfig(){return &_data.gdc; }
     bool dejsonGravityConfig(char* json);
-    String jsonGravityConfig(void);
+    String jsonGravityConfig();
     // beer profile
-    BeerTempSchedule* beerTempSchedule(void){ return &_data.tempSchedule;}
-    BrewStatus* brewStatus(void){ return &_data.brewStatus;}
+    BeerTempSchedule* beerTempSchedule(){ return &_data.tempSchedule;}
+    BrewStatus* brewStatus(){ return &_data.brewStatus;}
     bool dejsonBeerProfile(String json);
-    String jsonBeerProfile(void);
+    String jsonBeerProfile();
 
     // local log
-    FileIndexes* logFileIndexes(void){ return &_data.logFileIndexes; }
+    FileIndexes* logFileIndexes(){ return &_data.logFileIndexes; }
 
     // Remote logging
-    RemoteLoggingInformation *remoteLogInfo(void){return &_data.remoteLogginInfo;}
+    RemoteLoggingInformation *remoteLogInfo(){return &_data.remoteLogginInfo;}
     bool dejsonRemoteLogging(String json);
-    String jsonRemoteLogging(void);
+    String jsonRemoteLogging();
 
     // autocap
-    AutoCapSettings *autoCapSettings(void){ return &_data.autoCapSettings;}
+    AutoCapSettings *autoCapSettings(){ return &_data.autoCapSettings;}
     //ParasiteTempControlSettings
-    ParasiteTempControlSettings *parasiteTempControlSettings(void){ return &_data.parasiteTempControlSettings;}
+    ParasiteTempControlSettings *parasiteTempControlSettings(){ return &_data.parasiteTempControlSettings;}
     bool dejsonParasiteTempControlSettings(String json);
     String jsonParasiteTempControlSettings(bool enabled);
 
-    void preFormat(void);
-    void postFormat(void);
+    void preFormat();
+    void postFormat();
     
 #if SupportPressureTransducer
     //pressure monitor
     PressureMonitorSettings *pressureMonitorSettings(){return &_data.pressureMonitorSettings;}
     bool dejsonPressureMonitorSettings(String json);
-    String jsonPressureMonitorSettings(void);
+    String jsonPressureMonitorSettings();
 #endif
 
 #if SupportMqttRemoteControl
-    MqttRemoteControlSettings *mqttRemoteControlSettings(void){ return & _data.mqttRemoteControlSettings;}
+    MqttRemoteControlSettings *mqttRemoteControlSettings(){ return & _data.mqttRemoteControlSettings;}
     bool dejsonMqttRemoteControlSettings(String json);
-    String jsonMqttRemoteControlSettings(void);
+    String jsonMqttRemoteControlSettings();
 #endif
 protected:
     Settings _data;
 
-    void    setDefault(void);
+    void    setDefault();
 
-    void defaultSystemConfiguration(void);
-    void defaultTimeInformation(void);
-    void defaultGravityConfig(void);
-    void defaultBeerProfile(void);
-    void defaultLogFileIndexes(void);
-    void defaultRemoteLogging(void);
-    void defaultAutoCapSettings(void);
+    void defaultSystemConfiguration();
+    void defaultTimeInformation();
+    void defaultGravityConfig();
+    void defaultBeerProfile();
+    void defaultLogFileIndexes();
+    void defaultRemoteLogging();
+    void defaultAutoCapSettings();
 #if EanbleParasiteTempControl   
-    void defaultParasiteTempControlSettings(void);
+    void defaultParasiteTempControlSettings();
 #endif
 };
 

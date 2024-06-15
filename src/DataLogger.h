@@ -11,14 +11,14 @@
 class DataLogger
 {
 public:
-    DataLogger(void):_lastUpdate(0){ _loggingInfo= theSettings.remoteLogInfo(); }
+    DataLogger():_lastUpdate(0){ _loggingInfo= theSettings.remoteLogInfo(); }
 
     // web interface
 	void loop(time_t now);
-	void reportNow(void);
+	void reportNow();
 
 protected:
-	void sendData(void);
+	void sendData();
 
 	RemoteLoggingInformation *_loggingInfo;
 	

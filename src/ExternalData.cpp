@@ -25,11 +25,11 @@ void ExternalData::waitFormula(){
     _cfg->numberCalPoints =0;
 }
 
-bool ExternalData::iSpindelEnabled(void){
+bool ExternalData::iSpindelEnabled(){
     return _cfg->ispindelEnable;
 }
 
-float ExternalData::hydrometerCalibration(void){ 
+float ExternalData::hydrometerCalibration(){ 
     return _cfg->ispindelCalibrationBaseTemp;
 }
 
@@ -78,7 +78,7 @@ void ExternalData::sseNotify(char *buf){
 }
 
 
-void ExternalData::loadConfig(void){
+void ExternalData::loadConfig(){
     _cfg = theSettings.GravityConfig();
     filter.setBeta(_cfg->lpfBeta);
 }

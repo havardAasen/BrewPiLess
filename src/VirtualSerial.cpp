@@ -1,6 +1,6 @@
 #include "VirtualSerial.h"
 
-int QueueBuffer::read(void)
+int QueueBuffer::read()
 {
 	if(_writePtr == _readPtr) return -1;
 	int r=(int)_buffer[_readPtr];
@@ -9,7 +9,7 @@ int QueueBuffer::read(void)
 	return r;
 }
 
-int QueueBuffer::available(void)
+int QueueBuffer::available()
 {
 	 // avoid using %(mod) which takes time;
 	return (_writePtr >= _readPtr)? (_writePtr - _readPtr):(_bufferSize  + _writePtr - _readPtr);

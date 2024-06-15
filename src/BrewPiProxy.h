@@ -11,15 +11,15 @@
 
 class BrewPiProxy{
 public:
-	BrewPiProxy(void):_unit('C'),_lastLineLength(0),_readPtr(0){_lastLineBuff[0]='\0';}
+	BrewPiProxy():_unit('C'),_lastLineLength(0),_readPtr(0){_lastLineBuff[0]='\0';}
 	void begin(void (*readString)(const char*));
 
-	void loop(void);
+	void loop();
 	void write(char ch);
 
 	void putLine(const char* str);
 
-	char* getLastLine(void){return _lastLineBuff;}
+	char* getLastLine(){return _lastLineBuff;}
 
 	void getTemperature(float *pBeerTemp,float *pBeerSet,float *pFridgeTemp, float *pFridgeSet);
 	void getTemperatureSetting(char *pUnit,float *pMinSetTemp,float *pMaxSetTemp);
@@ -27,7 +27,7 @@ public:
 	void getLogInfo(char *pUnit,uint8_t *pMode,uint8_t *pState);
 	void getAllStatus(uint8_t *pState,uint8_t *pMode,float *pBeerTemp,float *pBeerSet,float *pFridgeTemp, float *pFridgeSet, float *pRoomTemp);
 
-	bool ambientSensorConnected(void);
+	bool ambientSensorConnected();
 
 protected:
 	char _unit;

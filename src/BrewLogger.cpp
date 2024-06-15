@@ -5,7 +5,7 @@
 
 BrewLogger brewLogger;
 
-BrewLogger::BrewLogger(void){
+BrewLogger::BrewLogger(){
 	_recording=false;
 	_fsspace=0;
 	_tempLogPeriod=60000;
@@ -14,7 +14,7 @@ BrewLogger::BrewLogger(void){
 }
 
 	
-	bool BrewLogger::begin(void)
+	bool BrewLogger::begin()
 	{
     	bool resumeSuccess=false;
 		loadIdxFile();
@@ -31,7 +31,7 @@ BrewLogger::BrewLogger(void){
         return resumeSuccess;
 	}
 
-	String BrewLogger::fsinfo(void)
+	String BrewLogger::fsinfo()
 	{
 		FSInfo fs_info;
 		LittleFS.info(fs_info);
@@ -43,7 +43,7 @@ BrewLogger::BrewLogger(void){
 		return ret;
 	}
 	
-	const char* BrewLogger::currentLog(void)
+	const char* BrewLogger::currentLog()
 	{
 		if(!_recording) return NULL;
 		if(_pFileInfo->logname[0] != 0)
@@ -51,7 +51,7 @@ BrewLogger::BrewLogger(void){
 		else return NULL;
 	}
 
-	String BrewLogger::loggingStatus(void)
+	String BrewLogger::loggingStatus()
 	{
 		// populate JS
 		String ret=String("{\"rec\":");
@@ -289,7 +289,7 @@ BrewLogger::BrewLogger(void){
 		return true;
 	}
 
-	void BrewLogger::endSession(void){
+	void BrewLogger::endSession(){
 		if(!_recording) return;
 		_recording=false;
 		_logFile.close();
@@ -313,7 +313,7 @@ BrewLogger::BrewLogger(void){
 		startVolatileLog();
 	}
 
-	void BrewLogger::loop(void){
+	void BrewLogger::loop(){
 		//if(!_recording) return;
 
 		unsigned long miliseconds = millis();
@@ -323,7 +323,7 @@ BrewLogger::BrewLogger(void){
 		logData();
 	}
 
-	void BrewLogger::logData(void){
+	void BrewLogger::logData(){
 		uint8_t state, mode;
 		float fTemps[5];
 
@@ -491,7 +491,7 @@ BrewLogger::BrewLogger(void){
 		sprintf(buf,"%s/%s",LOG_PATH,_pFileInfo->files[index].name);
 	}
 
-	size_t BrewLogger::volatileDataOffset(void)
+	size_t BrewLogger::volatileDataOffset()
 	{
 		return _startOffset;
 	}
@@ -616,7 +616,7 @@ BrewLogger::BrewLogger(void){
 		writeBuffer(idx+3,LowOctect(angle));
 		commitData(idx,4);		
 	}
-	void BrewLogger::resetTempData(void)
+	void BrewLogger::resetTempData()
 	{
 		for(int i=0;i<5;i++) _iTempData[i]=INVALID_TEMP_INT;
 		_extTemp=INVALID_TEMP_INT;
@@ -625,7 +625,7 @@ BrewLogger::BrewLogger(void){
 		_extTileAngle = INVALID_TILT_ANGLE;
 	}
 
-	void BrewLogger::checkspace(void)
+	void BrewLogger::checkspace()
 	{
 		FSInfo fs_info;
 		LittleFS.info(fs_info);
@@ -707,7 +707,7 @@ BrewLogger::BrewLogger(void){
 		//DBG_PRINTF("*startLog*\n");
 	}
 
-	void BrewLogger::startVolatileLog(void)
+	void BrewLogger::startVolatileLog()
 	{
 		DBG_PRINTF("startVolatileLog, mode=%c, beerteemp=%d\n",_mode,_iTempData[OrderBeerTemp]);
 		_headTime=TimeKeeper.getTimeSeconds();
@@ -722,7 +722,7 @@ BrewLogger::BrewLogger(void){
 
 
 
-	int BrewLogger::freeBufferSpace(void)
+	int BrewLogger::freeBufferSpace()
 	{
 		//DBG_PRINTF("_logHead:%d, _logIndex: %d\n",_logHead,_logIndex);
 		if(_logIndex >= (size_t)_logHead){
@@ -733,7 +733,7 @@ BrewLogger::BrewLogger(void){
 		}
 	}
 
-	void BrewLogger::dropData(void)
+	void BrewLogger::dropData()
 	{
 		noInterrupts();
 		// move headto nex time stamp.
@@ -917,7 +917,7 @@ BrewLogger::BrewLogger(void){
 	}
 
 
-	void BrewLogger::addResumeTag(void)
+	void BrewLogger::addResumeTag()
 	{
 		int idx = allocByte(4);
 		if(idx < 0) return;
@@ -937,17 +937,17 @@ BrewLogger::BrewLogger(void){
 		commitData(idx,4);
 	}
 
-	void BrewLogger::loadIdxFile(void)
+	void BrewLogger::loadIdxFile()
 	{
         _pFileInfo = theSettings.logFileIndexes();
 	}
 
-	void BrewLogger::saveIdxFile(void)
+	void BrewLogger::saveIdxFile()
 	{
         theSettings.save();
 	}
 
-	void BrewLogger::onFormatFS(void){
+	void BrewLogger::onFormatFS(){
 		// force to end session
 		if(_recording){
 			_recording=false;

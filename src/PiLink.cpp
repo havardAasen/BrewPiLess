@@ -94,7 +94,7 @@ char PiLink::printfBuff[PRINTF_BUFFER_SIZE];
 String PiLink::printBuf;
 #endif
 
-void PiLink::init(void){
+void PiLink::init(){
 #ifndef ESP8266_WiFi
 //piStream.begin(57600);
 #endif
@@ -244,7 +244,7 @@ int PiLink::read() {
 #endif
 }
 
-void PiLink::receive(void){
+void PiLink::receive(){
 #ifdef ESP8266_ONE
 	while (brewPiRxBuffer.available() > 0) {
 #else
@@ -507,7 +507,7 @@ void PiLink::sendJsonTemp(const char* name, temperature temp)
 	print(tempString);
 }
 
-void PiLink::printTemperatures(void){
+void PiLink::printTemperatures(){
 	// print all temperatures with empty annotations
 	printTemperaturesJSON(0, 0);
 }
@@ -575,7 +575,7 @@ void PiLink::sendJsonClose() {
 }
 
 // Send settings as JSON string
-void PiLink::sendControlSettings(void){
+void PiLink::sendControlSettings(){
 	char tempString[12];
 	printResponse('S');
 	ControlSettings& cs = tempControl.cs;
@@ -696,7 +696,7 @@ void PiLink::sendJsonValues(char responseType, const JsonOutput* /*PROGMEM*/ jso
 }
 
 // Send control constants as JSON string. Might contain spaces between minus sign and number. Python will have to strip these
-void PiLink::sendControlConstants(void){
+void PiLink::sendControlConstants(){
 	jsonOutputBase = (uint8_t*)&tempControl.cc;
 	sendJsonValues('C', jsonOutputCCMap, sizeof(jsonOutputCCMap)/sizeof(jsonOutputCCMap[0]));
 }
@@ -716,7 +716,7 @@ const PiLink::JsonOutput PiLink::jsonOutputCVMap[] PROGMEM = {
 };
 
 // Send all control variables. Useful for debugging and choosing parameters
-void PiLink::sendControlVariables(void){
+void PiLink::sendControlVariables(){
 	jsonOutputBase = (uint8_t*)&tempControl.cv;
 	sendJsonValues('V', jsonOutputCVMap, sizeof(jsonOutputCVMap)/sizeof(jsonOutputCVMap[0]));
 }
@@ -830,7 +830,7 @@ void PiLink::parseJson(ParseJsonCallback fn, void* data)
 	} while (next);
 }
 
-void PiLink::receiveJson(void){
+void PiLink::receiveJson(){
 
 	parseJson(&processJsonPair, NULL);
 

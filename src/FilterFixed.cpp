@@ -54,7 +54,7 @@ void FixedFilter::init(temperature val){
 		yv[2] = xv[0];
 }
 
-temperature FixedFilter::detectPosPeak(void){
+temperature FixedFilter::detectPosPeak(){
 	if(yv[0] < yv[1] && yv[1] >= yv[2]){
 		return tempPreciseToRegular(yv[1]);
 	}
@@ -63,7 +63,7 @@ temperature FixedFilter::detectPosPeak(void){
 	}
 }
 
-temperature FixedFilter::detectNegPeak(void){
+temperature FixedFilter::detectNegPeak(){
 	if(yv[0] > yv[1] && yv[1] <= yv[2]){
 		return tempPreciseToRegular(yv[1]);
 	}

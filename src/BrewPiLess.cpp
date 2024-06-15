@@ -206,7 +206,7 @@ void initTime(bool apmode)
 	}
 }
 #if AUTO_CAP
-void capStatusReport(void);
+void capStatusReport();
 #endif
 class BrewPiWebHandler: public AsyncWebHandler
 {
@@ -365,7 +365,7 @@ class BrewPiWebHandler: public AsyncWebHandler
 		}
 	}	  
 public:
-	BrewPiWebHandler(void){}
+	BrewPiWebHandler(){}
 
 #if LegacyEspAsyncLibraries != true
 	virtual bool isRequestHandlerTrivial() override final {return false;}
@@ -751,7 +751,7 @@ AppleCNAHandler appleCNAHandler;
 
 
 #if AUTO_CAP
-String capControlStatus(void)
+String capControlStatus()
 {
 	uint8_t mode=autoCapControl.mode();
 	bool capped = autoCapControl.isCapOn();
@@ -773,7 +773,7 @@ String capControlStatus(void)
 	return capstate;
 } 
 void stringAvailable(const char*);
-void capStatusReport(void)
+void capStatusReport()
 {
 	char buf[128];
 	String capstate= capControlStatus();
@@ -935,7 +935,7 @@ void stringAvailable(const char *str)
 #endif
 }
 
-void notifyLogStatus(void)
+void notifyLogStatus()
 {
 	externalData.waitFormula();
 	const char *logname= brewLogger.currentLog();
@@ -944,7 +944,7 @@ void notifyLogStatus(void)
 	stringAvailable(status.c_str());
 }
 
-void reportRssi(void)
+void reportRssi()
 {
 	char buf[256];
 
@@ -1226,7 +1226,7 @@ public:
     	_buffer[1]=':';
 	}
 
-	void loadConfig(void){
+	void loadConfig(){
 		externalData.loadConfig();
 	}
 
@@ -1506,7 +1506,7 @@ void brewpi_setup()
 	logDebug("init complete");
 }
 
-void brewpiLoop(void)
+void brewpiLoop()
 {
 	static unsigned long lastUpdate = 0;
 	uint8_t oldState;

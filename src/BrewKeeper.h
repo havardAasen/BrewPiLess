@@ -15,17 +15,17 @@ class BrewProfile
 	char _unit;
 	uint8_t _stableThreshold;
 
-	void _tempConvert(void);
+	void _tempConvert();
 
 	void _estimateStep(time_t now,Gravity gravity);
 
 	void _toNextStep(unsigned long time);
 	bool checkCondition(unsigned long time,Gravity gravity);
 	bool _loadProfile(String filename);
-	uint32_t currentStepDuration(void);
-	void _saveBrewingStatus(void);
+	uint32_t currentStepDuration();
+	void _saveBrewingStatus();
 public:
-	BrewProfile(void):_unit('U'){
+	BrewProfile():_unit('U'){
     	_stableThreshold = 1;
 		_schedule =  theSettings.beerTempSchedule();
 		_status =  theSettings.brewStatus();
@@ -48,7 +48,7 @@ protected:
 	Gravity _lastGravity;
 
 	void (*_write)(const char*);
-	void _loadProfile(void);
+	void _loadProfile();
 public:
 
 	BrewKeeper(void(*puts)(const char*)):_lastGravity(INVALID_GRAVITY),_write(puts){}
@@ -60,7 +60,7 @@ public:
 	void setStableThreshold(uint8_t threshold){_profile.setStableThreshold(threshold);}
 
 	void profileUpdated(){ _profile.profileUpdated();}
-	void begin(void){ _profile.profileUpdated();}
+	void begin(){ _profile.profileUpdated();}
 
 	void setModeFromRemote(char mode);
 	void setBeerSet(char *tempStr);

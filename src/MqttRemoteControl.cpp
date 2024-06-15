@@ -94,7 +94,7 @@ uint16_t MqttRemoteControl::_publish(const char* key,char value){
     return _client.publish(topic,DefaultLogginQoS,true,data,1);
 }
 
-void MqttRemoteControl::_reportData(void){
+void MqttRemoteControl::_reportData(){
     _lastReportTime = millis();
 
     char data[BUFFERSIZE];
@@ -191,7 +191,7 @@ bool MqttRemoteControl::loop(){
     return true;
 }
 
-void MqttRemoteControl::_runModeCommand(void){
+void MqttRemoteControl::_runModeCommand(){
     if(_lvMode == InvalidMode){
         DBG_PRINTF("MQTT:mode not set\n");
     }
@@ -289,7 +289,7 @@ void MqttRemoteControl::reset()
 }
 
 
-void MqttRemoteControl::_onConnect(void){
+void MqttRemoteControl::_onConnect(){
     _connectAttempt =0;
     DBG_PRINTF("MQTT:connected..\n");
 
@@ -342,7 +342,7 @@ void MqttRemoteControl::_onConnect(void){
 
 }
 
-void MqttRemoteControl::_onDisconnect(void){
+void MqttRemoteControl::_onDisconnect(){
      DBG_PRINTF("\nMQTT:Disconnected.\n");
     _connectAttempt ++;
 }

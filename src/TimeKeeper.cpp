@@ -25,7 +25,7 @@ void TimeKeeperClass::setCurrentTime(time_t now)
 	saveTime(now);
 }
 
-void TimeKeeperClass::begin(void)
+void TimeKeeperClass::begin()
 {
 	_online = false;
 
@@ -64,7 +64,7 @@ void TimeKeeperClass::begin(char* server1,char* server2,char* server3)
   	_lastSaved=_referenceSeconds;
 }
 
-time_t TimeKeeperClass::getTimeSeconds(void) // get Epoch time
+time_t TimeKeeperClass::getTimeSeconds() // get Epoch time
 {
 	unsigned long diff=millis() -  _referenceSystemTime;
 
@@ -94,7 +94,7 @@ time_t TimeKeeperClass::getTimeSeconds(void) // get Epoch time
 
 static char _dateTimeStrBuff[128];
 
-const char* TimeKeeperClass::getDateTimeStr(void)
+const char* TimeKeeperClass::getDateTimeStr()
 {
 	time_t current=getTimeSeconds();
 	tm *t= localtime(&current);
@@ -111,7 +111,7 @@ void TimeKeeperClass::saveTime(time_t t)
 	theSettings.save();
 }
 
-time_t TimeKeeperClass::loadTime(void)
+time_t TimeKeeperClass::loadTime()
 {
 	return (theSettings.timeInformation())->savedTime;
 }
@@ -119,9 +119,9 @@ time_t TimeKeeperClass::loadTime(void)
 void TimeKeeperClass::setTimezoneOffset(int32_t offset){
 	(theSettings.timeInformation())->timezoneoffset = offset;
 }
-int32_t TimeKeeperClass::getTimezoneOffset(void){
+int32_t TimeKeeperClass::getTimezoneOffset(){
 	return (theSettings.timeInformation())->timezoneoffset;
 }
-time_t TimeKeeperClass::getLocalTimeSeconds(void){ 
+time_t TimeKeeperClass::getLocalTimeSeconds(){
 	return  getTimeSeconds() + (theSettings.timeInformation())->timezoneoffset;
 }

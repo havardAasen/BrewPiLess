@@ -63,15 +63,15 @@ protected:
     char* _capPath;
     #endif
 
-    void _onConnect(void);
-    void _onDisconnect(void);
+    void _onConnect();
+    void _onDisconnect();
     void _onMessage(char* topic, uint8_t* payload, size_t len);
     void _onPublish(uint16_t packetId);
     void _onModeChange(char* payload,size_t len);
 
     void _onSettingTempChange(bool isBeerSet,char* payload, size_t len);
 
-    void _runModeCommand(void);
+    void _runModeCommand();
 
 #if EanbleParasiteTempControl
     void _onPtcChange(char* payload,size_t len);

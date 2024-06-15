@@ -113,7 +113,7 @@ void BrewProfile::setOriginalGravityPoint(uint16_t gravityPoint){
 
 #define MAX_BREWING_STATE_LEN 256
 
-void BrewProfile::_saveBrewingStatus(void){
+void BrewProfile::_saveBrewingStatus(){
 	theSettings.save();
 }
 
@@ -249,7 +249,7 @@ float BrewProfile::tempByTimeGravity(time_t time,Gravity gravity)
 	else return C2F(target);
 }
 
-uint32_t BrewProfile::currentStepDuration(void){
+uint32_t BrewProfile::currentStepDuration(){
 	return ScheduleDayToTime(_schedule->steps[_status->currentStep].days);
 }
 

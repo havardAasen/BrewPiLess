@@ -59,7 +59,7 @@
 #define BEEP_OFF() bitClear(BUZZER_TIMER_REG,BUZZER_TIMER_REG_FLAG);
 #endif
 
-void Buzzer::init(void){
+void Buzzer::init(){
 #ifdef ESP8266_ONE
 	pinMode(BuzzPin,OUTPUT);
 #else

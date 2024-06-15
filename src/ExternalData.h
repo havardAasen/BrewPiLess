@@ -46,7 +46,7 @@ public:
 	SimpleFilter(){ _b = 0.1;}
 	void setInitial(float v){ _y=v;}
 	void setBeta(float b) { _b = b; }
-	float beta(void){ return _b; }
+	float beta(){ return _b; }
 
 	float addData(float x){
 		_y = _y + _b * (x - _y);
@@ -80,7 +80,7 @@ protected:
 	void setAuxTemperatureCelsius(float temp);
 	void setOriginalGravity(float og);	
 public:
-	ExternalData(void):_gravity(INVALID_GRAVITY),_auxTemp(INVALID_TEMP),
+	ExternalData():_gravity(INVALID_GRAVITY),_auxTemp(INVALID_TEMP),
 	_lastUpdate(0),_deviceVoltage(INVALID_VOLTAGE)
 	,_ispindelName(NULL),_calibrating(false),_rssiValid(false)
 	{ _filteredGravity = INVALID_GRAVITY;}
@@ -92,26 +92,26 @@ public:
 	void waitFormula();
 	void setCalibrating(bool cal){ _calibrating=cal;}
 	//configuration reading
-    bool iSpindelEnabled(void);
-	float hydrometerCalibration(void);
+    bool iSpindelEnabled();
+	float hydrometerCalibration();
 
     void sseNotify(char *buf);
 	//configuration processs
     bool processconfig(char* configdata);
-	void loadConfig(void);
+	void loadConfig();
 	//update formula
 	void formula(float coeff[4],uint32_t npt);
 
 
 	// for remote data logger
-	float auxTemp(void){return _auxTemp; }
+	float auxTemp(){return _auxTemp; }
 //	void setUpdateTime(time_t update){ _lastUpdate=update;}
-	time_t lastUpdate(void){return _lastUpdate;}
+	time_t lastUpdate(){return _lastUpdate;}
 	void setDeviceVoltage(float vol){ _deviceVoltage = vol; }
 	void setDeviceRssi(int16_t rssi){_rssi = rssi;  _rssiValid=true;}
-	float deviceVoltage(void){return _deviceVoltage;}
-	float tiltValue(void){return _ispindelTilt;}
-	void invalidateDeviceVoltage(void) { _deviceVoltage= INVALID_VOLTAGE; }
+	float deviceVoltage(){return _deviceVoltage;}
+	float tiltValue(){return _ispindelTilt;}
+	void invalidateDeviceVoltage() { _deviceVoltage= INVALID_VOLTAGE; }
 
 	bool processGravityReport(char data[],size_t length, bool authenticated, uint8_t& error);
 };

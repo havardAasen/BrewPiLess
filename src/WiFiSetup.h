@@ -35,20 +35,20 @@ public:
 
 	void onEvent(std::function<void(const char*)> handler){ _eventHandler = handler;}
 
-	bool stayConnected(void);
-	bool isApMode(void) {return _apMode;}
+	bool stayConnected();
+	bool isApMode() {return _apMode;}
 
 	void setMaxReconnect(unsigned int reconnect){_maxReconnect=reconnect;}
 	void setSwitchToApWhenDisconnected(bool toAp){  _switchToAp= toAp; }
 	void setAutoReconnect(bool reconnect){ _autoReconnect=reconnect; }
 
-	String scanWifi(void);
-	bool requestScanWifi(void);
+	String scanWifi();
+	bool requestScanWifi();
 	bool connect(char const *ssid,const char *passwd=NULL,IPAddress ip=0,IPAddress gw=0, IPAddress nm=0,IPAddress dns=0);
-	bool disconnect(void);
+	bool disconnect();
 
-	bool isConnected(void);
-	String status(void);
+	bool isConnected();
+	String status();
 private:
 	WiFiMode _mode;
 	WiFiState _wifiState;
@@ -79,7 +79,7 @@ private:
 	static constexpr int time_for_rescue_AP_mode = 60000;
 	static constexpr int time_for_recover_network = 120000;
 
-	void setupApService(void);
+	void setupApService();
 	void enterBackupApMode();
 	void onConnected();
 	void createNetwork();

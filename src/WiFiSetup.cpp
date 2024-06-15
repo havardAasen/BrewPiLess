@@ -38,7 +38,7 @@ void WiFiSetupClass::setMode(WiFiMode mode)
 	_wifiState = WiFiState::mode_change_pending;
 }
 
-void WiFiSetupClass::enterBackupApMode(void)
+void WiFiSetupClass::enterBackupApMode()
 {
 	WiFi.mode(WIFI_AP_STA);
 	createNetwork();
@@ -53,7 +53,7 @@ void WiFiSetupClass::createNetwork(){
 	DBG_PRINTF("WiFi: Create network [%s]\n", _apName);
 }
 
-void WiFiSetupClass::setupApService(void)
+void WiFiSetupClass::setupApService()
 {
 	dnsServer.reset(new DNSServer());
 	dnsServer->setErrorReplyCode(DNSReplyCode::NoError);
@@ -127,13 +127,13 @@ bool WiFiSetupClass::connect(char const *ssid,const char *passwd,IPAddress ip,IP
 	return true;
 }
 
-bool WiFiSetupClass::disconnect(void){
+bool WiFiSetupClass::disconnect(){
 	DBG_PRINTF("Disconnect Request\n");
 	_wifiState = WiFiState::disconnect_pending;
 	return true;
 }
 
-bool WiFiSetupClass::isConnected(void){
+bool WiFiSetupClass::isConnected(){
 	return WiFi.status() == WL_CONNECTED;
 }
 
@@ -143,7 +143,7 @@ void WiFiSetupClass::onConnected(){
 	}
 }
 
-String WiFiSetupClass::status(void){
+String WiFiSetupClass::status(){
 	String ret;
 	ret  = String("{\"md\":") + String(_mode) + String(",\"con\":") + String((WiFi.status() == WL_CONNECTED)? 1:0);
 
@@ -158,7 +158,7 @@ String WiFiSetupClass::status(void){
 	return ret;
 }
 
-bool WiFiSetupClass::stayConnected(void)
+bool WiFiSetupClass::stayConnected()
 {
 	if(_apMode){
 		dnsServer->processNextRequest();
@@ -276,7 +276,7 @@ bool WiFiSetupClass::stayConnected(void)
 	return false;
 }
 
-bool WiFiSetupClass::requestScanWifi(void) {
+bool WiFiSetupClass::requestScanWifi() {
 	if(_wifiScan == WiFiScan::none){
 		_wifiScan = WiFiScan::pending;
 		return true;
@@ -284,7 +284,7 @@ bool WiFiSetupClass::requestScanWifi(void) {
 	return false;
 }
 
-String WiFiSetupClass::scanWifi(void) {
+String WiFiSetupClass::scanWifi() {
 	
 	String rst="{\"list\":[";
 	

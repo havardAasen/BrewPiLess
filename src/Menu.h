@@ -38,10 +38,10 @@ enum menuPages{
 class Menu{
 	public:
 	Menu(){};
-	static void pickSettingToChange(void);
-	static void pickMode(void);
-	static void pickBeerSetting(void);
-	static void pickFridgeSetting(void);
+	static void pickSettingToChange();
+	static void pickMode();
+	static void pickBeerSetting();
+	static void pickFridgeSetting();
 	static void initRotaryWithTemp(temperature oldSetting);
 
 	~Menu(){};

@@ -21,12 +21,12 @@ class AutoCapControl
 {
 public:
 
-    AutoCapControl(void):_capStatus(CapStatusUnknown){}
+    AutoCapControl():_capStatus(CapStatusUnknown){}
 
-    void begin(void);
+    void begin();
 
-    bool isCapOn(void);
-    bool isPhysicalCapOn(void);
+    bool isCapOn();
+    bool isPhysicalCapOn();
     void setPhysicalCapOn(bool on);
 
     bool autoCapOn(uint32_t current, float gravity);
@@ -34,9 +34,9 @@ public:
     void capAtTime(uint32_t now);
     void catOnGravity(float sg);
     
-    uint32_t targetTime(void){return _settings->condition.targetTime;}
-    float    targetGravity(void){return _settings->condition.targetGravity;}
-    uint8_t mode(void);
+    uint32_t targetTime(){return _settings->condition.targetTime;}
+    float    targetGravity(){return _settings->condition.targetGravity;}
+    uint8_t mode();
 
     static Actuator* capper;
 
@@ -46,7 +46,7 @@ private:
 
     void setCapOn(bool on);
 
-    void saveConfig(void);
+    void saveConfig();
 };
 
 extern AutoCapControl autoCapControl;

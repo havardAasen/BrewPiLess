@@ -89,23 +89,23 @@ class FixedFilter{
 		temperature add(temperature val); // adds a value and returns the most recent filter output
 		temperature_precise addDoublePrecision(temperature_precise val);
 
-		temperature readOutput(void){
+		temperature readOutput(){
 			return yv[0]>>16; // return 16 most significant bits of most recent output
 		}
 
-		temperature readInput(void){
+		temperature readInput(){
 			return xv[0]>>16; // return 16 most significant bits of most recent input
 		}
 
-		temperature_precise readOutputDoublePrecision(void){
+		temperature_precise readOutputDoublePrecision(){
 			return yv[0];
 		}
 
-		temperature_precise readPrevOutputDoublePrecision(void){
+		temperature_precise readPrevOutputDoublePrecision(){
 			return yv[1];
 		}
 
-		temperature detectPosPeak(void); //returns positive peak or INVALID_TEMP when no peak has been found
-		temperature detectNegPeak(void); //returns negative peak or INVALID_TEMP when no peak has been found
+		temperature detectPosPeak(); //returns positive peak or INVALID_TEMP when no peak has been found
+		temperature detectNegPeak(); //returns negative peak or INVALID_TEMP when no peak has been found
 
 };

@@ -123,55 +123,55 @@ class TempControl{
 	TempControl(){};
 	~TempControl(){};
 
-	TEMP_CONTROL_METHOD void init(void);
-	TEMP_CONTROL_METHOD void reset(void);
+	TEMP_CONTROL_METHOD void init();
+	TEMP_CONTROL_METHOD void reset();
 
-	TEMP_CONTROL_METHOD void updateTemperatures(void);
-	TEMP_CONTROL_METHOD void updatePID(void);
-	TEMP_CONTROL_METHOD void updateState(void);
-	TEMP_CONTROL_METHOD void updateOutputs(void);
-	TEMP_CONTROL_METHOD void detectPeaks(void);
+	TEMP_CONTROL_METHOD void updateTemperatures();
+	TEMP_CONTROL_METHOD void updatePID();
+	TEMP_CONTROL_METHOD void updateState();
+	TEMP_CONTROL_METHOD void updateOutputs();
+	TEMP_CONTROL_METHOD void detectPeaks();
 
 	TEMP_CONTROL_METHOD void loadSettings(eptr_t offset);
 	TEMP_CONTROL_METHOD void storeSettings(eptr_t offset);
-	TEMP_CONTROL_METHOD void loadDefaultSettings(void);
+	TEMP_CONTROL_METHOD void loadDefaultSettings();
 
 	TEMP_CONTROL_METHOD void loadConstants(eptr_t offset);
 	TEMP_CONTROL_METHOD void storeConstants(eptr_t offset);
-	TEMP_CONTROL_METHOD void loadDefaultConstants(void);
+	TEMP_CONTROL_METHOD void loadDefaultConstants();
 
 	//TEMP_CONTROL_METHOD void loadSettingsAndConstants(void);
 
-	TEMP_CONTROL_METHOD uint16_t timeSinceCooling(void);
- 	TEMP_CONTROL_METHOD uint16_t timeSinceHeating(void);
-  	TEMP_CONTROL_METHOD uint16_t timeSinceIdle(void);
+	TEMP_CONTROL_METHOD uint16_t timeSinceCooling();
+ 	TEMP_CONTROL_METHOD uint16_t timeSinceHeating();
+  	TEMP_CONTROL_METHOD uint16_t timeSinceIdle();
 
-	TEMP_CONTROL_METHOD temperature getBeerTemp(void);
-	TEMP_CONTROL_METHOD temperature getBeerSetting(void);
+	TEMP_CONTROL_METHOD temperature getBeerTemp();
+	TEMP_CONTROL_METHOD temperature getBeerSetting();
 	TEMP_CONTROL_METHOD void setBeerTemp(temperature newTemp);
 
-	TEMP_CONTROL_METHOD temperature getFridgeTemp(void);
-	TEMP_CONTROL_METHOD temperature getFridgeSetting(void);
+	TEMP_CONTROL_METHOD temperature getFridgeTemp();
+	TEMP_CONTROL_METHOD temperature getFridgeSetting();
 	TEMP_CONTROL_METHOD void setFridgeTemp(temperature newTemp);
 
-	TEMP_CONTROL_METHOD temperature getRoomTemp(void) {
+	TEMP_CONTROL_METHOD temperature getRoomTemp() {
 		return ambientSensor->read();
 	}
 
 	TEMP_CONTROL_METHOD void setMode(char newMode, bool force=false);
-	TEMP_CONTROL_METHOD char getMode(void) {
+	TEMP_CONTROL_METHOD char getMode() {
 		return cs.mode;
 	}
 
-	TEMP_CONTROL_METHOD unsigned char getState(void){
+	TEMP_CONTROL_METHOD unsigned char getState(){
 		return state;
 	}
 
-	TEMP_CONTROL_METHOD uint16_t getWaitTime(void){
+	TEMP_CONTROL_METHOD uint16_t getWaitTime(){
 		return waitTime;
 	}
 
-	TEMP_CONTROL_METHOD void resetWaitTime(void){
+	TEMP_CONTROL_METHOD void resetWaitTime(){
 		waitTime = 0;
 	}
 
@@ -185,9 +185,9 @@ class TempControl{
 		}
 	}
 
-	TEMP_CONTROL_METHOD bool stateIsCooling(void);
-	TEMP_CONTROL_METHOD bool stateIsHeating(void);
-	TEMP_CONTROL_METHOD bool modeIsBeer(void){
+	TEMP_CONTROL_METHOD bool stateIsCooling();
+	TEMP_CONTROL_METHOD bool stateIsHeating();
+	TEMP_CONTROL_METHOD bool modeIsBeer(){
 		return (cs.mode == MODE_BEER_CONSTANT || cs.mode == MODE_BEER_PROFILE);
 	}
 

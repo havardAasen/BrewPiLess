@@ -54,7 +54,7 @@ static const char STR_Wait_to_[] PROGMEM = "Wait to ";
 static const char STR__time_left[] PROGMEM = " time left";
 static const char STR_empty_string[] PROGMEM = "";
 
-void LcdDisplay::init(void){
+void LcdDisplay::init(){
 #ifdef BREWPI_IIC_LCD
 //	Wire.begin(PIN_SDA,PIN_SCL);
 #endif
@@ -70,7 +70,7 @@ void LcdDisplay::init(void){
 #endif
 
 //print all temperatures on the LCD
-void LcdDisplay::printAllTemperatures(void){
+void LcdDisplay::printAllTemperatures(){
 	// alternate between beer and room temp
 	if (flags & LCD_FLAG_ALTERNATE_ROOM) {
 		bool displayRoom = ((ticks.seconds()&0x08)==0) && !BREWPI_SIMULATE && tempControl.ambientSensor->isConnected();
@@ -94,22 +94,22 @@ void LcdDisplay::setDisplayFlags(uint8_t newFlags) {
 
 
 
-void LcdDisplay::printBeerTemp(void){
+void LcdDisplay::printBeerTemp(){
 	printTemperatureAt(6, 1, tempControl.getBeerTemp());
 }
 
-void LcdDisplay::printBeerSet(void){
+void LcdDisplay::printBeerSet(){
 	temperature beerSet = tempControl.getBeerSetting();
 	printTemperatureAt(12, 1, beerSet);
 }
 
-void LcdDisplay::printFridgeTemp(void){
+void LcdDisplay::printFridgeTemp(){
 	printTemperatureAt(6,2, flags & LCD_FLAG_DISPLAY_ROOM ?
 		tempControl.ambientSensor->read() :
 		tempControl.getFridgeTemp());
 }
 
-void LcdDisplay::printFridgeSet(void){
+void LcdDisplay::printFridgeSet(){
 	temperature fridgeSet = tempControl.getFridgeSetting();
 	if(flags & LCD_FLAG_DISPLAY_ROOM) // beer setting is not active
 		fridgeSet = INVALID_TEMP;
@@ -137,7 +137,7 @@ void LcdDisplay::printTemperature(temperature temp){
 }
 
 //print the stationary text on the lcd.
-void LcdDisplay::printStationaryText(void){
+void LcdDisplay::printStationaryText(){
 	printAt_P(0, 0, PSTR("Mode"));
 	printAt_P(0, 1, STR_Beer_);
 	printAt_P(0, 2, (flags & LCD_FLAG_DISPLAY_ROOM) ?  PSTR("Room  ") : STR_Fridge_);
@@ -164,7 +164,7 @@ void LcdDisplay::printAt(uint8_t x, uint8_t y, char* text){
 }
 
 // print mode on the right location on the first line, after "Mode   "
-void LcdDisplay::printMode(void){
+void LcdDisplay::printMode(){
 	lcd.setCursor(7,0);
 	// Factoring prints out of switch has negative effect on code size in this function
 	switch(tempControl.getMode()){
@@ -194,7 +194,7 @@ void LcdDisplay::printMode(void){
 }
 
 // print the current state on the last line of the lcd
-void LcdDisplay::printState(void){
+void LcdDisplay::printState(){
 	uint16_t time = UINT16_MAX; // init to max
 	uint8_t state = tempControl.getDisplayState();
 	if(state != stateOnDisplay){ //only print static text when state has changed

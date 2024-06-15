@@ -53,15 +53,15 @@ temperature_precise CascadedFilter::addDoublePrecision(temperature_precise val){
 }
 
 
-temperature CascadedFilter::readInput(void){
+temperature CascadedFilter::readInput(){
 	return sections[0].readInput(); // return input of first section
 }
 
-temperature_precise CascadedFilter::readOutputDoublePrecision(void){
+temperature_precise CascadedFilter::readOutputDoublePrecision(){
 	return sections[NUM_SECTIONS-1].readOutputDoublePrecision(); // return output of last section
 }
 
-temperature_precise CascadedFilter::readPrevOutputDoublePrecision(void){
+temperature_precise CascadedFilter::readPrevOutputDoublePrecision(){
 	return sections[NUM_SECTIONS-1].readPrevOutputDoublePrecision(); // return previous output of last section
 }
 

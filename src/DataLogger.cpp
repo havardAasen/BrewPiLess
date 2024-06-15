@@ -16,7 +16,7 @@
 
 
 
-void DataLogger::reportNow(void)
+void DataLogger::reportNow()
 {
 	_lastUpdate=0;
 }
@@ -35,7 +35,7 @@ void DataLogger::loop(time_t now)
 
 #define BUFFERSIZE 512
 
-void DataLogger::sendData(void)
+void DataLogger::sendData()
 {
 	char data[BUFFERSIZE];
 	int len=0;

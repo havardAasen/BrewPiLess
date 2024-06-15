@@ -82,17 +82,17 @@ class TempSensor {
 	#endif
 	void update();
 
-	temperature readFastFiltered(void);
+	temperature readFastFiltered();
 
-	temperature readSlowFiltered(void){
+	temperature readSlowFiltered(){
 		return slowFilter.readOutput(); //return most recent unfiltered value
 	}
 
-	temperature readSlope(void);
+	temperature readSlope();
 
-	temperature detectPosPeak(void);
+	temperature detectPosPeak();
 
-	temperature detectNegPeak(void);
+	temperature detectNegPeak();
 
 	void setFastFilterCoefficients(uint8_t b);
 

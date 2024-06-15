@@ -83,11 +83,11 @@ bool ParasiteTempController::updateSettings(String json){
     _setCooling(false);
     return ret;
 }
-String ParasiteTempController::getSettings(void)
+String ParasiteTempController::getSettings()
 {
    return theSettings.jsonParasiteTempControlSettings(cooler != &defaultActuator);
 }
-bool ParasiteTempController::checkSettings(void)
+bool ParasiteTempController::checkSettings()
 {
     if((_settings->setTemp + MIN_TEM_DIFF) > _settings->maxIdleTemp) return false;
     if(_settings->minCoolingTime < MIN_COOL_TIME ) return false;

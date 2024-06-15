@@ -41,18 +41,18 @@ class CascadedFilter{
 	void setCoefficients(uint8_t bValue);
 	temperature add(temperature val); // adds a value and returns the most recent filter output
 	temperature_precise addDoublePrecision(temperature_precise val);
-	temperature readInput(void); // returns the most recent filter input
+	temperature readInput(); // returns the most recent filter input
 
-	temperature readOutput(void){
+	temperature readOutput(){
 		return sections[NUM_SECTIONS-1].readOutput(); // return output of last section
 	}
-	temperature_precise readOutputDoublePrecision(void);
-	temperature_precise readPrevOutputDoublePrecision(void);
+	temperature_precise readOutputDoublePrecision();
+	temperature_precise readPrevOutputDoublePrecision();
 
-	temperature detectPosPeak(void){
+	temperature detectPosPeak(){
 		return sections[NUM_SECTIONS-1].detectPosPeak(); // detect peaks in last section
 	}
-	temperature detectNegPeak(void){
+	temperature detectNegPeak(){
 		return sections[NUM_SECTIONS-1].detectNegPeak(); // detect peaks in last section
 	}
 };

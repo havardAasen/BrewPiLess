@@ -12,14 +12,14 @@ Actuator* AutoCapControl::capper = &defaultActuator;
 
 AutoCapControl autoCapControl;
 
-uint8_t AutoCapControl::mode(void)
+uint8_t AutoCapControl::mode()
 {
     if(AutoCapControl::capper != &defaultActuator)
         return _settings->autoCapMode;
     return AutoCapModeNone;
 }
 
-void AutoCapControl::begin(void)
+void AutoCapControl::begin()
 {
     _settings = theSettings.autoCapSettings();
 
@@ -34,7 +34,7 @@ void AutoCapControl::begin(void)
     }
 }
 
-void AutoCapControl::saveConfig(void)
+void AutoCapControl::saveConfig()
 {
     theSettings.save();
 }
@@ -61,7 +61,7 @@ void AutoCapControl::capManualSet(bool capped)
     saveConfig();
 }
 
-bool isPhysicalCapOn(void){ 
+bool isPhysicalCapOn(){ 
     if( AutoCapControl::capper == &defaultActuator ) return false;
     return AutoCapControl::capper->isActive(); 
 }
@@ -75,7 +75,7 @@ void AutoCapControl::setPhysicalCapOn(bool on){
     }
 }
 
-bool AutoCapControl::isCapOn(void){ 
+bool AutoCapControl::isCapOn(){ 
     return _capStatus == CapStatusActive;
 }
 

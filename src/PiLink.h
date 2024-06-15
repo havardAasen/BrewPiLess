@@ -35,8 +35,8 @@ class PiLink{
 	public:
 
 	// There can only be one PiLink object, so functions are static
-	static void init(void);
-	static void receive(void);
+	static void init();
+	static void receive();
 
 #if 1 //#ifndef ESP8266 // There is a bug in the ESP8266 implementation that causes these not to work.
 	static void printFridgeAnnotation(const char * annotation, ...);
@@ -45,22 +45,22 @@ class PiLink{
 
 	static void debugMessage(const char * message, ...);
 
-	static void printTemperatures(void);
+	static void printTemperatures();
 
 	typedef void (*ParseJsonCallback)(const char* key, const char* val, void* data);
 
 	static void parseJson(ParseJsonCallback fn, void* data=NULL);
 
-	static int read(void);  // Adding so we can completely abstract away piStream outside of piLink
+	static int read();  // Adding so we can completely abstract away piStream outside of piLink
 
 	private:
 
-	static void sendControlSettings(void);
-	static void receiveControlConstants(void);
-	static void sendControlConstants(void);
-	static void sendControlVariables(void);
+	static void sendControlSettings();
+	static void receiveControlConstants();
+	static void sendControlConstants();
+	static void sendControlVariables();
 
-	static void receiveJson(void); // receive settings as JSON key:value pairs
+	static void receiveJson(); // receive settings as JSON key:value pairs
 
 	static void print(const char *fmt, ...); // use when format string is stored in RAM
 #ifdef ARDUINO
@@ -72,9 +72,9 @@ class PiLink{
 #endif
 #endif
 
-	static void test_functionality(void);
+	static void test_functionality();
 	static void print_P(const char *fmt, ...); // use when format string is stored in PROGMEM with PSTR("string")
-	static void printNewLine(void);
+	static void printNewLine();
 	static void printChamberCount();
 	static void printNibble(uint8_t n);
 

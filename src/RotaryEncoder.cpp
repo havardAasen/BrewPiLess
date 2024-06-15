@@ -109,7 +109,7 @@ static uint8_t _buttonPressed;
 #define btnIsDownContinuousPressed (_buttonPressed == (ButtonDownMask<<4))
 
 
-static void btnInit(void){
+static void btnInit(){
 	_testButtunStatus=0;
 	_buttonChangeTime=0;
 	_continuousPressedDectedTime=0;
@@ -128,7 +128,7 @@ static void btnInit(void){
 // avoid using digitalRead, supposedly quicker.
 static unsigned char buttonStatus=0;
 
-IRAM_ATTR static boolean btnDetect(void)
+IRAM_ATTR static boolean btnDetect()
 {
 	uint32_t currentTimeInMS=millis();
 
@@ -241,7 +241,7 @@ IRAM_ATTR static void processbuttons(){
 		_buttonStatusChanged = true;
 	}
 }
-IRAM_ATTR static void isr_upChanged(void) {
+IRAM_ATTR static void isr_upChanged() {
 	if (digitalRead(UpButtonPin) == 0){
 		buttonStatus |= ButtonUpMask;
 	}else{
@@ -250,7 +250,7 @@ IRAM_ATTR static void isr_upChanged(void) {
 	processbuttons();
 }
 
-IRAM_ATTR static void isr_downChanged(void) {
+IRAM_ATTR static void isr_downChanged() {
 	if (digitalRead(DownButtonPin) == 0){
 		buttonStatus |= ButtonDownMask;
 	}else{
@@ -259,7 +259,7 @@ IRAM_ATTR static void isr_downChanged(void) {
 	processbuttons();
 }
 
-static boolean btnReadButtons(void){
+static boolean btnReadButtons(){
 	processbuttons(); // to process continuous pressing
 
 	//noInterrupts();
@@ -410,7 +410,7 @@ static boolean btnReadButtons(void)
 #endif //#if BUTTON_INTERRUPT
 
 
-void RotaryEncoder::init(void){
+void RotaryEncoder::init(){
 
 #if ButtonViaPCF8574
 
@@ -440,11 +440,11 @@ void RotaryEncoder::setRange(int16_t start, int16_t minVal, int16_t maxVal){
 		maximum = maxVal; // +1 to make sure that one step is still two half steps at overflow
 }
 
-void RotaryEncoder::setPushed(void){
+void RotaryEncoder::setPushed(){
 	pushFlag = true;
 }
 
-void RotaryEncoder::process(void){
+void RotaryEncoder::process(){
 	// check button status
 	if(btnReadButtons()){
 		display.resetBacklightTimer();
@@ -469,11 +469,11 @@ void RotaryEncoder::process(void){
 		}
 	}
 }
-bool RotaryEncoder::pushed(void){
+bool RotaryEncoder::pushed(){
 	process();
 	return pushFlag;
 }
-bool RotaryEncoder::changed(void){
+bool RotaryEncoder::changed(){
 	process();
 	// returns one if the value changed since the last call of changed.
 	static int16_t prevValue = 0;
@@ -488,7 +488,7 @@ bool RotaryEncoder::changed(void){
 	return 0;
 }
 
-int16_t RotaryEncoder::read(void){
+int16_t RotaryEncoder::read(){
 	return steps;
 }
 

@@ -49,7 +49,7 @@ public:
 
 	~OneWireTempSensor();
 
-	bool isConnected(void){
+	bool isConnected(){
 		return connected;
 	}
 

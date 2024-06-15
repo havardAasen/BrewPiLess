@@ -15,11 +15,11 @@ BPLSettings theSettings;
 #define BPLSettingFileName "/bpl.cfg"
 
 
-void BPLSettings::preFormat(void){
+void BPLSettings::preFormat(){
 	brewLogger.onFormatFS();
 }
 
-void BPLSettings::postFormat(void){
+void BPLSettings::postFormat(){
 	save();
 }
 
@@ -63,7 +63,7 @@ void BPLSettings::save()
 }
 
 
-void BPLSettings::setDefault(void)
+void BPLSettings::setDefault()
 {
 	// clear. to be safe
 	memset((char*)&_data,'\0',sizeof(_data));
@@ -81,10 +81,10 @@ void BPLSettings::setDefault(void)
 #endif
 }
 
-void BPLSettings::defaultTimeInformation(void){}
-void BPLSettings::defaultAutoCapSettings(void){}
+void BPLSettings::defaultTimeInformation(){}
+void BPLSettings::defaultAutoCapSettings(){}
 
-void BPLSettings::defaultLogFileIndexes(void){}
+void BPLSettings::defaultLogFileIndexes(){}
 
 //***************************************************************
 // system configuration
@@ -117,7 +117,7 @@ static void stringNcopy(char *dst,const char *src,size_t n){
 }
 
 
-void BPLSettings::defaultSystemConfiguration(void){
+void BPLSettings::defaultSystemConfiguration(){
     SystemConfiguration *syscfg=&_data.syscfg;
 
     stringNcopy(syscfg->titlelabel,DEFAULT_PAGE_TITLE,32);
@@ -169,7 +169,7 @@ bool BPLSettings::dejsonSystemConfiguration(String json){
 	return false;
 }
     // encod json
-String BPLSettings::jsonSystemConfiguration(void){
+String BPLSettings::jsonSystemConfiguration(){
 	#if ARDUINOJSON_VERSION_MAJOR == 6
 	DynamicJsonDocument root(1024);
 	#else
@@ -267,7 +267,7 @@ String BPLSettings::jsonSystemConfiguration(void){
 	return true;
 }
 
-String BPLSettings::jsonGravityConfig(void){
+String BPLSettings::jsonGravityConfig(){
 		// save to file
 
 		#if ARDUINOJSON_VERSION_MAJOR == 6
@@ -304,7 +304,7 @@ String BPLSettings::jsonGravityConfig(void){
     return ret;
 }	
 
-void BPLSettings::defaultGravityConfig(void)
+void BPLSettings::defaultGravityConfig()
 {
 	GravityDeviceConfiguration *gdc = &_data.gdc;
 
@@ -413,7 +413,7 @@ void makeTime(time_t timeInput, struct tm &tm){
   tm.tm_mday = time + 1;     // day of month
 }
 
- void BPLSettings::defaultBeerProfile(void)
+ void BPLSettings::defaultBeerProfile()
  {
 	BeerTempSchedule *tempSchedule = & _data.tempSchedule;
 	tempSchedule->unit = 'C';
@@ -553,7 +553,7 @@ bool BPLSettings::dejsonBeerProfile(String json)
 	return true;
 }
 
-String BPLSettings::jsonBeerProfile(void)
+String BPLSettings::jsonBeerProfile()
 {
 
 	#if ARDUINOJSON_VERSION_MAJOR == 6
@@ -657,7 +657,7 @@ String BPLSettings::jsonBeerProfile(void)
 
 //***************************************************************
 // Remote data logging
-void BPLSettings::defaultRemoteLogging(void)
+void BPLSettings::defaultRemoteLogging()
 {
 	// OK for all zero
 }
@@ -722,7 +722,7 @@ bool BPLSettings::dejsonRemoteLogging(String json)
   	return true;
 }
 
-String BPLSettings::jsonRemoteLogging(void)
+String BPLSettings::jsonRemoteLogging()
 {
 	
 #if ARDUINOJSON_VERSION_MAJOR == 6
@@ -765,7 +765,7 @@ String BPLSettings::jsonRemoteLogging(void)
 #define MinIdleKey "minidle"
 
 
-void BPLSettings::defaultParasiteTempControlSettings(void)
+void BPLSettings::defaultParasiteTempControlSettings()
 {
 	ParasiteTempControlSettings *ps=parasiteTempControlSettings();
     ps->minIdleTime = 300 * 1000;
@@ -869,7 +869,7 @@ bool BPLSettings::dejsonPressureMonitorSettings(String json){
 	return true;
 }
 
-String BPLSettings::jsonPressureMonitorSettings(void){
+String BPLSettings::jsonPressureMonitorSettings(){
     const int BUFFER_SIZE = JSON_OBJECT_SIZE(9);
 
 	#if ARDUINOJSON_VERSION_MAJOR == 6
@@ -916,7 +916,7 @@ String BPLSettings::jsonPressureMonitorSettings(void){
 #define ReportBasePathKey "base"
 #define MqttReportFormatKey "format"
 
-String BPLSettings::jsonMqttRemoteControlSettings(void){
+String BPLSettings::jsonMqttRemoteControlSettings(){
 
 	#if ARDUINOJSON_VERSION_MAJOR == 6
 		DynamicJsonDocument root(1024);

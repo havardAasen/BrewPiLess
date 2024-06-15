@@ -162,7 +162,7 @@ static bool handleFileRead(String path){
   return false;
 }
 
-static void handleFileUpload(void){
+static void handleFileUpload(){
   if(server.uri() != "/edit") return;
   HTTPUpload& upload = server.upload();
   if(upload.status == UPLOAD_FILE_START){
@@ -182,7 +182,7 @@ static void handleFileUpload(void){
   }
 }
 
-static void handleFileDelete(void){
+static void handleFileDelete(){
   if(server.args() == 0) return server.send(500, "text/plain", "BAD ARGS");
   String path = server.arg(0);
   DBG_PRINTLN("handleFileDelete: " + path);
@@ -195,7 +195,7 @@ static void handleFileDelete(void){
   path = String();
 }
 
-static void handleFileCreate(void){
+static void handleFileCreate(){
   if(server.args() == 0)
     return server.send(500, "text/plain", "BAD ARGS");
   String path = server.arg(0);
@@ -213,7 +213,7 @@ static void handleFileCreate(void){
   path = String();
 }
 
-static void handleFileList(void) {
+static void handleFileList() {
   if(!server.hasArg("dir")) {server.send(500, "text/plain", "BAD ARGS"); return;}
 
   String path = server.arg("dir");
@@ -328,7 +328,7 @@ void ESPUpdateServer_setup(const char* user, const char* pass){
 }
 
 
-void ESPUpdateServer_loop(void){
+void ESPUpdateServer_loop(){
   server.handleClient();
 }
 

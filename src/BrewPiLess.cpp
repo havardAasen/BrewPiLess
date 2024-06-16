@@ -334,14 +334,10 @@ class BrewPiWebHandler: public AsyncWebHandler
 		  
 		if(LittleFS.exists(path)){
 			//request->send(LittleFS, path);
-			bool nocache=false;
-			for(byte i=0;i< sizeof(nocache_list)/sizeof(const char*);i++){
-				if(path.equals(nocache_list[i])){
-						nocache=true;
-						break;
-					}
-			}
-
+			const bool nocache = std::any_of(std::cbegin(nocache_list),
+						         std::cend(nocache_list), [&](const char *p) {
+				return path.equals(p);
+			});
 
 			AsyncWebServerResponse *response = request->beginResponse(LittleFS, path);
 			if(nocache)

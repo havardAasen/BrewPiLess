@@ -42,11 +42,11 @@ void NullLcdDriver::begin(uint8_t cols, uint8_t lines) {
 /********** high level commands, for the user! */
 void NullLcdDriver::clear()
 {
-	for(uint8_t i = 0; i<4; i++){
+	for (auto& line : content) {
 		for(uint8_t j = 0; j<20; j++){
-			content[i][j]=' '; // initialize on all spaces
+		    line[j]=' '; // initialize on all spaces
 		}
-		content[i][20]='\0'; // NULL terminate string
+		line[20]='\0'; // NULL terminate string
 	}
 }
 

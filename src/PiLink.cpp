@@ -1046,9 +1046,9 @@ const PiLink::JsonParserConvert PiLink::jsonParserConverters[] PROGMEM = {
 void PiLink::processJsonPair(const char * key, const char * val, void* pv){
 	logInfoStringString(INFO_RECEIVED_SETTING, key, val);
 
-	for (uint8_t i=0; i<sizeof(jsonParserConverters)/sizeof(jsonParserConverters[0]); i++) {
+	for (const auto& jsonParserConverter : jsonParserConverters) {
 		JsonParserConvert converter;
-		memcpy_P(&converter, &jsonParserConverters[i], sizeof(converter));
+		memcpy_P(&converter, &jsonParserConverter, sizeof(converter));
 		//logDeveloper("Handling converter %d %s %S %d %d"), i, key, converter.key, converter.fn, converter.target);
 		if (strcmp_P(key,converter.key) == 0) {
 			//logDeveloper("Handling json key %s"), key);

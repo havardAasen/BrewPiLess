@@ -141,7 +141,7 @@ class OLEDFourBit : public Print {
 	uint8_t _rw_pin; // LOW: write to oled.  HIGH: read from oled.
 	uint8_t _enable_pin; // activated by a HIGH pulse.
 	uint8_t _busy_pin;
-	uint8_t _data_pins[4];
+	std::array<uint8_t, 4> _data_pins;
 
 	uint8_t _displayfunction;
 	uint8_t _displaycontrol;

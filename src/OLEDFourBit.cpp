@@ -64,10 +64,10 @@ void OLEDFourBit::begin(uint8_t cols, uint8_t lines) {
 	digitalWrite(_enable_pin, LOW);
 	digitalWrite(_rw_pin, LOW);
 
-  	for (int i = 0; i < 4; i++) {
-		pinMode(_data_pins[i], OUTPUT);
-		digitalWrite(_data_pins[i], LOW);
-	}
+	std::for_each(_data_pins.cbegin(), _data_pins.cend(), [](int pin) {
+		pinMode(pin, OUTPUT);
+		digitalWrite(pin, LOW);
+	});
 
 	// SEE PAGE 20 of NHD-0420DZW-AY5
 	delayMicroseconds(50000); // wait 50 ms just to be sure tha the lcd is initialized
@@ -107,11 +107,11 @@ void OLEDFourBit::clear()
 {
 	command(LCD_CLEARDISPLAY);  // clear display, set cursor position to zero
 
-	for(uint8_t i = 0; i<4; i++){
+	for (auto& line : content) {
 		for(uint8_t j = 0; j<20; j++){
-			content[i][j]=' '; // initialize on all spaces
+		    line[j]=' '; // initialize on all spaces
 		}
-		content[i][20]='\0'; // NULL terminate string
+		line[20]='\0'; // NULL terminate string
 	}
 }
 
@@ -272,9 +272,9 @@ void OLEDFourBit::waitBusy() {
 
 char OLEDFourBit::readChar(){
 	char value=0x00;
-	for (int i = 0; i < 4; i++) {
-		pinMode(_data_pins[i], INPUT);
-	}
+	std::for_each(_data_pins.cbegin(), _data_pins.cend(), [](int pin) {
+		pinMode(pin, INPUT);
+	});
 	digitalWrite(_rs_pin, HIGH);
 	digitalWrite(_rw_pin, HIGH);
 	pulseEnable();

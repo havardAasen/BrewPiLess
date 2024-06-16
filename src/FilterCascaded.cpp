@@ -25,14 +25,14 @@
 #include "TemperatureFormats.h"
 
 CascadedFilter::CascadedFilter() {
-	for(uint8_t i=0; i<NUM_SECTIONS; i++){
-		sections[i].setCoefficients(2); // default to a b value of 2
+	for(auto& section : sections){
+		section.setCoefficients(2); // default to a b value of 2
 	}
 }
 
 void CascadedFilter::setCoefficients(uint8_t bValue){
-	for(uint8_t i=0; i<NUM_SECTIONS; i++){
-		sections[i].setCoefficients(bValue);
+	for(auto& section : sections){
+		section.setCoefficients(bValue);
 	}
 }
 
@@ -46,8 +46,8 @@ temperature CascadedFilter::add(temperature val){
 temperature_precise CascadedFilter::addDoublePrecision(temperature_precise val){
 	temperature_precise input = val;
 	// input is input for next section, which is the output of the previous section
-	for(uint8_t i=0; i<NUM_SECTIONS; i++){
-		input = sections[i].addDoublePrecision(input);
+	for(auto& section : sections){
+		input = section.addDoublePrecision(input);
 	}
 	return input;
 }
@@ -66,7 +66,6 @@ temperature_precise CascadedFilter::readPrevOutputDoublePrecision(){
 }
 
 void CascadedFilter::init(temperature val){
-	for(uint8_t i=0; i<NUM_SECTIONS; i++){
-		sections[i].init(val);
-	}
+	for (auto& section : sections)
+		section.init(val);
 }

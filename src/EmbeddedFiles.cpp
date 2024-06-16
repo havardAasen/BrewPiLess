@@ -123,12 +123,11 @@ EmbeddedFileMapEntry fileMaps[]={
 
 const uint8_t* getEmbeddedFile(const char* filename,bool &gzip, unsigned int &size)
 {
-	for(int i=0;i<(int)(sizeof(fileMaps)/sizeof(EmbeddedFileMapEntry));i++)
-	{
-		if(strcmp_P(filename,fileMaps[i].filename) ==0){
-		    gzip = fileMaps[i].gzipped;
-		    size = fileMaps[i].size;
-			return fileMaps[i].content;
+	for (auto& entry : fileMaps) {
+		if (strcmp_P(filename, entry.filename) == 0) {
+			gzip = entry.gzipped;
+			size = entry.size;
+			return entry.content;
 		}
 	}
 	return nullptr;

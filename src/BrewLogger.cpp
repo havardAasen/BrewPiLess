@@ -618,7 +618,7 @@ BrewLogger::BrewLogger(){
 	}
 	void BrewLogger::resetTempData()
 	{
-		for(int i=0;i<5;i++) _iTempData[i]=INVALID_TEMP_INT;
+		for (auto& data : _iTempData) data=INVALID_TEMP_INT;
 		_extTemp=INVALID_TEMP_INT;
 		_extGravity=INVALID_GRAVITY_INT;
 		_extOriginGravity=INVALID_GRAVITY_INT;
@@ -666,9 +666,9 @@ BrewLogger::BrewLogger(){
 		// a record full of all data = 2 + 7 * 2= 16
 		*ptr++ = (char) PeriodTag;
 		*ptr++ = (char) 0x7F;
-		for(int i=0;i<VolatileDataHeaderSize;i++){
-			*ptr++ = _headData[i] >> 8;
-			*ptr++ = _headData[i] & 0xFF;
+		for (auto data : _headData) {
+			*ptr++ = data >> 8;
+			*ptr++ = data & 0xFF;
 		}
 		// mode : 2
 		*ptr++ = ModeTag;

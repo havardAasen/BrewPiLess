@@ -368,10 +368,10 @@ public:
 	BrewPiWebHandler(){}
 
 #if LegacyEspAsyncLibraries != true
-	virtual bool isRequestHandlerTrivial() override final {return false;}
+	bool isRequestHandlerTrivial() final {return false;}
 #endif
 
-	void handleRequest(AsyncWebServerRequest *request){
+	void handleRequest(AsyncWebServerRequest *request) override{
 		SystemConfiguration *syscfg=theSettings.systemConfiguration();
 
 		#if UseServerSideEvent == true
@@ -656,7 +656,7 @@ public:
 		}
 	 }
 
-	bool canHandle(AsyncWebServerRequest *request){
+	bool canHandle(AsyncWebServerRequest *request) override{
 	 	if(request->method() == HTTP_GET){
 	 		if( request->url() == CONFIG_PATH || request->url() == TIME_PATH
 			#if UseServerSideEvent == true
@@ -724,10 +724,10 @@ class AppleCNAHandler: public AsyncWebHandler
 {
 public:
 	AppleCNAHandler(){}
-	void handleRequest(AsyncWebServerRequest *request){
+	void handleRequest(AsyncWebServerRequest *request) override{
 		request->send(200, "text/html", "<HTML><HEAD><TITLE>Success</TITLE></HEAD><BODY>Success</BODY></HTML>");
 	}
-	bool canHandle(AsyncWebServerRequest *request){
+	bool canHandle(AsyncWebServerRequest *request) override{
 		String host=request->host();
 		//DBG_PRINTF("Request host:");
 		//DBG_PRINTF(host.c_str());
@@ -1067,7 +1067,7 @@ class LogHandler:public AsyncWebHandler
 {
 public:
 
-	void handleRequest(AsyncWebServerRequest *request){
+	void handleRequest(AsyncWebServerRequest *request) override{
 /*		if( request->url() == IGNORE_MASK_PATH){
 			if(request->hasParam("m")){
 				uint32_t mask= request->getParam("m")->value().toInt();
@@ -1188,7 +1188,7 @@ public:
 	}
 
 	LogHandler(){}
-	bool canHandle(AsyncWebServerRequest *request){
+	bool canHandle(AsyncWebServerRequest *request) override{
 	 	if(request->url() == CHART_DATA_PATH || request->url() ==LOGLIST_PATH
 		  /*|| request->url() == IGNORE_MASK_PATH */) return true;
 	 	return false;
@@ -1230,7 +1230,7 @@ public:
 		externalData.loadConfig();
 	}
 
-	bool canHandle(AsyncWebServerRequest *request){
+	bool canHandle(AsyncWebServerRequest *request) override{
 		DBG_PRINTF("req: %s\n", request->url().c_str());
 	 	if(request->url() == GRAVITY_PATH	) return true;
 	 	if(request->url() == GravityDeviceConfigPath) return true;
@@ -1239,7 +1239,7 @@ public:
 	 	return false;
 	}
 
-	void handleRequest(AsyncWebServerRequest *request){
+	void handleRequest(AsyncWebServerRequest *request) override{
 		if(request->url() == GRAVITY_PATH){
 			if(request->method() != HTTP_POST){
 				request->send(400);
@@ -1292,7 +1292,7 @@ public:
 		}
 	}
 
-	virtual void handleBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)override final{
+	void handleBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)final{
 		if(!index){
 		    DBG_PRINTF("BodyStart-len:%d total: %u\n",len, total);
 			_dataLength =0;
@@ -1310,7 +1310,7 @@ public:
 		}
 	}
 #if LegacyEspAsyncLibraries != true	
-	virtual bool isRequestHandlerTrivial() override final {return false;}
+	bool isRequestHandlerTrivial() final {return false;}
 #endif
 };
 ExternalDataHandler externalDataHandler;
@@ -1344,7 +1344,7 @@ class NetworkConfig:public AsyncWebHandler
 public:
 	NetworkConfig(){}
 
-	void handleRequest(AsyncWebServerRequest *request){
+	void handleRequest(AsyncWebServerRequest *request) override{
 		if(request->url() == WIFI_SCAN_PATH) handleNetworkScan(request);
 		else if(request->url() == WIFI_CONNECT_PATH) handleNetworkConnect(request);
 		else if(request->url() == WIFI_DISC_PATH) handleNetworkDisconnect(request);
@@ -1409,7 +1409,7 @@ public:
 		request->send(200,"application/json","{}");
 	}
 
-	bool canHandle(AsyncWebServerRequest *request){
+	bool canHandle(AsyncWebServerRequest *request) override{
 		if(request->url() == WIFI_SCAN_PATH) return true; 
 		else if(request->url() == WIFI_CONNECT_PATH) return true;
 		else if(request->url() == WIFI_DISC_PATH) return true;
@@ -1418,7 +1418,7 @@ public:
 	}
 
 	#if !LegacyEspAsyncLibraries
-	virtual bool isRequestHandlerTrivial() override final {return false;}
+	bool isRequestHandlerTrivial() final {return false;}
 	#endif
 };
 

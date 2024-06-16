@@ -40,13 +40,13 @@ class ExternalTempSensor : public BasicTempSensor
 		this->_connected = connected;
 	}
 
-	bool isConnected() { return _connected; }
+	bool isConnected() override { return _connected; }
 
-	bool init() {
+	bool init() override {
 		return read()!=TEMP_SENSOR_DISCONNECTED;
 	}
 
-	temperature read() {
+	temperature read() override {
 		if (!isConnected())
 			return TEMP_SENSOR_DISCONNECTED;
 		return _temperature;

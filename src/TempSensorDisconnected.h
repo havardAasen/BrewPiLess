@@ -25,13 +25,13 @@
 class DisconnectedTempSensor : public BasicTempSensor {
 
 public:
-	bool isConnected() { return false; }
+	bool isConnected() override { return false; }
 
-	bool init() {
+	bool init() override {
 		return read()!=TEMP_SENSOR_DISCONNECTED;
 	}
 
-	temperature read() {
+	temperature read() override {
 		return TEMP_SENSOR_DISCONNECTED;
 	}
 

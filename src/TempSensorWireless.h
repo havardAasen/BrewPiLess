@@ -19,7 +19,7 @@ public:
 		_calibrationOffset =constrainTemp16(temperature(cal)<<shift);
 		if(! theWirelessTempSensor)theWirelessTempSensor=this;
 	}
-	~WirelessTempSensor(){
+	~WirelessTempSensor() override{
 		theWirelessTempSensor=nullptr;
     }
      
@@ -38,13 +38,13 @@ public:
 		this->_connected = connected;
 	}
 
-	bool isConnected() { return _connected; }
+	bool isConnected() override { return _connected; }
 
-	bool init() {
+	bool init() override {
 		return read()!=TEMP_SENSOR_DISCONNECTED;
 	}
 
-	temperature read() {
+	temperature read() override {
 		if (!isConnected())
             return TEMP_SENSOR_DISCONNECTED;
         if((millis() - _updateTime) > _expiryTime){

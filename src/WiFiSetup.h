@@ -31,7 +31,7 @@ public:
 
 	void begin(WiFiMode mode, char const *ssid,const char *passwd=nullptr);
 	void setMode(WiFiMode mode);
-	void staConfig(IPAddress ip=0,IPAddress gw=0, IPAddress nm=0, IPAddress dns=0);
+	void staConfig(const IPAddress& ip=0, const IPAddress& gw=0, const IPAddress& nm=0, const IPAddress& dns=0);
 
 	void onEvent(std::function<void(const char*)> handler){ _eventHandler = handler;}
 
@@ -44,7 +44,8 @@ public:
 
 	String scanWifi();
 	bool requestScanWifi();
-	bool connect(char const *ssid,const char *passwd=nullptr,IPAddress ip=0,IPAddress gw=0, IPAddress nm=0,IPAddress dns=0);
+	bool connect(char const *ssid, const char *passwd=nullptr, const IPAddress& ip=0,
+                     const IPAddress& gw=0, const IPAddress& nm=0, const IPAddress& dns=0);
 	bool disconnect();
 
 	bool isConnected();

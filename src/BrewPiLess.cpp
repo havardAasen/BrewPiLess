@@ -263,7 +263,7 @@ class BrewPiWebHandler: public AsyncWebHandler
           request->send(404);
     }
 
-    bool fileExists(String path)
+    bool fileExists(const String& path)
     {
 	    if(LittleFS.exists(path)) return true;
 	    bool dum;
@@ -299,7 +299,7 @@ class BrewPiWebHandler: public AsyncWebHandler
 		request->send(response);
 	}
 
-	void sendFile(AsyncWebServerRequest *request,String path)
+	void sendFile(AsyncWebServerRequest *request,const String& path)
 	{
 		//workaround for safari
 		if(path.endsWith(".js")){
@@ -783,7 +783,7 @@ void capStatusReport()
 }
 #endif
 
-void greeting(std::function<void(const char*)> sendFunc)
+void greeting(const std::function<void(const char*)>& sendFunc)
 {
 	char buf[512];
 	// gravity related info., starting from "G"

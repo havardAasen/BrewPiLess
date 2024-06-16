@@ -1,5 +1,7 @@
 #include <FS.h>
 #include <ArduinoJson.h>
+
+#include <utility>
 #include "ParasiteTempController.h"
 #include "DeviceManager.h"
 
@@ -77,7 +79,7 @@ void ParasiteTempController::run(){
 
 
 bool ParasiteTempController::updateSettings(String json){
-    bool ret=theSettings.dejsonParasiteTempControlSettings(json);
+    bool ret=theSettings.dejsonParasiteTempControlSettings(std::move(json));
     theSettings.save();
     if(ret)_validSetting=checkSettings();
     _setCooling(false);

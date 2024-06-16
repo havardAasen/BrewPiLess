@@ -6,6 +6,8 @@
 #include <FS.h>
 #include <LittleFS.h>
 #include <ArduinoJson.h>
+
+#include <utility>
 #include "Config.h"
 #include "ExternalData.h"
 #include "BPLSettings.h"
@@ -143,7 +145,7 @@ extern String getContentType(String filename);
 
 String getResponseContentType(String filename){
   if(server.hasArg("download")) return "application/octet-stream";
-  return getContentType(filename);
+  return getContentType(std::move(filename));
 }
 
 static bool handleFileRead(String path){

@@ -39,16 +39,16 @@ EepromManager::EepromManager()
 
 bool EepromManager::hasSettings()
 {
-	uint8_t version = eepromAccess.readByte(pointerOffset(version));
+	uint8_t version = EepromAccess::readByte(pointerOffset(version));
 	return (version==EEPROM_FORMAT_VERSION);
 }
 
 void EepromManager::zapEeprom()
 {
 	for (uint16_t offset=0; offset<EepromFormat::MAX_EEPROM_SIZE; offset++)
-		eepromAccess.writeByte(offset, 0xFF);
+		EepromAccess::writeByte(offset, 0xFF);
 #ifdef ESP8266
-	eepromAccess.commit();
+	EepromAccess::commit();
 #endif
 
 }
@@ -60,11 +60,11 @@ void EepromManager::initializeEeprom()
 //	for (uint16_t offset=0; offset<EepromFormat::MAX_EEPROM_SIZE; offset++)
 //		eepromAccess.writeByte(offset, 0);
 #ifdef ESP8266
-	eepromAccess.set_manual_commit(true);
+	EepromAccess::set_manual_commit(true);
 #endif
 	zapEeprom();
 
-	deviceManager.setupUnconfiguredDevices();
+	DeviceManager::setupUnconfiguredDevices();
 
 	// fetch the default values
 	tempControl.loadDefaultConstants();
@@ -83,15 +83,15 @@ void EepromManager::initializeEeprom()
 	}
 
 	// set the version flag - so that storeDevice will work
-	eepromAccess.writeByte(0, EEPROM_FORMAT_VERSION);
+	EepromAccess::writeByte(0, EEPROM_FORMAT_VERSION);
 
 	saveDefaultDevices();
 	// set state to startup
 	tempControl.init();
 
 #ifdef ESP8266
-	eepromAccess.set_manual_commit(false);
-	eepromAccess.commit();
+	EepromAccess::set_manual_commit(false);
+	EepromAccess::commit();
 #endif
 }
 
@@ -109,7 +109,7 @@ bool EepromManager::applySettings()
 		return false;
 
 	// start from a clean state
-	deviceManager.setupUnconfiguredDevices();
+	DeviceManager::setupUnconfiguredDevices();
 
 	logDebug("Applying settings");
 
@@ -124,11 +124,11 @@ bool EepromManager::applySettings()
 	DeviceConfig deviceConfig;
 	for (uint8_t index = 0; fetchDevice(deviceConfig, index); index++)
 	{
-		if (deviceManager.isDeviceValid(deviceConfig, deviceConfig, index))
-			deviceManager.installDevice(deviceConfig);
+		if (DeviceManager::isDeviceValid(deviceConfig, deviceConfig, index))
+			DeviceManager::installDevice(deviceConfig);
 		else {
 			clear((uint8_t*)&deviceConfig, sizeof(deviceConfig));
-			eepromManager.storeDevice(deviceConfig, index);
+			EepromManager::storeDevice(deviceConfig, index);
 		}
 	}
 	return true;
@@ -157,7 +157,7 @@ bool EepromManager::fetchDevice(DeviceConfig& config, uint8_t deviceIndex)
 {
 	bool ok = (hasSettings() && deviceIndex<EepromFormat::MAX_DEVICES);
 	if (ok)
-		eepromAccess.readDeviceDefinition(config, pointerOffset(devices)+sizeof(DeviceConfig)*deviceIndex, sizeof(DeviceConfig));
+		EepromAccess::readDeviceDefinition(config, pointerOffset(devices)+sizeof(DeviceConfig)*deviceIndex, sizeof(DeviceConfig));
 	return ok;
 }
 
@@ -165,7 +165,7 @@ bool EepromManager::storeDevice(const DeviceConfig& config, uint8_t deviceIndex)
 {
 	bool ok = (hasSettings() && deviceIndex<EepromFormat::MAX_DEVICES);
 	if (ok)
-		eepromAccess.writeDeviceDefinition(pointerOffset(devices)+sizeof(DeviceConfig)*deviceIndex, config, sizeof(DeviceConfig));
+		EepromAccess::writeDeviceDefinition(pointerOffset(devices)+sizeof(DeviceConfig)*deviceIndex, config, sizeof(DeviceConfig));
 	return ok;
 }
 

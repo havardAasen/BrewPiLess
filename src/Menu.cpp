@@ -66,7 +66,7 @@ bool blinkLoop(
 	//#if ESP8266
 		yield();
 	//#endif
-		if(rotaryEncoder.changed()){
+		if(RotaryEncoder::changed()){
 			lastChangeTime = ticks.seconds();
 			//blinkTimer = 0;
 			switchTime=0;
@@ -85,8 +85,8 @@ bool blinkLoop(
 			switchTime = current;
 		}
 
-		if (rotaryEncoder.pushed()) {
-			rotaryEncoder.resetPushed();
+		if (RotaryEncoder::pushed()) {
+			RotaryEncoder::resetPushed();
 			show();
 			pushed();
 			return true;
@@ -99,33 +99,33 @@ bool blinkLoop(
 }
 
 void clearSettingText() {
-	display.printAt_P(0, rotaryEncoder.read(), STR_6SPACES);
+	display.printAt_P(0, RotaryEncoder::read(), STR_6SPACES);
 }
 
 void settingChanged() {} // no -op - the only change is to update the display which happens already
 
 void settingSelected() {
-	switch(rotaryEncoder.read()){
+	switch(RotaryEncoder::read()){
 		case 0:
-			menu.pickMode();
+			Menu::pickMode();
 			return;
 		case 1:
 			// switch to beer constant, because beer setting will be set through display
 			tempControl.setMode(MODE_BEER_CONSTANT);
 			display.printMode();
-			menu.pickBeerSetting();
+			Menu::pickBeerSetting();
 			return;
 		case 2:
 			// switch to fridge constant, because fridge setting will be set through display
 			tempControl.setMode(MODE_FRIDGE_CONSTANT);
 			display.printMode();
-			menu.pickFridgeSetting();
+			Menu::pickFridgeSetting();
 			return;
 	}
 }
 
 void Menu::pickSettingToChangeLoop() {
-	rotaryEncoder.setRange(0, 0, 2); // mode setting, beer temp, fridge temp
+	RotaryEncoder::setRange(0, 0, 2); // mode setting, beer temp, fridge temp
 	blinkLoop(
 		settingChanged,
 		display.printStationaryText,
@@ -136,7 +136,7 @@ void Menu::pickSettingToChangeLoop() {
 
 void changedMode() {
 	const char lookup[] = {'b', 'f', 'p', 'o'};
-	tempControl.setMode(lookup[rotaryEncoder.read()]);
+	tempControl.setMode(lookup[RotaryEncoder::read()]);
 }
 
 void clearMode() {
@@ -146,21 +146,21 @@ void clearMode() {
 void selectMode() {
 	char mode = tempControl.getMode();
 	if(mode ==  MODE_BEER_CONSTANT){
-		menu.pickBeerSetting();
+		Menu::pickBeerSetting();
 	}
 	else if(mode == MODE_FRIDGE_CONSTANT){
-		menu.pickFridgeSetting();
+		Menu::pickFridgeSetting();
 	}
 	else if(mode == MODE_BEER_PROFILE){
 #ifdef ESP8266
-		piLink.printTemperaturesJSON("Changed to profile mode in menu.", nullptr);
+		PiLink::printTemperaturesJSON("Changed to profile mode in menu.", nullptr);
 #else
 		piLink.printBeerAnnotation(PSTR("Changed to profile mode in menu."));
 #endif
 	}
 	else if(mode == MODE_OFF){
 #ifdef ESP8266
-		piLink.printTemperaturesJSON("Temp control turned off in menu.", nullptr);
+		PiLink::printTemperaturesJSON("Temp control turned off in menu.", nullptr);
 #else
 		piLink.printBeerAnnotation(PSTR("Temp control turned off in menu."));
 #endif
@@ -172,7 +172,7 @@ void Menu::pickMode() {
 	uint8_t startValue=0;
 	const char* LOOKUP = "bfpo";
 	startValue = indexOf(LOOKUP, oldSetting);
-	rotaryEncoder.setRange(startValue, 0, 3); // toggle between beer constant, beer profile, fridge constant
+	RotaryEncoder::setRange(startValue, 0, 3); // toggle between beer constant, beer profile, fridge constant
 
 	if (!blinkLoop(changedMode, display.printMode, clearMode, selectMode))
 		tempControl.setMode(oldSetting);
@@ -191,7 +191,7 @@ void pickTempSetting(ReadTemp readTemp, WriteTemp writeTemp, const char* tempNam
 		startVal = intToTemp(20);
 	}
 
-	rotaryEncoder.setRange(fixedToTenths(oldSetting), fixedToTenths(tempControl.cc.tempSettingMin), fixedToTenths(tempControl.cc.tempSettingMax));
+	RotaryEncoder::setRange(fixedToTenths(oldSetting), fixedToTenths(tempControl.cc.tempSettingMin), fixedToTenths(tempControl.cc.tempSettingMax));
 
 	//uint8_t blinkTimer = 0;
 	uint32_t switchTime=0;
@@ -203,17 +203,17 @@ void pickTempSetting(ReadTemp readTemp, WriteTemp writeTemp, const char* tempNam
 		yield();
 //		#endif
 
-		if(rotaryEncoder.changed()){
+		if(RotaryEncoder::changed()){
 			lastChangeTime = ticks.seconds();
 			//blinkTimer = 0;
 			switchTime=0;
 			hidden=true;
 
-			startVal = tenthsToFixed(rotaryEncoder.read());
+			startVal = tenthsToFixed(RotaryEncoder::read());
 			display.printTemperatureAt(12, row, startVal);
 
-			if( rotaryEncoder.pushed() ){
-				rotaryEncoder.resetPushed();
+			if( RotaryEncoder::pushed() ){
+				RotaryEncoder::resetPushed();
 				writeTemp(startVal);
 				char tempString[9];
 				//printAnnoation(PSTR("%S temp set to %s in Menu."), tempName, tempToString(tempString,startVal,1,9));
@@ -249,12 +249,12 @@ void pickTempSetting(ReadTemp readTemp, WriteTemp writeTemp, const char* tempNam
 void Menu::pickFridgeSetting(){
 	// TODO - Fix this
 	//pickTempSetting(tempControl.getFridgeSetting, tempControl.setFridgeTemp, PSTR("Fridge"), piLink.printFridgeAnnotation, 2);
-	pickTempSetting(tempControl.getFridgeSetting, tempControl.setFridgeTemp, "Fridge", piLink.printFridgeAnnotation, 2);
+	pickTempSetting(tempControl.getFridgeSetting, tempControl.setFridgeTemp, "Fridge", PiLink::printFridgeAnnotation, 2);
 }
 
 void Menu::pickBeerSetting(){
 	// TODO - Fix This
-	pickTempSetting(tempControl.getBeerSetting, tempControl.setBeerTemp, "Beer", piLink.printBeerAnnotation, 1);
+	pickTempSetting(tempControl.getBeerSetting, tempControl.setBeerTemp, "Beer", PiLink::printBeerAnnotation, 1);
 }
 
 

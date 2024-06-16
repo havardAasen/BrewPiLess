@@ -129,7 +129,7 @@ uint8_t DallasTemperature::getDeviceCount(void)
 // returns true if address is valid
 bool DallasTemperature::validAddress(const uint8_t* deviceAddress)
 {
-    return (_wire->crc8(deviceAddress, 7) == deviceAddress[7]);
+    return (OneWire::crc8(deviceAddress, 7) == deviceAddress[7]);
 }
 
 #if REQUIRESINDEXEDADDRESSING
@@ -168,7 +168,7 @@ bool DallasTemperature::isConnected(const uint8_t* deviceAddress, uint8_t* scrat
 	#if REQUIRESPARASITEPOWERAVAILABLE
 		return (_wire->crc8(scratchPad, 8) == scratchPad[SCRATCHPAD_CRC]);
 	#else
-		return (_wire->crc8(scratchPad, 8) == scratchPad[SCRATCHPAD_CRC] && !readPowerSupply(deviceAddress));
+		return (OneWire::crc8(scratchPad, 8) == scratchPad[SCRATCHPAD_CRC] && !readPowerSupply(deviceAddress));
 	#endif
 }
 

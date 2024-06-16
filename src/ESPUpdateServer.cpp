@@ -271,7 +271,7 @@ void ESPUpdateServer_setup(const char* user, const char* pass){
   //get heap status, analog input value and all GPIO statuses in one json call
   server.on("/all", HTTP_GET, [](){
     String json = "{";
-    json += "\"heap\":"+String(ESP.getFreeHeap());
+    json += "\"heap\":"+String(EspClass::getFreeHeap());
     json += ", \"analog\":"+String(analogRead(A0));
     json += ", \"gpio\":"+String((uint32_t)(((GPI | GPO) & 0xFFFF) | ((GP16I & 0x01) << 16)));
     json += "}";

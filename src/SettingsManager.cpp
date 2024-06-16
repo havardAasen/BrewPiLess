@@ -29,12 +29,12 @@ void SettingsManager::loadSettings()
 	logDebug("loading settings");
 
 
-	if (!eepromManager.applySettings())
+	if (!EepromManager::applySettings())
 	{
 		tempControl.loadDefaultSettings();
 		tempControl.loadDefaultConstants();
 
-		deviceManager.setupUnconfiguredDevices();
+		DeviceManager::setupUnconfiguredDevices();
 
 		logWarning(WARNING_START_IN_SAFE_MODE);
 	}

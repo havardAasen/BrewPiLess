@@ -369,26 +369,26 @@ void PiLink::receive(){
 #endif
 
 		case 'E': // initialize eeprom
-			eepromManager.initializeEeprom();
+			EepromManager::initializeEeprom();
 			logInfo(INFO_EEPROM_INITIALIZED);
-			settingsManager.loadSettings();
+			SettingsManager::loadSettings();
 			break;
 
 		case 'd': // list devices in eeprom order
 			openListResponse('d');
-			deviceManager.listDevices();
+			DeviceManager::listDevices();
 			closeListResponse();
 			break;
 
 		case 'U': // update device
 			//printResponse('U'); // moved into function below, because installing devices can cause printing in between
-			deviceManager.parseDeviceDefinition();
+			DeviceManager::parseDeviceDefinition();
 			//piLink.printNewLine();
 			break;
 
 		case 'h': // hardware query
 			openListResponse('h');
-			deviceManager.enumerateHardware();
+			DeviceManager::enumerateHardware();
 			closeListResponse();
 			break;
 
@@ -593,11 +593,11 @@ void PiLink::sendControlSettings(){
 uint8_t* jsonOutputBase;
 
 void PiLink::jsonOutputUint8(const char* key, uint8_t offset) {
-	piLink.sendJsonPair(key, *(jsonOutputBase+offset));
+	PiLink::sendJsonPair(key, *(jsonOutputBase+offset));
 }
 
 void PiLink::jsonOutputUint16(const char* key, uint8_t offset) {
-	piLink.sendJsonPair(key, *((uint16_t*) (jsonOutputBase+offset)));
+	PiLink::sendJsonPair(key, *((uint16_t*) (jsonOutputBase+offset)));
 }
 
 /**
@@ -606,21 +606,21 @@ void PiLink::jsonOutputUint16(const char* key, uint8_t offset) {
  */
 void PiLink::jsonOutputTempToString(const char* key,  uint8_t offset) {
 	char buf[12];
-	piLink.sendJsonPair(key, tempToString(buf, *((temperature*)(jsonOutputBase+offset)), 1, 12));
+	PiLink::sendJsonPair(key, tempToString(buf, *((temperature*)(jsonOutputBase+offset)), 1, 12));
 }
 
 void PiLink::jsonOutputFixedPointToString(const char* key, uint8_t offset) {
 	char buf[12];
-	piLink.sendJsonPair(key, fixedPointToString(buf, *((temperature*)(jsonOutputBase+offset)), 3, 12));
+	PiLink::sendJsonPair(key, fixedPointToString(buf, *((temperature*)(jsonOutputBase+offset)), 3, 12));
 }
 
 void PiLink::jsonOutputTempDiffToString(const char* key, uint8_t offset) {
 	char buf[12];
-	piLink.sendJsonPair(key, tempDiffToString(buf, *((temperature*)(jsonOutputBase+offset)), 3, 12));
+	PiLink::sendJsonPair(key, tempDiffToString(buf, *((temperature*)(jsonOutputBase+offset)), 3, 12));
 }
 
 void PiLink::jsonOutputChar(const char* key, uint8_t offset) {
-	piLink.sendJsonPair(key, *((char*)(jsonOutputBase+offset)));
+	PiLink::sendJsonPair(key, *((char*)(jsonOutputBase+offset)));
 }
 
 typedef void (*JsonOutputCCHandler)(const char* key, uint8_t offset);
@@ -865,7 +865,7 @@ void PiLink::setMode(const char* val) {
 	formatStandardAnnotation(annotation, STR_MODE, val, "in web interface");
 	printTemperaturesJSON(0, annotation.c_str());
 #else
-	piLink.printFridgeAnnotation(STR_FMT_SET_TO, STR_MODE, val, STR_WEB_INTERFACE);
+	PiLink::printFridgeAnnotation(STR_FMT_SET_TO, STR_MODE, val, STR_WEB_INTERFACE);
 #endif
 }
 
@@ -930,7 +930,7 @@ void PiLink::setFridgeSetting(const char* val) {
 void PiLink::setTempFormat(const char* val) {
 	tempControl.cc.tempFormat = val[0];
 	display.printStationaryText(); // reprint stationary text to update to right degree unit
-	eepromManager.storeTempConstantsAndSettings();
+	EepromManager::storeTempConstantsAndSettings();
 }
 
 
@@ -971,28 +971,28 @@ void applyFilterSetting(const char* val, void* target) {
 		case SLOW: sensor->setSlowFilterCoefficients(value); break;
 		case SLOPE: sensor->setSlopeFilterCoefficients(value); break;
 	}
-	eepromManager.storeTempConstantsAndSettings();
+	EepromManager::storeTempConstantsAndSettings();
 }
 
 void setStringToFixedPoint(const char* value, temperature* target) {
 	*target = stringToFixedPoint(value);
-	eepromManager.storeTempConstantsAndSettings();
+	EepromManager::storeTempConstantsAndSettings();
 }
 void setStringToTemp(const char* value, temperature* target) {
 	*target = stringToTemp(value);
-	eepromManager.storeTempConstantsAndSettings();
+	EepromManager::storeTempConstantsAndSettings();
 }
 void setStringToTempDiff(const char* value, temperature* target) {
 	*target = stringToTempDiff(value);
-	eepromManager.storeTempConstantsAndSettings();
+	EepromManager::storeTempConstantsAndSettings();
 }
 void setUint16(const char* value, uint16_t* target) {
 	*target = atol(value);
-	eepromManager.storeTempConstantsAndSettings();
+	EepromManager::storeTempConstantsAndSettings();
 }
 void setBool(const char* value, uint8_t* target) {
 	*target = (atol(value)!=0);
-	eepromManager.storeTempConstantsAndSettings();
+	EepromManager::storeTempConstantsAndSettings();
 }
 
 

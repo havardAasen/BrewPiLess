@@ -237,7 +237,7 @@ class BrewPiWebHandler: public AsyncWebHandler
 
 	void handleFileDelete(AsyncWebServerRequest *request){
 		if(request->hasParam("path", true)){
-        	ESP.wdtDisable(); LittleFS.remove(request->getParam("path", true)->value()); ESP.wdtEnable(10);
+        	EspClass::wdtDisable(); LittleFS.remove(request->getParam("path", true)->value()); EspClass::wdtEnable(10);
             request->send(200, "", "DELETE: "+request->getParam("path", true)->value());
         } else
           request->send(404);
@@ -246,7 +246,7 @@ class BrewPiWebHandler: public AsyncWebHandler
 	void handleFilePuts(AsyncWebServerRequest *request){
 		if(request->hasParam("path", true)
 			&& request->hasParam("content", true)){
-        	ESP.wdtDisable();
+        	EspClass::wdtDisable();
     		String file=request->getParam("path", true)->value();
     		File fh= LittleFS.open(file, "w");
     		if(!fh){
@@ -256,7 +256,7 @@ class BrewPiWebHandler: public AsyncWebHandler
     		String c=request->getParam("content", true)->value();
       		fh.print(c.c_str());
       		fh.close();
-        	ESP.wdtEnable(10);
+        	EspClass::wdtEnable(10);
             request->send(200,"application/json","{}");
             DBG_PRINTF("fputs path=%s\n",file.c_str());
         } else
@@ -1458,7 +1458,7 @@ void handleReset()
 {
 #if defined(ESP8266)
 	// The asm volatile method doesn't work on ESP8266. Instead, use ESP.restart
-	ESP.restart();
+	EspClass::restart();
 #else
 	// resetting using the watchdog timer (which is a full reset of all registers)
 	// might not be compatible with old Arduino bootloaders. jumping to 0 is safer.
@@ -1473,7 +1473,7 @@ void brewpi_setup()
 #if defined(ESP8266)
 	// We need to initialize the EEPROM on ESP8266
 	EEPROM.begin(MAX_EEPROM_SIZE_LIMIT);
-	eepromAccess.set_manual_commit(false); // TODO - Move this where it should actually belong (a class constructor)
+	EepromAccess::set_manual_commit(false); // TODO - Move this where it should actually belong (a class constructor)
 #endif
 
 #if BREWPI_BUZZER
@@ -1481,11 +1481,11 @@ void brewpi_setup()
 	buzzer.beep(2, 500);
 #endif
 
-	piLink.init();
+	PiLink::init();
 
 	logDebug("started");
 	tempControl.init();
-	settingsManager.loadSettings();
+	SettingsManager::loadSettings();
 
 #if BREWPI_SIMULATE
 	simulator.step();
@@ -1501,7 +1501,7 @@ void brewpi_setup()
 	display.printStationaryText();
 	display.printState();
 
-	rotaryEncoder.init();
+	RotaryEncoder::init();
 
 	logDebug("init complete");
 }
@@ -1524,15 +1524,15 @@ void brewpiLoop()
 		oldState = tempControl.getState();
 		tempControl.updateState();
 		if (oldState != tempControl.getState()) {
-			piLink.printTemperatures(); // add a data point at every state transition
+			PiLink::printTemperatures(); // add a data point at every state transition
 		}
 		tempControl.updateOutputs();
 
 #if BREWPI_MENU
-		if (rotaryEncoder.pushed()) {
-			rotaryEncoder.resetPushed();
+		if (RotaryEncoder::pushed()) {
+			RotaryEncoder::resetPushed();
 			display.updateBacklight();
-			menu.pickSettingToChange();
+			Menu::pickSettingToChange();
 		}
 #endif
 
@@ -1549,7 +1549,7 @@ void brewpiLoop()
 	connectClients();
 	yield();
 #endif
-	piLink.receive();
+	PiLink::receive();
 
 }
 
@@ -1689,8 +1689,8 @@ void setup(void){
 		request->send(200,"","totalBytes:" +String(fs_info.totalBytes) +
 		" usedBytes:" + String(fs_info.usedBytes)+" blockSize:" + String(fs_info.blockSize)
 		+" pageSize:" + String(fs_info.pageSize)
-		+" freesketch:" + String(ESP.getFreeSketchSpace())
-		+" heap:"+String(ESP.getFreeHeap()));
+		+" freesketch:" + String(EspClass::getFreeSketchSpace())
+		+" heap:"+String(EspClass::getFreeHeap()));
 		//testSPIFFS();
 	});
 
@@ -1833,7 +1833,7 @@ void loop(void){
   				WiFiSetup.setAutoReconnect(false);
   				delay(1000);
   			}
-  			ESP.restart();
+  			EspClass::restart();
   		}
   	}
 }

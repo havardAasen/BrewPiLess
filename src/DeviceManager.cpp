@@ -197,13 +197,13 @@ inline void** deviceTarget(DeviceConfig& config)
 
 #if AUTO_CAP
 	case DEVICE_BEER_CAPPER:
-		ppv = (void**)&autoCapControl.capper;
+		ppv = (void**)&AutoCapControl::capper;
 	break;
 #endif
 
 #if EanbleParasiteTempControl
 	case DEVICE_PTC_COOL:
-		ppv = (void**)& parasiteTempController.cooler;
+		ppv = (void**)& ParasiteTempController::cooler;
 		break;
 #endif
 
@@ -412,7 +412,7 @@ void DeviceManager::parseDeviceDefinition()
 	static DeviceDefinition dev;
 	fill((int8_t*)&dev, sizeof(dev));
 
-	piLink.parseJson(&handleDeviceDefinition, &dev);
+	PiLink::parseJson(&handleDeviceDefinition, &dev);
 
 	if (!inRangeInt8(dev.id, 0, MAX_DEVICE_SLOT))			// no device id given, or it's out of range, can't do anything else.
 		return;
@@ -422,7 +422,7 @@ void DeviceManager::parseDeviceDefinition()
 	DeviceConfig original;
 
 	// todo - should ideally check if the eeprom is correctly initialized.
-	eepromManager.fetchDevice(original, dev.id);
+	EepromManager::fetchDevice(original, dev.id);
 	memcpy(&target, &original, sizeof(target));
 #ifndef ESP8266_ONE
 	piLink.print("Dev Chamber: %d, Dev Beer: %d, Dev Function: %d, Dev Hardware: %d, Dev PinNr: %d\r\n", dev.chamber, dev.beer, dev.deviceFunction, dev.deviceHardware, dev.pinNr);
@@ -470,15 +470,15 @@ void DeviceManager::parseDeviceDefinition()
 		// also remove any existing device for the new function, since install overwrites any existing definition.
 		uninstallDevice(target);
 		installDevice(target);
-		eepromManager.storeDevice(target, dev.id);
+		EepromManager::storeDevice(target, dev.id);
 	}
 	else {
 		logError(ERROR_DEVICE_DEFINITION_UPDATE_SPEC_INVALID);
 	}
-	piLink.printResponse('U');
-	deviceManager.beginDeviceOutput();
-	deviceManager.printDevice(dev.id, *print, nullptr);
-	piLink.printNewLine();
+	PiLink::printResponse('U');
+	DeviceManager::beginDeviceOutput();
+	DeviceManager::printDevice(dev.id, *print, nullptr);
+	PiLink::printNewLine();
 }
 
 /**
@@ -647,12 +647,12 @@ void DeviceManager::printDevice(device_slot_t slot, DeviceConfig& config, const 
 	}
 	deviceString += '}';
 
-	piLink.print_P(deviceString.c_str());
+	PiLink::print_P(deviceString.c_str());
 }
 
 bool DeviceManager::allDevices(DeviceConfig& config, uint8_t deviceIndex)
 {
-	return eepromManager.fetchDevice(config, deviceIndex);
+	return EepromManager::fetchDevice(config, deviceIndex);
 }
 
 void parseBytes(uint8_t* data, const char* s, uint8_t len) {
@@ -914,7 +914,7 @@ void DeviceManager::enumerateHardware()
 	spec.hardware = -1;			// any hardware
 	spec.function = 0;			// no function restriction
 
-	piLink.parseJson(handleHardwareSpec, &spec);
+	PiLink::parseJson(handleHardwareSpec, &spec);
 	DeviceOutput out;
 
 
@@ -981,20 +981,20 @@ void DeviceManager::listDevices() {
 	DeviceDisplay dd;
 	fill((int8_t*)&dd, sizeof(dd));
 	dd.empty = 0;
-	piLink.parseJson(HandleDeviceDisplay, (void*)&dd);
+	PiLink::parseJson(HandleDeviceDisplay, (void*)&dd);
 	if (dd.id==-2) {
 		if (dd.write>=0)
 			tempControl.cameraLight.setActive(dd.write!=0);
 		return;
 	}
-	deviceManager.beginDeviceOutput();
-	for (device_slot_t idx=0; deviceManager.allDevices(dc, idx); idx++) {
-		if (deviceManager.enumDevice(dd, dc, idx))
+	DeviceManager::beginDeviceOutput();
+	for (device_slot_t idx=0; DeviceManager::allDevices(dc, idx); idx++) {
+		if (DeviceManager::enumDevice(dd, dc, idx))
 		{
 			char val[10];
 			val[0] = 0;
 			UpdateDeviceState(dd, dc, val);
-			deviceManager.printDevice(idx, dc, val);
+			DeviceManager::printDevice(idx, dc, val);
 		}
 	}
 }

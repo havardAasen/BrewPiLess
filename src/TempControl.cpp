@@ -502,14 +502,14 @@ void TempControl::increaseEstimator(temperature * estimator, temperature error){
 	if(*estimator < 25){
 		*estimator = intToTempDiff(5)/100; // make estimator at least 0.05
 	}
-	eepromManager.storeTempSettings();
+	EepromManager::storeTempSettings();
 }
 
 // Decrease estimator at least 16.7% (1/1.2), max 33.3% (1/1.5)
 void TempControl::decreaseEstimator(temperature * estimator, temperature error){
 	temperature factor = 426 - constrainTemp(abs(error)>>5, 0, 85); // 0.833 - 3.1% of error, limit between 0.667 and 0.833
 	*estimator = multiplyFactorTemperatureDiff(factor, *estimator);
-	eepromManager.storeTempSettings();
+	EepromManager::storeTempSettings();
 }
 
 uint16_t TempControl::timeSinceCooling(){
@@ -537,23 +537,23 @@ void TempControl::loadDefaultSettings(){
 }
 
 void TempControl::storeConstants(eptr_t offset){
-	eepromAccess.writeControlConstants(offset,  cc, sizeof(ControlConstants));
+	EepromAccess::writeControlConstants(offset,  cc, sizeof(ControlConstants));
 }
 
 void TempControl::loadConstants(eptr_t offset){
-	eepromAccess.readControlConstants(cc, offset, sizeof(ControlConstants));
+	EepromAccess::readControlConstants(cc, offset, sizeof(ControlConstants));
 	initFilters();
 }
 
 // write new settings to EEPROM to be able to reload them after a reset
 // The update functions only write to EEPROM if the value has changed
 void TempControl::storeSettings(eptr_t offset){
-	eepromAccess.writeControlSettings(offset, cs, sizeof(ControlSettings));
+	EepromAccess::writeControlSettings(offset, cs, sizeof(ControlSettings));
 	storedBeerSetting = cs.beerSetting;
 }
 
 void TempControl::loadSettings(eptr_t offset){
-	eepromAccess.readControlSettings(cs, offset, sizeof(ControlSettings));
+	EepromAccess::readControlSettings(cs, offset, sizeof(ControlSettings));
 	logDebug("loaded settings");
 	storedBeerSetting = cs.beerSetting;
 	setMode(cs.mode, true);		// force the mode update
@@ -587,7 +587,7 @@ void TempControl::setMode(char newMode, bool force){
 			cs.beerSetting = INVALID_TEMP;
 			cs.fridgeSetting = INVALID_TEMP;
 		}
-		eepromManager.storeTempSettings();
+		EepromManager::storeTempSettings();
 	}
 }
 
@@ -630,7 +630,7 @@ void TempControl::setBeerTemp(temperature newTemp){
 		// Do not store settings every time in profile mode, because EEPROM has limited number of write cycles.
 		// A temperature ramp would cause a lot of writes
 		// If Raspberry Pi is connected, it will update the settings anyway. This is just a safety feature.
-		eepromManager.storeTempSettings();
+		EepromManager::storeTempSettings();
 	}
 }
 
@@ -639,7 +639,7 @@ void TempControl::setFridgeTemp(temperature newTemp){
 	reset(); // reset peak detection and PID
 	updatePID();
 	updateState();
-	eepromManager.storeTempSettings();
+	EepromManager::storeTempSettings();
 }
 
 bool TempControl::stateIsCooling(){

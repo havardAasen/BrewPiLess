@@ -28,35 +28,35 @@ static const char PROGMEM LOG_STRING_FORMAT[] = "\"%s\"";
 
 void Logger::logMessageVaArg(char type, LOG_ID_TYPE errorID, const char * varTypes, ...){
 	va_list args;
-	piLink.printResponse('D');
-	piLink.sendJsonPair(JSONKEY_logType, type);
-	piLink.sendJsonPair(JSONKEY_logID, errorID);
-	piLink.print_P(PSTR(",\"V\":["));
+	PiLink::printResponse('D');
+	PiLink::sendJsonPair(JSONKEY_logType, type);
+	PiLink::sendJsonPair(JSONKEY_logID, errorID);
+	PiLink::print_P(PSTR(",\"V\":["));
 	va_start (args, varTypes);
 	uint8_t index = 0;
 	char buf[9];
 	while(varTypes[index]){
 		switch(varTypes[index]){
 			case 'd': // integer, signed or unsigned
-				piLink.print_P(STR_FMT_D, va_arg(args, int));
+				PiLink::print_P(STR_FMT_D, va_arg(args, int));
 				break;
 			case 's': // string
-				piLink.print_P(LOG_STRING_FORMAT, va_arg(args, char*));
+				PiLink::print_P(LOG_STRING_FORMAT, va_arg(args, char*));
 				break;
 			case 't': // temperature in fixed_7_9 format
-				piLink.print_P(LOG_STRING_FORMAT, tempToString(buf, va_arg(args,int), 1, 12));
+				PiLink::print_P(LOG_STRING_FORMAT, tempToString(buf, va_arg(args,int), 1, 12));
 			break;
 			case 'f': // fixed point value
-				piLink.print_P(LOG_STRING_FORMAT, fixedPointToString(buf, (temperature) va_arg(args,int), 3, 12));
+				PiLink::print_P(LOG_STRING_FORMAT, fixedPointToString(buf, (temperature) va_arg(args,int), 3, 12));
 			break;
 		}
 		if(varTypes[++index]){
-			piLink.print(',');
+			PiLink::print(',');
 		}
 	}
 	va_end (args);
-	piLink.print_P(PSTR("]"));
-	piLink.sendJsonClose();
+	PiLink::print_P(PSTR("]"));
+	PiLink::sendJsonClose();
 }
 
 Logger logger;

@@ -207,10 +207,10 @@ void MqttRemoteControl::_loadConfig()
     if(_mode == MqttModeOff) return;
     _serverPort = settings->port;
 
-    _serverAddress=settings->serverOffset? (char*)settings->_strings + settings->serverOffset:NULL;
+    _serverAddress=settings->serverOffset? (char*)settings->_strings + settings->serverOffset:nullptr;
 
-    _username = settings->usernameOffset? (char*)settings->_strings + settings->usernameOffset:NULL;
-    _password = settings->passwordOffset? (char*)settings->_strings + settings->passwordOffset:NULL;
+    _username = settings->usernameOffset? (char*)settings->_strings + settings->usernameOffset:nullptr;
+    _password = settings->passwordOffset? (char*)settings->_strings + settings->passwordOffset:nullptr;
 
 
     #if SerialDebug
@@ -228,9 +228,9 @@ void MqttRemoteControl::_loadConfig()
         
         _reportPeriod = settings->reportPeriod * 1000;
         _reportFormat = settings->reportFormat;
-        _reportBasePath =settings->reportBasePathOffset ? (char*)settings->_strings + settings->reportBasePathOffset:NULL;
+        _reportBasePath =settings->reportBasePathOffset ? (char*)settings->_strings + settings->reportBasePathOffset:nullptr;
 
-        if(_reportPeriod ==0 || _reportBasePath == NULL){
+        if(_reportPeriod ==0 || _reportBasePath == nullptr){
             DBG_PRINTF("Invalid period %d or path %s\n",_reportPeriod, _reportBasePath);
             _mode = (_mode == MqttModeBothControlLoggging)? MqttModeControl:MqttModeOff;
         }
@@ -238,16 +238,16 @@ void MqttRemoteControl::_loadConfig()
 
     if(_mode == MqttModeControl || _mode == MqttModeBothControlLoggging){
 
-        _modePath = settings->modePathOffset? (char*)settings->_strings + settings->modePathOffset:NULL;
-        _beerSetPath = settings->beerSetPathOffset? (char*)settings->_strings + settings->beerSetPathOffset:NULL;
-        _fridgeSetPath = settings->fridgeSetPathOffset? (char*)settings->_strings + settings->fridgeSetPathOffset:NULL;
+        _modePath = settings->modePathOffset? (char*)settings->_strings + settings->modePathOffset:nullptr;
+        _beerSetPath = settings->beerSetPathOffset? (char*)settings->_strings + settings->beerSetPathOffset:nullptr;
+        _fridgeSetPath = settings->fridgeSetPathOffset? (char*)settings->_strings + settings->fridgeSetPathOffset:nullptr;
         
 #if EanbleParasiteTempControl
-        _ptcPath = settings->ptcPathOffset? (char*)settings->_strings + settings->ptcPathOffset:NULL;
+        _ptcPath = settings->ptcPathOffset? (char*)settings->_strings + settings->ptcPathOffset:nullptr;
 #endif
 
 #if Auto_CAP
-        _capPath = settings->capControlPathOffset? (char*)settings->_strings + settings->capControlPathOffset:NULL;
+        _capPath = settings->capControlPathOffset? (char*)settings->_strings + settings->capControlPathOffset:nullptr;
 #endif
 
 

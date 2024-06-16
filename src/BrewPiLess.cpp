@@ -796,7 +796,7 @@ void greeting(std::function<void(const char*)> sendFunc)
 
 	// RSSI && 
 	const char *logname= brewLogger.currentLog();
-	if(logname == NULL) logname="";
+	if(logname == nullptr) logname="";
 	SystemConfiguration *syscfg= theSettings.systemConfiguration();
 #if AUTO_CAP
 	String capstate= capControlStatus();
@@ -849,7 +849,7 @@ AsyncWebSocket ws(WS_PATH);
 
 
 #if GreetingInMainLoop
-AsyncWebSocketClient * _lastWSclient=NULL;
+AsyncWebSocketClient * _lastWSclient=nullptr;
 void sayHelloWS()
 {
 	if(! _lastWSclient) return;
@@ -858,7 +858,7 @@ void sayHelloWS()
 			_lastWSclient->text(msg);
 	});
 	
-	_lastWSclient = NULL;
+	_lastWSclient = nullptr;
 }
 
 #endif
@@ -1020,7 +1020,7 @@ void reportRssi()
 #if UseServerSideEvent
 #if GreetingInMainLoop 
 
-AsyncEventSourceClient *_lastClient=NULL;
+AsyncEventSourceClient *_lastClient=nullptr;
 
 void sayHelloSSE()
 {
@@ -1030,7 +1030,7 @@ void sayHelloSSE()
 	greeting([=](const char* msg){
 		_lastClient->send(msg);
 	});
-	_lastClient = NULL;
+	_lastClient = nullptr;
 }
 
 void onClientConnected(AsyncEventSourceClient *client)
@@ -1376,7 +1376,7 @@ public:
 		
 
 			String ssid=request->getParam("nw",true)->value();
-			const char *pass=NULL;
+			const char *pass=nullptr;
 			if(request->hasParam("pass",true)){
 				pass = request->getParam("pass",true)->value().c_str();
 			}

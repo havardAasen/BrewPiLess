@@ -49,7 +49,7 @@ class PiLink{
 
 	typedef void (*ParseJsonCallback)(const char* key, const char* val, void* data);
 
-	static void parseJson(ParseJsonCallback fn, void* data=NULL);
+	static void parseJson(ParseJsonCallback fn, void* data=nullptr);
 
 	static int read();  // Adding so we can completely abstract away piStream outside of piLink
 

@@ -132,7 +132,7 @@ const char SimulatorTime[] PROGMEM = "t";
 
 void setTicks(ExternalTicks& externalTicks, const char* val, int multiplier=1000) {
 
-	if (val==NULL || *val==0) {
+	if (val==nullptr || *val==0) {
 		externalTicks.incMillis(1000);
 	}
 	else {

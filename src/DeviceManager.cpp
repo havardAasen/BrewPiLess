@@ -51,7 +51,7 @@
 
 #if BREWPI_EXTERNAL_SENSOR
 #include "TempSensorWireless.h"
-WirelessTempSensor* WirelessTempSensor::theWirelessTempSensor=NULL;
+WirelessTempSensor* WirelessTempSensor::theWirelessTempSensor=nullptr;
 #endif
 
 /*
@@ -84,7 +84,7 @@ OneWire* DeviceManager::oneWireBus(uint8_t pin) {
 		return &fridgeSensorBus;
 #endif
 #endif
-	return NULL;
+	return nullptr;
 }
 
 bool DeviceManager::firstDeviceOutput;
@@ -156,7 +156,7 @@ void* DeviceManager::createDevice(DeviceConfig& config, DeviceType dt)
 		#endif
 #endif
 	}
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -169,7 +169,7 @@ inline void** deviceTarget(DeviceConfig& config)
 	// for multichamber, will write directly to the multi-chamber managed storage.
 	// later...
 	if (config.chamber>1 || config.beer>1)
-		return NULL;
+		return nullptr;
 
 	void** ppv;
 	switch (config.deviceFunction) {
@@ -211,7 +211,7 @@ inline void** deviceTarget(DeviceConfig& config)
 		ppv = (void**)&tempControl.beerSensor;
 		break;
 	default:
-		ppv = NULL;
+		ppv = nullptr;
 	}
 	return ppv;
 }
@@ -244,7 +244,7 @@ void DeviceManager::uninstallDevice(DeviceConfig& config)
 {
 	DeviceType dt = deviceType(config.deviceFunction);
 	void** ppv = deviceTarget(config);
-	if (ppv==NULL)
+	if (ppv==nullptr)
 		return;
 
 	BasicTempSensor* s;
@@ -289,7 +289,7 @@ void DeviceManager::installDevice(DeviceConfig& config)
 {
 	DeviceType dt = deviceType(config.deviceFunction);
 	void** ppv = deviceTarget(config);
-	if (ppv==NULL || config.hw.deactivate)
+	if (ppv==nullptr || config.hw.deactivate)
 		return;
 	BasicTempSensor* s;
 	TempSensor* ts;
@@ -300,7 +300,7 @@ void DeviceManager::installDevice(DeviceConfig& config)
 			DEBUG_ONLY(logInfoInt(INFO_INSTALL_TEMP_SENSOR, config.deviceFunction));
 			// sensor may be wrapped in a TempSensor class, or may stand alone.
 			s = (BasicTempSensor*)createDevice(config, dt);
-			if (*ppv==NULL){
+			if (*ppv==nullptr){
 				logErrorInt(ERROR_OUT_OF_MEMORY_FOR_DEVICE, config.deviceFunction);
 			}
 			if (isBasicSensor(config.deviceFunction)) {
@@ -325,7 +325,7 @@ void DeviceManager::installDevice(DeviceConfig& config)
 			DEBUG_ONLY(logInfoInt(INFO_INSTALL_DEVICE, config.deviceFunction));
 			*ppv = createDevice(config, dt);
 #if (BREWPI_DEBUG > 0)
-			if (*ppv==NULL)
+			if (*ppv==nullptr)
 				logErrorInt(ERROR_OUT_OF_MEMORY_FOR_DEVICE, config.deviceFunction);
 #endif
 			break;
@@ -477,7 +477,7 @@ void DeviceManager::parseDeviceDefinition()
 	}
 	piLink.printResponse('U');
 	deviceManager.beginDeviceOutput();
-	deviceManager.printDevice(dev.id, *print, NULL);
+	deviceManager.printDevice(dev.id, *print, nullptr);
 	piLink.printNewLine();
 }
 
@@ -844,7 +844,7 @@ void DeviceManager::enumerateOneWireDevices(EnumerateHardware& h, EnumDevicesCal
 		config.chamber = 1; // chamber 1 is default
 //		logDebug("Enumerating one-wire devices on pin %d", pin);
 		OneWire* wire = oneWireBus(pin);
-		if (wire!=NULL) {
+		if (wire!=nullptr) {
 			wire->reset_search();
 			while (wire->search(config.hw.address)) {
 				// hardware device type from OneWire family ID
@@ -953,7 +953,7 @@ void UpdateDeviceState(DeviceDisplay& dd, DeviceConfig& dc, char* val)
 		return;
 
 	void** ppv = deviceTarget(dc);
-	if (ppv==NULL)
+	if (ppv==nullptr)
 		return;
 
 	if (dd.write>=0 && dt==DEVICETYPE_SWITCH_ACTUATOR) {

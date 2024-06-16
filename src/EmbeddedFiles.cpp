@@ -34,7 +34,7 @@
 #if NoEmbeddedFile == true
 
 const uint8_t* getEmbeddedFile(const char* filename,bool &gzip, unsigned int &size){
-	return NULL;
+	return nullptr;
 }
 
 #else
@@ -131,6 +131,6 @@ const uint8_t* getEmbeddedFile(const char* filename,bool &gzip, unsigned int &si
 			return fileMaps[i].content;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 #endif

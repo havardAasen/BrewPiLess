@@ -82,7 +82,7 @@ protected:
 public:
 	ExternalData():_gravity(INVALID_GRAVITY),_auxTemp(INVALID_TEMP),
 	_lastUpdate(0),_deviceVoltage(INVALID_VOLTAGE)
-	,_ispindelName(NULL),_calibrating(false),_rssiValid(false)
+	,_ispindelName(nullptr),_calibrating(false),_rssiValid(false)
 	{ _filteredGravity = INVALID_GRAVITY;}
 
 	float gravity(bool filtered=false);

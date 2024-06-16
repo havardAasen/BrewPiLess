@@ -45,10 +45,10 @@ BrewLogger::BrewLogger(){
 	
 	const char* BrewLogger::currentLog()
 	{
-		if(!_recording) return NULL;
+		if(!_recording) return nullptr;
 		if(_pFileInfo->logname[0] != 0)
 			return _pFileInfo->logname;
-		else return NULL;
+		else return nullptr;
 	}
 
 	String BrewLogger::loggingStatus()

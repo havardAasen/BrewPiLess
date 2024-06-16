@@ -27,9 +27,9 @@ private:
 
 public:
 	WiFiSetupClass():_wifiState(WiFiState::connected),_wifiScan(WiFiScan::none),_apMode(false),_switchToAp(true),_autoReconnect(true),
-		 _maxReconnect(5),_eventHandler(NULL),_targetSSID(NULL),_targetPass(NULL),_ip(INADDR_NONE),_gw(INADDR_NONE),_nm(INADDR_NONE){}
+		 _maxReconnect(5),_eventHandler(nullptr),_targetSSID(nullptr),_targetPass(nullptr),_ip(INADDR_NONE),_gw(INADDR_NONE),_nm(INADDR_NONE){}
 
-	void begin(WiFiMode mode, char const *ssid,const char *passwd=NULL);
+	void begin(WiFiMode mode, char const *ssid,const char *passwd=nullptr);
 	void setMode(WiFiMode mode);
 	void staConfig(IPAddress ip=0,IPAddress gw=0, IPAddress nm=0, IPAddress dns=0);
 
@@ -44,7 +44,7 @@ public:
 
 	String scanWifi();
 	bool requestScanWifi();
-	bool connect(char const *ssid,const char *passwd=NULL,IPAddress ip=0,IPAddress gw=0, IPAddress nm=0,IPAddress dns=0);
+	bool connect(char const *ssid,const char *passwd=nullptr,IPAddress ip=0,IPAddress gw=0, IPAddress nm=0,IPAddress dns=0);
 	bool disconnect();
 
 	bool isConnected();

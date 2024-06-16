@@ -20,7 +20,7 @@ public:
 		if(! theWirelessTempSensor)theWirelessTempSensor=this;
 	}
 	~WirelessTempSensor(){
-		theWirelessTempSensor=NULL;
+		theWirelessTempSensor=nullptr;
     }
      
     void setExpiryTime(uint32_t period){

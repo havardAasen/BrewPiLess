@@ -47,9 +47,9 @@ bool OneWireTempSensor::init(){
 
 	bool success = false;
 
-	if (sensor==NULL) {
+	if (sensor==nullptr) {
 		sensor = new DallasTemperature(oneWire);
-		if (sensor==NULL) {
+		if (sensor==nullptr) {
 			logErrorString(ERROR_SRAM_SENSOR, addressString);
 		}
 	}

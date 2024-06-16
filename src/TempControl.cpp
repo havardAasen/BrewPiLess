@@ -83,12 +83,12 @@ void TempControl::init(){
 	cameraLight.setActive(false);
 
 	// this is for cases where the device manager hasn't configured beer/fridge sensor.
-	if (beerSensor==NULL) {
+	if (beerSensor==nullptr) {
 		beerSensor = new TempSensor(TEMP_SENSOR_TYPE_BEER, &defaultTempSensor);
 		beerSensor->init();
 	}
 
-	if (fridgeSensor==NULL) {
+	if (fridgeSensor==nullptr) {
 		fridgeSensor = new TempSensor(TEMP_SENSOR_TYPE_FRIDGE, &defaultTempSensor);
 		fridgeSensor->init();
 	}
@@ -218,7 +218,7 @@ void TempControl::updateState(){
 		String annotation = "";
 		annotation += "Fridge door ";
 		annotation += doorOpen ? "opened" : "closed";
-		piLink.printTemperaturesJSON(0, annotation.c_str());
+		piLink.printTemperaturesJSON(nullptr, annotation.c_str());
 #else
 		piLink.printFridgeAnnotation(PSTR("Fridge door %S"), doorOpen ? PSTR("opened") : PSTR("closed"));
 #endif

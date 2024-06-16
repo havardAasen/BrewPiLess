@@ -698,9 +698,9 @@ bool BPLSettings::dejsonRemoteLogging(String json)
 
 	bool enabled= root["enabled"];
 	uint32_t period = root["period"];
-		
-	if(url == NULL || method==NULL || format==NULL 
-		|| strcmp(url,"") ==0 || strcmp(method,"") ==0 || strcmp(format,"") ==0){	
+
+	if(url == nullptr || method==nullptr || format==nullptr
+		|| strcmp(url,"") ==0 || strcmp(method,"") ==0 || strcmp(format,"") ==0){
 		return false;
 	}
 
@@ -1009,7 +1009,7 @@ static char *copyIfExist(JsonObject& root,const char* key,uint16_t &offset,char*
 		} 
 
 
-		if(ptr - base  +length > MqttSettingStringSpace ) return NULL;
+		if(ptr - base  +length > MqttSettingStringSpace ) return nullptr;
 		strcpy(ptr,str);
 		offset = (uint16_t)(ptr - base);
 

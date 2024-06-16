@@ -76,9 +76,9 @@ void WiFiSetupClass::begin(WiFiMode mode, char const *ssid,const char *passwd)
 			DBG_PRINTF("Invalid SSID!");
 			_mode = WIFI_AP;
 	}
-	_apName=(ssid == NULL || *ssid=='\0')? DEFAULT_HOSTNAME:ssid;
+	_apName=(ssid == nullptr || *ssid=='\0')? DEFAULT_HOSTNAME:ssid;
 	
-	_apPassword=(passwd !=NULL && *passwd=='\0')? NULL:passwd;
+	_apPassword=(passwd !=nullptr && *passwd=='\0')? nullptr:passwd;
 
 	// let the underlined library do the reconnection jobs.
 	WiFi.setAutoConnect(_autoReconnect);
@@ -115,7 +115,7 @@ bool WiFiSetupClass::connect(char const *ssid,const char *passwd,IPAddress ip,IP
 	if(_targetSSID) free((void*)_targetSSID);
 	_targetSSID=strdup(ssid);
 	if(_targetPass) free((void*)_targetPass);
-	_targetPass=(passwd)? strdup(passwd):NULL;
+	_targetPass=(passwd)? strdup(passwd):nullptr;
 
 	_ip=ip;
 	_gw=gw;
@@ -215,7 +215,7 @@ bool WiFiSetupClass::stayConnected()
 				_time=millis();
 
 				if(_mode == WIFI_STA){
-					if(WiFi.SSID() == NULL || WiFi.SSID() == "")
+					if(WiFi.SSID() == nullptr || WiFi.SSID() == "")
 						WiFi.mode(WIFI_AP_STA);
 					// just keep WIFI_AP_Mode in case Network isn't specified
 				}

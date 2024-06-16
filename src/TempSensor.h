@@ -46,12 +46,12 @@ enum TempSensorType {
 
 class TempSensor {
 	public:
-	TempSensor(TempSensorType sensorType, BasicTempSensor* sensor =NULL)  {
+	TempSensor(TempSensorType sensorType, BasicTempSensor* sensor =nullptr)  {
 		updateCounter = 255; // first update for slope filter after (255-4s)
 		setSensor(sensor);
 		#if FridgeSensorFallBack
 		_useBackupSensor=false;
-		_backupSensor=NULL;
+		_backupSensor=nullptr;
 		#endif
 	 }
 

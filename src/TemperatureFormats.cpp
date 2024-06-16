@@ -140,7 +140,7 @@ long_temperature stringToFixedPoint(const char * numberString){
 	long_temperature intPart = 0;
 	long_temperature fracPart = 0;
 
-	char * fractPtr = 0; //pointer to the point in the string
+	char * fractPtr = nullptr; //pointer to the point in the string
 	bool negative = 0;
 	if(numberString[0] == '-'){
 		numberString++;
@@ -151,7 +151,7 @@ long_temperature stringToFixedPoint(const char * numberString){
 	fractPtr = strchrnul(numberString, '.'); // returns pointer to the point.
 
 	intPart = atol(numberString);
-	if(fractPtr != 0){
+	if(fractPtr != nullptr){
 		// decimal point was found
 		fractPtr++; // add 1 to pointer to skip point
 		int8_t numDecimals = (int8_t) strlen(fractPtr);

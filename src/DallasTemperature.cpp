@@ -439,7 +439,7 @@ void DallasTemperature::requestTemperatures()
 #if REQUIRESWAITFORCONVERSION
     // ASYNC mode?
     if (!waitForConversion) return;
-    blockTillConversionComplete(getResolution(), NULL);
+    blockTillConversionComplete(getResolution(), nullptr);
 #endif
 
 }
@@ -493,7 +493,7 @@ int16_t DallasTemperature::millisToWaitForConversion(uint8_t bitResolution)
 void DallasTemperature::blockTillConversionComplete(uint8_t bitResolution, const uint8_t* deviceAddress)
 {
     int delms = millisToWaitForConversion(bitResolution);
-    if (deviceAddress != NULL && checkForConversion && !isParasitePowerMode())
+    if (deviceAddress != nullptr && checkForConversion && !isParasitePowerMode())
     {
         unsigned long timend = millis() + delms;
         while(!isConversionAvailable(deviceAddress) && (ticks.millis() < timend));

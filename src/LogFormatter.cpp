@@ -111,7 +111,7 @@ size_t dataSprintf(char *buffer,const char *format,const char* invalid)
 int _copyName(char *buf,char *name,bool concate)
 {
 	char *ptr=buf;
-	if(name ==NULL) return 0;
+	if(name ==nullptr) return 0;
 	if(concate){
 		*ptr='&';
 		ptr++;

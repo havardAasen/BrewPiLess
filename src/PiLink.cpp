@@ -509,7 +509,7 @@ void PiLink::sendJsonTemp(const char* name, temperature temp)
 
 void PiLink::printTemperatures(){
 	// print all temperatures with empty annotations
-	printTemperaturesJSON(0, 0);
+	printTemperaturesJSON(nullptr, nullptr);
 }
 
 #if 1 //#ifndef ESP8266 // There is a bug with the ESP8266 which prevents this from working. Removing it so we aren't tempted to use it.
@@ -520,7 +520,7 @@ void PiLink::printBeerAnnotation(const char * annotation, ...){
 	va_start (args, annotation );
 	vsnprintf_P(tempString, 128, annotation, args);
 	va_end (args);
-	printTemperaturesJSON(tempString, 0);
+	printTemperaturesJSON(tempString, nullptr);
 }
 
 void PiLink::printFridgeAnnotation(const char * annotation, ...){
@@ -530,7 +530,7 @@ void PiLink::printFridgeAnnotation(const char * annotation, ...){
 	va_start (args, annotation );
 	vsnprintf_P(tempString, 128, annotation, args);
 	va_end (args);
-	printTemperaturesJSON(0, tempString);
+	printTemperaturesJSON(nullptr, tempString);
 }
 
 #endif
@@ -832,7 +832,7 @@ void PiLink::parseJson(ParseJsonCallback fn, void* data)
 
 void PiLink::receiveJson(){
 
-	parseJson(&processJsonPair, NULL);
+	parseJson(&processJsonPair, nullptr);
 
 #if !BREWPI_SIMULATE	// this is quite an overhead and not needed for the simulator
 	sendControlSettings();	// update script with new settings
@@ -873,7 +873,7 @@ void PiLink::setBeerSetting(const char* val) {
 #if 0 //#ifdef ESP8266
 	String annotation = "";
 #endif
-	const char* source = NULL;
+	const char* source = nullptr;
 	temperature newTemp = stringToTemp(val);
 	if (tempControl.cs.mode == 'p') {
 		if (abs(newTemp - tempControl.cs.beerSetting) > 100) { // this excludes gradual updates under 0.2 degrees
@@ -999,14 +999,14 @@ void setBool(const char* value, uint8_t* target) {
 #define JSON_CONVERT(jsonKey, target, fn) { jsonKey, target, (JsonParserHandlerFn)&fn }
 
 const PiLink::JsonParserConvert PiLink::jsonParserConverters[] PROGMEM = {
-	JSON_CONVERT(JSONKEY_mode, NULL, setMode),
-	JSON_CONVERT(JSONKEY_beerSetting, NULL, setBeerSetting),
-	JSON_CONVERT(JSONKEY_fridgeSetting, NULL, setFridgeSetting),
+	JSON_CONVERT(JSONKEY_mode, nullptr, setMode),
+	JSON_CONVERT(JSONKEY_beerSetting, nullptr, setBeerSetting),
+	JSON_CONVERT(JSONKEY_fridgeSetting, nullptr, setFridgeSetting),
 
 	JSON_CONVERT(JSONKEY_heatEstimator, &tempControl.cs.heatEstimator, setStringToFixedPoint),
 	JSON_CONVERT(JSONKEY_coolEstimator, &tempControl.cs.coolEstimator, setStringToFixedPoint),
 
-	JSON_CONVERT(JSONKEY_tempFormat, NULL, setTempFormat),
+	JSON_CONVERT(JSONKEY_tempFormat, nullptr, setTempFormat),
 
 	JSON_CONVERT(JSONKEY_tempSettingMin, &tempControl.cc.tempSettingMin, setStringToTemp),
 	JSON_CONVERT(JSONKEY_tempSettingMax, &tempControl.cc.tempSettingMax, setStringToTemp),

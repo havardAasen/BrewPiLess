@@ -24,6 +24,20 @@ void BPLSettings::postFormat(){
 }
 
 
+void BPLSettings::setWiFiConfiguration(const char* ssid, const char* password)
+{
+    if(ssid)
+		strcpy(_data.wifiConfiguration.ssid, ssid);
+    else
+		_data.wifiConfiguration.ssid[0]='\0';
+
+	if(password)
+		strcpy(_data.wifiConfiguration.pass, password);
+	else
+		_data.wifiConfiguration.pass[0]='\0';
+}
+
+
 void BPLSettings::load()
 {
 	DBG_PRINTF("syscfg:%d, timeinfo:%d, gdc:%d, \

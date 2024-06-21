@@ -226,6 +226,12 @@ typedef struct _PressureMonitorSettings{
 }PressureMonitorSettings;
 #endif
 
+struct WiFiConfiguration{
+    char ssid[33];
+    char pass[33];
+    char _padding[30];
+};
+
 //####################################################
 // whole structure
 struct Settings{
@@ -238,6 +244,7 @@ struct Settings{
     RemoteLoggingInformation remoteLogginInfo; // 636: 444
     AutoCapSettings autoCapSettings; // 1080: 12
     ParasiteTempControlSettings parasiteTempControlSettings; //1092: 20
+    WiFiConfiguration wifiConfiguration;
 
 #if SupportPressureTransducer
     PressureMonitorSettings pressureMonitorSettings; // 16
@@ -287,7 +294,10 @@ public:
 
     void preFormat();
     void postFormat();
-    
+
+    WiFiConfiguration *getWifiConfiguration(){ return &_data.wifiConfiguration; }
+    void setWiFiConfiguration(const char* ssid, const char* pass);
+
 #if SupportPressureTransducer
     //pressure monitor
     PressureMonitorSettings *pressureMonitorSettings(){return &_data.pressureMonitorSettings;}

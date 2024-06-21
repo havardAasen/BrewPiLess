@@ -93,11 +93,6 @@ extern "C" {
 /* Start of Configuration 															  */
 /**************************************************************************************/
 
-
-#define JSON_BUFFER_SIZE 1024
-
-
-
 #define WS_PATH 		"/ws"
 #define SSE_PATH 		"/getline"
 

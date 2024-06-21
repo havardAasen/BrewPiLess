@@ -142,50 +142,37 @@ int copyTemp(char* buf,char* name,float value, bool concate)
 
 size_t nonNullJson(char* buffer,size_t size)
 {
-	const int JSON_BUFFER_SIZE = JSON_OBJECT_SIZE(15);
-	
-	#if ARDUINOJSON_VERSION_MAJOR == 6
-	DynamicJsonDocument root(JSON_BUFFER_SIZE +size);
-	#else
-
-	DynamicJsonBuffer jsonBuffer(JSON_BUFFER_SIZE);
-	JsonObject& root = jsonBuffer.createObject();
-	#endif
-
 	uint8_t state, mode;
 	float beerSet,fridgeSet;
 	float beerTemp,fridgeTemp,roomTemp;
 
 	brewPi.getAllStatus(&state,&mode,& beerTemp,& beerSet,& fridgeTemp,& fridgeSet,& roomTemp);
 
-	if(IS_FLOAT_TEMP_VALID(beerTemp)) root[KeyBeerTemp] = beerTemp;
-	if(IS_FLOAT_TEMP_VALID(beerSet)) root[KeyBeerSet] = beerSet;
-	if(IS_FLOAT_TEMP_VALID(fridgeTemp)) root[KeyFridgeTemp] = fridgeTemp;
-	if(IS_FLOAT_TEMP_VALID(fridgeSet)) root[KeyFridgeSet] = fridgeSet;
-	if(IS_FLOAT_TEMP_VALID(roomTemp)) root[KeyRoomTemp] = roomTemp;
+	JsonDocument doc;
+	if(IS_FLOAT_TEMP_VALID(beerTemp)) doc[KeyBeerTemp] = beerTemp;
+	if(IS_FLOAT_TEMP_VALID(beerSet)) doc[KeyBeerSet] = beerSet;
+	if(IS_FLOAT_TEMP_VALID(fridgeTemp)) doc[KeyFridgeTemp] = fridgeTemp;
+	if(IS_FLOAT_TEMP_VALID(fridgeSet)) doc[KeyFridgeSet] = fridgeSet;
+	if(IS_FLOAT_TEMP_VALID(roomTemp)) doc[KeyRoomTemp] = roomTemp;
 
-	root[KeyMode] =(int)( modeInInteger(mode) - '0');
+	doc[KeyMode] =(int)( modeInInteger(mode) - '0');
 	#if SupportPressureTransducer
-	if(PressureMonitor.isCurrentPsiValid()) root[KeyPressure]= PressureMonitor.currentPsi();
+	if(PressureMonitor.isCurrentPsiValid()) doc[KeyPressure]= PressureMonitor.currentPsi();
 	#endif
 	float sg=externalData.gravity();
 	if(IsGravityValid(sg)){
-		root[KeyGravity] = sg;
-		root[KeyPlato] = externalData.plato();
+		doc[KeyGravity] = sg;
+		doc[KeyPlato] = externalData.plato();
 	}
 
 	// iSpindel data
 	float vol=externalData.deviceVoltage();
 	if(IsVoltageValid(vol)){
-		 root[KeyVoltage] = vol;
+		 doc[KeyVoltage] = vol;
 		float at=externalData.auxTemp();
-		if(IS_FLOAT_TEMP_VALID(at)) root[KeyAuxTemp] = at;
+		if(IS_FLOAT_TEMP_VALID(at)) doc[KeyAuxTemp] = at;
 		float tilt=externalData.tiltValue();
-		root[KeyTilt]=tilt;
+		doc[KeyTilt]=tilt;
 	}
-	#if ARDUINOJSON_VERSION_MAJOR == 6
-	return	serializeJson(root,buffer,size);
-	#else
-	return root.printTo(buffer,size);
-	#endif
+	return	serializeJson(doc,buffer,size);
 }

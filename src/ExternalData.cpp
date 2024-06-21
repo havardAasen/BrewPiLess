@@ -197,24 +197,15 @@ float  ExternalData::temperatureCorrection(float sg, float t, float c){
 
 bool ExternalData::processGravityReport(char data[],size_t length, bool authenticated, uint8_t& error)
 {
-	//const int BUFFER_SIZE = JSON_OBJECT_SIZE(20);
-	//StaticJsonBuffer<BUFFER_SIZE> jsonBuffer;
-	#if ARDUINOJSON_VERSION_MAJOR == 6
-	DynamicJsonDocument root(512);
-	auto jsonerror=deserializeJson(root,data,length);
-	if(jsonerror 
-	#else
-	DynamicJsonBuffer jsonBuffer(512);
-	JsonObject& root = jsonBuffer.parseObject((char*)data,length);
-	if (!root.success() 
-	#endif
-		|| !root.containsKey("name")){
+	JsonDocument doc;
+	auto jsonerror=deserializeJson(doc,data,length);
+	if(jsonerror || !doc.containsKey("name")){
   		DBG_PRINTF("Invalid JSON\n");
   		error = ErrorJSONFormat;
   		return false;
 	}
 
-	String name= root["name"];
+	String name= doc["name"];
     // web interface
 	if(name.equals("webjs")){
 		if(! authenticated){
@@ -222,23 +213,23 @@ bool ExternalData::processGravityReport(char data[],size_t length, bool authenti
     	    return false;
         }
 
-		if(!root.containsKey("gravity")){
+		if(!doc.containsKey("gravity")){
   			DBG_PRINTF("No gravity\n");
   			error = ErrorMissingField;
   			return false;
   		}
-		float  gravity = root["gravity"];
+		float  gravity = doc["gravity"];
 
 		//if(!IsGravityInValidRange(gravity)) return true;
-		if(root.containsKey("plato")){
-			if(root["plato"] && !_cfg->usePlato){
+		if(doc.containsKey("plato")){
+			if(doc["plato"] && !_cfg->usePlato){
 				gravity = Brix2SG(gravity);
-			}else if(!root["plato"] && _cfg->usePlato){
+			}else if(!doc["plato"] && _cfg->usePlato){
 				gravity = SG2Brix(gravity);
 			}
 		} 
 
-		if(root.containsKey("og")){
+		if(doc.containsKey("og")){
 				setOriginalGravity(gravity);
 		}else{
 				// gravity data from user
@@ -253,15 +244,15 @@ bool ExternalData::processGravityReport(char data[],size_t length, bool authenti
 			if(_ispindelName) strcpy(_ispindelName,name.c_str());
 		}
 
-		if(! root.containsKey("temperature")){
+		if(! doc.containsKey("temperature")){
 		    DBG_PRINTF("iSpindel report no temperature!\n");
 		    return false;
 		}
 
-        float itemp=root["temperature"];
+        float itemp=doc["temperature"];
 		float tempC=itemp;
-		if(root.containsKey("temp_units")){
-			const char *TU=root["temp_units"];
+		if(doc.containsKey("temp_units")){
+			const char *TU=doc["temp_units"];
 			if(*TU == 'F') tempC = (itemp-32)/1.8;
 			else if(*TU == 'K') tempC = itemp- 273.15;
 		}
@@ -271,25 +262,25 @@ bool ExternalData::processGravityReport(char data[],size_t length, bool authenti
 		//Serial.print("temperature:");
 		//Serial.println(itemp);
 
-		if(!root.containsKey("angle")){
+		if(!doc.containsKey("angle")){
         	DBG_PRINTF("iSpindel report no angle!\n");
 			return false;
 		}
     	
-        setTilt(root["angle"],itemp,TimeKeeper.getTimeSeconds());
+        setTilt(doc["angle"],itemp,TimeKeeper.getTimeSeconds());
 
-        if(root.containsKey("battery"))
-    	    setDeviceVoltage(root["battery"]);
+        if(doc.containsKey("battery"))
+    	    setDeviceVoltage(doc["battery"]);
 
-        if(root.containsKey("RSSI"))
-    	    setDeviceRssi(root["RSSI"]);
+        if(doc.containsKey("RSSI"))
+    	    setDeviceRssi(doc["RSSI"]);
 
-		//setPlato(root["gravityP"],TimeKeeper.getTimeSeconds());
-		if(root.containsKey("gravity") &&
+		//setPlato(doc["gravityP"],TimeKeeper.getTimeSeconds());
+		if(doc.containsKey("gravity") &&
                 ! _cfg->calculateGravity 
 				&& ! _calibrating ){
 			// gravity information directly from iSpindel
-			float sgreading=root["gravity"];
+			float sgreading=doc["gravity"];
             setGravity(sgreading, TimeKeeper.getTimeSeconds());
         }
 	}else{

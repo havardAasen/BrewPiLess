@@ -62,6 +62,11 @@ void WiFiSetupClass::setupApService()
 }
 
 
+bool WiFiSetupClass::isApMode(){
+	return WiFi.getMode() == WIFI_AP;
+}
+
+
 void WiFiSetupClass::begin(WiFiMode mode, char const *ssid,const char *passwd)
 {
 	wifi_info("begin:");
@@ -86,13 +91,11 @@ void WiFiSetupClass::begin(WiFiMode mode, char const *ssid,const char *passwd)
 	WiFi.mode(_mode);
 	// start AP
 	if( _mode == WIFI_AP || _mode == WIFI_AP_STA){
-		_apMode=true;
 		createNetwork();
 		setupApService();
 	}
 
 	if( _mode == WIFI_STA || _mode == WIFI_AP_STA){
-		_apMode=false;
 		if(_ip !=INADDR_NONE){
 				WiFi.config(_ip,_gw,_nm);
 		}else{
@@ -124,7 +127,6 @@ bool WiFiSetupClass::connect(char const *ssid, const char *passwd, const IPAddre
 	_dns=dns;
 
 	_wifiState = WiFiState::change_connect_pending;
-	_apMode =false;
 	return true;
 }
 
@@ -161,7 +163,8 @@ String WiFiSetupClass::status(){
 
 bool WiFiSetupClass::stayConnected()
 {
-	if(_apMode){
+
+	if(isApMode()){
 		dnsServer->processNextRequest();
 		return true;
 	}
@@ -185,7 +188,6 @@ bool WiFiSetupClass::stayConnected()
 	}else if(_wifiState==WiFiState::disconnect_pending){
 			WiFi.disconnect();
 			DBG_PRINTF("Enter AP Mode\n");
-    		_apMode=true;
 			_wifiState =WiFiState::disconnected;
 			return true;
 	}else if(_wifiState==WiFiState::mode_change_pending){

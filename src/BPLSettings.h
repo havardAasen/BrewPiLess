@@ -5,7 +5,7 @@
 #include "Config.h"
 //*****************************************************
 // 156 bytes
-typedef struct _SystemConfiguration{
+struct SystemConfiguration{
     char  username[32];
     char  password[32];
     char  hostnetworkname[32];
@@ -19,21 +19,21 @@ typedef struct _SystemConfiguration{
     uint8_t wifiMode;
     uint32_t dns;
     uint8_t _padding[4];
-}SystemConfiguration;
+};
 
 //*****************************************************
 // time information
 // 12
-typedef struct _TimeInformation{
+struct TimeInformation{
     uint32_t savedTime;
     uint32_t timezoneoffset;
     uint8_t _padding[4];
-} TimeInformation;
+};
 
 //*****************************************************
 // gravity device
 //  36
-typedef struct _GravityDeviceConfiguration{
+struct GravityDeviceConfiguration{
     float ispindelCoefficients[4];
     float   lpfBeta;
 	uint32_t  numberCalPoints;
@@ -46,7 +46,7 @@ typedef struct _GravityDeviceConfiguration{
 	uint8_t  stableThreshold;
 	uint8_t  usePlato;
     uint8_t _padding[6];
-}GravityDeviceConfiguration;
+};
 
 //*****************************************************
 // Beer Profile
@@ -75,7 +75,7 @@ typedef int16_t Gravity;
 #define GravityToPlato(g) (((float)(g) / 10.0))
 
 // 12
-typedef struct _ScheduleStep{
+struct ScheduleStep{
     int16_t   temp;
     uint16_t  days;
     union GravityT{
@@ -89,24 +89,25 @@ typedef struct _ScheduleStep{
     uint8_t  attSpecified;
     char     condition;
     uint8_t _padding[2];
-} ScheduleStep; // 12bytes
+}; // 12bytes
+
 // 12 * 7 +12 = 96
-typedef struct _BeerTempSchedule{
+struct BeerTempSchedule{
 	ScheduleStep steps[MaximumSteps];
 	time_t   startDay;
     uint8_t  numberOfSteps;
     char     unit;
     uint8_t  _padding[6];
-} BeerTempSchedule;
+};
 
-typedef struct _BrewStatus{
+struct BrewStatus{
 	time_t   startingDate;
 	time_t   timeEnterCurrentStep;
 	time_t   currentStepDuration;
 	uint16_t  OGPoints;
 	uint8_t  currentStep;
     uint8_t _padding[5];
-}BrewStatus;
+};
 
 //*****************************************************
 // Local logging
@@ -114,18 +115,18 @@ typedef struct _BrewStatus{
 
 #define MaximumLogFileName 24
 
-typedef struct _FileIndexEntry{
+struct FileIndexEntry{
 	char name[MaximumLogFileName];
 	unsigned long time;
-} FileIndexEntry;
+};
 
-typedef struct _FileIndexes
+struct FileIndexes
 {
 	FileIndexEntry files[MAX_LOG_FILE_NUMBER];
 	char logname[MaximumLogFileName];
 	unsigned long starttime;
     uint8_t _padding[8];
-} FileIndexes;
+};
 
 //*****************************************************
 // Remote logging
@@ -136,7 +137,7 @@ typedef struct _FileIndexes
 #define mHTTP_POST 1
 #define mHTTP_PUT 2 
 
-typedef struct _RemoteLoggingInformation{
+struct RemoteLoggingInformation{
 	char url[MaximumUrlLength];
 	char format[MaximumFormatLength];
 	char contentType[MaximumContentTypeLength];
@@ -145,30 +146,30 @@ typedef struct _RemoteLoggingInformation{
 	uint8_t enabled;
 	uint8_t service;
     uint8_t _padding[2];
-} RemoteLoggingInformation;
+};
 
 
 //*****************************************************
 // Auto Cap
 
-typedef struct _AutoCapSettings{
+struct AutoCapSettings{
     union _condition{
         uint32_t targetTime;
         float    targetGravity;
     }condition;
     uint8_t autoCapMode;
     uint8_t _padding[7];
-} AutoCapSettings;
+};
 
 //*****************************************************
 // Parasite temp control
-typedef struct _ParasiteTempControlSettings{
+struct ParasiteTempControlSettings{
     float setTemp;
     float maxIdleTemp;
     uint32_t minCoolingTime;
     uint32_t minIdleTime;
     uint8_t _padding[4];
-}ParasiteTempControlSettings;
+};
 
 //*****************************************************
 // MQtt remote control
@@ -188,7 +189,7 @@ typedef struct _ParasiteTempControlSettings{
 #define MqttReportJson 1
 
 #define MqttSettingStringSpace 320
-typedef struct _MqttRemoteControlSettings{
+struct MqttRemoteControlSettings{
     uint16_t port;
     uint8_t  mode;
     uint8_t  reportFormat;
@@ -207,7 +208,7 @@ typedef struct _MqttRemoteControlSettings{
     uint8_t   _padding2[2];
 
     uint8_t   _strings[MqttSettingStringSpace];
-}MqttRemoteControlSettings;
+};
 #endif
 
 //*****************************************************
@@ -217,13 +218,13 @@ typedef struct _MqttRemoteControlSettings{
 #define PMModeMonitor 1
 #define PMModeControl 2
 
-typedef struct _PressureMonitorSettings{
+struct PressureMonitorSettings{
     float fa;
     uint16_t fb;
     uint8_t mode;
     uint8_t psi;
     uint8_t _padding[9];
-}PressureMonitorSettings;
+};
 #endif
 
 struct WiFiConfiguration{

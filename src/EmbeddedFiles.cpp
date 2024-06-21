@@ -39,12 +39,12 @@ const uint8_t* getEmbeddedFile(const char* filename,bool &gzip, unsigned int &si
 
 #else
 
-typedef struct _EmbeddedFileMapEntry{
+struct EmbeddedFileMapEntry{
 	const char *filename;
 	const uint8_t *content;
     unsigned int size;
 	bool  gzipped;
-} EmbeddedFileMapEntry;
+};
 
 #include "data/bwf_js.h"
 const char file_bwf_js [] PROGMEM="/bwf.js";

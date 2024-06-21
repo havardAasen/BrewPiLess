@@ -791,16 +791,14 @@ void greeting(const std::function<void(const char*)>& sendFunc)
 	
 	String ptcstate= parasiteTempController.getSettings();
 
-	sprintf(buf,"A:{\"nn\":\"%s\",\"ver\":\"%s\",\"rssi\":%d,\
-				\"tm\":%lld,\"off\":%ld, \"log\":\"%s\",\"cap\":{%s},\"ptcs\":%s}"
+	sprintf(buf,"A:{\"nn\":\"%s\",\"ver\":\"%s\",\"rssi\":%d,\"tm\":%lld,\"off\":%ld,\"log\":\"%s\",\"cap\":{%s},\"ptcs\":%s}"
 		,syscfg->titlelabel,BPL_VERSION,WiFi.RSSI(),
 		TimeKeeper.getTimeSeconds(),(long int)TimeKeeper.getTimezoneOffset(),
 		logname, capstate.c_str(),ptcstate.c_str());
 
 
 #else
-	sprintf(buf,"A:{\"nn\":\"%s\",\"ver\":\"%s\",\"rssi\":%d,\
-				\"tm\":%lu,\"off\":%ld, \"log\":\"%s\",\"cap\":{%s}}"
+	sprintf(buf,"A:{\"nn\":\"%s\",\"ver\":\"%s\",\"rssi\":%d,\"tm\":%lu,\"off\":%ld,\"log\":\"%s\",\"cap\":{%s}}"
 		,syscfg->titlelabel,BPL_VERSION,WiFi.RSSI(),
 		TimeKeeper.getTimeSeconds(),(long int)TimeKeeper.getTimezoneOffset(),
 		logname, capstate.c_str());
@@ -950,8 +948,7 @@ void reportRssi()
 		int pmmode=PressureMonitor.mode();
 		int psi = (int) PressureMonitor.currentPsi();
 		
-		sprintf(buf,"A:{\"rssi\":%d,\"ptc\":\"%c\",\"pt\":%u,\"ptctp\":%d,\"ptclo\":%d,\"ptcup\":%d,\
-			\"st\":%d,\"md\":\"%c\",\"bt\":%d,\"bs\":%d,\"ft\":%d,\"fs\":%d,\"rt\":%d,\"sl\":\"%s\",\"tu\":\"%c\",\"pm\":%d,\"psi\":%d}",
+		sprintf(buf,"A:{\"rssi\":%d,\"ptc\":\"%c\",\"pt\":%u,\"ptctp\":%d,\"ptclo\":%d,\"ptcup\":%d,\"st\":%d,\"md\":\"%c\",\"bt\":%d,\"bs\":%d,\"ft\":%d,\"fs\":%d,\"rt\":%d,\"sl\":\"%s\",\"tu\":\"%c\",\"pm\":%d,\"psi\":%d}",
 				WiFi.RSSI(),ptcmode,parasiteTempController.getTimeElapsed(),
 				parasiteTempController.getTemp(),parasiteTempController.getLowerBound(),parasiteTempController.getUpperBound(),
 			state,
@@ -968,8 +965,7 @@ void reportRssi()
 			);
 
 	#else
-	sprintf(buf,"A:{\"rssi\":%d,\"ptc\":\"%c\",\"pt\":%u,\"ptctp\":%d,\"ptclo\":%d,\"ptcup\":%d,\
-		\"st\":%d,\"md\":\"%c\",\"bt\":%d,\"bs\":%d,\"ft\":%d,\"fs\":%d,\"rt\":%d,\"sl\":\"%s\",\"tu\":\"%c\"}",
+	sprintf(buf,"A:{\"rssi\":%d,\"ptc\":\"%c\",\"pt\":%u,\"ptctp\":%d,\"ptclo\":%d,\"ptcup\":%d,\"st\":%d,\"md\":\"%c\",\"bt\":%d,\"bs\":%d,\"ft\":%d,\"fs\":%d,\"rt\":%d,\"sl\":\"%s\",\"tu\":\"%c\"}",
 			WiFi.RSSI(),ptcmode,parasiteTempController.getTimeElapsed(),
 			parasiteTempController.getTemp(),parasiteTempController.getLowerBound(),parasiteTempController.getUpperBound(),
 		state,

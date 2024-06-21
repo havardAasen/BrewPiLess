@@ -137,7 +137,7 @@ void BrewProfile::_estimateStep(time_t now,Gravity gravity)
 
 void BrewProfile::_toNextStep(unsigned long time)
 {
-	uint32_t csd;
+	uint32_t csd = 0;
 	do{
 		_status->currentStep++;
 		if(_status->currentStep < _schedule->numberOfSteps)

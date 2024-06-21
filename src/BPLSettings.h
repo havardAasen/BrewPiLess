@@ -18,7 +18,6 @@ struct SystemConfiguration{
     uint8_t passwordLcd;
     uint8_t wifiMode;
     uint32_t dns;
-    uint8_t _padding[4];
 };
 
 //*****************************************************
@@ -27,7 +26,6 @@ struct SystemConfiguration{
 struct TimeInformation{
     uint32_t savedTime;
     uint32_t timezoneoffset;
-    uint8_t _padding[4];
 };
 
 //*****************************************************
@@ -45,7 +43,6 @@ struct GravityDeviceConfiguration{
 
 	uint8_t  stableThreshold;
 	uint8_t  usePlato;
-    uint8_t _padding[6];
 };
 
 //*****************************************************
@@ -88,7 +85,6 @@ struct ScheduleStep{
     } stable;
     uint8_t  attSpecified;
     char     condition;
-    uint8_t _padding[2];
 }; // 12bytes
 
 // 12 * 7 +12 = 96
@@ -97,7 +93,6 @@ struct BeerTempSchedule{
 	time_t   startDay;
     uint8_t  numberOfSteps;
     char     unit;
-    uint8_t  _padding[6];
 };
 
 struct BrewStatus{
@@ -106,7 +101,6 @@ struct BrewStatus{
 	time_t   currentStepDuration;
 	uint16_t  OGPoints;
 	uint8_t  currentStep;
-    uint8_t _padding[5];
 };
 
 //*****************************************************
@@ -125,7 +119,6 @@ struct FileIndexes
 	FileIndexEntry files[MAX_LOG_FILE_NUMBER];
 	char logname[MaximumLogFileName];
 	unsigned long starttime;
-    uint8_t _padding[8];
 };
 
 //*****************************************************
@@ -145,7 +138,6 @@ struct RemoteLoggingInformation{
 	uint8_t method;
 	uint8_t enabled;
 	uint8_t service;
-    uint8_t _padding[2];
 };
 
 
@@ -158,7 +150,6 @@ struct AutoCapSettings{
         float    targetGravity;
     }condition;
     uint8_t autoCapMode;
-    uint8_t _padding[7];
 };
 
 //*****************************************************
@@ -168,7 +159,6 @@ struct ParasiteTempControlSettings{
     float maxIdleTemp;
     uint32_t minCoolingTime;
     uint32_t minIdleTime;
-    uint8_t _padding[4];
 };
 
 //*****************************************************
@@ -205,7 +195,6 @@ struct MqttRemoteControlSettings{
 
     uint16_t  reportBasePathOffset;
     uint16_t  reportPeriod;
-    uint8_t   _padding2[2];
 
     uint8_t   _strings[MqttSettingStringSpace];
 };
@@ -223,14 +212,12 @@ struct PressureMonitorSettings{
     uint16_t fb;
     uint8_t mode;
     uint8_t psi;
-    uint8_t _padding[9];
 };
 #endif
 
 struct WiFiConfiguration{
     char ssid[33];
     char pass[33];
-    char _padding[30];
 };
 
 //####################################################

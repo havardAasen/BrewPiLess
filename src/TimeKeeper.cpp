@@ -48,12 +48,12 @@ void TimeKeeperClass::begin(char* server1,char* server2,char* server3)
 
   	unsigned long secs=0;
 	int trial;
-	for(trial=0;trial< 50;trial++)
+	for(trial=0;trial< 20;trial++)
   	{
     	secs = sntp_get_current_timestamp();
 		DBG_PRINTF("Time from NTP :%ld\n",secs);
     	if(secs > 1546265623) break;
-    	delay(200);
+    	delay(500);
   	}
 	if(secs < 1546265623){
 		secs=loadTime() + 300;

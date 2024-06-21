@@ -86,9 +86,6 @@ extern "C" {
 #define ResponseAppleCNA true
 #define CaptivePortalTimeout 180
 
-#ifndef LegacyEspAsyncLibraries
-#define LegacyEspAsyncLibraries false
-#endif
 /**************************************************************************************/
 /* Start of Configuration 															  */
 /**************************************************************************************/
@@ -358,9 +355,7 @@ class BrewPiWebHandler: public AsyncWebHandler
 public:
 	BrewPiWebHandler(){}
 
-#if LegacyEspAsyncLibraries != true
 	bool isRequestHandlerTrivial() final {return false;}
-#endif
 
 	void handleRequest(AsyncWebServerRequest *request) override{
 		SystemConfiguration *syscfg=theSettings.systemConfiguration();
@@ -1300,9 +1295,7 @@ public:
 			DBG_PRINTF("Body total%u data:%s\n", total,_data);
 		}
 	}
-#if LegacyEspAsyncLibraries != true	
 	bool isRequestHandlerTrivial() final {return false;}
-#endif
 };
 ExternalDataHandler externalDataHandler;
 
@@ -1408,9 +1401,7 @@ public:
 	 	return false;
 	}
 
-	#if !LegacyEspAsyncLibraries
 	bool isRequestHandlerTrivial() final {return false;}
-	#endif
 };
 
 NetworkConfig networkConfig;

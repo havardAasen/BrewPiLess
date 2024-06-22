@@ -5,6 +5,7 @@
 #include "WiFiSetup.h"
 
 #include <algorithm>
+#include <memory>
 #include <numeric>
 #include <vector>
 
@@ -55,7 +56,7 @@ void WiFiSetupClass::createNetwork(){
 
 void WiFiSetupClass::setupApService()
 {
-	dnsServer.reset(new DNSServer());
+	dnsServer = std::make_unique<DNSServer>();
 	dnsServer->setErrorReplyCode(DNSReplyCode::NoError);
 	dnsServer->start(dns_port, "*", WiFi.softAPIP());
 	delay(500);

@@ -288,12 +288,12 @@ bool WiFiSetupClass::requestScanWifi() {
 	return false;
 }
 
-String WiFiSetupClass::scanWifi() {
+String WiFiSetupClass::scanWifi() const {
 	
 	String rst="{\"list\":[";
 	
 	DBG_PRINTF("Scan Networks...\n");
-	const int available_networks = WiFi.scanNetworks();
+	const std::uint8_t available_networks = WiFi.scanNetworks();
     DBG_PRINTF("Scan done\n");
     if (available_networks == 0) {
     	DBG_PRINTF("No networks found\n");
@@ -301,18 +301,20 @@ String WiFiSetupClass::scanWifi() {
 		return rst;
     }
 
-	std::vector<int> networks(available_networks);
+	std::vector<std::uint8_t> networks(available_networks);
 	std::iota(networks.begin(), networks.end(), 0);
-	std::sort(networks.begin(), networks.end(), [](int a, int b)
+	std::sort(networks.begin(), networks.end(), [](const std::uint8_t a, const std::uint8_t b)
 			  { return WiFi.SSID(a) > WiFi.SSID(b); });
-	const auto end_unique = std::unique(networks.begin(), networks.end(), [](int a, int b)
-										{ return WiFi.SSID(a) == WiFi.SSID(b); });
+	const auto end_unique = std::unique(networks.begin(), networks.end(),
+	                                    [](const std::uint8_t a, const std::uint8_t b) {
+		                                    return WiFi.SSID(a) == WiFi.SSID(b);
+	                                    });
 	networks.erase(end_unique, networks.end());
-	std::sort(networks.begin(), networks.end(), [](int a, int b)
+	std::sort(networks.begin(), networks.end(), [](const std::uint8_t a, const std::uint8_t b)
 			  { return WiFi.RSSI(a) > WiFi.RSSI(b); });
 
 	bool comma = false;
-	for (auto network : networks) {
+	for (const auto network : networks) {
 		DBG_PRINTF("SSID: %s, RSSI: %d\n", WiFi.SSID(network).c_str(), WiFi.RSSI(network));
 		String item = String("{\"ssid\":\"") + WiFi.SSID(network) +
 					  String("\",\"rssi\":") + WiFi.RSSI(network) +

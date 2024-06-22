@@ -42,7 +42,7 @@ public:
 	void setSwitchToApWhenDisconnected(bool toAp){  _switchToAp= toAp; }
 	void setAutoReconnect(bool reconnect){ _autoReconnect=reconnect; }
 
-	String scanWifi();
+	[[nodiscard]] String scanWifi() const;
 	bool requestScanWifi();
 	bool connect(char const *ssid, const char *passwd=nullptr, const IPAddress& ip=0,
                      const IPAddress& gw=0, const IPAddress& nm=0, const IPAddress& dns=0);

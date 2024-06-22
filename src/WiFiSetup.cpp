@@ -164,113 +164,111 @@ String WiFiSetupClass::status(){
 
 bool WiFiSetupClass::stayConnected()
 {
-
 	if(isApMode()){
 		dnsServer->processNextRequest();
 		return true;
 	}
-	
-	if(_wifiState==WiFiState::change_connect_pending){
-			DBG_PRINTF("Change Connect\n");
-			//if(WiFi.status() == WL_CONNECTED){
-			WiFi.disconnect();
-			//DBG_PRINTF("Disconnect\n");
-			//}
-			if(_ip != INADDR_NONE){
-				WiFi.config(_ip,_gw,_nm,_dns);
-			}
-			WiFi.begin(_targetSSID,_targetPass);
-			_reconnect =0;
-			_wifiState = WiFiState::connecting;
 
-			wifi_info("**try:");
-			_time=millis();
+	if(_wifiState==WiFiState::change_connect_pending){
+		DBG_PRINTF("Change Connect\n");
+		//if(WiFi.status() == WL_CONNECTED){
+		WiFi.disconnect();
+		//DBG_PRINTF("Disconnect\n");
+		//}
+		if(_ip != INADDR_NONE){
+			WiFi.config(_ip,_gw,_nm,_dns);
+		}
+		WiFi.begin(_targetSSID,_targetPass);
+		_reconnect =0;
+		_wifiState = WiFiState::connecting;
+
+		wifi_info("**try:");
+		_time=millis();
 
 	}else if(_wifiState==WiFiState::disconnect_pending){
-			WiFi.disconnect();
-			DBG_PRINTF("Enter AP Mode\n");
-			_wifiState =WiFiState::disconnected;
-			return true;
+		WiFi.disconnect();
+		DBG_PRINTF("Enter AP Mode\n");
+		_wifiState =WiFiState::disconnected;
+		return true;
 	}else if(_wifiState==WiFiState::mode_change_pending){
-			WiFiMode mode= WiFi.getMode();
-
-			if(mode == WIFI_AP_STA){
-				if( _mode == WIFI_AP){
-					//WiFi.disconnect();
-					_wifiState =WiFiState::disconnected;
-				}else if (_mode == WIFI_STA){
-				}
-				WiFi.mode(_mode);
-
-			}else if(mode == WIFI_STA){
-				if( _mode == WIFI_AP_STA){
-					WiFi.mode(_mode);
-					createNetwork();
-				}else if (_mode == WIFI_AP){
-					//WiFi.disconnect();
-					_wifiState =WiFiState::disconnected;
-					WiFi.mode(_mode);
-				}
-
-			}else if(mode == WIFI_AP){
-				if(_mode == WIFI_AP_STA) WiFi.mode(_mode);
-				WiFi.begin();
-				_wifiState =WiFiState::connection_recovering;
-				_time=millis();
-
-				if(_mode == WIFI_STA){
-					if(WiFi.SSID() == nullptr || WiFi.SSID() == "")
-						WiFi.mode(WIFI_AP_STA);
-					// just keep WIFI_AP_Mode in case Network isn't specified
-				}
+		WiFiMode mode= WiFi.getMode();
+		DBG_PRINTF("Changing mode from %d to %d\n",mode,_mode);
+		if(mode == WIFI_AP_STA){
+			if( _mode == WIFI_AP){
+				//WiFi.disconnect();
+				_wifiState =WiFiState::disconnected;
+			}else if (_mode == WIFI_STA){
 			}
+			WiFi.mode(_mode);
+
+		}else if(mode == WIFI_STA){
+			if( _mode == WIFI_AP_STA){
+				WiFi.mode(_mode);
+				createNetwork();
+			}else if (_mode == WIFI_AP){
+				//WiFi.disconnect();
+				_wifiState =WiFiState::disconnected;
+				WiFi.mode(_mode);
+			}
+
+		}else if(mode == WIFI_AP){
+			if(_mode == WIFI_AP_STA) WiFi.mode(_mode);
+			WiFi.begin();
+			_wifiState =WiFiState::connection_recovering;
+			_time=millis();
+
+			if(_mode == WIFI_STA){
+				if(WiFi.SSID() == nullptr || WiFi.SSID() == "")
+					WiFi.mode(WIFI_AP_STA);
+				// just keep WIFI_AP_Mode in case Network isn't specified
+			}
+		}
 
 	}else if(WiFi.status() != WL_CONNECTED){
- 			if(_wifiState==WiFiState::connected)
- 			{
-				wifi_info("**disc:");
+ 		if(_wifiState==WiFiState::connected)
+ 		{
+			wifi_info("**disc:");
 
-				_time=millis();
-				DBG_PRINTF("Lost Network. auto reconnect %d\n",_autoReconnect);
+			_time=millis();
+			DBG_PRINTF("Lost Network. auto reconnect %d\n",_autoReconnect);
+			_wifiState = WiFiState::connection_recovering;
+			return true;
+		}else if (_wifiState==WiFiState::connection_recovering){
+			// if sta mode, turn on AP mode
+			if(millis() - _time > time_for_rescue_AP_mode){
+				DBG_PRINTF("Stop recovering\n");
+				_time = millis();
+				_wifiState =WiFiState::disconnected;
+				WiFi.setAutoConnect(false);
+				if(_mode == WIFI_STA){
+					// create a wifi
+					WiFi.mode(WIFI_AP_STA);
+					createNetwork();
+				} // _mode == WIFI_STA
+			} // millis() - _time > time_for_rescue_AP_mode
+		} else if(_wifiState==WiFiState::disconnected){ // _wifiState == WiFiState::ConnectionRecovering
+			if( millis() -  _time  > time_for_recover_network){
+  				DBG_PRINTF("Start recovering\n");
+				WiFi.setAutoConnect(true);
 				_wifiState = WiFiState::connection_recovering;
-				return true;
-			}else if (_wifiState==WiFiState::connection_recovering){
-				// if sta mode, turn on AP mode
-				if(millis() - _time > time_for_rescue_AP_mode){
-					DBG_PRINTF("Stop recovering\n");
-					_time = millis();
-					_wifiState =WiFiState::disconnected;
-					WiFi.setAutoConnect(false);
-					if(_mode == WIFI_STA){
-						// create a wifi
-						WiFi.mode(WIFI_AP_STA);
-						createNetwork();
-					} // _mode == WIFI_STA
-				} // millis() - _time > time_for_rescue_AP_mode
-			} else if(_wifiState==WiFiState::disconnected){ // _wifiState == WiFiState::ConnectionRecovering
-				if( millis() -  _time  > time_for_recover_network){
-  					DBG_PRINTF("Start recovering\n");
-						WiFi.setAutoConnect(true);
-						_wifiState = WiFiState::connection_recovering;
-						_time = millis();
-				}
-		  }
- 	} // WiFi.status() != WL_CONNECTED 
- 	else // connected
- 	{
- 			WiFiState oldState=_wifiState;
- 			_wifiState=WiFiState::connected;
- 			_reconnect=0;
- 			if(oldState != _wifiState){
-				if(WiFi.getMode() != _mode){
-					WiFi.mode(_mode);
-				}
-				onConnected();
-				return true;
+				_time = millis();
 			}
-  } // end of connected
+		}
+	} // WiFi.status() != WL_CONNECTED
+	else // connected
+	{
+ 		WiFiState oldState=_wifiState;
+ 		_wifiState=WiFiState::connected;
+ 		_reconnect=0;
+ 		if(oldState != _wifiState){
+			if(WiFi.getMode() != _mode){
+				DBG_PRINTF("Change mode to: %d from %d\n", _mode, WiFi.getMode());
+				WiFi.mode(_mode);
+			}
+			onConnected();
+		}
+	} // end of connected
 
-	
 	if(_wifiScan == WiFiScan::pending){
 		String nets=scanWifi();
 		_wifiScan = WiFiScan::none;

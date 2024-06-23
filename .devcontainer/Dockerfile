@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
     npm \
     python3-venv \
     ruby-dev \
+    xxd \
     && rm -rf /var/lib/apt/lists/*
 
 RUN  curl -fLo /etc/udev/rules.d/99-platformio-udev.rules --create-dir https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/system/99-platformio-udev.rules

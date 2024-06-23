@@ -7,5 +7,6 @@
 .DS_Store
 htmljs/.sass-cache/
 htmljs/build/
+htmljs/cheader/
 htmljs/dist/
 htmljs/node_modules/

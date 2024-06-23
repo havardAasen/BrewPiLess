@@ -1798,7 +1798,6 @@ void loop(void){
 
 	if(!IS_RESTARTING){
 		WiFiSetup.stayConnected();
-		if(WiFiSetup.isApMode()) TimeKeeper.setInternetAccessibility(false);
 	}
 
   	if(_systemState ==SystemStateRestartPending){

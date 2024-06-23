@@ -30,56 +30,56 @@
 #endif
 #endif
 
-static const char JSONKEY_mode[] PROGMEM = "mode";
-static const char JSONKEY_beerSetting[] PROGMEM = "beerSet";
-static const char JSONKEY_fridgeSetting[] PROGMEM = "fridgeSet";
-static const char JSONKEY_heatEstimator[] PROGMEM = "heatEst";
-static const char JSONKEY_coolEstimator[] PROGMEM = "coolEst";
+inline constexpr char JSONKEY_mode[] PROGMEM = "mode";
+inline constexpr char JSONKEY_beerSetting[] PROGMEM = "beerSet";
+inline constexpr char JSONKEY_fridgeSetting[] PROGMEM = "fridgeSet";
+inline constexpr char JSONKEY_heatEstimator[] PROGMEM = "heatEst";
+inline constexpr char JSONKEY_coolEstimator[] PROGMEM = "coolEst";
 
 // constant;
-static const char JSONKEY_tempFormat[] PROGMEM = "tempFormat";
-static const char JSONKEY_tempSettingMin[] PROGMEM = "tempSetMin";
-static const char JSONKEY_tempSettingMax[] PROGMEM = "tempSetMax";
-static const char JSONKEY_pidMax[] PROGMEM = "pidMax";
-static const char JSONKEY_Kp[] PROGMEM = "Kp";
-static const char JSONKEY_Ki[] PROGMEM = "Ki";
-static const char JSONKEY_Kd[] PROGMEM = "Kd";
-static const char JSONKEY_iMaxError[] PROGMEM = "iMaxErr";
-static const char JSONKEY_idleRangeHigh[] PROGMEM = "idleRangeH";
-static const char JSONKEY_idleRangeLow[] PROGMEM = "idleRangeL";
-static const char JSONKEY_heatingTargetUpper[] PROGMEM = "heatTargetH";
-static const char JSONKEY_heatingTargetLower[] PROGMEM = "heatTargetL";
-static const char JSONKEY_coolingTargetUpper[] PROGMEM = "coolTargetH";
-static const char JSONKEY_coolingTargetLower[] PROGMEM = "coolTargetL";
-static const char JSONKEY_maxHeatTimeForEstimate[] PROGMEM = "maxHeatTimeForEst";
-static const char JSONKEY_maxCoolTimeForEstimate[] PROGMEM = "maxCoolTimeForEst";
-static const char JSONKEY_fridgeFastFilter[] PROGMEM = "fridgeFastFilt";
-static const char JSONKEY_fridgeSlowFilter[] PROGMEM = "fridgeSlowFilt";
-static const char JSONKEY_fridgeSlopeFilter[] PROGMEM = "fridgeSlopeFilt";
-static const char JSONKEY_beerFastFilter[] PROGMEM = "beerFastFilt";
-static const char JSONKEY_beerSlowFilter[] PROGMEM = "beerSlowFilt";
-static const char JSONKEY_beerSlopeFilter[] PROGMEM = "beerSlopeFilt";
-static const char JSONKEY_lightAsHeater[] PROGMEM = "lah";
-static const char JSONKEY_rotaryHalfSteps[] PROGMEM = "hs";
+inline constexpr char JSONKEY_tempFormat[] PROGMEM = "tempFormat";
+inline constexpr char JSONKEY_tempSettingMin[] PROGMEM = "tempSetMin";
+inline constexpr char JSONKEY_tempSettingMax[] PROGMEM = "tempSetMax";
+inline constexpr char JSONKEY_pidMax[] PROGMEM = "pidMax";
+inline constexpr char JSONKEY_Kp[] PROGMEM = "Kp";
+inline constexpr char JSONKEY_Ki[] PROGMEM = "Ki";
+inline constexpr char JSONKEY_Kd[] PROGMEM = "Kd";
+inline constexpr char JSONKEY_iMaxError[] PROGMEM = "iMaxErr";
+inline constexpr char JSONKEY_idleRangeHigh[] PROGMEM = "idleRangeH";
+inline constexpr char JSONKEY_idleRangeLow[] PROGMEM = "idleRangeL";
+inline constexpr char JSONKEY_heatingTargetUpper[] PROGMEM = "heatTargetH";
+inline constexpr char JSONKEY_heatingTargetLower[] PROGMEM = "heatTargetL";
+inline constexpr char JSONKEY_coolingTargetUpper[] PROGMEM = "coolTargetH";
+inline constexpr char JSONKEY_coolingTargetLower[] PROGMEM = "coolTargetL";
+inline constexpr char JSONKEY_maxHeatTimeForEstimate[] PROGMEM = "maxHeatTimeForEst";
+inline constexpr char JSONKEY_maxCoolTimeForEstimate[] PROGMEM = "maxCoolTimeForEst";
+inline constexpr char JSONKEY_fridgeFastFilter[] PROGMEM = "fridgeFastFilt";
+inline constexpr char JSONKEY_fridgeSlowFilter[] PROGMEM = "fridgeSlowFilt";
+inline constexpr char JSONKEY_fridgeSlopeFilter[] PROGMEM = "fridgeSlopeFilt";
+inline constexpr char JSONKEY_beerFastFilter[] PROGMEM = "beerFastFilt";
+inline constexpr char JSONKEY_beerSlowFilter[] PROGMEM = "beerSlowFilt";
+inline constexpr char JSONKEY_beerSlopeFilter[] PROGMEM = "beerSlopeFilt";
+inline constexpr char JSONKEY_lightAsHeater[] PROGMEM = "lah";
+inline constexpr char JSONKEY_rotaryHalfSteps[] PROGMEM = "hs";
 #if SettableMinimumCoolTime 
-static const char JSONKEY_minCoolTime[] PROGMEM = "minCoolTime";
-static const char JSONKEY_minCoolIdleTime[] PROGMEM = "minCoolIdleTime";
-static const char JSONKEY_minHeatTime[] PROGMEM = "minHeatTime";
-static const char JSONKEY_minHeatIdleTime[] PROGMEM = "minHeatIdleTime";
-static const char JSONKEY_mutexDeadTime[] PROGMEM = "deadTime";
+inline constexpr char JSONKEY_minCoolTime[] PROGMEM = "minCoolTime";
+inline constexpr char JSONKEY_minCoolIdleTime[] PROGMEM = "minCoolIdleTime";
+inline constexpr char JSONKEY_minHeatTime[] PROGMEM = "minHeatTime";
+inline constexpr char JSONKEY_minHeatIdleTime[] PROGMEM = "minHeatIdleTime";
+inline constexpr char JSONKEY_mutexDeadTime[] PROGMEM = "deadTime";
 #endif
 // variable;
-static const char JSONKEY_beerDiff[] PROGMEM = "beerDiff";
-static const char JSONKEY_diffIntegral[] PROGMEM = "diffIntegral";
-static const char JSONKEY_beerSlope[] PROGMEM = "beerSlope";
-static const char JSONKEY_p[] PROGMEM = "p";
-static const char JSONKEY_i[] PROGMEM = "i";
-static const char JSONKEY_d[] PROGMEM = "d";
-static const char JSONKEY_estimatedPeak[] PROGMEM = "estPeak"; // current peak estimate
-static const char JSONKEY_negPeakEstimate[] PROGMEM = "negPeakEst"; // last neg peak estimate before switching to idle
-static const char JSONKEY_posPeakEstimate[] PROGMEM = "posPeakEst";
-static const char JSONKEY_negPeak[] PROGMEM = "negPeak"; // last true neg peak
-static const char JSONKEY_posPeak[] PROGMEM = "posPeak";
+inline constexpr char JSONKEY_beerDiff[] PROGMEM = "beerDiff";
+inline constexpr char JSONKEY_diffIntegral[] PROGMEM = "diffIntegral";
+inline constexpr char JSONKEY_beerSlope[] PROGMEM = "beerSlope";
+inline constexpr char JSONKEY_p[] PROGMEM = "p";
+inline constexpr char JSONKEY_i[] PROGMEM = "i";
+inline constexpr char JSONKEY_d[] PROGMEM = "d";
+inline constexpr char JSONKEY_estimatedPeak[] PROGMEM = "estPeak"; // current peak estimate
+inline constexpr char JSONKEY_negPeakEstimate[] PROGMEM = "negPeakEst"; // last neg peak estimate before switching to idle
+inline constexpr char JSONKEY_posPeakEstimate[] PROGMEM = "posPeakEst";
+inline constexpr char JSONKEY_negPeak[] PROGMEM = "negPeak"; // last true neg peak
+inline constexpr char JSONKEY_posPeak[] PROGMEM = "posPeak";
 
-static const char JSONKEY_logType[] PROGMEM = "logType";
-static const char JSONKEY_logID[] PROGMEM = "logID";
+inline constexpr char JSONKEY_logType[] PROGMEM = "logType";
+inline constexpr char JSONKEY_logID[] PROGMEM = "logID";

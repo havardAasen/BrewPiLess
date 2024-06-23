@@ -852,7 +852,6 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
 	if(type == WS_EVT_CONNECT){
     	DBG_PRINTF("ws[%s][%u] connect\n", server->url(), client->id());
     	//client->printf("Hello Client %u :)", client->id());
-    	client->ping();
 		#if GreetingInMainLoop
 		_lastWSclient = client;
 		#else

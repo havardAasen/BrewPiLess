@@ -1,4 +1,5 @@
 #include <ESP8266WiFi.h>          //https://github.com/esp8266/Arduino
+#include <ESP8266mDNS.h>
 //needed for library
 #include <DNSServer.h>
 #include "Config.h"
@@ -164,108 +165,144 @@ String WiFiSetupClass::status(){
 
 bool WiFiSetupClass::stayConnected()
 {
-	if(isApMode()){
+	if (WiFi.getMode() == WIFI_AP || WiFi.getMode() == WIFI_AP_STA)
 		dnsServer->processNextRequest();
-		return true;
-	}
 
-	if(_wifiState==WiFiState::change_connect_pending){
+	if (_wifiState == WiFiState::change_connect_pending) {
 		DBG_PRINTF("Change Connect\n");
-		//if(WiFi.status() == WL_CONNECTED){
 		WiFi.disconnect();
-		//DBG_PRINTF("Disconnect\n");
-		//}
-		if(_ip != INADDR_NONE){
-			WiFi.config(_ip,_gw,_nm,_dns);
+		WiFiMode mode = WiFi.getMode();
+		if (mode == WIFI_AP) {
+			WiFi.mode(WIFI_AP_STA);
+			MDNS.notifyAPChange();
 		}
-		WiFi.begin(_targetSSID,_targetPass);
-		_reconnect =0;
-		_wifiState = WiFiState::connecting;
+
+		if (_ip != INADDR_NONE) {
+			WiFi.config(_ip, _gw, _nm, _dns);
+		}
+		if (_targetSSID)
+			WiFi.begin(_targetSSID, _targetPass);
+		else
+			WiFi.begin();
+		_reconnect = 0;
+		_wifiState = WiFiState::connection_recovering;
 
 		wifi_info("**try:");
-		_time=millis();
-
-	}else if(_wifiState==WiFiState::disconnect_pending){
+		_time = millis();
+	} else if (_wifiState == WiFiState::disconnect_pending) {
 		WiFi.disconnect();
 		DBG_PRINTF("Enter AP Mode\n");
-		_wifiState =WiFiState::disconnected;
+		_wifiState = WiFiState::disconnected;
 		return true;
-	}else if(_wifiState==WiFiState::mode_change_pending){
-		WiFiMode mode= WiFi.getMode();
-		DBG_PRINTF("Changing mode from %d to %d\n",mode,_mode);
-		if(mode == WIFI_AP_STA){
-			if( _mode == WIFI_AP){
-				//WiFi.disconnect();
-				_wifiState =WiFiState::disconnected;
-			}else if (_mode == WIFI_STA){
+	} else if (_wifiState == WiFiState::mode_change_pending) {
+		WiFiMode mode = WiFi.getMode();
+
+		if (mode == WIFI_AP_STA) {
+			if (_mode == WIFI_AP) {
+				DBG_PRINTF("Change from AP_STA to AP\n");
+				WiFi.disconnect();
+				_wifiState = WiFiState::disconnected;
+			} else if (_mode == WIFI_STA) {
 			}
 			WiFi.mode(_mode);
-
-		}else if(mode == WIFI_STA){
-			if( _mode == WIFI_AP_STA){
+			MDNS.notifyAPChange();
+		} else if (mode == WIFI_STA) {
+			if (_mode == WIFI_AP_STA) {
 				WiFi.mode(_mode);
+				MDNS.notifyAPChange();
+
 				createNetwork();
-			}else if (_mode == WIFI_AP){
+				setupApService();
+			} else if (_mode == WIFI_AP) {
 				//WiFi.disconnect();
-				_wifiState =WiFiState::disconnected;
+				_wifiState = WiFiState::disconnected;
 				WiFi.mode(_mode);
+				MDNS.notifyAPChange();
 			}
-
-		}else if(mode == WIFI_AP){
-			if(_mode == WIFI_AP_STA) WiFi.mode(_mode);
+		} else if (mode == WIFI_AP) {
+			if (_mode == WIFI_AP_STA) {
+				WiFi.mode(_mode);
+				MDNS.notifyAPChange();
+			}
 			WiFi.begin();
-			_wifiState =WiFiState::connection_recovering;
-			_time=millis();
+			_wifiState = WiFiState::connection_recovering;
+			_time = millis();
 
-			if(_mode == WIFI_STA){
-				if(WiFi.SSID() == nullptr || WiFi.SSID() == "")
+			if (_mode == WIFI_STA) {
+				if (WiFi.SSID() == nullptr || WiFi.SSID() == "") {
 					WiFi.mode(WIFI_AP_STA);
+					MDNS.notifyAPChange();
+				}
 				// just keep WIFI_AP_Mode in case Network isn't specified
 			}
 		}
-
-	}else if(WiFi.status() != WL_CONNECTED){
- 		if(_wifiState==WiFiState::connected)
- 		{
+	} else if (WiFi.status() != WL_CONNECTED) {
+		if (_wifiState == WiFiState::connected) {
 			wifi_info("**disc:");
-
-			_time=millis();
-			DBG_PRINTF("Lost Network. auto reconnect %d\n",_autoReconnect);
-			_wifiState = WiFiState::connection_recovering;
-			return true;
-		}else if (_wifiState==WiFiState::connection_recovering){
-			// if sta mode, turn on AP mode
-			if(millis() - _time > time_for_rescue_AP_mode){
-				DBG_PRINTF("Stop recovering\n");
-				_time = millis();
-				_wifiState =WiFiState::disconnected;
-				WiFi.setAutoConnect(false);
-				if(_mode == WIFI_STA){
-					// create a wifi
-					WiFi.mode(WIFI_AP_STA);
-					createNetwork();
-				} // _mode == WIFI_STA
-			} // millis() - _time > time_for_rescue_AP_mode
-		} else if(_wifiState==WiFiState::disconnected){ // _wifiState == WiFiState::ConnectionRecovering
-			if( millis() -  _time  > time_for_recover_network){
-  				DBG_PRINTF("Start recovering\n");
-				WiFi.setAutoConnect(true);
+			if (_mode != WIFI_AP) {
+				onConnected();
+				DBG_PRINTF("Lost Network.WiFi.status()= %d\n", WiFi.status());
 				_wifiState = WiFiState::connection_recovering;
+				if (_targetSSID) WiFi.begin(_targetSSID, _targetPass);
+				else WiFi.begin();
+				WiFi.setAutoReconnect(true);
 				_time = millis();
+			}
+		} else if (_wifiState == WiFiState::connection_recovering) {
+			// if sta mode, turn on AP mode
+			if (millis() - _time > time_for_recovering_network) {
+				DBG_PRINTF("Stop recovering\n");
+				// enter AP mode, or the underlying WiFi stack would keep searching and block
+				//  connections to AP mode.
+
+				WiFi.setAutoReconnect(false);
+
+				if (_mode == WIFI_STA && WiFi.getMode() == WIFI_STA) {
+					enterBackupApMode();
+				}
+
+				_time = millis();
+				_wifiState = WiFiState::disconnected;
+			} // millis() - _time > TimeForRecoveringNetwork
+		} else if (_wifiState == WiFiState::disconnected) {
+			if (_mode == WIFI_AP) {
+				// Can't "return" here, if it returns here, the "canning networking will never run."
+				//  // don't try to restore network, since there is none to be rediscover
+			} else {
+				// in AP_STA or STA mode
+				if (millis() - _time > wait_time_to_recover_network) {
+					DBG_PRINTF("Start recovering, wifi.status=%d\n",
+					           WiFi.status());
+					DBG_PRINTF("retry SSID:%s\n",
+					           _targetSSID? _targetSSID:"NULL");
+					if (_targetSSID) WiFi.begin(_targetSSID, _targetPass);
+					else WiFi.begin();
+
+					WiFi.setAutoReconnect(true);
+
+					_wifiState = WiFiState::connection_recovering;
+					_time = millis();
+				}
 			}
 		}
-	} // WiFi.status() != WL_CONNECTED
-	else // connected
-	{
- 		WiFiState oldState=_wifiState;
- 		_wifiState=WiFiState::connected;
- 		_reconnect=0;
- 		if(oldState != _wifiState){
-			if(WiFi.getMode() != _mode){
-				DBG_PRINTF("Change mode to: %d from %d\n", _mode, WiFi.getMode());
-				WiFi.mode(_mode);
+	} else { // connected
+		if (_mode == WIFI_AP) {
+			DBG_PRINTF("Connected in AP_mode\n");
+		} else {
+			const WiFiState oldState = _wifiState;
+			_wifiState = WiFiState::connected;
+			_reconnect = 0;
+			if (oldState != _wifiState) {
+				if (WiFi.getMode() != _mode) {
+					DBG_PRINTF("Change to mode: %d from %d\n", _mode,
+					           WiFi.getMode());
+					WiFi.mode(_mode);
+					MDNS.notifyAPChange();
+				}
+
+				wifi_info("WiFi Connected:");
+				onConnected();
 			}
-			onConnected();
 		}
 	} // end of connected
 

@@ -76,8 +76,8 @@ private:
 	IPAddress _dns;
 
 	static constexpr int dns_port = 53;
-	static constexpr int time_for_rescue_AP_mode = 60000;
-	static constexpr int time_for_recover_network = 120000;
+	static constexpr int time_for_recovering_network = 8000;
+	static constexpr int wait_time_to_recover_network = 60000;
 
 	void setupApService();
 	void enterBackupApMode();

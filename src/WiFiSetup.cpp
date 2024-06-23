@@ -16,7 +16,7 @@ WiFiSetupClass WiFiSetup;
 #if SerialDebug
 #define DebugOut(a) DebugPort.print(a)
 #define DBG_PRINTF(...) DebugPort.printf(__VA_ARGS__)
-#define wifi_info(a)	DBG_PRINTF("%s,SSID:%s pass:%s IP:%s, gw:%s\n",(a),WiFi.SSID().c_str(),WiFi.psk().c_str(),WiFi.localIP().toString().c_str(),WiFi.gatewayIP().toString().c_str())
+#define wifi_info(a)	DBG_PRINTF("%s,SSID:%s IP:%s, gw:%s\n",(a),WiFi.SSID().c_str(),WiFi.localIP().toString().c_str(),WiFi.gatewayIP().toString().c_str())
 #else
 #define DebugOut(a)
 #define DBG_PRINTF(...)
@@ -137,7 +137,7 @@ void WiFiSetupClass::begin(const WiFiMode mode, const char *ssid, const char *pa
 
 bool WiFiSetupClass::connect(char const *ssid, const char *passwd, const IPAddress& ip,
                              const IPAddress& gw, const IPAddress& nm, const IPAddress& dns){
-	DBG_PRINTF("Connect to %s pass:%s, ip=%s\n",ssid, passwd,ip.toString().c_str());
+	DBG_PRINTF("Connect to %s, ip=%s\n",ssid, ip.toString().c_str());
 
 	if(_targetSSID) free((void*)_targetSSID);
 	_targetSSID=strdup(ssid);

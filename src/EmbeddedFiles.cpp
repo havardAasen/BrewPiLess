@@ -14,12 +14,6 @@
 #define PASTER(lo,file)   STRINGIFY(data/lo ## file )
 #define EVALUATOR(l,x)  PASTER(l,x)
 
-#define ClassicIndexHtmFile EVALUATOR(WebPageLanguage,_c_index_htm.h)
-#define ClassicSetupHtmFile EVALUATOR(WebPageLanguage,_c_setup_htm.h)
-#define ClassicLogHtmFile EVALUATOR(WebPageLanguage,_c_log_htm.h)
-#define ClassicGravityHtmFile EVALUATOR(WebPageLanguage,_c_gdc_htm.h)
-#define ClassicConfigHtmFile EVALUATOR(WebPageLanguage,_c_config_htm.h)
-
 
 #define IndexHtmFile EVALUATOR(WebPageLanguage,_index_htm.h)
 #define ControlHtmFile EVALUATOR(WebPageLanguage,_control_htm.h)
@@ -57,7 +51,6 @@ const char file_testcmd_htm [] PROGMEM="/testcmd.htm";
 
 const char file_lcd_htm [] PROGMEM="/lcd";
 
-#if FrontEnd == TomsFrontEnd
 #include "data/lcd_htm.h"
 
 #include IndexHtmFile
@@ -91,35 +84,6 @@ EmbeddedFileMapEntry fileMaps[]={
 {file_lcd_htm,lcd_htm_gz,sizeof(lcd_htm_gz),true}
 };
 
-#else
-
-#include "data/c_lcd_htm.h"
-
-#include ClassicIndexHtmFile
-#include ClassicSetupHtmFile
-#include ClassicLogHtmFile
-#include ClassicGravityHtmFile
-#include ClassicConfigHtmFile
-
-const char file_index_htm [] PROGMEM="/index.htm";
-const char file_setup_htm [] PROGMEM="/setup.htm";
-const char file_logconfig [] PROGMEM="/log.htm";
-const char file_gravitydevice [] PROGMEM="/gdc.htm";
-const char file_config [] PROGMEM="/config.htm";
-
-
-EmbeddedFileMapEntry fileMaps[]={
-{file_bwf_js,data_bwf_min_js_gz,sizeof(data_bwf_min_js_gz),true},
-{file_index_htm,data_c_index_htm_gz,sizeof(data_c_index_htm_gz),true},
-{file_setup_htm,data_c_setup_htm_gz,sizeof(data_c_setup_htm_gz),true},
-{file_logconfig,data_c_log_htm_gz,sizeof(data_c_log_htm_gz),true},
-{file_gravitydevice,data_c_gdc_htm_gz,sizeof(data_c_gdc_htm_gz),true},
-{file_config,data_c_config_htm_gz,sizeof(data_c_config_htm_gz),true},
-{file_testcmd_htm,(const uint8_t *)data_testcmd_htm,0,false},
-{file_lcd_htm,lcd_htm_gz,sizeof(lcd_htm_gz),true}
-};
-
-#endif
 
 const uint8_t* getEmbeddedFile(const char* filename,bool &gzip, unsigned int &size)
 {

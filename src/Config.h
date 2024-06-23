@@ -455,15 +455,6 @@
 #define WebPageLanguage english
 #endif
 
-#define ClassicFrontEnd 0
-#define TomsFrontEnd 1
-
-#ifndef UseClassicFrontEnd
-#define FrontEnd TomsFrontEnd
-#else
-#define FrontEnd ClassicFrontEnd
-#endif
-
 #ifndef EanbleParasiteTempControl
 #define EanbleParasiteTempControl true
 #endif

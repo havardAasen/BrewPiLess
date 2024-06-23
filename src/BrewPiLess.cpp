@@ -1382,7 +1382,9 @@ public:
 				WiFiSetup.connect(ssid.c_str(),pass);
 				DBG_PRINTF("dynamic IP\n");
 			}
-			//MDNS.notifyAPChange();		
+
+		DBG_PRINTF("Saving WiFI credentials for SSID: %s\n",ssid.c_str());
+		theSettings.setWiFiConfiguration(ssid.c_str(),pass);
 		theSettings.save();
 
 		request->send(200,"application/json","{}");
@@ -1605,14 +1607,21 @@ void setup(void){
 
 	//1. Start WiFi
 	DBG_PRINTF("Starting WiFi...\n");
-	WiFiMode wifiMode= (WiFiMode) syscfg->wifiMode;
 	WiFiSetup.staConfig(IPAddress(syscfg->ip),IPAddress(syscfg->gw),IPAddress(syscfg->netmask),IPAddress(syscfg->dns));
 	WiFiSetup.onEvent(wiFiEvent);
-	WiFiSetup.begin(wifiMode,syscfg->hostnetworkname,syscfg->password);
 
-  	DBG_PRINTF("WiFi Done!\n");
+        const auto wifiMode = static_cast<WiFiMode>(syscfg->wifiMode);
+        if (strlen(syscfg->hostnetworkname) > 0) {
+	        const auto *wifiCon = theSettings.getWifiConfiguration();
+        	WiFiSetup.begin(wifiMode, syscfg->hostnetworkname, syscfg->password,
+				wifiCon->ssid[0] ? wifiCon->ssid : nullptr,
+				wifiCon->pass[0] ? wifiCon->pass : nullptr);
+        } else {
+        	WiFiSetup.begin(wifiMode,DEFAULT_HOSTNAME,DEFAULT_PASSWORD);
+        }
 
-	// get time
+	DBG_PRINTF("WiFi Done!\n");
+
 	initTime(WiFiSetup.isApMode());
 
 	if (!MDNS.begin(syscfg->hostnetworkname)) {

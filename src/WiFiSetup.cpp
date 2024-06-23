@@ -69,49 +69,70 @@ bool WiFiSetupClass::isApMode(){
 }
 
 
-void WiFiSetupClass::begin(WiFiMode mode, char const *ssid,const char *passwd)
+void WiFiSetupClass::begin(const WiFiMode mode, const char *ssid, const char *passwd,
+                           const char *targetSSID, const char *targetPass)
 {
 	wifi_info("begin:");
-	
 
-	_mode= (mode==WIFI_OFF)? WIFI_AP_STA:mode;
-
-
-	DBG_PRINTF("\nSaved SSID:\"%s\"\n",WiFi.SSID().c_str());
-	DBG_PRINTF("\nAP mode:%d, used;%d\n",mode,_mode);
-	if(WiFi.SSID() == "[Your SSID]"){
-			DBG_PRINTF("Invalid SSID!");
-			_mode = WIFI_AP;
+	if (targetSSID && targetSSID[0]) {
+		if (_targetSSID) free((void *) _targetSSID);
+		_targetSSID = strdup(targetSSID);
 	}
-	_apName=(ssid == nullptr || *ssid=='\0')? DEFAULT_HOSTNAME:ssid;
-	
-	_apPassword=(passwd !=nullptr && *passwd=='\0')? nullptr:passwd;
+	if (targetPass && targetPass[0]) {
+		if (_targetPass) free((void *) _targetPass);
+		_targetPass = strdup(targetPass);
+	}
 
-	// let the underlined library do the reconnection jobs.
-	WiFi.setAutoConnect(_autoReconnect);
+	_mode = mode;
+	WiFiMode mode2use = (_mode == WIFI_OFF) ? WIFI_AP_STA : _mode;
 
-	WiFi.mode(_mode);
-	// start AP
-	if( _mode == WIFI_AP || _mode == WIFI_AP_STA){
+	DBG_PRINTF("Saved SSID:\"%s\" targetSSID:%s\n", WiFi.SSID().c_str(),
+	           targetSSID? targetSSID:"NULL");
+	DBG_PRINTF("AP mode:%d, used;%d autoReconect:%d\n", mode, mode2use,
+	           WiFi.getAutoReconnect());
+	if ((mode2use == WIFI_STA || mode2use == WIFI_AP_STA)
+	    && _targetSSID == nullptr
+	    && (WiFi.SSID() == "[Your SSID]" || WiFi.SSID() == "" || WiFi.SSID() == nullptr)) {
+		DBG_PRINTF("Invalid SSID!");
+		mode2use = WIFI_AP;
+	}
+	_apName = (ssid == nullptr || *ssid == '\0') ? DEFAULT_HOSTNAME : ssid;
+	_apPassword = (passwd != nullptr && *passwd == '\0') ? nullptr : passwd;
+
+	WiFi.setAutoConnect(true);
+	WiFi.mode(mode2use);
+
+	if (mode2use == WIFI_AP || mode2use == WIFI_AP_STA) {
 		createNetwork();
 		setupApService();
 	}
 
-	if( _mode == WIFI_STA || _mode == WIFI_AP_STA){
-		if(_ip !=INADDR_NONE){
-				WiFi.config(_ip,_gw,_nm);
-		}else{
-			// the weird printout of "[NO IP]" implies that explicitly specification of DHCP 
+	if (mode2use == WIFI_STA || mode2use == WIFI_AP_STA) {
+		if (_ip != INADDR_NONE && _ip != IPAddress(0, 0, 0, 0)) {
+			DBG_PRINTF("Config IP:%s, _gw:%s, _nm:%s\n", _ip.toString().c_str(),
+			           _gw.toString().c_str(), _nm.toString().c_str());
+			WiFi.config(_ip, _gw, _nm, _dns);
+		} else {
+			// the weird printout of "[NO IP]" implies that explicitly specification of DHCP
 			// might be necessary.
-			WiFi.config(INADDR_NONE,INADDR_NONE,INADDR_NONE);
+			DBG_PRINTF("Dynamic IP\n");
+			WiFi.config(IPAddress(0, 0, 0, 0), IPAddress(0, 0, 0, 0),
+			            IPAddress(0, 0, 0, 0));
 		}
-		
 		WiFi.setAutoReconnect(true);
-		WiFi.begin();
-		
-		_time=millis();
+
+		wl_status_t status;
+		if (targetSSID)
+			status = WiFi.begin(targetSSID, targetPass);
+		else
+			status = WiFi.begin();
+
+		DBG_PRINTF("WiFi.begin() return:%d\n", status);
+		_time = millis();
 	}
-	DBG_PRINTF("\ncreate network:%s pass:%s\n",_apName, passwd);
+	_wifiState = (mode2use == WIFI_AP)
+		             ? WiFiState::disconnected
+		             : WiFiState::connection_recovering;
 }
 
 bool WiFiSetupClass::connect(char const *ssid, const char *passwd, const IPAddress& ip,

@@ -29,7 +29,7 @@ public:
 	WiFiSetupClass():_wifiState(WiFiState::connected),_wifiScan(WiFiScan::none),_switchToAp(true),_autoReconnect(true),
 		 _maxReconnect(5),_eventHandler(nullptr),_targetSSID(nullptr),_targetPass(nullptr),_ip(INADDR_NONE),_gw(INADDR_NONE),_nm(INADDR_NONE){}
 
-	void begin(WiFiMode mode, char const *ssid,const char *passwd=nullptr);
+	void begin(WiFiMode mode, const char *ssid, const char *passwd = nullptr, const char *targetSSID = nullptr,const char *targetPass = nullptr);
 	void setMode(WiFiMode mode);
 	void staConfig(const IPAddress& ip=0, const IPAddress& gw=0, const IPAddress& nm=0, const IPAddress& dns=0);
 

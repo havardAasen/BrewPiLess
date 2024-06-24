@@ -22,6 +22,23 @@ jobs:
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
 
+      - name: Install dependencies for frontend
+        run: |
+          sudo apt-get update && sudo apt-get install --yes --no-install-recommends \
+              npm \
+              ruby-dev \
+              xxd
+
+          npm install htmljs/
+          command -v grunt > /dev/null || npm install --global grunt-cli
+          sudo gem install sass
+
+      - name: Build frontend
+        working-directory: htmljs
+        run: |
+          grunt i18n
+          ./output.sh
+
       - name: Build ${{ matrix.environment }}
         run: pio run -e ${{ matrix.environment }}
       - uses: actions/upload-artifact@v4

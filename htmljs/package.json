@@ -23,8 +23,5 @@
     "grunt-postcss": "^0.8.0",
     "grunt-processhtml": "^0.4.1",
     "load-grunt-tasks": "^3.5.2"
-  },
-  "dependencies": {
-    "coffeescript": "^2.7.0"
   }
 }

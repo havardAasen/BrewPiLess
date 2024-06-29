@@ -7,11 +7,11 @@
 #endif
 #define Language english
 #define STRINGIFY(str)  #str
-#define PASTER(lo,file)   STRINGIFY(data/lo ## file )
+#define PASTER(lo,file)   STRINGIFY(lo ## file )
 #define EVALUATOR(l,x)  PASTER(l,x)
 
 #define STRINGIFY(str)  #str
-#define PASTER(lo,file)   STRINGIFY(data/lo ## file )
+#define PASTER(lo,file)   STRINGIFY(lo ## file )
 #define EVALUATOR(l,x)  PASTER(l,x)
 
 
@@ -40,18 +40,18 @@ struct EmbeddedFileMapEntry{
 	bool  gzipped;
 };
 
-#include "data/bwf_js.h"
+#include "bwf_js.h"
 const char file_bwf_js [] PROGMEM="/bwf.js";
 
-#include "data/testcmd_htm.h"
+#include "testcmd_htm.h"
 const char file_testcmd_htm [] PROGMEM="/testcmd.htm";
 
-#include "data/dygraph_js.h"
+#include "dygraph_js.h"
 
 
 const char file_lcd_htm [] PROGMEM="/lcd";
 
-#include "data/lcd_htm.h"
+#include "lcd_htm.h"
 
 #include IndexHtmFile
 #include ControlHtmFile

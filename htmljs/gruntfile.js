@@ -13,6 +13,15 @@ module.exports = function(grunt) {
       }
     },
 
+    uglify: {
+      target: {
+        files: [
+          { 'dist/bwf.min.js': ['src/js/vendor/bwf.js'] },
+          { 'dist/dygraph.min.js': ['src/js/vendor/dygraph-combined.js'] },
+        ]
+      }
+    },
+
     htmlmin: {
       dist: {
         options: {
@@ -254,6 +263,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('i18n', [
     'copy',
+    'uglify',
     'processhtml',
     'htmlmin:dev',
     'sass:dev',

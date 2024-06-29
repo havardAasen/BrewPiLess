@@ -37,7 +37,9 @@ module.exports = function(grunt) {
           'dist/pressure.tmpl.htm': 'dist/pressure.tmpl.htm',
           'dist/BPLLogViewer.tmpl.htm': 'dist/BPLLogViewer.tmpl.htm',
           'dist/BPLog.tmpl.htm': 'dist/BPLog.tmpl.htm',
-          'dist/lcd.htm': 'dist/lcd.htm'
+          'dist/lcd.htm': 'dist/lcd.htm',
+          'dist/testcmd.htm': 'dist/testcmd.htm',
+          'dist/edit.htm': 'dist/edit.htm'
         }
       },
       dev: {
@@ -63,7 +65,9 @@ module.exports = function(grunt) {
           'build/pressure.tmpl.html': 'build/pressure.tmpl.html',
           'build/BPLLogViewer.tmpl.html': 'build/BPLLogViewer.tmpl.html',
           'build/BPLog.tmpl.html': 'build/BPLog.tmpl.html',
-          'build/lcd.html': 'build/lcd.html'
+          'build/lcd.html': 'build/lcd.html',
+          'build/testcmd.html': 'build/testcmd.html',
+          'build/edit.html': 'build/edit.html'
         }
       }
     },
@@ -82,7 +86,9 @@ module.exports = function(grunt) {
           { 'dist/pressure.tmpl.htm': ['build/pressure.tmpl.html'] },
           { 'dist/BPLLogViewer.tmpl.htm': ['build/BPLLogViewer.tmpl.html'] },
           { 'dist/BPLog.tmpl.htm': ['build/BPLog.tmpl.html'] },
-          { 'dist/lcd.htm': ['build/lcd.html']}
+          { 'dist/lcd.htm': ['build/lcd.html']},
+          { 'dist/testcmd.htm': ['src/testcmd.html']},
+          { 'dist/edit.htm': ['src/edit.html']}
         ]
       }
     },
@@ -140,7 +146,16 @@ module.exports = function(grunt) {
         files: [
           {
             expand: true,
-            src: ['dist/english/*.htm', 'dist/chinese/*.htm', 'dist/spanish/*.htm', 'dist/portuguese-br/*.htm', 'dist/slovak/*.htm', 'dist/lcd.htm'],
+            src: [
+              'dist/english/*.htm',
+              'dist/chinese/*.htm',
+              'dist/spanish/*.htm',
+              'dist/portuguese-br/*.htm',
+              'dist/slovak/*.htm',
+              'dist/lcd.htm',
+              'dist/testcmd.htm',
+              'dist/edit.htm'
+            ],
             dest: '.',
             ext: '.htm.gz'
           },
@@ -169,7 +184,9 @@ module.exports = function(grunt) {
           'build/pressure.tmpl.html': ['src/pressure.tmpl.html'],
           'build/BPLLogViewer.tmpl.html': ['src/BPLLogViewer.tmpl.html'],
           'build/BPLog.tmpl.html': ['src/BPLog.tmpl.html'],
-          'build/lcd.html': ['src/lcd.html']
+          'build/lcd.html': ['src/lcd.html'],
+          'build/testcmd.html': ['src/testcmd.html'],
+          'build/edit.html': ['src/edit.html']
         }
       }
     },

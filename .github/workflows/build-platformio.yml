@@ -5,7 +5,7 @@ jobs:
   build:
     strategy:
       matrix:
-        environment: [d1_mini, thorrax]
+        environment: [d1_mini, nodemcuv2, thorrax]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -14,6 +14,7 @@
                 "platformio-ide.disablePIOHomeStartup": true
             },
             "extensions": [
+                "dbaeumer.vscode-eslint",
                 "ms-vscode.cpptools",
                 "platformio.platformio-ide",
                 "streetsidesoftware.code-spell-checker"

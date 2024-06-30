@@ -14,7 +14,7 @@ outfiles=(index_htm control_htm config_htm setup_htm log_htm gdc_htm pressure_ht
 languages=(english spanish portuguese-br slovak chinese)
 
 non_translated_files=(lcd.htm.gz edit.htm.gz testcmd.htm.gz bwf.gz.js dygraph.gz.js)
-on_translated_variables=(lcd_htm_gz edit_htm_gz data_testcmd_htm data_bwf_min_js_gz dygraph_combined_js_gz)
+on_translated_variables=(lcd_htm_gz edit_htm_gz testcmd_htm_gz data_bwf_min_js_gz dygraph_combined_js_gz)
 non_translated_out=(lcd_htm edit_html_gz testcmd_htm bwf_js dygraph_js)
 
 gen_C_file()

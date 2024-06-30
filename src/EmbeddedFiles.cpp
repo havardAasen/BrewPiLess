@@ -80,7 +80,7 @@ EmbeddedFileMapEntry fileMaps[]={
 {file_gravitydevice,gravity_htm_gz,sizeof(gravity_htm_gz),true},
 {file_config,config_htm_gz,sizeof(config_htm_gz),true},
 {file_pressure,pressure_htm_gz,sizeof(pressure_htm_gz),true},
-{file_testcmd_htm,(const uint8_t *)data_testcmd_htm,0,false},
+{file_testcmd_htm,testcmd_htm_gz,sizeof(testcmd_htm_gz),true},
 {file_lcd_htm,lcd_htm_gz,sizeof(lcd_htm_gz),true}
 };
 

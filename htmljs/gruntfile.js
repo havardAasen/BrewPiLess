@@ -1,8 +1,17 @@
 'use strict';
 
 module.exports = function(grunt) {
-  // Load all grunt tasks matching the `grunt-*` pattern
-  require('load-grunt-tasks')(grunt);
+  grunt.loadNpmTasks('grunt-combo-html-css-js');
+  grunt.loadNpmTasks('grunt-contrib-compress');
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-htmlmin');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-multi-lang-site-generator');
+  grunt.loadNpmTasks('grunt-postcss');
+  grunt.loadNpmTasks('grunt-processhtml');
 
   grunt.initConfig({
     copy: {

@@ -93,11 +93,11 @@ void IICOledLcd::display() {
 }
 
 // Turn the (optional) backlight off/on
-void IICOledLcd::noBacklight(void) {
+void IICOledLcd::noBacklight() {
 	_display.displayOff();
 }
 
-void IICOledLcd::backlight(void) {
+void IICOledLcd::backlight() {
 	_display.displayOn();
 }
 
@@ -105,12 +105,12 @@ void IICOledLcd::backlight(void) {
 
 /*********** mid level commands, for sending data/cmds */
 
-inline int16_t IICOledLcd::xpos(void)
+inline int16_t IICOledLcd::xpos()
 {
 	return LEFT_MARGIN + _fontWidth * _currpos;
 }
 
-inline int16_t  IICOledLcd::ypos(void)
+inline int16_t  IICOledLcd::ypos()
 {
 	return TOP_MARGIN + _fontHeight * _currline;
 }
@@ -138,11 +138,11 @@ inline size_t IICOledLcd::write(uint8_t value) {
 }
 
 // This resets the backlight timer and updates the SPI output
-void IICOledLcd::resetBacklightTimer(void) {
+void IICOledLcd::resetBacklightTimer() {
     _backlightTime = ticks.seconds();
 }
 
-void IICOledLcd::updateBacklight(void) {
+void IICOledLcd::updateBacklight() {
     // True = OFF, False = ON
     bool backLightOutput = (backlightAutoOffPeriod !=0) && (BREWPI_SIMULATE || ticks.timeSince(_backlightTime) > backlightAutoOffPeriod);
     if(backLightOutput) {

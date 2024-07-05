@@ -603,7 +603,7 @@ float DallasTemperature::getTempF(const uint8_t* deviceAddress)
 
 #if 0 && REQUIRESPARASITEPOWERAVAILABLE  // moved to header for inlining
 // returns true if the bus requires parasite power
-bool DallasTemperature::isParasitePowerMode(void)
+bool DallasTemperature::isParasitePowerMode()
 {
     return parasite;
 }
@@ -792,7 +792,7 @@ bool DallasTemperature::hasAlarm(const uint8_t* deviceAddress)
 }
 
 // returns true if any device is reporting an alarm condition on the bus
-bool DallasTemperature::hasAlarm(void)
+bool DallasTemperature::hasAlarm()
 {
     DeviceAddress deviceAddress;
     resetAlarmSearch();
@@ -800,7 +800,7 @@ bool DallasTemperature::hasAlarm(void)
 }
 
 // runs the alarm handler for all devices returned by alarmSearch()
-void DallasTemperature::processAlarms(void)
+void DallasTemperature::processAlarms()
 {
     resetAlarmSearch();
     DeviceAddress alarmAddr;

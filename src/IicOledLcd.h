@@ -69,25 +69,25 @@ public:
   void getLine(uint8_t lineNumber, char * buffer);
 
   //void readContent(void); // read the content from the display to the shadow copy buffer
-  char readChar(void);
+  char readChar();
 
 //  void command(uint8_t);
 
   void setBufferOnly(bool bufferOnly) { _bufferOnly = bufferOnly; }
 
-  void resetBacklightTimer(void);
+  void resetBacklightTimer();
 
-  void updateBacklight(void);
+  void updateBacklight();
 
-  uint8_t getCurrPos(void) {
+  uint8_t getCurrPos() {
     return _currpos;
   }
 
-  uint8_t getCurrLine(void) {
+  uint8_t getCurrLine() {
     return _currline;
   }
 
-  void printSpacesToRestOfLine(void);
+  void printSpacesToRestOfLine();
 
   using Print::write;
   void setAutoOffPeriod(uint32 period){ backlightAutoOffPeriod = period; }
@@ -116,8 +116,8 @@ SSD1306  _display;
 
   void internal_write(uint8_t);
 
-  inline int16_t xpos(void);
-  inline int16_t ypos(void);
+  inline int16_t xpos();
+  inline int16_t ypos();
 };
 #endif
 #endif

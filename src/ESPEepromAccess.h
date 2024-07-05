@@ -73,7 +73,7 @@ public:
 		logWarningIntString(0, sizeof(source), "writeDeviceDefinition called");
 	}
 
-	static void commit(void) {
+	static void commit() {
 		EEPROM.commit();
 	}
 

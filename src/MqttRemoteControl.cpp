@@ -362,37 +362,32 @@ void MqttRemoteControl::_onMessage(char* topic, uint8_t* payload, size_t len) {
 #endif
 }
 
-void MqttRemoteControl::_onModeChange(char* payload,size_t len){
-    // we are going to accept mode and integer.
-    char mode; // o:off, f: fridgeConst, b: beerConst, p: beerProfile
-    
-    constexpr char modeChars[]={ModeOff,ModeFridgeConst,ModeBeerConst,ModeBeerProfile};
- 
-    #if SerialDebug
-    DBG_PRINTF("MQTT:mode path value:");
+// Accepting mode and integer.
+void MqttRemoteControl::_onModeChange(const char *payload, const std::size_t len)
+{
+    constexpr std::array<char, 4> modeChars{ModeOff, ModeFridgeConst, ModeBeerConst, ModeBeerProfile};
+
+#if SerialDebug
+    DBG_PRINTF("MQTT: Mode path value:");
     for(size_t i=0;i<len;i++)
         DBG_PRINTF("%c",payload[i]);
     DBG_PRINTF("\n");
-    #endif
+#endif
 
-    if(*payload >='0' && *payload <= '3'){
+    char mode;
+    if (*payload >= '0' && *payload <= '3') {
         mode = modeChars[*payload - '0'];
-    }else{
-        // char. check if it is valid
-        size_t i;
-        for(i=0;i< sizeof(modeChars);i++){
-            if(modeChars[i] == *payload) break;
-        }
-        if(i>= sizeof(modeChars)){
-            // error.
-            DBG_PRINTF("MQTT:error mode command:%c\n",*payload);
+    } else {
+        if (std::none_of(modeChars.begin(), modeChars.end(),
+                         [&](const char c) { return c == *payload; })) {
+            DBG_PRINTF("MQTT: Error, unknown mode\n");
             return;
         }
         mode = *payload;
     }
-     DBG_PRINTF("MQTT:Mode command:%c\n",mode);
-    if(_lvMode != mode){
-        _lvMode=mode;
+    DBG_PRINTF("MQTT: Mode: %c\n", mode);
+    if (_lvMode != mode) {
+        _lvMode = mode;
         _runModeCommand();
     }
 }

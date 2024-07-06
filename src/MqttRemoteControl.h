@@ -67,7 +67,7 @@ protected:
     void _onDisconnect();
     void _onMessage(char* topic, uint8_t* payload, size_t len);
     void _onPublish(uint16_t packetId);
-    void _onModeChange(char* payload,size_t len);
+    void _onModeChange(const char* payload, std::size_t len);
 
     void _onSettingTempChange(bool isBeerSet,char* payload, size_t len);
 

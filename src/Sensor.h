@@ -36,7 +36,7 @@ class ValueSensor : public Sensor<T>
 public:
 	explicit ValueSensor(T initial) : value(initial) {}
 
-	virtual T sense() {
+	T sense() override {
 		return (T)0;
 	}
 

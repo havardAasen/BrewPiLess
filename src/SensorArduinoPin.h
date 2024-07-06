@@ -24,7 +24,7 @@ class DigitalConstantPinSensor : public SwitchSensor
 		fastPinMode(pin, internalPullup ? INPUT_PULLUP : INPUT);
 	}
 
-	virtual bool sense() {
+	bool sense() override {
 		return fastDigitalRead(pin) ^ invert;
 	}
 };
@@ -46,7 +46,7 @@ public:
 		this->pin = pin;
 	}
 
-	virtual bool sense() {
+	bool sense() override {
 		return digitalRead(pin) ^ invert;
 	}
 };

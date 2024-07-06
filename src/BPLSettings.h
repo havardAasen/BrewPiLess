@@ -245,8 +245,6 @@ struct Settings{
 class BPLSettings
 {
 public:
-    BPLSettings(){}
-
     void load();
     void save();
     // system configuration
@@ -299,7 +297,7 @@ public:
     String jsonMqttRemoteControlSettings();
 #endif
 protected:
-    Settings _data;
+    Settings _data{};
 
     void    setDefault();
 

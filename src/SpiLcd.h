@@ -85,10 +85,6 @@
 
 class SpiLcd : public Print {
 	public:
-	// Constants are set in initializer list of constructor
-	SpiLcd(){};
-	~SpiLcd(){};
-
 	void init();
 
 	void begin(uint8_t cols, uint8_t rows);
@@ -159,18 +155,18 @@ class SpiLcd : public Print {
 	void waitBusy();
 
 	// Define shift register byte, keep pin state in this byte and send it out for each write.
-	volatile uint8_t _spiByte;
+	volatile uint8_t _spiByte{};
 
-	uint8_t _displayfunction;
-	uint8_t _displaycontrol;
-	uint8_t _displaymode;
-	uint8_t _currline;
-	uint8_t _currpos;
-	uint8_t _numlines;
+	uint8_t _displayfunction{};
+	uint8_t _displaycontrol{};
+	uint8_t _displaymode{};
+	uint8_t _currline{};
+	uint8_t _currpos{};
+	uint8_t _numlines{};
 
-	bool	_bufferOnly;
-	uint16_t _backlightTime;
+	bool	_bufferOnly{};
+	uint16_t _backlightTime{};
 
-	char content[4][21]; // always keep a copy of the display content in this variable
+	char content[4][21]{}; // always keep a copy of the display content in this variable
 
 };

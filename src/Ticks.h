@@ -42,7 +42,7 @@ typedef uint8_t ticks_seconds_tiny_t;
  */
 class MockTicks {
 public:
-	MockTicks(uint8_t increment) : _increment(increment), _ticks(0) { }
+	explicit MockTicks(uint8_t increment) : _increment(increment) { }
 
 	ticks_millis_t millis() { return _ticks+=_increment; }
 	ticks_micros_t micros() { return _ticks+=_increment; }
@@ -51,7 +51,7 @@ public:
 private:
 
 	uint32_t _increment;
-	uint32_t _ticks;
+	uint32_t _ticks{};
 };
 
 /**

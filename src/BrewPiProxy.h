@@ -11,7 +11,6 @@
 
 class BrewPiProxy{
 public:
-	BrewPiProxy():_unit('C'),_lastLineLength(0),_readPtr(0){_lastLineBuff[0]='\0';}
 	void begin(void (*readString)(const char*));
 
 	void loop();
@@ -30,13 +29,13 @@ public:
 	bool ambientSensorConnected();
 
 protected:
-	char _unit;
-	char _lastLineBuff[BUFF_SIZE];
-	int  _lastLineLength;
-	char _buff[BUFF_SIZE];
-	int   _readPtr;
+	char _unit{'C'};
+	char _lastLineBuff[BUFF_SIZE]{};
+	int  _lastLineLength{};
+	char _buff[BUFF_SIZE]{};
+	int   _readPtr{};
 
-	void (*_readString)(const char*);
+	void (*_readString)(const char*){};
 };
 extern BrewPiProxy brewPi;
 #endif

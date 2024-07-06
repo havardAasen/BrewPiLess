@@ -11,7 +11,7 @@
 class DataLogger
 {
 public:
-    DataLogger():_lastUpdate(0){ _loggingInfo= theSettings.remoteLogInfo(); }
+    DataLogger(){ _loggingInfo= theSettings.remoteLogInfo(); }
 
     // web interface
 	void loop(time_t now);
@@ -21,8 +21,8 @@ protected:
 	void sendData();
 
 	RemoteLoggingInformation *_loggingInfo;
-	
-	time_t _lastUpdate;
+
+	time_t _lastUpdate{};
 };
 extern DataLogger dataLogger;
 

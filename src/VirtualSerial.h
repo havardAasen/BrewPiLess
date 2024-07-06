@@ -7,11 +7,11 @@ class QueueBuffer
 {
 protected:
 	char* _buffer;
-	int _writePtr;
-	int _readPtr;
+	int _writePtr{};
+	int _readPtr{};
 	int  _bufferSize;
 public:
-	QueueBuffer(int size){_bufferSize=size; _buffer=(char*)malloc(size);  _writePtr=_readPtr=0;}
+	explicit QueueBuffer(int size){_bufferSize=size; _buffer=(char*)malloc(size);}
 	~QueueBuffer(){ free(_buffer);}
 
 	void print(char c);

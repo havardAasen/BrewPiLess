@@ -71,14 +71,13 @@ H(z) = 2^-a * -------------------------------------------------
 class FixedFilter{
 	public:
 		// input and output arrays
-		temperature_precise xv[3];
-		temperature_precise yv[3];
-		uint8_t a;
-		uint8_t b;
+		temperature_precise xv[3]{};
+		temperature_precise yv[3]{};
+		uint8_t a{};
+		uint8_t b{};
 
 	public:
 		FixedFilter() { setCoefficients(20); /* default to a b value of 2 */ }
-		~FixedFilter() { }
 		void init(temperature val);
 
 		void setCoefficients(uint8_t bValue) {

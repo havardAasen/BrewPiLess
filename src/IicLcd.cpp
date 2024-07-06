@@ -78,12 +78,8 @@ void IIClcd::scanForAddress()
 #endif
 
 
-IIClcd::IIClcd(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows)
+IIClcd::IIClcd(const uint8_t addr, const uint8_t cols, const uint8_t rows) : _Addr(addr), _cols(cols), _rows(rows)
 {
-  _Addr = lcd_Addr;
-  _cols = lcd_cols;
-  _rows = lcd_rows;
-  _backlightval = LCD_NOBACKLIGHT;
 }
 
 void IIClcd::init(){

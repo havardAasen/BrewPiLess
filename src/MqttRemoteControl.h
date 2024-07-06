@@ -3,6 +3,7 @@
 #include <ESP8266WiFi.h>
 
 #include <AsyncMqttClient.h>
+#include <BPLSettings.h>
 
 #include "Config.h"
 
@@ -29,34 +30,33 @@
 class MqttRemoteControl{
 protected:
     AsyncMqttClient _client;
-    uint32_t _connectTime;
-    uint32_t _lastReportTime;
-    uint16_t _connectAttempt;
+    uint32_t _connectTime{};
+    uint32_t _lastReportTime{};
+    uint16_t _connectAttempt{};
+    uint8_t _mode{MqttModeOff};
+    uint8_t _reportFormat{};
 
-    uint8_t _mode;
-    uint8_t _reportFormat;
+    uint32_t _reportPeriod{};
 
-    uint32_t _reportPeriod;
+    bool _reconnecting{};
+    bool _reloadConfig{};
+    char _lvMode{InvalidMode};
+    char _lvBeerSet[MaxSettingLength+1]{};
+    char _lvFridgeSet[MaxSettingLength+1]{};
 
-    bool _reconnecting;
-    bool _reloadConfig;
-    char _lvMode;
-    char _lvBeerSet[MaxSettingLength+1];
-    char _lvFridgeSet[MaxSettingLength+1];
+    char* _serverAddress{};
+    uint16_t _serverPort{};
+    char* _username{};
+    char* _password{};
 
-    char* _serverAddress;
-    uint16_t _serverPort;
-    char* _username;
-    char* _password;
-
-    char* _modePath;
-    char* _beerSetPath;
-    char* _fridgeSetPath;
+    char* _modePath{};
+    char* _beerSetPath{};
+    char* _fridgeSetPath{};
     
-    char* _reportBasePath;
+    char* _reportBasePath{};
     
     #if EanbleParasiteTempControl
-    char* _ptcPath;
+    char* _ptcPath{};
     #endif
 
     #if Auto_CAP
@@ -85,8 +85,8 @@ protected:
     void _reportData();
     uint16_t _publish(const char* key,float value,int precision);
     uint16_t _publish(const char* key,char value);
-    uint16_t _lastPacketId;
-    bool     _publishing;
+    uint16_t _lastPacketId{};
+    bool     _publishing{};
 public:
     MqttRemoteControl();
     bool begin();

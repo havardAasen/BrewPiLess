@@ -126,7 +126,7 @@ class DallasTemperature
 {
   public:
 
-  DallasTemperature(OneWire*);
+  explicit DallasTemperature(OneWire*);
 
   /*
    * Initializes the connection with the device. This is done at power up and after detectedReset() returns true.

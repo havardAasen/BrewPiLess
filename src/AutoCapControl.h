@@ -20,9 +20,6 @@ typedef uint8_t CapStatus;
 class AutoCapControl
 {
 public:
-
-    AutoCapControl():_capStatus(CapStatusUnknown){}
-
     void begin();
 
     bool isCapOn();
@@ -41,8 +38,8 @@ public:
     static Actuator* capper;
 
 private:
-    AutoCapSettings *_settings;
-    CapStatus _capStatus;
+    AutoCapSettings *_settings{};
+    CapStatus _capStatus{CapStatusUnknown};
 
     void setCapOn(bool on);
 

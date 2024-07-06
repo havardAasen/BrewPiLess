@@ -28,14 +28,6 @@ extern BrewPiProxy brewpi;
 MqttRemoteControl mqttRemoteControl;
 
 MqttRemoteControl::MqttRemoteControl(){
-    _lvMode = InvalidMode;
-    _lvBeerSet[0] = '\0';
-    _lvFridgeSet[0] = '\0';
-    _mode = MqttModeOff;
-    _connectTime =0;
-    _lastReportTime=0;
-    _publishing = false;
-    
     _client.onConnect([this](bool){
         this->_onConnect();
     });

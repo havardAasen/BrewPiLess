@@ -353,8 +353,6 @@ class BrewPiWebHandler: public AsyncWebHandler
 		}
 	}	  
 public:
-	BrewPiWebHandler(){}
-
 	bool isRequestHandlerTrivial() final {return false;}
 
 	void handleRequest(AsyncWebServerRequest *request) override{
@@ -1321,8 +1319,6 @@ IPAddress scanIP(char const *str)
 class NetworkConfig:public AsyncWebHandler
 {
 public:
-	NetworkConfig(){}
-
 	void handleRequest(AsyncWebServerRequest *request) override{
 		if(request->url() == WIFI_SCAN_PATH) handleNetworkScan(request);
 		else if(request->url() == WIFI_CONNECT_PATH) handleNetworkConnect(request);

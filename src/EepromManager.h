@@ -79,7 +79,7 @@ public:
 
 class EepromStream
 {
-	eptr_t pv;
+	eptr_t pv{};
 
 	void writeByte(uint8_t value) {
 		eepromAccess.writeByte(pv++, value);

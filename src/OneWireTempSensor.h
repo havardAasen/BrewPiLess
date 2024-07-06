@@ -41,13 +41,12 @@ public:
 	 * /param calibration	A temperature value that is added to all readings. This can be used to calibrate the sensor.
 	 */
 	OneWireTempSensor(OneWire* bus, DeviceAddress address, fixed4_4 calibrationOffset)
-	: oneWire(bus), sensor(nullptr) {
-		connected = true;  // assume connected. Transition from connected to disconnected prints a message.
+	: oneWire(bus) {
 		memcpy(sensorAddress, address, sizeof(DeviceAddress));
 		this->calibrationOffset = calibrationOffset;
 	};
 
-	~OneWireTempSensor();
+	~OneWireTempSensor() override;
 
 	bool isConnected(){
 		return connected;
@@ -73,10 +72,10 @@ public:
 	temperature readAndConstrainTemp();
 
 	OneWire * oneWire;
-	DallasTemperature * sensor;
-	DeviceAddress sensorAddress;
+	DallasTemperature * sensor{};
+	DeviceAddress sensorAddress{};
 
 	fixed4_4 calibrationOffset;
-	bool connected;
+	bool connected{true}; // assume connected. Transition from connected to disconnected prints a message.
 
 };

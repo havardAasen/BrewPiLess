@@ -57,12 +57,12 @@ class Actuator
 class ValueActuator ACTUATOR_BASE_CLASS_DECL
 {
 public:
-	ValueActuator() : state(false) {}
-	ValueActuator(bool initial) : state(initial) {}
+	ValueActuator() = default;
+	explicit ValueActuator(bool initial) : state(initial) {}
 
 	ACTUATOR_METHOD void setActive(bool active) { state = active; }
 	ACTUATOR_METHOD bool isActive() { return state; }
 
 private:
-	bool state;
+	bool state{};
 };

@@ -25,9 +25,7 @@
 #include "TemperatureFormats.h"
 
 CascadedFilter::CascadedFilter() {
-	for(auto& section : sections){
-		section.setCoefficients(2); // default to a b value of 2
-	}
+	setCoefficients(2); // default to a b value of 2
 }
 
 void CascadedFilter::setCoefficients(uint8_t bValue){

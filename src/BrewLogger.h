@@ -61,8 +61,6 @@ class BrewLogger
 {
 
 public:
-	BrewLogger();
-	
 	bool begin();
 
 	String fsinfo();
@@ -97,42 +95,42 @@ public:
 	//format file system
 	void onFormatFS();
 private:
-	size_t _fsspace;
-	uint32_t  _tempLogPeriod;
-	uint32_t _lastTempLog;
-    uint32_t _resumeLastLogTime;
+	size_t _fsspace{};
+	uint32_t  _tempLogPeriod{60000};
+	uint32_t _lastTempLog{};
+	uint32_t _resumeLastLogTime{};
 
-	bool _recording;
-	bool _calibrating;
+	bool _recording{};
+	bool _calibrating{};
 
-	size_t _logIndex;
-	size_t _savedLength;
-	size_t _lastRead;
-	char _logBuffer[LogBufferSize];
+	size_t _logIndex{};
+	size_t _savedLength{};
+	size_t _lastRead{};
+	char _logBuffer[LogBufferSize]{};
 
 	File    _logFile;
 
 	// brewpi specific info
-	uint8_t _mode;
-	uint8_t _state;
-	bool _usePlato;
-	
-	uint16_t  _iTempData[5];
-	uint16_t  _extTemp;
-	uint16_t  _extGravity;
-	uint16_t  _extOriginGravity;
-	uint16_t  _extTileAngle;
+	uint8_t _mode{};
+	uint8_t _state{};
+	bool _usePlato{};
+
+	uint16_t  _iTempData[5]{INVALID_TEMP_INT};
+	uint16_t  _extTemp{INVALID_TEMP_INT};
+	uint16_t  _extGravity{INVALID_GRAVITY_INT};
+	uint16_t  _extOriginGravity{INVALID_GRAVITY_INT};
+	uint16_t  _extTileAngle{INVALID_TILT_ANGLE};
 
 	// for circular buffer
-	int _logHead;
-	uint32_t _headTime;
-	uint32_t _startOffset;
-	bool _sendHeader;
-	uint32_t _sendOffset;
-	FileIndexes *_pFileInfo;
+	int _logHead{};
+	uint32_t _headTime{};
+	uint32_t _startOffset{};
+	bool _sendHeader{};
+	uint32_t _sendOffset{};
+	FileIndexes *_pFileInfo{};
 
 	#define VolatileDataHeaderSize 7
-	uint16_t  _headData[VolatileDataHeaderSize];
+	uint16_t  _headData[VolatileDataHeaderSize]{};
 
 	void resetTempData();
 	void checkspace();

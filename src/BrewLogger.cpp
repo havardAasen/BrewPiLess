@@ -5,15 +5,7 @@
 
 BrewLogger brewLogger;
 
-BrewLogger::BrewLogger(){
-	_recording=false;
-	_fsspace=0;
-	_tempLogPeriod=60000;
-	resetTempData();
-	_calibrating=false;
-}
 
-	
 	bool BrewLogger::begin()
 	{
     	bool resumeSuccess=false;

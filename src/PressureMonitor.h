@@ -20,8 +20,8 @@ public:
     void loop();
 protected:
     PressureMonitorSettings *_settings;
-    uint32_t _time;
-    float _currentPsi;
+    uint32_t _time{};
+    float _currentPsi{-100};
     void _readPressure();
 };
 

@@ -7,7 +7,6 @@
 class ParasiteTempController
 {
 public:
-    ParasiteTempController(){}
     void run();
     void init();
 
@@ -26,12 +25,12 @@ public:
     static Actuator *cooler;
 
 protected:
-    ParasiteTempControlSettings *_settings;
+    ParasiteTempControlSettings *_settings{};
     
-    bool _validSetting;
-    float _currentTemp;
-    uint32_t _lastSwitchedTime;
-    uint32_t _lastSensorValidTime;
+    bool _validSetting{};
+    float _currentTemp{};
+    uint32_t _lastSwitchedTime{};
+    uint32_t _lastSensorValidTime{};
 
     void _setCooling(bool cool);
     bool checkSettings();

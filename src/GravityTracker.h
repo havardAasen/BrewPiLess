@@ -12,10 +12,10 @@ typedef uint16_t TrackingGravity;
 
 class GravityTracker
 {
-    int _idx;
-    int16_t _record[NumberOfSlots];
-    uint32_t _currentStartTime;
-    int16_t _lastValue;
+    int _idx{};
+    int16_t _record[NumberOfSlots]{};
+    uint32_t _currentStartTime{};
+    int16_t _lastValue{};
 
     void addRecord(uint16_t v){
         _record[_idx++]=v;
@@ -23,15 +23,6 @@ class GravityTracker
     }
 
 public:
-    GravityTracker(void){
-        for(int i=0;i<NumberOfSlots;i++){
-            _record[i]=InvalidValue;
-        }
-        _idx=0;
-        _currentStartTime=0;
-        _lastValue=0;
-    }
-
     bool stable(int duration,int to=1){
         int current = _idx -1;
         if(current < 0) current =NumberOfSlots-1;

@@ -27,14 +27,14 @@ template<class T> class Sensor
 	public:
 	virtual T sense()=0;
 
-	virtual ~Sensor() {}
+	virtual ~Sensor() = default;
 };
 
 template <class T>
 class ValueSensor : public Sensor<T>
 {
 public:
-	ValueSensor(T initial) : value(initial) {}
+	explicit ValueSensor(T initial) : value(initial) {}
 
 	virtual T sense() {
 		return (T)0;

@@ -12,8 +12,8 @@ class BrewProfile
 	BeerTempSchedule *_schedule;
 	BrewStatus  *_status;
 
-	char _unit;
-	uint8_t _stableThreshold;
+	char _unit{'U'};
+	uint8_t _stableThreshold{1};
 
 	void _tempConvert();
 
@@ -25,8 +25,7 @@ class BrewProfile
 	uint32_t currentStepDuration();
 	void _saveBrewingStatus();
 public:
-	BrewProfile():_unit('U'){
-    	_stableThreshold = 1;
+	BrewProfile() {
 		_schedule =  theSettings.beerTempSchedule();
 		_status =  theSettings.brewStatus();
 	}
@@ -42,16 +41,16 @@ public:
 class BrewKeeper
 {
 protected:
-	time_t _lastSetTemp;
+	time_t _lastSetTemp{};
 
 	BrewProfile _profile;
-	Gravity _lastGravity;
+	Gravity _lastGravity{INVALID_GRAVITY};
 
 	void (*_write)(const char*);
 	void _loadProfile();
 public:
 
-	BrewKeeper(void(*puts)(const char*)):_lastGravity(INVALID_GRAVITY),_write(puts){}
+	explicit BrewKeeper(void(*puts)(const char*)):_write(puts){}
 	void updateGravity(float sg);
 	void updateOriginalGravity(float sg);
 

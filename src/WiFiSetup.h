@@ -26,9 +26,6 @@ private:
 	};
 
 public:
-	WiFiSetupClass():_wifiState(WiFiState::connected),_wifiScan(WiFiScan::none),_switchToAp(true),_autoReconnect(true),
-		 _maxReconnect(5),_eventHandler(nullptr),_targetSSID(nullptr),_targetPass(nullptr),_ip(INADDR_NONE),_gw(INADDR_NONE),_nm(INADDR_NONE){}
-
 	void begin(WiFiMode mode, const char *ssid, const char *passwd = nullptr, const char *targetSSID = nullptr,const char *targetPass = nullptr);
 	void setMode(WiFiMode mode);
 	void staConfig(const IPAddress& ip=0, const IPAddress& gw=0, const IPAddress& nm=0, const IPAddress& dns=0);
@@ -51,28 +48,28 @@ public:
 	bool isConnected();
 	String status();
 private:
-	WiFiMode _mode;
-	WiFiState _wifiState;
-	WiFiScan _wifiScan;
-	bool _switchToAp;
-	bool _autoReconnect;
+	WiFiMode _mode{};
+	WiFiState _wifiState{WiFiState::connected};
+	WiFiScan _wifiScan{WiFiScan::none};
+	bool _switchToAp{true};
+	bool _autoReconnect{true};
 
-	unsigned int _maxReconnect;
-	unsigned int _reconnect;
+	unsigned int _maxReconnect{5};
+	unsigned int _reconnect{};
 
-	unsigned long _time;
-	std::function<void(const char*)> _eventHandler;
+	unsigned long _time{};
+	std::function<void(const char*)> _eventHandler{nullptr};
 	
 	std::unique_ptr<DNSServer>        dnsServer;
 
-	const char *_apName;
-	const char *_apPassword;
+	const char *_apName{};
+	const char *_apPassword{};
 
-	const char *_targetSSID;
-	const char *_targetPass;
-	IPAddress _ip;
-	IPAddress _gw;
-	IPAddress _nm;
+	const char *_targetSSID{};
+	const char *_targetPass{};
+	IPAddress _ip{INADDR_NONE};
+	IPAddress _gw{INADDR_NONE};
+	IPAddress _nm{INADDR_NONE};
 	IPAddress _dns;
 
 	static constexpr int dns_port = 53;

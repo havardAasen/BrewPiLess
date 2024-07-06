@@ -59,8 +59,8 @@
 
 class IIClcd : public Print {
 public:
-  IIClcd(uint8_t lcd_Addr,uint8_t lcd_cols,uint8_t lcd_rows);
-  ~IIClcd() {};
+  IIClcd(uint8_t addr, uint8_t cols, uint8_t rows);
+  ~IIClcd() = default;
 
   void init();
 
@@ -91,7 +91,7 @@ public:
   void createChar(uint8_t, uint8_t[]);
   void setCursor(uint8_t, uint8_t);
 
-  virtual size_t write(uint8_t);
+  size_t write(uint8_t) override;
 
 #define print_P_inline 1
 #ifdef print_P_inline
@@ -139,21 +139,21 @@ private:
   void expanderWrite(uint8_t);
   void pulseEnable(uint8_t);
   
-  uint32_t backlightAutoOffPeriod;
+  uint32_t backlightAutoOffPeriod{};
   uint8_t _Addr;
-  uint8_t _displayfunction;
-  uint8_t _displaycontrol;
-  uint8_t _displaymode;
-  uint8_t _numlines;
-  uint8_t _currline;
-  uint8_t _currpos;
+  uint8_t _displayfunction{};
+  uint8_t _displaycontrol{};
+  uint8_t _displaymode{};
+  uint8_t _numlines{};
+  uint8_t _currline{};
+  uint8_t _currpos{};
   uint8_t _cols;
   uint8_t _rows;
-  uint8_t _backlightval;
-  uint16_t _backlightTime;
-  bool _bufferOnly;
+  uint8_t _backlightval{};
+  uint16_t _backlightTime{};
+  bool _bufferOnly{};
 
-  char content[4][21]; // always keep a copy of the display content in this variable
+  char content[4][21]{}; // always keep a copy of the display content in this variable
 
 #if LCD_AUTO_ADDRESSING == true
   void scanForAddress();

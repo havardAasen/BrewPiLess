@@ -119,10 +119,6 @@ enum states{
 
 class TempControl{
 	public:
-
-	TempControl(){};
-	~TempControl(){};
-
 	TEMP_CONTROL_METHOD void init();
 	TEMP_CONTROL_METHOD void reset();
 

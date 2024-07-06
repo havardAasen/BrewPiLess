@@ -51,11 +51,6 @@ typedef uint8_t pio_t;
 class DS2413
 {
 public:
-
-	DS2413()
-	{
-	}
-
 	/*
 	 * Initializes this ds2413.
 	 * /param oneWire The oneWire bus the device is connected to
@@ -210,8 +205,8 @@ private:
 	 */
 	bool accessWrite(uint8_t b, uint8_t maxTries=3);
 
-	OneWire* oneWire;
-	DeviceAddress address;
+	OneWire* oneWire{};
+	DeviceAddress address{};
 };
 
 #endif

@@ -26,7 +26,7 @@
 class MockTempSensor : public BasicTempSensor
 {
 public:
-	MockTempSensor(temperature initial, temperature delta) : _temperature(initial), _delta(delta), _connected(true) { }
+	MockTempSensor(temperature initial, temperature delta) : _temperature(initial), _delta(delta) {}
 
 	void setConnected(bool connected)
 	{
@@ -59,5 +59,5 @@ public:
 	private:
 	temperature _temperature;
 	temperature _delta;
-	bool _connected;
+	bool _connected{true};
 };

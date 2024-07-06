@@ -40,10 +40,9 @@ extern BrewPiProxy brewPi;
 
 class SimpleFilter
 {
-	float _y;
-	float _b;
+	float _y{};
+	float _b{0.1};
 public:
-	SimpleFilter(){ _b = 0.1;}
 	void setInitial(float v){ _y=v;}
 	void setBeta(float b) { _b = b; }
 	float beta(){ return _b; }
@@ -57,21 +56,21 @@ public:
 class ExternalData
 {
 protected:
-	float _gravity;
-	float _auxTemp;
-	time_t _lastUpdate;
-	float  _deviceVoltage;
+	float _gravity{INVALID_GRAVITY};
+	float _auxTemp{INVALID_TEMP};
+	time_t _lastUpdate{};
+	float  _deviceVoltage{INVALID_VOLTAGE};
 //	float _og;
 	SimpleFilter filter;
-    char *_ispindelName;
-	float _ispindelTilt;
-	bool  _calibrating;
-	float _filteredGravity;
-	int16_t _rssi;
-	bool _rssiValid;
+	char *_ispindelName{};
+	float _ispindelTilt{};
+	bool  _calibrating{};
+	float _filteredGravity{INVALID_GRAVITY};
+	int16_t _rssi{};
+	bool _rssiValid{};
 
 
-	GravityDeviceConfiguration *_cfg;
+	GravityDeviceConfiguration *_cfg{};
 
 	float temperatureCorrection(float sg, float t, float c);
 
@@ -80,11 +79,6 @@ protected:
 	void setAuxTemperatureCelsius(float temp);
 	void setOriginalGravity(float og);	
 public:
-	ExternalData():_gravity(INVALID_GRAVITY),_auxTemp(INVALID_TEMP),
-	_lastUpdate(0),_deviceVoltage(INVALID_VOLTAGE)
-	,_ispindelName(nullptr),_calibrating(false),_rssiValid(false)
-	{ _filteredGravity = INVALID_GRAVITY;}
-
 	float gravity(bool filtered=false);
 	float plato(bool filtered=false);
 

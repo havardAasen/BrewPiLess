@@ -29,7 +29,7 @@
 class BasicTempSensor
 {
 public:
-	virtual ~BasicTempSensor() { }
+	virtual ~BasicTempSensor() = default;
 
 	virtual bool isConnected() = 0;
 

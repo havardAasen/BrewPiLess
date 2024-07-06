@@ -69,7 +69,7 @@
 
 class OLEDFourBit : public Print {
 	public:
-	OLEDFourBit(){};
+	virtual ~OLEDFourBit() = default;
 
 #if BREWPI_STATIC_CONFIG==BREWPI_SHIELD_DIY
 	void init() {
@@ -137,23 +137,23 @@ class OLEDFourBit : public Print {
 	void pulseEnable();
 	void waitBusy();
 
-	uint8_t _rs_pin; // LOW: command.  HIGH: character.
-	uint8_t _rw_pin; // LOW: write to oled.  HIGH: read from oled.
-	uint8_t _enable_pin; // activated by a HIGH pulse.
-	uint8_t _busy_pin;
-	std::array<uint8_t, 4> _data_pins;
+	uint8_t _rs_pin{}; // LOW: command.  HIGH: character.
+	uint8_t _rw_pin{}; // LOW: write to oled.  HIGH: read from oled.
+	uint8_t _enable_pin{}; // activated by a HIGH pulse.
+	uint8_t _busy_pin{};
+	std::array<uint8_t, 4> _data_pins{};
 
-	uint8_t _displayfunction;
-	uint8_t _displaycontrol;
-	uint8_t _displaymode;
-	uint8_t _initialized;
-	uint8_t _currline;
-	uint8_t _currpos;
-	uint8_t _numlines;
+	uint8_t _displayfunction{};
+	uint8_t _displaycontrol{};
+	uint8_t _displaymode{};
+	uint8_t _initialized{};
+	uint8_t _currline{};
+	uint8_t _currpos{};
+	uint8_t _numlines{};
 
-	char content[4][21]; // always keep a copy of the display content in this variable
+	char content[4][21]{}; // always keep a copy of the display content in this variable
 
-	bool	_bufferOnly;
+	bool	_bufferOnly{};
 
 };
 

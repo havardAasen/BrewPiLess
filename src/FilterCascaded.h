@@ -36,7 +36,6 @@ class CascadedFilter{
 
 	public:
 	CascadedFilter();
-	~CascadedFilter() {}
 	void init(temperature val);
 	void setCoefficients(uint8_t bValue);
 	temperature add(temperature val); // adds a value and returns the most recent filter output

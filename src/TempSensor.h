@@ -46,13 +46,8 @@ enum TempSensorType {
 
 class TempSensor {
 	public:
-	TempSensor(TempSensorType sensorType, BasicTempSensor* sensor =nullptr)  {
-		updateCounter = 255; // first update for slope filter after (255-4s)
+	explicit TempSensor(TempSensorType sensorType, BasicTempSensor* sensor =nullptr)  {
 		setSensor(sensor);
-		#if FridgeSensorFallBack
-		_useBackupSensor=false;
-		_backupSensor=nullptr;
-		#endif
 	 }
 
 	 void setSensor(BasicTempSensor* sensor) {
@@ -103,19 +98,19 @@ class TempSensor {
 	BasicTempSensor& sensor();
 
 	private:
-	BasicTempSensor* _sensor;
+	BasicTempSensor* _sensor{};
 	TempSensorFilter fastFilter;
 	TempSensorFilter slowFilter;
 	TempSensorFilter slopeFilter;
-	unsigned char updateCounter;
-	temperature_precise prevOutputForSlope;
+	unsigned char updateCounter{255}; // first update for slope filter after (255-4s)
+	temperature_precise prevOutputForSlope{};
 	#if FridgeSensorFallBack
-	BasicTempSensor* _backupSensor;
-	bool _useBackupSensor;
+	BasicTempSensor* _backupSensor{};
+	bool _useBackupSensor{};
 	#endif
 	// An indication of how stale the data is in the filters. Each time a read fails, this value is incremented.
 	// It's used to reset the filters after a large enough disconnect delay, and on the first init.
-	int8_t failedReadCount;		// -1 for uninitialized, >=0 afterwards.
+	int8_t failedReadCount{};		// -1 for uninitialized, >=0 afterwards.
 
 	friend class ChamberManager;
 	friend class Chamber;

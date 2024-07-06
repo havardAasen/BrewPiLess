@@ -2,6 +2,7 @@
 #define WiFiSetup_H
 
 #include <DNSServer.h>
+#include <utility>
 
 
 class WiFiSetupClass
@@ -30,7 +31,7 @@ public:
 	void setMode(WiFiMode mode);
 	void staConfig(const IPAddress& ip=0, const IPAddress& gw=0, const IPAddress& nm=0, const IPAddress& dns=0);
 
-	void onEvent(std::function<void(const char*)> handler){ _eventHandler = handler;}
+	void onEvent(std::function<void(const char*)> handler){ _eventHandler = std::move(handler);}
 
 	bool stayConnected();
 	bool isApMode();

@@ -11,8 +11,8 @@ protected:
 	int _readPtr{};
 	int  _bufferSize;
 public:
-	explicit QueueBuffer(int size){_bufferSize=size; _buffer=(char*)malloc(size);}
-	~QueueBuffer(){ free(_buffer);}
+	explicit QueueBuffer(int size);
+	~QueueBuffer();
 
 	void print(char c);
 	void print(const char* c);

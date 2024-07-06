@@ -1,5 +1,16 @@
 #include "VirtualSerial.h"
 
+QueueBuffer::QueueBuffer(const int size)
+{
+	_bufferSize = size;
+	_buffer = new char[size];
+}
+
+QueueBuffer::~QueueBuffer()
+{
+	delete[] _buffer;
+}
+
 int QueueBuffer::read()
 {
 	if(_writePtr == _readPtr) return -1;

@@ -82,7 +82,7 @@ class EepromStream
 	eptr_t pv{};
 
 	void writeByte(uint8_t value) {
-		eepromAccess.writeByte(pv++, value);
+		EepromAccess::writeByte(pv++, value);
 	}
 	// TODO - Clean this up
 /*	void writeBlock(void* source, uint16_t size)
@@ -92,15 +92,15 @@ class EepromStream
 	}*/
 	// Breaking this out into three functions so that we can have better control
 	void writeControlSettings(ControlSettings& source, uint16_t size) {
-		eepromAccess.writeControlSettings(pv, source, size);
+		EepromAccess::writeControlSettings(pv, source, size);
 	}
 
 	void writeControlConstants(ControlConstants& source, uint16_t size) {
-		eepromAccess.writeControlConstants(pv, source, size);
+		EepromAccess::writeControlConstants(pv, source, size);
 	}
 
 	void writeDeviceDefinition(const DeviceConfig& source, uint16_t size) {
-		eepromAccess.writeDeviceDefinition(pv, source, size);
+		EepromAccess::writeDeviceDefinition(pv, source, size);
 	}
 };
 

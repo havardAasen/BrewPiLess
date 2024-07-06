@@ -35,22 +35,22 @@ extern Logger logger;
 
 #if BREWPI_LOG_ERRORS
 	inline void logError(uint8_t debugId){
-		logger.logMessageVaArg('E', debugId, "");
+		Logger::logMessageVaArg('E', debugId, "");
 	}
 	inline void logErrorInt(uint8_t debugId, int val){
-		logger.logMessageVaArg('E', debugId, "d", val);
+		Logger::logMessageVaArg('E', debugId, "d", val);
 	}
 	inline void logErrorString(uint8_t debugId, const char * val){
-		logger.logMessageVaArg('E', debugId, "s", val);
+		Logger::logMessageVaArg('E', debugId, "s", val);
 	}
 	inline void logErrorTemp(uint8_t debugId, temperature temp){
-		logger.logMessageVaArg('E', debugId, "t", temp);
+		Logger::logMessageVaArg('E', debugId, "t", temp);
 	}
 	inline void logErrorIntInt(uint8_t debugId, int val1, int val2){
-		logger.logMessageVaArg('E', debugId, "dd", val1, val2);
+		Logger::logMessageVaArg('E', debugId, "dd", val1, val2);
 	}
 	inline void logErrorIntIntInt(uint8_t debugId, int val1, int val2, int val3){
-		logger.logMessageVaArg('E', debugId, "ddd", val1, val2, val3);
+		Logger::logMessageVaArg('E', debugId, "ddd", val1, val2, val3);
 	}
 #else
 	#define logError(debugId) {}
@@ -63,19 +63,19 @@ extern Logger logger;
 
 #if BREWPI_LOG_WARNINGS
 	inline void logWarning(uint8_t debugId){
-		logger.logMessageVaArg('W', debugId, "");
+		Logger::logMessageVaArg('W', debugId, "");
 	}
 	inline void logWarningInt(uint8_t debugId, int val){
-		logger.logMessageVaArg('W', debugId, "d", val);
+		Logger::logMessageVaArg('W', debugId, "d", val);
 	}
 	inline void logWarningString(uint8_t debugId, const char * val){
-		logger.logMessageVaArg('W', debugId, "s", val);
+		Logger::logMessageVaArg('W', debugId, "s", val);
 	}
 	inline void logWarningTemp(uint8_t debugId, temperature temp){
-		logger.logMessageVaArg('W', debugId, "t", temp);
+		Logger::logMessageVaArg('W', debugId, "t", temp);
 	}
 	inline void logWarningIntString(uint8_t debugId, int val1, const char *val2){
-		logger.logMessageVaArg('W', debugId, "ds", val1, val2);
+		Logger::logMessageVaArg('W', debugId, "ds", val1, val2);
 	}
 #else
 	#define logWarning(debugId) {}
@@ -87,28 +87,28 @@ extern Logger logger;
 
 #if BREWPI_LOG_INFO
 		inline void logInfo(uint8_t debugId){
-			logger.logMessageVaArg('I', debugId, "");
+			Logger::logMessageVaArg('I', debugId, "");
 		}
 		inline void logInfoInt(uint8_t debugId, int val){
-			logger.logMessageVaArg('I', debugId, "d", val);
+			Logger::logMessageVaArg('I', debugId, "d", val);
 		}
 		inline void logInfoString(uint8_t debugId, const char * val){
-			logger.logMessageVaArg('I', debugId, "s", val);
+			Logger::logMessageVaArg('I', debugId, "s", val);
 		}
 		inline void logInfoTemp(uint8_t debugId, temperature temp){
-			logger.logMessageVaArg('I', debugId, "t", temp);
+			Logger::logMessageVaArg('I', debugId, "t", temp);
 		}
 		inline void logInfoIntString(uint8_t debugId, int val1, const char * val2){
-			logger.logMessageVaArg('I', debugId, "ds", val1, val2);
+			Logger::logMessageVaArg('I', debugId, "ds", val1, val2);
 		}
 		inline void logInfoStringString(uint8_t debugId, const char * val1, const char * val2){
-			logger.logMessageVaArg('I', debugId, "ss", val1, val2);
+			Logger::logMessageVaArg('I', debugId, "ss", val1, val2);
 		}
 		inline void logInfoIntStringTemp(uint8_t debugId, int val1, const char * val2, temperature val3){
-			logger.logMessageVaArg('I', debugId, "dst", val1, val2, val3);
+			Logger::logMessageVaArg('I', debugId, "dst", val1, val2, val3);
 		}
 		inline void logInfoTempTempFixedFixed(uint8_t debugId, temperature t1, temperature t2, temperature f1, temperature f2){
-			logger.logMessageVaArg('I', debugId, "ttff", t1, t2, f1, f2);
+			Logger::logMessageVaArg('I', debugId, "ttff", t1, t2, f1, f2);
 		}
 #else
 	#define logInfo(debugId) {}

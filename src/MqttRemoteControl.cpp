@@ -366,7 +366,7 @@ void MqttRemoteControl::_onModeChange(char* payload,size_t len){
     // we are going to accept mode and integer.
     char mode; // o:off, f: fridgeConst, b: beerConst, p: beerProfile
     
-    const char modeChars[]={ModeOff,ModeFridgeConst,ModeBeerConst,ModeBeerProfile};
+    constexpr char modeChars[]={ModeOff,ModeFridgeConst,ModeBeerConst,ModeBeerProfile};
  
     #if SerialDebug
     DBG_PRINTF("MQTT:mode path value:");

@@ -311,7 +311,7 @@ bool DallasTemperature::setResolution(const uint8_t* deviceAddress, uint8_t newR
     if (isConnected(deviceAddress, scratchPad))
     {
         // DS18S20 has a fixed 9-bit resolution
-        if (!isDS18S20Model(deviceAddress))
+        if constexpr (!isDS18S20Model(deviceAddress))
         {
 			uint8_t resolution;
 #if REQUIRESONLY12BITCONVERSION
@@ -356,7 +356,7 @@ uint8_t DallasTemperature::getResolution(const uint8_t* deviceAddress)
 {
     // this model has a fixed resolution of 9 bits but getTemp calculates
     // a full 12 bits resolution and we need 750ms convert time
-    if (isDS18S20Model(deviceAddress)) return 12;
+    if constexpr (isDS18S20Model(deviceAddress)) return 12;
 
     ScratchPad scratchPad;
     if (isConnected(deviceAddress, scratchPad))
@@ -560,7 +560,7 @@ int16_t DallasTemperature::calculateTemperature(const uint8_t* deviceAddress, ui
     See - http://myarduinotoy.blogspot.co.uk/2013/02/12bit-result-from-ds18s20.html
     */
 
-    if (isDS18S20Model(deviceAddress))
+    if constexpr (isDS18S20Model(deviceAddress))
         rawTemperature = ((rawTemperature & 0xFFFE) << 3) + 12 - scratchPad[COUNT_REMAIN];
 
     return rawTemperature;

@@ -41,15 +41,15 @@ struct EmbeddedFileMapEntry{
 };
 
 #include "bwf_js.h"
-const char file_bwf_js [] PROGMEM="/bwf.js";
+constexpr char file_bwf_js [] PROGMEM="/bwf.js";
 
 #include "testcmd_htm.h"
-const char file_testcmd_htm [] PROGMEM="/testcmd.htm";
+constexpr char file_testcmd_htm [] PROGMEM="/testcmd.htm";
 
 #include "dygraph_js.h"
 
 
-const char file_lcd_htm [] PROGMEM="/lcd";
+constexpr char file_lcd_htm [] PROGMEM="/lcd";
 
 #include "lcd_htm.h"
 
@@ -61,14 +61,14 @@ const char file_lcd_htm [] PROGMEM="/lcd";
 #include ConfigHtmFile
 #include PressureHtmFile
 
-const char file_index_htm [] PROGMEM="/index.htm";
-const char file_dygraph_js [] PROGMEM="/dygraph-combined.js";
-const char file_control_htm [] PROGMEM="/control.htm";
-const char file_setup_htm [] PROGMEM="/setup.htm";
-const char file_logconfig [] PROGMEM="/logging.htm";
-const char file_gravitydevice [] PROGMEM="/gravity.htm";
-const char file_config [] PROGMEM="/config.htm";
-const char file_pressure [] PROGMEM="/pressure.htm";
+constexpr char file_index_htm [] PROGMEM="/index.htm";
+constexpr char file_dygraph_js [] PROGMEM="/dygraph-combined.js";
+constexpr char file_control_htm [] PROGMEM="/control.htm";
+constexpr char file_setup_htm [] PROGMEM="/setup.htm";
+constexpr char file_logconfig [] PROGMEM="/logging.htm";
+constexpr char file_gravitydevice [] PROGMEM="/gravity.htm";
+constexpr char file_config [] PROGMEM="/config.htm";
+constexpr char file_pressure [] PROGMEM="/pressure.htm";
 
 EmbeddedFileMapEntry fileMaps[]={
 {file_bwf_js,data_bwf_min_js_gz,sizeof(data_bwf_min_js_gz),true},

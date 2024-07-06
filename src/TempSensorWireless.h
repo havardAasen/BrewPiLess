@@ -14,7 +14,7 @@ public:
         setConnected(connected);
         _expiryTime = expiryTime * 1000;
 	
-		const uint8_t shift = TEMP_FIXED_POINT_BITS-ONEWIRE_TEMP_SENSOR_PRECISION; // difference in precision between DS18B20 format and temperature adt
+		constexpr uint8_t shift = TEMP_FIXED_POINT_BITS-ONEWIRE_TEMP_SENSOR_PRECISION; // difference in precision between DS18B20 format and temperature adt
 		//temperature i fixed7_9, calibration fixed4_4
 		_calibrationOffset =constrainTemp16(temperature(cal)<<shift);
 		if(! theWirelessTempSensor)theWirelessTempSensor=this;

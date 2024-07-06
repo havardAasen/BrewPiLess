@@ -135,7 +135,7 @@ void Menu::pickSettingToChangeLoop() {
 }
 
 void changedMode() {
-	const char lookup[] = {'b', 'f', 'p', 'o'};
+	constexpr char lookup[] = {'b', 'f', 'p', 'o'};
 	tempControl.setMode(lookup[RotaryEncoder::read()]);
 }
 

@@ -24,7 +24,7 @@
 #include "TemperatureFormats.h"
 #include "JsonKeys.h"
 
-static const char PROGMEM LOG_STRING_FORMAT[] = "\"%s\"";
+constexpr char PROGMEM LOG_STRING_FORMAT[] = "\"%s\"";
 
 void Logger::logMessageVaArg(char type, LOG_ID_TYPE errorID, const char * varTypes, ...){
 	va_list args;

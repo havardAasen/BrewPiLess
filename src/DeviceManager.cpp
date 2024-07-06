@@ -348,30 +348,27 @@ struct DeviceDefinition {
 	/**
 	 * Lists the first letter of the key name for each attribute.
 	 */
-	static const char ORDER[12];
+	static constexpr char ORDER[12] = "icbfhpxndja";
 };
 
-// the special cases are placed at the end. All others should map directly to an int8_t via atoi().
-const char DeviceDefinition::ORDER[12] = "icbfhpxndja";
-
-const char DEVICE_ATTRIB_INDEX = 'i';
-const char DEVICE_ATTRIB_CHAMBER = 'c';
-const char DEVICE_ATTRIB_BEER = 'b';
-const char DEVICE_ATTRIB_FUNCTION = 'f';
-const char DEVICE_ATTRIB_HARDWARE = 'h';
-const char DEVICE_ATTRIB_PIN = 'p';
-const char DEVICE_ATTRIB_INVERT = 'x';
-const char DEVICE_ATTRIB_DEACTIVATED = 'd';
-const char DEVICE_ATTRIB_ADDRESS = 'a';
+constexpr char DEVICE_ATTRIB_INDEX = 'i';
+constexpr char DEVICE_ATTRIB_CHAMBER = 'c';
+constexpr char DEVICE_ATTRIB_BEER = 'b';
+constexpr char DEVICE_ATTRIB_FUNCTION = 'f';
+constexpr char DEVICE_ATTRIB_HARDWARE = 'h';
+constexpr char DEVICE_ATTRIB_PIN = 'p';
+constexpr char DEVICE_ATTRIB_INVERT = 'x';
+constexpr char DEVICE_ATTRIB_DEACTIVATED = 'd';
+constexpr char DEVICE_ATTRIB_ADDRESS = 'a';
 #if BREWPI_DS2413
-const char DEVICE_ATTRIB_PIO = 'n';
+constexpr char DEVICE_ATTRIB_PIO = 'n';
 #endif
-const char DEVICE_ATTRIB_CALIBRATEADJUST = 'j';	// value to add to temp sensors to bring to correct temperature
+constexpr char DEVICE_ATTRIB_CALIBRATEADJUST = 'j';	// value to add to temp sensors to bring to correct temperature
 
-const char DEVICE_ATTRIB_VALUE = 'v';		// print current values
-const char DEVICE_ATTRIB_WRITE = 'w';		// write value to device
+constexpr char DEVICE_ATTRIB_VALUE = 'v';		// print current values
+constexpr char DEVICE_ATTRIB_WRITE = 'w';		// write value to device
 
-const char DEVICE_ATTRIB_TYPE = 't';
+constexpr char DEVICE_ATTRIB_TYPE = 't';
 
 
 void handleDeviceDefinition(const char* key, const char* val, void* pv)

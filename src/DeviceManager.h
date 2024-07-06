@@ -46,8 +46,8 @@ class DeviceConfig;
 
 typedef int8_t device_slot_t;
 inline bool isDefinedSlot(device_slot_t s) { return s>=0; }
-const device_slot_t MAX_DEVICE_SLOT = 16;		// exclusive
-const device_slot_t INVALID_SLOT = -1;
+inline constexpr device_slot_t MAX_DEVICE_SLOT = 16;		// exclusive
+inline constexpr device_slot_t INVALID_SLOT = -1;
 
 /*
  * Describes the logical function of each device.

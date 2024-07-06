@@ -847,14 +847,14 @@ static const char *STR_TEMPERATURE_PROFILE  = "by temperature profile";
 static const char *STR_MODE  = "Mode";
 static const char *STR_BEER_TEMP  = "Beer temp";
 static const char *STR_FRIDGE_TEMP  = "Fridge temp";
-static const char STR_FMT_SET_TO[] PROGMEM = "%s set to %s %s";
+constexpr char STR_FMT_SET_TO[] PROGMEM = "%s set to %s %s";
 #else
-static const char STR_WEB_INTERFACE[] PROGMEM = "in web interface";
-static const char STR_TEMPERATURE_PROFILE[] PROGMEM = "by temperature profile";
-static const char STR_MODE[] PROGMEM = "Mode";
-static const char STR_BEER_TEMP[] PROGMEM = "Beer temp";
-static const char STR_FRIDGE_TEMP[] PROGMEM = "Fridge temp";
-static const char STR_FMT_SET_TO[] PROGMEM = "%S set to %s %S";
+constexpr char STR_WEB_INTERFACE[] PROGMEM = "in web interface";
+constexpr char STR_TEMPERATURE_PROFILE[] PROGMEM = "by temperature profile";
+constexpr char STR_MODE[] PROGMEM = "Mode";
+constexpr char STR_BEER_TEMP[] PROGMEM = "Beer temp";
+constexpr char STR_FRIDGE_TEMP[] PROGMEM = "Fridge temp";
+constexpr char STR_FMT_SET_TO[] PROGMEM = "%S set to %s %S";
 #endif
 
 void PiLink::setMode(const char* val) {

@@ -39,16 +39,16 @@ struct BeerBlock {
 
 struct ChamberBlock
 {
-	static const uint8_t MAX_BEERS = 6;
+	static constexpr uint8_t MAX_BEERS = 6;
 	ChamberSettings chamberSettings;
 	BeerBlock		beer[MAX_BEERS];
 };
 
 struct EepromFormat
 {
-	static const uint16_t MAX_EEPROM_SIZE = MAX_EEPROM_SIZE_LIMIT;
-	static const uint8_t MAX_CHAMBERS = 4;
-	static const uint8_t MAX_DEVICES = MAX_DEVICE_SLOT;
+	static constexpr uint16_t MAX_EEPROM_SIZE = MAX_EEPROM_SIZE_LIMIT;
+	static constexpr uint8_t MAX_CHAMBERS = 4;
+	static constexpr uint8_t MAX_DEVICES = MAX_DEVICE_SLOT;
 
 	byte version;
 	byte numChambers;		// todo - remove this - and increase reserved space.
@@ -64,7 +64,7 @@ __attribute__((error("EEPROM data is > 1024 bytes")));
 
 static inline __attribute__((always_inline))
 void eepromSizeCheck() {
-	if (sizeof(EepromFormat) > EepromFormat::MAX_EEPROM_SIZE) {
+	if constexpr (sizeof(EepromFormat) > EepromFormat::MAX_EEPROM_SIZE) {
 		eepromSizeTooLarge();
 	}
 }

@@ -44,15 +44,15 @@ LcdDriver LcdDisplay::lcd;
 #endif
 #endif // #if BREWPI_OLED128x64_LCD
 // Constant strings used multiple times
-static const char STR_Beer_[] PROGMEM = "Beer ";
-static const char STR_Fridge_[] PROGMEM = "Fridge ";
-static const char STR_Const_[] PROGMEM = "Const.";
-static const char STR_Cool[] PROGMEM = "Cool";
-static const char STR_Heat[] PROGMEM = "Heat";
-static const char STR_ing_for[] PROGMEM = "ing for";
-static const char STR_Wait_to_[] PROGMEM = "Wait to ";
-static const char STR__time_left[] PROGMEM = " time left";
-static const char STR_empty_string[] PROGMEM = "";
+constexpr char STR_Beer_[] PROGMEM = "Beer ";
+constexpr char STR_Fridge_[] PROGMEM = "Fridge ";
+constexpr char STR_Const_[] PROGMEM = "Const.";
+constexpr char STR_Cool[] PROGMEM = "Cool";
+constexpr char STR_Heat[] PROGMEM = "Heat";
+constexpr char STR_ing_for[] PROGMEM = "ing for";
+constexpr char STR_Wait_to_[] PROGMEM = "Wait to ";
+constexpr char STR__time_left[] PROGMEM = " time left";
+constexpr char STR_empty_string[] PROGMEM = "";
 
 void LcdDisplay::init(){
 #ifdef BREWPI_IIC_LCD

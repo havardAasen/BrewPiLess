@@ -9,8 +9,6 @@
 
 #if BREWPI_OLED128x64_LCD
 
-#include "font_cousine_10.h"
-
 #define TOP_MARGIN (2)
 #define LEFT_MARGIN 4
 
@@ -53,7 +51,6 @@ void IICOledLcd::begin(uint8_t cols, uint8_t lines){
     _display.clear();
     _display.display();
 
-    _display.setFont(Cousine_10);
     _display.setTextAlignment(TEXT_ALIGN_LEFT);
     _display.setContrast(255);
 }

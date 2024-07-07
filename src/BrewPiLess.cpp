@@ -44,7 +44,6 @@
 #endif
 
 #include "TimeKeeper.h"
-#include "mystrlib.h"
 
 #include "GravityTracker.h"
 #include "BrewKeeper.h"

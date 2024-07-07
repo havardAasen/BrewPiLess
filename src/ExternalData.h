@@ -4,7 +4,6 @@
 #include "BrewPiProxy.h"
 #include "BrewKeeper.h"
 #include "BrewLogger.h"
-#include "mystrlib.h"
 #include "BPLSettings.h"
 
 #if BREWPI_EXTERNAL_SENSOR

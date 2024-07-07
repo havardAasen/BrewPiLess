@@ -1,10 +1,11 @@
-#include <FS.h>
 #include <ArduinoJson.h>
+#include <FS.h>
+#include <cstdio>
+
+#include "BrewKeeper.h"
+#include "BrewPiProxy.h"
 #include "TimeKeeper.h"
 
-#include "BrewPiProxy.h"
-#include "BrewKeeper.h"
-#include "mystrlib.h"
 #define F2C(d) (((d)-32)/1.8)
 #define C2F(d) (((d)*1.8)+32)
 
@@ -59,7 +60,7 @@ void BrewKeeper::keep(time_t now)
 		char buff[36];
 		strcpy(buff,"j{beerSet:");
 		int len=strlen(buff);
-		len+=sprintFloat(buff+len,temp,2);
+		len+=sprintf(buff+len, "%.*f", 2, temp);
 		strcpy(buff+len,"}");
 
 		//BPSerial.print(buff);

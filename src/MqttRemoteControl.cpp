@@ -5,7 +5,6 @@
 #include "LogFormatter.h"
 #include "TemperatureFormats.h"
 #include "BrewPiProxy.h"
-#include "mystrlib.h"
 #include "ExternalData.h"
 #if SupportPressureTransducer
 #include "PressureMonitor.h"
@@ -67,7 +66,7 @@ uint16_t MqttRemoteControl::_publish(const char* key,float value,int precision){
     strcpy(topic + baselength +1, key);
 
     char data[64];
-    int len= sprintFloat(data,value,precision);
+    int len= sprintf(data, "%.*f", precision, value);
     return _client.publish(topic,DefaultLogginQoS,true,data,len);
 }
 

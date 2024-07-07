@@ -1,4 +1,5 @@
 #include <ArduinoJson.h>
+#include <cstdio>
 #include "ExternalData.h"
 
 ExternalData externalData;
@@ -36,24 +37,24 @@ float ExternalData::hydrometerCalibration(){
 void ExternalData::sseNotify(char *buf){
 
 		char strbattery[8];
-		int len=sprintFloat(strbattery,_deviceVoltage,2);
+		int len=sprintf(strbattery, "%.*f", 2, _deviceVoltage);
 		strbattery[len]='\0';
 
 		char strgravity[8];
-		len=sprintFloat(strgravity,_gravity,3);
+		len=sprintf(strgravity, "%.*f", 3, _gravity);
 		strgravity[len]='\0';
 
 		char slowpassfilter[8];
-		len=sprintFloat(slowpassfilter,filter.beta(),2);
+		len=sprintf(slowpassfilter, "%.*f", 2, filter.beta());
 		slowpassfilter[len]='\0';
 
 		char strtilt[8];
-		len=sprintFloat(strtilt,_ispindelTilt,2);
+		len=sprintf(strtilt, "%.*f", 2, _ispindelTilt);
 		strtilt[len]='\0';
 
 		char coeff[4][20];
 		for(int i=0;i<4;i++){
-			len=sprintFloat(coeff[i],_cfg->ispindelCoefficients[i],9);
+			len=sprintf(coeff[i], "%.*f", 9, _cfg->ispindelCoefficients[i]);
 			coeff[i][len]='\0';	
 		}
 		char strRssi[32];

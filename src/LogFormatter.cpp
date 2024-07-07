@@ -1,6 +1,7 @@
 #include <ArduinoJson.h>
+#include <cstdio>
+
 #include "LogFormatter.h"
-#include "mystrlib.h"
 #include "DataLogger.h"
 #include "Config.h"
 #include "TemperatureFormats.h"
@@ -28,7 +29,7 @@ extern BrewPiProxy brewPi;
 size_t printFloat(char* buffer,float value,int precision,bool valid,const char* invalidstr)
 {
 	if(valid){
-		return sprintFloat(buffer,value,precision);
+		return sprintf(buffer, "%.*f", precision, value);
 	}else{
         strcpy(buffer,invalidstr);
         return strlen(invalidstr);
@@ -84,7 +85,7 @@ size_t dataSprintf(char *buffer,const char *format,const char* invalid)
 				float tilt=externalData.tiltValue();
 				d += printFloat(buffer+d,tilt,2,true,invalid);
 			}else if(ch == 'u'){
-				d += sprintInt(buffer+d, externalData.lastUpdate());
+				d += sprintf(buffer+d, "%lld",  externalData.lastUpdate());
 			}else if(ch == 'U'){
 				char unit;
 				uint8_t unused1,unused2;
@@ -132,7 +133,7 @@ int copyTemp(char* buf,char* name,float value, bool concate)
 	int n;
 	if((n = _copyName(buf,name,concate))!=0){
 		if(IS_FLOAT_TEMP_VALID(value)){
-			n += sprintFloat(buf + n ,value,2);
+			n += sprintf(buf + n, "%.*f", 2, value);
 		}else{
 			strcpy(buf + n,"null");
 			n += 4;

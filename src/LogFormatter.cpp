@@ -12,14 +12,17 @@
 extern BrewPiProxy brewPi;
 
 
-
-static char modeInInteger(char mode){
-	char modevalue;
-	if(mode == 'p') modevalue = '3';
-	else if(mode == 'b') modevalue = '2';
-	else if(mode == 'f') modevalue = '1';
-	else modevalue = '0';
-	return modevalue;
+[[nodiscard]] static constexpr char modeInInteger(const char mode){
+	switch (mode) {
+		case 'p':
+			return '3';
+		case 'b':
+			return '2';
+		case 'f':
+			return '1';
+		default:
+			return '0';
+	}
 }
 
 size_t printFloat(char* buffer,float value,int precision,bool valid,const char* invalidstr)

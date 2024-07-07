@@ -38,13 +38,12 @@
 // The interface to the Raspberry Pi uses decimal notation, like 21.3.
 // Depending on the EEPROM setting cc.tempFormat, this will be interpreted as Celsius or Fahrenheit
 
-// just for clarity, typedefs are used instead of normal integers.
 // Addition and shifting can be done normally. When two fixed points values are multiplied, you have shift the result
-typedef int16_t fixed7_9; // fixed7_9 uses 7 signed int bits and 9 fraction bits
-typedef int32_t fixed23_9; // fixed23_9 uses 23 signed int bits and 9 fraction bits. Used when results can overflow
-typedef int32_t fixed7_25; // fixed7_25 uses 7 signed int bits and 25 fraction bits. Used when extra precision is needed
-typedef int16_t fixed12_4; // 1 sign bit, 11 integer bits, and 4 fraction bits - encoding returned by DS18B20 sensors.
-typedef int8_t fixed4_4; // fixed4_4 uses 1-sign bit, 3 int bits and 4 fraction bits. Corresponds with precision of DS18B20 sensors
+using fixed7_9 = int16_t ; // fixed7_9 uses 7 signed int bits and 9 fraction bits
+using fixed23_9 = int32_t ; // fixed23_9 uses 23 signed int bits and 9 fraction bits. Used when results can overflow
+using fixed7_25 = int32_t ; // fixed7_25 uses 7 signed int bits and 25 fraction bits. Used when extra precision is needed
+using fixed12_4 = int16_t ; // 1 sign bit, 11 integer bits, and 4 fraction bits - encoding returned by DS18B20 sensors.
+using fixed4_4 = int8_t ; // fixed4_4 uses 1-sign bit, 3 int bits and 4 fraction bits. Corresponds with precision of DS18B20 sensors
 
 #define INVALID_TEMP -32768
 #define MAX_TEMP 32767
@@ -56,10 +55,10 @@ typedef int8_t fixed4_4; // fixed4_4 uses 1-sign bit, 3 int bits and 4 fraction 
 
 
 /* Temperature expressed as an integer. */
-typedef int8_t temp_int;
-typedef fixed7_9 temperature;
-typedef fixed23_9 long_temperature;
-typedef fixed7_25 temperature_precise;
+using temp_int = int8_t;
+using temperature = fixed7_9;
+using long_temperature = fixed23_9;
+using temperature_precise = fixed7_25;
 
 #define TEMP_FIXED_POINT_BITS (9)
 #define TEMP_FIXED_POINT_SCALE (1<<TEMP_FIXED_POINT_BITS)

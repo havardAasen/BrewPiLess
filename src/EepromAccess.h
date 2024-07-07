@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef EEPROM_ACCESS_H
+#define EEPROM_ACCESS_H
 
 #include "EepromTypes.h"
 
@@ -43,3 +44,5 @@ typedef ArrayEepromAccess EepromAccess;
 #endif
 
 extern EepromAccess eepromAccess;
+
+#endif

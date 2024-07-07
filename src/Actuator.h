@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef ACTUATOR_H
+#define ACTUATOR_H
 
 #include "Brewpi.h"
 #include "FastDigitalPin.h"
@@ -66,3 +67,5 @@ public:
 private:
 	bool state{};
 };
+
+#endif

@@ -1,5 +1,5 @@
-#ifndef AutoCapControl_H
-#define AutoCapControl_H
+#ifndef AUTO_CAP_CONTROL_H
+#define AUTO_CAP_CONTROL_H
 
 #include "Brewpi.h"
 #include "Actuator.h"

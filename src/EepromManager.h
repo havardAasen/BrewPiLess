@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef EEPROM_MANAGER_H
+#define EEPROM_MANAGER_H
 
 #include "Brewpi.h"
 
@@ -105,3 +106,5 @@ class EepromStream
 };
 
 extern EepromManager eepromManager;
+
+#endif

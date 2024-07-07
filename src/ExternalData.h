@@ -1,5 +1,6 @@
-#ifndef ExternalData_H
-#define ExternalData_H
+#ifndef EXTERNAL_DATA_H
+#define EXTERNAL_DATA_H
+
 #include "BrewPiProxy.h"
 #include "BrewKeeper.h"
 #include "BrewLogger.h"

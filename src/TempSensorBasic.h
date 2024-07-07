@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef TEMP_SENSOR_BASIC_H
+#define TEMP_SENSOR_BASIC_H
 
 #include "TemperatureFormats.h"
 
@@ -44,3 +45,5 @@ public:
 	virtual temperature read() = 0;
 
 };
+
+#endif

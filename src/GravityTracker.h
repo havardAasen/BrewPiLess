@@ -1,5 +1,6 @@
-#ifndef GravityTracker_H
-#define GravityTracker_H
+#ifndef GRAVITY_TRACKER_H
+#define GRAVITY_TRACKER_H
+
 #define NumberOfSlots 72
 #define InvalidValue 0
 #define AveragePeriod  3600
@@ -51,4 +52,5 @@ public:
 };
 
 extern GravityTracker gravityTracker;
+
 #endif

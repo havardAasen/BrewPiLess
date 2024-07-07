@@ -22,8 +22,8 @@
  * Differences are some of the control commands (cursor on/off), language setting and especially initialization sequence.
  */
 
-#ifndef OLEDFourBit_h
-#define OLEDFourBit_h
+#ifndef OLED_FOUR_BIT_H
+#define OLED_FOUR_BIT_H
 
 #include <inttypes.h>
 #include "Print.h"

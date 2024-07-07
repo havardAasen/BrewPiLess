@@ -17,7 +17,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef TEMP_CONTROL_H
+#define TEMP_CONTROL_H
 
 #include "Brewpi.h"
 #include "TempSensor.h"
@@ -242,3 +243,5 @@ class TempControl{
 };
 
 extern TempControl tempControl;
+
+#endif

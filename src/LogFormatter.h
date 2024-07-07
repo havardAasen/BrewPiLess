@@ -1,5 +1,5 @@
-#ifndef LogFormatter_H
-#define LogFormatter_H
+#ifndef LOG_FORMATTER_H
+#define LOG_FORMATTER_H
 
 #define KeyBeerTemp "beerTemp"
 #define KeyBeerSet "beerSet"

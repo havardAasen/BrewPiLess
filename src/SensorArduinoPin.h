@@ -5,7 +5,8 @@
  * Created on 22 August 2013, 19:36
  */
 
-#pragma once
+#ifndef SENSOR_ARDUINO_PIN_H
+#define SENSOR_ARDUINO_PIN_H
 
 #ifdef ARDUINO
 
@@ -50,5 +51,7 @@ public:
 		return digitalRead(pin) ^ invert;
 	}
 };
+
+#endif
 
 #endif

@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef DS2413_H
+#define DS2413_H
 
 #ifdef ARDUINO
 
@@ -208,5 +209,7 @@ private:
 	OneWire* oneWire{};
 	DeviceAddress address{};
 };
+
+#endif
 
 #endif

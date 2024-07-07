@@ -17,7 +17,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef BUZZER_H
+#define BUZZER_H
 
 #include "Brewpi.h"
 #include "Actuator.h"
@@ -40,4 +41,6 @@ class Buzzer : public ValueActuator
 };
 
 extern Buzzer buzzer;
+#endif
+
 #endif

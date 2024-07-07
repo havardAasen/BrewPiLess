@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EEPROM_STRUCTS_H
+#define EEPROM_STRUCTS_H
 
 #ifdef ARDUINO
 #include "DallasTemperature.h"	// for DeviceAddress
@@ -126,3 +127,5 @@ struct DeviceConfig {
 	} hw;
 	bool reserved2;
 };
+
+#endif

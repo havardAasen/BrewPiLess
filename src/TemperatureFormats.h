@@ -17,7 +17,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef TEMPERATURE_FORMATS_H
+#define TEMPERATURE_FORMATS_H
 
 #include "Brewpi.h"
 #include <stdint.h>
@@ -168,3 +169,5 @@ inline long_temperature convertFromInternalTemp(long_temperature rawTemp) {
 float temperatureFloatValue(temperature t);
 //new
 #define OPTIMIZE_TEMPERATURE_FORMATS 1 && OPTIMIZE_GLOBAL
+
+#endif

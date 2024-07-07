@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef EEPROM_FORMAT_H
+#define EEPROM_FORMAT_H
 
 #include "Brewpi.h"
 #include "DeviceManager.h"
@@ -92,3 +93,5 @@ void eepromSizeCheck() {
  * rev 3: deactivate flag in DeviceConfig, and additinoal padding to allow for some future expansion.
  * rev 4: added padding at start and reduced device count to 16. We can always increase later.
  */
+
+#endif

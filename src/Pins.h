@@ -17,7 +17,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef PINS_H
+#define PINS_H
 
 #include "Brewpi.h"
 
@@ -143,4 +144,6 @@
 // You can use the internal pull-up resistors instead of external ones for the doorPin and the rotary encoder pins
 #ifndef USE_INTERNAL_PULL_UP_RESISTORS
 #define USE_INTERNAL_PULL_UP_RESISTORS 1
+#endif
+
 #endif

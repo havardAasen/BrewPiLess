@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef DISPLAY_BASE_H
+#define DISPLAY_BASE_H
 
 #include "Brewpi.h"
 #include "TemperatureFormats.h"
@@ -156,3 +157,5 @@ inline constexpr uint8_t LCD_FLAG_DISPLAY_ROOM = 0x01;
 	* When set, the room temp will automatically alternate between beer and room temp.
 	*/
 inline constexpr uint8_t LCD_FLAG_ALTERNATE_ROOM = 0x02;
+
+#endif

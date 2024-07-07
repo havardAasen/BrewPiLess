@@ -17,10 +17,10 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#ifndef VERSION_H
+#define VERSION_H
 
 #define VERSION_STRING "0.2.4"
 
 
-#endif /* VERSION_H_ */
+#endif

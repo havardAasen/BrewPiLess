@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef PILINK_H
+#define PILINK_H
 
 #include "Brewpi.h"
 #include "TemperatureFormats.h"
@@ -161,3 +162,5 @@ private:
 };
 
 extern PiLink piLink;
+
+#endif

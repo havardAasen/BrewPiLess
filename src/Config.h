@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef CONFIG_H
+#define CONFIG_H
 
 
 
@@ -469,4 +470,6 @@
 
 #ifndef AUTO_CAP
 #define  AUTO_CAP true
+#endif
+
 #endif

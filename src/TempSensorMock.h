@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef TEMP_SENSOR_MOCK_H
+#define TEMP_SENSOR_MOCK_H
 
 #include "Brewpi.h"
 #include "TempSensor.h"
@@ -61,3 +62,5 @@ public:
 	temperature _delta;
 	bool _connected{true};
 };
+
+#endif

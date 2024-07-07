@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef SIMULATOR_H
+#define SIMULATOR_H
 
 #include "Brewpi.h"
 #include "TempSensorExternal.h"
@@ -423,3 +424,5 @@ void setRunFactor(temperature factor);
 void HandleSimulatorConfig(const char* key, const char* val, void* pv);
 
 void simulateLoop();
+
+#endif

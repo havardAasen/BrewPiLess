@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef DISPLAY_H
+#define DISPLAY_H
 
 /**
  * To use the display, include this file. It takes care of setting DisplayType to the appropriate type of display according
@@ -32,3 +33,5 @@ typedef LcdDisplay DisplayType;
 
 
 extern DisplayType DISPLAY_REF display;
+
+#endif

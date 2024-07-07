@@ -17,7 +17,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef ROTARY_ENCODER_H
+#define ROTARY_ENCODER_H
 
 #include "Brewpi.h"
 
@@ -67,3 +68,5 @@ class RotaryEncoder
 };
 
 extern RotaryEncoder rotaryEncoder;
+
+#endif

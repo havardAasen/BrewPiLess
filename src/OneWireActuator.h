@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef ONEWIRE_ACTUATOR_H
+#define ONEWIRE_ACTUATOR_H
 
 #ifdef ARDUINO
 
@@ -68,5 +69,7 @@ private:
 	pio_t pio;
 	bool invert;
 };
+
+#endif
 
 #endif

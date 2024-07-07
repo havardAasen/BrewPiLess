@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef DEVICE_MANAGER_H
+#define DEVICE_MANAGER_H
 
 #include "Brewpi.h"
 
@@ -293,3 +294,5 @@ private:
 
 
 extern DeviceManager deviceManager;
+
+#endif

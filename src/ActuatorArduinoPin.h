@@ -5,7 +5,8 @@
  * Created on 19 August 2013, 20:32
  */
 
-#pragma once
+#ifndef ACTUATOR_ARDUINO_PIN_H
+#define ACTUATOR_ARDUINO_PIN_H
 
 #include "Actuator.h"
 
@@ -52,3 +53,5 @@ class DigitalPinActuator ACTUATOR_BASE_CLASS_DECL
 
 	bool isActive() { return active; }
 };
+
+#endif

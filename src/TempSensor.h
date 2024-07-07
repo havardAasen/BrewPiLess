@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef TEMP_SENSOR_H
+#define TEMP_SENSOR_H
 
 #include "Brewpi.h"
 #include "FilterCascaded.h"
@@ -116,3 +117,5 @@ class TempSensor {
 	friend class Chamber;
 	friend class DeviceManager;
 };
+
+#endif

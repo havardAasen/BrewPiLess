@@ -1,5 +1,5 @@
-
-
+#ifndef TEMP_SENSOR_WIRELESS_H
+#define TEMP_SENSOR_WIRELESS_H
 
 #include "Brewpi.h"
 #include "TempSensor.h"
@@ -66,3 +66,5 @@ public:
     uint32_t _expiryTime;
     uint32_t _updateTime{};
 };
+
+#endif

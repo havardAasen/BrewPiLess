@@ -1,5 +1,5 @@
-#ifndef VirtualSerial_H
-#define VirtualSerial_H
+#ifndef VIRTUAL_SERIAL_H
+#define VIRTUAL_SERIAL_H
 
 #include <Arduino.h>
 

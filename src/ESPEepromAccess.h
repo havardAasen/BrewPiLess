@@ -15,6 +15,8 @@
 * along with this file.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef ESP_EEPROM_ACCESS_H
+#define ESP_EEPROM_ACCESS_H
 
 #ifndef ESP8266
 // Generate an error if we have been incorrectly included in an Arduino build
@@ -83,3 +85,5 @@ public:
 
 
 };
+
+#endif

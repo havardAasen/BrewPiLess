@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef BREWPI_STRINGS_H
+#define BREWPI_STRINGS_H
 
 extern const char STR_FMT_S_RAM[];
 extern const char STR_FMT_S_PROGMEM[];
@@ -42,4 +43,6 @@ inline int8_t indexOf(const char* s, char c)
 }
 #else
 int8_t indexOf(const char* s, char c);
+#endif
+
 #endif

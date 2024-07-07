@@ -19,7 +19,10 @@
  */
 
 
-#pragma once
+#ifndef EEPROM_TYPES_H
+#define EEPROM_TYPES_H
 
 typedef uint16_t eptr_t;
 #define INVALID_EPTR (0)
+
+#endif

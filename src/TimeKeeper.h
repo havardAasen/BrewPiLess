@@ -1,5 +1,5 @@
-#ifndef TimeKeeper_H
-#define TimeKeeper_H
+#ifndef TIMEKEEPER_H
+#define TIMEKEEPER_H
 
 class TimeKeeperClass
 {

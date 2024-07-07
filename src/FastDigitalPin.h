@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef FAST_DIGITAL_PIN_H
+#define FAST_DIGITAL_PIN_H
 
 #ifndef FAST_DIGITAL_PIN
 #define FAST_DIGITAL_PIN 1
@@ -33,4 +34,6 @@
 	#define fastPinMode pinMode
 	#define fastDigitalWrite digitalWrite
 	#define fastDigitalRead digitalRead
+#endif
+
 #endif

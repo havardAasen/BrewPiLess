@@ -1,5 +1,5 @@
-#ifndef IicOledLcd_h
-#define IicOledLcd_h
+#ifndef IIC_OLED_LCD_H
+#define IIC_OLED_LCD_H
 
 #include "Brewpi.h"
 #include "BrewpiStrings.h"

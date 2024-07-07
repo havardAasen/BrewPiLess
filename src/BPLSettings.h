@@ -1,5 +1,6 @@
-#ifndef BPLSettings_H
-#define BPLSettings_H
+#ifndef BPL_SETTINGS_H
+#define BPL_SETTINGS_H
+
 #include <FS.h>
 #include <time.h>
 #include "Config.h"

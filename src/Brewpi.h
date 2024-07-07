@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef BREWPI_H
+#define BREWPI_H
 
 // have to use two levels of macro expansion to convert a symbol to a string. see http://gcc.gnu.org/onlinedocs/cpp/Stringification.html
 #define stringify(s) _stringifyDo(s)
@@ -63,3 +64,5 @@
 #include "Actuator.h"
 
 extern ValueActuator alarm;
+
+#endif

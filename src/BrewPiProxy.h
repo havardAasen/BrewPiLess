@@ -1,5 +1,5 @@
-#ifndef BrewPiProxy_H
-#define BrewPiProxy_H
+#ifndef BREW_PI_PROXY_H
+#define BREW_PI_PROXY_H
 
 #include <Arduino.h>
 #include "Config.h"

@@ -1,5 +1,6 @@
-#ifndef DataLogger_H
-#define DataLogger_H
+#ifndef DATA_LOGGER_H
+#define DATA_LOGGER_H
+
 #include "BPLSettings.h"
 #define RETRY_TIME 5
 #define MAX_RETRY_NUMBER 3

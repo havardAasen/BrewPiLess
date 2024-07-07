@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef TICKS_ARDUINO_H
+#define TICKS_ARDUINO_H
 
 #ifdef ARDUINO
 
@@ -43,5 +44,7 @@ public:
 	void millis(uint16_t millis);
 	void microseconds(uint32_t micros) { ::delayMicroseconds(micros); }
 };
+
+#endif
 
 #endif

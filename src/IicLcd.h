@@ -1,6 +1,6 @@
 //YWROBOT
-#ifndef LiquidCrystal_I2C_h
-#define LiquidCrystal_I2C_h
+#ifndef LIC_LCD_H
+#define LIC_LCD_H
 
 #include "Brewpi.h"
 #include "BrewpiStrings.h"

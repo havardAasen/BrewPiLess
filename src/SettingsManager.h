@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef SETTINGS_MANAGER_H
+#define SETTINGS_MANAGER_H
 
 #include "Brewpi.h"
 #include <assert.h>
@@ -44,3 +45,5 @@ public:
 };
 
 extern SettingsManager settingsManager;
+
+#endif

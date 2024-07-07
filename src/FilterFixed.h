@@ -17,7 +17,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef FILTER_FIXED_H
+#define FILTER_FIXED_H
 
 #include "Brewpi.h"
 
@@ -108,3 +109,5 @@ class FixedFilter{
 		temperature detectNegPeak(); //returns negative peak or INVALID_TEMP when no peak has been found
 
 };
+
+#endif

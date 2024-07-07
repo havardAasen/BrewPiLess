@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef TEMP_SENSOR_DISCONNECTED_H
+#define TEMP_SENSOR_DISCONNECTED_H
 
 #include "TempSensor.h"
 
@@ -36,3 +37,5 @@ public:
 	}
 
 };
+
+#endif

@@ -18,6 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef ARDUINO_EEPROM_ACCESS_H
+#define ARDUINO_EEPROM_ACCESS_H
 
 #if defined(ESP8266)
 
@@ -47,4 +49,6 @@ public:
 		eeprom_update_block(source, (void*)target, size);
 	}
 };
+#endif
+
 #endif

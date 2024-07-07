@@ -17,7 +17,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef DISPLAY_LCD_H
+#define DISPLAY_LCD_H
 
 #include "Brewpi.h"
 #include "DisplayBase.h"
@@ -130,3 +131,5 @@ class LcdDisplay DISPLAY_SUPERCLASS
 	DISPLAY_FIELD uint8_t stateOnDisplay;
 	DISPLAY_FIELD uint8_t flags;
 };
+
+#endif

@@ -1,5 +1,6 @@
-#ifndef BrewKeeper_H
-#define BrewKeeper_H
+#ifndef BREW_KEEPER_H
+#define BREW_KEEPER_H
+
 #include <Arduino.h>
 #include "Config.h"
 #include "GravityTracker.h"

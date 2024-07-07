@@ -17,7 +17,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef FILTER_CASCADED_H
+#define FILTER_CASCADED_H
 
 #include "Brewpi.h"
 
@@ -55,3 +56,5 @@ class CascadedFilter{
 		return sections[NUM_SECTIONS-1].detectNegPeak(); // detect peaks in last section
 	}
 };
+
+#endif

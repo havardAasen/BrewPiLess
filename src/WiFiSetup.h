@@ -1,5 +1,5 @@
-#ifndef WiFiSetup_H
-#define WiFiSetup_H
+#ifndef WIFI_SETUP_H
+#define WIFI_SETUP_H
 
 #include <DNSServer.h>
 #include <utility>
@@ -84,4 +84,5 @@ private:
 };
 
 extern WiFiSetupClass WiFiSetup;
+
 #endif

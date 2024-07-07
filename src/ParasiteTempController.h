@@ -1,5 +1,6 @@
 
-#pragma once
+#ifndef PARASITE_TEMP_CONTROLLER_H
+#define PARASITE_TEMP_CONTROLLER_H
 
 #include "TempControl.h"
 #include "BPLSettings.h"
@@ -37,3 +38,5 @@ protected:
 };
 
 extern ParasiteTempController parasiteTempController;
+
+#endif

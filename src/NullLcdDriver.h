@@ -19,7 +19,9 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+
+#ifndef NULL_LCD_DRIVER_H
+#define NULL_LCD_DRIVER_H
 
 #include "Brewpi.h"
 #include "BrewpiStrings.h"
@@ -100,3 +102,5 @@ class NullLcdDriver : public Print {
 	char content[4][21]{}; // always keep a copy of the display content in this variable
 
 };
+
+#endif

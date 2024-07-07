@@ -22,7 +22,8 @@
  * Differences are some of the control commands (cursor on/off), language setting and especially initialization sequence.
  */
 
-#pragma once
+#ifndef SPI_LCD_H
+#define SPI_LCD_H
 
 #include "Brewpi.h"
 #include "BrewpiStrings.h"
@@ -170,3 +171,5 @@ class SpiLcd : public Print {
 	char content[4][21]{}; // always keep a copy of the display content in this variable
 
 };
+
+#endif

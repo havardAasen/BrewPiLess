@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef SENSOR_H
+#define SENSOR_H
 
 #include "Brewpi.h"
 
@@ -49,3 +50,5 @@ private:
 };
 
 typedef Sensor<bool> SwitchSensor;
+
+#endif

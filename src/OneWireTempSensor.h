@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef ONEWIRE_TEMP_SENSOR_H
+#define ONEWIRE_TEMP_SENSOR_H
 
 #include "Brewpi.h"
 #include "TempSensor.h"
@@ -79,3 +80,5 @@ public:
 	bool connected{true}; // assume connected. Transition from connected to disconnected prints a message.
 
 };
+
+#endif

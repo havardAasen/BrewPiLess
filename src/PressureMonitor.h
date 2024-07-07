@@ -1,6 +1,5 @@
-#ifndef PressureMonitor_H
-#define PressureMonitor_H
-
+#ifndef PREASSURE_MONITOR_H
+#define PREASSURE_MONITOR_H
 
 #include "Brewpi.h"
 #include "Actuator.h"

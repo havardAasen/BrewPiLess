@@ -17,7 +17,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef JSON_KEYS_H
+#define JSON_KEYS_H
 
 #include "Brewpi.h"
 
@@ -83,3 +84,5 @@ inline constexpr char JSONKEY_posPeak[] PROGMEM = "posPeak";
 
 inline constexpr char JSONKEY_logType[] PROGMEM = "logType";
 inline constexpr char JSONKEY_logID[] PROGMEM = "logID";
+
+#endif

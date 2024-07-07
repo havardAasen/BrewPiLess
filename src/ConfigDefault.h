@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef CONFIG_DEFAULT_H
+#define CONFIG_DEFAULT_H
 
 /**
  * Do not change this file directly - rather edit Config.h
@@ -204,4 +205,6 @@
 
 #ifndef DS2413_SUPPORT_SENSE
 #define DS2413_SUPPORT_SENSE 0
+#endif
+
 #endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DALLAS_TEMPERATURE_H
+#define DALLAS_TEMPERATURE_H
 
 #include "Brewpi.h"
 #include "TemperatureFormats.h"
@@ -383,3 +384,5 @@ class DallasTemperature
   #endif
 
 };
+
+#endif

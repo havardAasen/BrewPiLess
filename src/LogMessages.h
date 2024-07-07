@@ -17,7 +17,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef LOG_MESSAGES_H
+#define LOG_MESSAGES_H
 
 /*	Overview of debug messages and ID's
 	A copy of this file is included with the python script, so it can parse it to extract the log strings.
@@ -97,3 +98,5 @@ enum infoMessages{
 	MSG(INFO_POSITIVE_DRIFT, "No peak detected. Drifting up after heating, current temp: %s, estimated peak: %s. Previous heat estimator: %s, New heat estimator: %s..", temperature, temperature, estimator, estimator),
 	MSG(INFO_NEGATIVE_DRIFT, "No peak detected. Drifting down after cooling, current temp: %s, estimated peak: %s. Previous cool estimator: %s, New cool estimator: %s..", temperature, temperature, estimator, estimator)
 }; // END enum infoMessages
+
+#endif

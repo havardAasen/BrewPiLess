@@ -1,3 +1,5 @@
+#ifndef MQTT_REMOTE_CONTROL_H
+#define MQTT_REMOTE_CONTROL_H
 
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
@@ -98,3 +100,5 @@ public:
 };
 
 extern MqttRemoteControl mqttRemoteControl;
+
+#endif

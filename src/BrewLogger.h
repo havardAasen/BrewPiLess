@@ -1,5 +1,6 @@
-#ifndef BrewLogger_H
-#define BrewLogger_H
+#ifndef BREW_LOGGER_H
+#define BREW_LOGGER_H
+
 #include <FS.h>
 #include "BPLSettings.h"
 #include "TimeKeeper.h"

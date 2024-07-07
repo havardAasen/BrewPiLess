@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef TEMP_SENSOR_EXTERNAL_H
+#define TEMP_SENSOR_EXTERNAL_H
 
 #include "Brewpi.h"
 #include "TempSensor.h"
@@ -60,3 +61,5 @@ class ExternalTempSensor : public BasicTempSensor
 	temperature _temperature{};
 	bool _connected{};
 };
+
+#endif

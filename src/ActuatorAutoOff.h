@@ -18,7 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#ifndef ACTUATOR_AUTO_OFF_H
+#define ACTUATOR_AUTO_OFF_H
 
 #include "Actuator.h"
 #include "Ticks.h"
@@ -54,3 +55,5 @@ private:
 	Actuator* target;
 	bool active;
 };
+
+#endif

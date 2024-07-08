@@ -1,25 +1,18 @@
 #include <ArduinoJson.h>
 #include <cstdio>
 #include "ExternalData.h"
+#include "common/conversion.h"
 
 ExternalData externalData;
 
 
-float Brix2SG(float brix){
- return (brix / (258.6-((brix / 258.2)*227.1))) + 1;
-}
-
-float SG2Brix(float SG){
- return (((182.4601 * SG -775.6821) * SG +1262.7794) * SG -669.5622);
-}
-
 float ExternalData::plato(bool filtered){ 
 	float sg= filtered? _filteredGravity:_gravity;
-	return _cfg->usePlato? sg:SG2Brix(sg);
+	return _cfg->usePlato ? sg : bpl::specific_gravity_to_brix(sg);
 }
 float ExternalData::gravity(bool filtered){ 
 	float sg= filtered? _filteredGravity:_gravity;
-	return _cfg->usePlato? Brix2SG(sg):sg;
+	return _cfg->usePlato ? bpl::brix_to_specific_gravity(sg) : sg;
 }
 
 void ExternalData::waitFormula(){
@@ -134,9 +127,15 @@ void ExternalData::setTilt(float tilt,float temp,time_t now){
 	// temp. correction
 	if(_cfg->ispindelTempCal){
 		if(_cfg->usePlato){
-			sg =SG2Brix(temperatureCorrection(Brix2SG(sg),C2F(temp),C2F((float)_cfg->ispindelCalibrationBaseTemp)));
+			sg = bpl::specific_gravity_to_brix(temperatureCorrection(
+				bpl::brix_to_specific_gravity(sg), bpl::celsius_to_fahrenheit(temp),
+				bpl::celsius_to_fahrenheit(
+					static_cast<float>(_cfg->ispindelCalibrationBaseTemp))));
 		}else
-	    	sg = temperatureCorrection(sg,C2F(temp),C2F((float)_cfg->ispindelCalibrationBaseTemp));
+		sg = temperatureCorrection(sg, bpl::celsius_to_fahrenheit(temp),
+	                                   bpl::celsius_to_fahrenheit(
+		                                   static_cast<float>(_cfg->
+			                                   ispindelCalibrationBaseTemp)));
 	}
 	// update, gravity data calculated
 	setGravity(sg,now,!_calibrating); // save only when not calibrating.
@@ -176,7 +175,7 @@ void ExternalData::setAuxTemperatureCelsius(float temp){
     if(unit == 'C'){
 		_auxTemp= temp;
 	}else{
-		_auxTemp= temp * 1.8 +32 ;
+		_auxTemp = bpl::celsius_to_fahrenheit(temp);
 	}
 	
     brewLogger.addAuxTemp(_auxTemp);
@@ -224,9 +223,9 @@ bool ExternalData::processGravityReport(char data[],size_t length, bool authenti
 		//if(!IsGravityInValidRange(gravity)) return true;
 		if(doc.containsKey("plato")){
 			if(doc["plato"] && !_cfg->usePlato){
-				gravity = Brix2SG(gravity);
+				gravity = bpl::brix_to_specific_gravity(gravity);
 			}else if(!doc["plato"] && _cfg->usePlato){
-				gravity = SG2Brix(gravity);
+				gravity = bpl::specific_gravity_to_brix(gravity);
 			}
 		} 
 
@@ -254,7 +253,7 @@ bool ExternalData::processGravityReport(char data[],size_t length, bool authenti
 		float tempC=itemp;
 		if(doc.containsKey("temp_units")){
 			const char *TU=doc["temp_units"];
-			if(*TU == 'F') tempC = (itemp-32)/1.8;
+			if(*TU == 'F') tempC = bpl::fahrenheit_to_celsius(itemp);
 			else if(*TU == 'K') tempC = itemp- 273.15;
 		}
 

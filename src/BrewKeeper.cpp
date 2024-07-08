@@ -5,10 +5,7 @@
 #include "BrewKeeper.h"
 #include "BrewPiProxy.h"
 #include "TimeKeeper.h"
-
-#define F2C(d) (((d)-32)/1.8)
-#define C2F(d) (((d)*1.8)+32)
-
+#include "common/conversion.h"
 
 #define BrewStatusFile "/brewing.s"
 #define CurrentProfileVersion 2
@@ -246,8 +243,8 @@ float BrewProfile::tempByTimeGravity(time_t time,Gravity gravity)
 	    target= ScheduleTemp(_schedule->steps[_status->currentStep].temp);
 	}
 	if(_unit == _schedule->unit) return target;
-	else if(_unit == 'C' ) return F2C(target);
-	else return C2F(target);
+	else if(_unit == 'C' ) return bpl::fahrenheit_to_celsius(target);
+	else return bpl::celsius_to_fahrenheit(target);
 }
 
 uint32_t BrewProfile::currentStepDuration(){

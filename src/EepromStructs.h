@@ -2,7 +2,7 @@
 #define EEPROM_STRUCTS_H
 
 #ifdef ARDUINO
-#include "DallasTemperature.h"	// for DeviceAddress
+#include <DallasTemperature.h>
 #endif
 
 

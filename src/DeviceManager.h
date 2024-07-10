@@ -33,7 +33,7 @@
 
 
 #ifdef ARDUINO
-#include "DallasTemperature.h"	// for DeviceAddress
+#include <DallasTemperature.h>
 #endif
 
 /**

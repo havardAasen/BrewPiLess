@@ -45,7 +45,7 @@
 #include "OneWireActuator.h"
 #include "DS2413.h"
 #include <OneWire.h>
-#include "DallasTemperature.h"
+#include <DallasTemperature.h>
 #include "ActuatorArduinoPin.h"
 #include "SensorArduinoPin.h"
 #endif
@@ -864,7 +864,7 @@ void DeviceManager::enumerateOneWireDevices(EnumerateHardware& h, EnumDevicesCal
 		#if !ONEWIRE_PARASITE_SUPPORT
 						{	// check that device is not parasite powered
 							DallasTemperature sensor(wire);
-							if(sensor.initConnection(config.hw.address)){
+							if(!sensor.readPowerSupply(config.hw.address)){
 								handleEnumeratedDevice(config, h, callback, output);
 							}
 						}

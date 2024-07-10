@@ -20,7 +20,6 @@
 
 #include "Brewpi.h"
 #include "OneWireTempSensor.h"
-#include "DallasTemperature.h"
 #include "OneWire.h"
 #include "OneWireDevices.h"
 #include "PiLink.h"
@@ -28,6 +27,7 @@
 #include "TemperatureFormats.h"
 
 #include <algorithm>
+#include <DallasTemperature.h>
 
 OneWireTempSensor::~OneWireTempSensor(){
 	delete sensor;
@@ -60,12 +60,12 @@ bool OneWireTempSensor::init(){
 	// This quickly tests if the sensor is connected and initializes the reset detection.
 	// During the main TempControl loop, we don't want to spend many seconds
 	// scanning each sensor since this brings things to a halt.
-	if (sensor && sensor->initConnection(sensorAddress) && requestConversion()) {
+	if (sensor && requestConversion()) {
 		logDebug("init onewire sensor - wait for conversion");
 		waitForConversion();
-		temperature temp = readAndConstrainTemp();
+		const temperature temp = readAndConstrainTemp();
 		DEBUG_ONLY(logInfoIntStringTemp(INFO_TEMP_SENSOR_INITIALIZED, pinNr, addressString, temp));
-		success = temp!=DEVICE_DISCONNECTED && requestConversion();
+		success = temp!=TEMP_SENSOR_DISCONNECTED && requestConversion();
 	}
 	setConnected(success);
 	logDebug("init onewire sensor complete %d", success);
@@ -108,12 +108,13 @@ temperature OneWireTempSensor::read(){
 
 temperature OneWireTempSensor::readAndConstrainTemp()
 {
-	temperature temp = sensor->getTempRaw(sensorAddress);
-	if(temp == DEVICE_DISCONNECTED){
+	const long_temperature long_temp = sensor->getTemp(sensorAddress);
+	if(long_temp == DEVICE_DISCONNECTED_RAW){
 		setConnected(false);
 		return TEMP_SENSOR_DISCONNECTED;
 	}
 
+	const auto temp = static_cast<temperature>(long_temp>>3);
 	constexpr std::uint8_t shift = TEMP_FIXED_POINT_BITS-ONEWIRE_TEMP_SENSOR_PRECISION; // difference in precision between DS18B20 format and temperature adt
 	constexpr std::int16_t lower = MIN_TEMP>>shift; // -1024
 	constexpr std::int16_t upper = MAX_TEMP>>shift; // 1023

@@ -1,10 +1,8 @@
 #ifndef EEPROM_STRUCTS_H
 #define EEPROM_STRUCTS_H
 
-#ifdef ARDUINO
-#include "DallasTemperature.h"	// for DeviceAddress
-#endif
-
+// Forward declare type from DallasTemperature.h
+using DeviceAddress = uint8_t[8];
 
 // These structs were moved from TempControl.h
 struct ControlSettings {

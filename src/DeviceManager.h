@@ -32,10 +32,6 @@
 #include "EepromStructs.h"
 
 
-#ifdef ARDUINO
-#include "DallasTemperature.h"	// for DeviceAddress
-#endif
-
 /**
  * A user has freedom to connect various devices to the arduino, either via extending the oneWire bus, or by assigning to specific pins, e.g. actuators, switch sensors.
  * Rather than make this compile-time, the configuration is stored at runtime.

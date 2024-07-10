@@ -24,10 +24,10 @@
 #include "Brewpi.h"
 #include "TempSensor.h"
 #include "FastDigitalPin.h"
-#include "DallasTemperature.h"
 #include "Ticks.h"
 
-class DallasTemperature;
+#include <DallasTemperature.h>
+
 class OneWire;
 
 #define ONEWIRE_TEMP_SENSOR_PRECISION (4)

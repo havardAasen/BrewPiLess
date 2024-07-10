@@ -49,12 +49,12 @@ public:
 
 	~OneWireTempSensor() override;
 
-	bool isConnected() override{
+	[[nodiscard]] bool isConnected() const override{
 		return connected;
 	}
 
 	bool init() override;
-	temperature read() override;
+	[[nodiscard]] temperature read() override;
 
 	private:
 

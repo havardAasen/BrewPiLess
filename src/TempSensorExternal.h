@@ -41,13 +41,13 @@ class ExternalTempSensor : public BasicTempSensor
 		this->_connected = connected;
 	}
 
-	bool isConnected() override { return _connected; }
+	[[nodiscard]] bool isConnected() const override { return _connected; }
 
 	bool init() override {
 		return read()!=TEMP_SENSOR_DISCONNECTED;
 	}
 
-	temperature read() override {
+	[[nodiscard]] temperature read() override {
 		if (!isConnected())
 			return TEMP_SENSOR_DISCONNECTED;
 		return _temperature;

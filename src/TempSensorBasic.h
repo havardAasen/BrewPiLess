@@ -30,20 +30,15 @@
 class BasicTempSensor
 {
 public:
-	virtual ~BasicTempSensor() = default;
+    virtual ~BasicTempSensor() = default;
 
-	virtual bool isConnected() = 0;
+    [[nodiscard]] virtual bool isConnected() const = 0;
 
-	/*
-	 * Attempt to (re-)initialize the sensor.
-	 */
-	virtual bool init() =0;
+    /** Attempt to (re-)initialize the sensor. */
+    virtual bool init() = 0;
 
-	/*
-	 * Fetch a new reading from the sensor
-	 */
-	virtual temperature read() = 0;
-
+    /** Fetch a new reading from the sensor. */
+    [[nodiscard]] virtual temperature read() = 0;
 };
 
 #endif

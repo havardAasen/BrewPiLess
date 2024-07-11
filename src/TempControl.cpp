@@ -84,12 +84,12 @@ void TempControl::init(){
 
 	// this is for cases where the device manager hasn't configured beer/fridge sensor.
 	if (beerSensor==nullptr) {
-		beerSensor = new TempSensor(TEMP_SENSOR_TYPE_BEER, &defaultTempSensor);
+		beerSensor = new TempSensor(&defaultTempSensor);
 		beerSensor->init();
 	}
 
 	if (fridgeSensor==nullptr) {
-		fridgeSensor = new TempSensor(TEMP_SENSOR_TYPE_FRIDGE, &defaultTempSensor);
+		fridgeSensor = new TempSensor(&defaultTempSensor);
 		fridgeSensor->init();
 	}
 

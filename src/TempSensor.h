@@ -39,15 +39,9 @@ typedef FixedFilter TempSensorFilter;
 #endif
 
 
-enum TempSensorType {
-	TEMP_SENSOR_TYPE_FRIDGE=1,
-	TEMP_SENSOR_TYPE_BEER
-};
-
-
 class TempSensor {
 	public:
-	explicit TempSensor(TempSensorType sensorType, BasicTempSensor* sensor =nullptr)  {
+	explicit TempSensor(BasicTempSensor* sensor =nullptr)  {
 		setSensor(sensor);
 	 }
 

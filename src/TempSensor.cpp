@@ -27,18 +27,22 @@
 
 void TempSensor::init()
 {
-	logDebug("tempsensor::init - begin %d", failedReadCount);
-	if (_sensor && _sensor->init() && (failedReadCount<0 || failedReadCount>60)) {
-		temperature temp = _sensor->read();
-		if (temp!=TEMP_SENSOR_DISCONNECTED) {
-			logDebug("initializing filters with value %d", temp);
-			fastFilter.init(temp);
-			slowFilter.init(temp);
-			slopeFilter.init(0);
-			prevOutputForSlope = slowFilter.readOutputDoublePrecision();
-			failedReadCount = 0;
-		}
-	}
+    logDebug("tempsensor::init - begin %d", failedReadCount);
+    if (!_sensor || !_sensor->init() || (failedReadCount >= 0 && failedReadCount <= 60)) {
+        return;
+    }
+
+    const temperature temp = _sensor->read();
+    if (temp == TEMP_SENSOR_DISCONNECTED) {
+        return;
+    }
+
+    logDebug("initializing filters with value %d", temp);
+    fastFilter.init(temp);
+    slowFilter.init(temp);
+    slopeFilter.init(0);
+    prevOutputForSlope = slowFilter.readOutputDoublePrecision();
+    failedReadCount = 0;
 }
 
 bool TempSensor::isConnected() const

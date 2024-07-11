@@ -89,7 +89,7 @@ OneWire* DeviceManager::oneWireBus(uint8_t pin) {
 
 bool DeviceManager::firstDeviceOutput;
 
-bool DeviceManager::isDefaultTempSensor(BasicTempSensor* sensor) {
+bool DeviceManager::isDefaultTempSensor(ITempSensor* sensor) {
 	return sensor==&defaultTempSensor;
 }
 
@@ -223,11 +223,11 @@ inline bool isBasicSensor(DeviceFunction function) {
 	return function==DEVICE_CHAMBER_ROOM_TEMP;
 }
 
-inline BasicTempSensor& unwrapSensor(DeviceFunction f, void* pv) {
-	return isBasicSensor(f) ? *(BasicTempSensor*)pv : ((TempSensor*)pv)->sensor();
+inline ITempSensor& unwrapSensor(DeviceFunction f, void* pv) {
+	return isBasicSensor(f) ? *(ITempSensor*)pv : ((TempSensor*)pv)->sensor();
 }
 
-inline void setSensor(DeviceFunction f, void** ppv, BasicTempSensor* sensor) {
+inline void setSensor(DeviceFunction f, void** ppv, ITempSensor* sensor) {
 	if (isBasicSensor(f))
 		*ppv = sensor;
 	else
@@ -247,7 +247,7 @@ void DeviceManager::uninstallDevice(DeviceConfig& config)
 	if (ppv==nullptr)
 		return;
 
-	BasicTempSensor* s;
+	ITempSensor* s;
 	switch(dt) {
 		case DEVICETYPE_NONE:
 			break;
@@ -291,7 +291,7 @@ void DeviceManager::installDevice(DeviceConfig& config)
 	void** ppv = deviceTarget(config);
 	if (ppv==nullptr || config.hw.deactivate)
 		return;
-	BasicTempSensor* s;
+	ITempSensor* s;
 	TempSensor* ts;
 	switch(dt) {
 		case DEVICETYPE_NONE:
@@ -299,7 +299,7 @@ void DeviceManager::installDevice(DeviceConfig& config)
 		case DEVICETYPE_TEMP_SENSOR:
 			DEBUG_ONLY(logInfoInt(INFO_INSTALL_TEMP_SENSOR, config.deviceFunction));
 			// sensor may be wrapped in a TempSensor class, or may stand alone.
-			s = (BasicTempSensor*)createDevice(config, dt);
+			s = (ITempSensor*)createDevice(config, dt);
 			if (*ppv==nullptr){
 				logErrorInt(ERROR_OUT_OF_MEMORY_FOR_DEVICE, config.deviceFunction);
 			}
@@ -963,7 +963,7 @@ void UpdateDeviceState(DeviceDisplay& dd, DeviceConfig& dc, char* val)
 			sprintf_P(val, STR_FMT_U, (unsigned int) ((SwitchSensor*)*ppv)->sense()!=0); // cheaper than itoa, because it overlaps with vsnprintf
 		}
 		else if (dt==DEVICETYPE_TEMP_SENSOR) {
-			BasicTempSensor& s = unwrapSensor(dc.deviceFunction, *ppv);
+			ITempSensor& s = unwrapSensor(dc.deviceFunction, *ppv);
 			temperature temp = s.read();
 			tempToString(val, temp, 3, 9);
 		}

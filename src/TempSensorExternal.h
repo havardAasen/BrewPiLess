@@ -28,7 +28,7 @@
  * A temp sensor whose value is not read from the device, but set in code.
  * This is used by the simulator.
  */
-class ExternalTempSensor : public BasicTempSensor
+class ExternalTempSensor : public ITempSensor
 {
 	public:
 	explicit ExternalTempSensor(bool connected=false)

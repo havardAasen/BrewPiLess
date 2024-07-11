@@ -23,7 +23,7 @@
 
 #include "Brewpi.h"
 #include "FilterCascaded.h"
-#include "TempSensorBasic.h"
+#include "ITempSensor.h"
 #include <stdlib.h>
 
 #define TEMP_SENSOR_DISCONNECTED INVALID_TEMP
@@ -41,16 +41,16 @@ typedef FixedFilter TempSensorFilter;
 
 class TempSensor {
 	public:
-	explicit TempSensor(BasicTempSensor* sensor =nullptr)  {
+	explicit TempSensor(ITempSensor* sensor =nullptr)  {
 		setSensor(sensor);
 	 }
 
-	 void setSensor(BasicTempSensor* sensor) {
+	 void setSensor(ITempSensor* sensor) {
 		 _sensor = sensor;
 		 failedReadCount = -1;
 	 }
 	#if FridgeSensorFallBack
-	void setBackupSensor(BasicTempSensor* sensor) {
+	void setBackupSensor(ITempSensor* sensor) {
 		 _backupSensor = sensor;
 	 }
 	#endif
@@ -79,17 +79,17 @@ class TempSensor {
 
 	void setSlopeFilterCoefficients(uint8_t b);
 
-	BasicTempSensor& sensor();
+	ITempSensor& sensor();
 
 	private:
-	BasicTempSensor* _sensor{};
+	ITempSensor* _sensor{};
 	TempSensorFilter fastFilter;
 	TempSensorFilter slowFilter;
 	TempSensorFilter slopeFilter;
 	unsigned char updateCounter{255}; // first update for slope filter after (255-4s)
 	temperature_precise prevOutputForSlope{};
 	#if FridgeSensorFallBack
-	BasicTempSensor* _backupSensor{};
+	ITempSensor* _backupSensor{};
 	bool _useBackupSensor{};
 	#endif
 	// An indication of how stale the data is in the filters. Each time a read fails, this value is incremented.

@@ -136,6 +136,6 @@ void TempSensor::setSlopeFilterCoefficients(uint8_t b){
 	slopeFilter.setCoefficients(b);
 }
 
-BasicTempSensor& TempSensor::sensor() {
+ITempSensor& TempSensor::sensor() {
 	return *_sensor;
 }

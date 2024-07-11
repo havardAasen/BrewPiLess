@@ -206,7 +206,7 @@ class TempControl{
 	TEMP_CONTROL_FIELD TempSensor* fridgeSensor;
 
 
-	TEMP_CONTROL_FIELD BasicTempSensor* ambientSensor;
+	TEMP_CONTROL_FIELD ITempSensor* ambientSensor;
 	TEMP_CONTROL_FIELD Actuator* heater;
 	TEMP_CONTROL_FIELD Actuator* cooler;
 	TEMP_CONTROL_FIELD Actuator* light;

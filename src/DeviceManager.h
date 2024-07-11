@@ -171,7 +171,7 @@ class DeviceManager
 {
 public:
 
-	bool isDefaultTempSensor(BasicTempSensor* sensor);
+	bool isDefaultTempSensor(ITempSensor* sensor);
 
 	int8_t enumerateActuatorPins(uint8_t offset)
 	{

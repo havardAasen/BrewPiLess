@@ -23,7 +23,7 @@
 
 #include "TempSensor.h"
 
-class DisconnectedTempSensor : public BasicTempSensor {
+class DisconnectedTempSensor : public ITempSensor {
 
 public:
 	[[nodiscard]] bool isConnected() const override { return false; }

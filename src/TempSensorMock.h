@@ -24,7 +24,7 @@
 #include "Brewpi.h"
 #include "TempSensor.h"
 
-class MockTempSensor : public BasicTempSensor
+class MockTempSensor : public ITempSensor
 {
 public:
 	MockTempSensor(temperature initial, temperature delta) : _temperature(initial), _delta(delta) {}

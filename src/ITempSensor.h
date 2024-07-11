@@ -18,8 +18,8 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TEMP_SENSOR_BASIC_H
-#define TEMP_SENSOR_BASIC_H
+#ifndef ITEMPSENSOR_H
+#define ITEMPSENSOR_H
 
 #include "TemperatureFormats.h"
 
@@ -27,10 +27,10 @@
 #define TEMP_SENSOR_DISCONNECTED INVALID_TEMP
 
 
-class BasicTempSensor
+class ITempSensor
 {
 public:
-    virtual ~BasicTempSensor() = default;
+    virtual ~ITempSensor() = default;
 
     [[nodiscard]] virtual bool isConnected() const = 0;
 

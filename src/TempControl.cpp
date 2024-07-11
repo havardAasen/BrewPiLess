@@ -43,7 +43,7 @@ extern DisconnectedTempSensor defaultTempSensor;
 // These sensors are switched out to implement multi-chamber.
 TempSensor* TempControl::beerSensor;
 TempSensor* TempControl::fridgeSensor;
-BasicTempSensor* TempControl::ambientSensor = &defaultTempSensor;
+ITempSensor* TempControl::ambientSensor = &defaultTempSensor;
 
 
 Actuator* TempControl::heater = &defaultActuator;

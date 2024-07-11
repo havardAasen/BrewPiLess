@@ -5,7 +5,7 @@
 #include "TempSensor.h"
 #include "OneWireTempSensor.h"
 
-class WirelessTempSensor: public BasicTempSensor
+class WirelessTempSensor: public ITempSensor
 {
 public:
 	static  WirelessTempSensor* theWirelessTempSensor;

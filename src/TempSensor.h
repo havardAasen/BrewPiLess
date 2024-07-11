@@ -59,17 +59,9 @@ class TempSensor {
 	bool hasSlopeFilter() { return true; }
 
 	void init();
-	
-	#if FridgeSensorFallBack
-	bool isConnected() {
-			if(_useBackupSensor && _backupSensor)
-				return _backupSensor->isConnected();
-			else
-				return _sensor->isConnected(); 
-		}
-	#else
-	bool isConnected() { return _sensor->isConnected(); }
-	#endif
+
+	[[nodiscard]] bool isConnected() const;
+
 	void update();
 
 	temperature readFastFiltered();

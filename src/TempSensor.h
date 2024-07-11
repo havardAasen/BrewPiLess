@@ -54,9 +54,6 @@ class TempSensor {
 		 _backupSensor = sensor;
 	 }
 	#endif
-	bool hasSlowFilter() { return true; }
-	bool hasFastFilter() { return true; }
-	bool hasSlopeFilter() { return true; }
 
 	void init();
 

@@ -9,6 +9,11 @@
 #define ACTUATOR_ARDUINO_PIN_H
 
 #include "Actuator.h"
+#include "FastDigitalPin.h"
+
+#include <Arduino.h>
+#include <cstdint>
+
 
 template<uint8_t pin, bool invert>
 class DigitalConstantPinActuator ACTUATOR_BASE_CLASS_DECL

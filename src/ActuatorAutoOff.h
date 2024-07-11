@@ -24,6 +24,8 @@
 #include "Actuator.h"
 #include "Ticks.h"
 
+#include <cstdint>
+
 class AutoOffActuator : public Actuator {
 
 public:

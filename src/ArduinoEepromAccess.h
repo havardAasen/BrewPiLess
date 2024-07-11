@@ -30,6 +30,8 @@
 #include <avr/eeprom.h>
 #include "EepromStructs.h"
 
+#include <cstdint>
+
 //TODO - Update to match ESPEepromAccess.h
 
 class ArduinoEepromAccess

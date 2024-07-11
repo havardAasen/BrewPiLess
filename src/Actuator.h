@@ -21,8 +21,6 @@
 #ifndef ACTUATOR_H
 #define ACTUATOR_H
 
-#include "Brewpi.h"
-#include "FastDigitalPin.h"
 
 #define ACTUATOR_VIRTUAL 1
 

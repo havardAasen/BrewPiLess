@@ -22,6 +22,9 @@
 #include "PiLink.h"
 #include "Ticks.h"
 
+#include <algorithm>
+#include <cstdint>
+
 void TempSensor::init()
 {
 	logDebug("tempsensor::init - begin %d", failedReadCount);
@@ -61,13 +64,13 @@ void TempSensor::update()
 		_useBackupSensor = true;
 	}else{
 		failedReadCount++;
-		failedReadCount = min(failedReadCount,int8_t(127));	// limit
+		failedReadCount = std::min(failedReadCount, static_cast<std::int8_t>(INT8_MAX));
 		return;
 	}
 	#else
 	if (!_sensor || (temp=_sensor->read())==TEMP_SENSOR_DISCONNECTED) {
 		failedReadCount++;
-		failedReadCount = min(failedReadCount,int8_t(127));	// limit
+		failedReadCount = std::min(failedReadCount, static_cast<std::int8_t>(INT8_MAX));
 		return;
 	}
 	#endif

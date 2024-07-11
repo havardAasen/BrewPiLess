@@ -20,8 +20,7 @@
 #ifndef TEMPERATURE_FORMATS_H
 #define TEMPERATURE_FORMATS_H
 
-#include "Brewpi.h"
-#include <stdint.h>
+#include <cstdint>
 
 
 // Offsets when converting to the internal format:

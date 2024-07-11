@@ -18,6 +18,7 @@
  */
 
 #include "Brewpi.h"
+#include "ITempSensor.h"
 #include "TempSensor.h"
 #include "PiLink.h"
 #include "Ticks.h"

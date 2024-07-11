@@ -21,6 +21,7 @@
 #define TEMP_CONTROL_H
 
 #include "Brewpi.h"
+#include "ITempSensor.h"
 #include "TempSensor.h"
 #include "Pins.h"
 #include "TemperatureFormats.h"

@@ -21,6 +21,7 @@
 #include "Brewpi.h"
 #include "BrewpiStrings.h"
 #include "DeviceManager.h"
+#include "ITempSensor.h"
 #include "TempControl.h"
 #include "Actuator.h"
 #include "Sensor.h"

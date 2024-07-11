@@ -22,6 +22,7 @@
 #define TEMP_SENSOR_MOCK_H
 
 #include "Brewpi.h"
+#include "ITempSensor.h"
 #include "TempSensor.h"
 
 class MockTempSensor : public ITempSensor

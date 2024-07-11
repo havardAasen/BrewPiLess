@@ -25,6 +25,7 @@
 
 #include "Actuator.h"
 #include "Sensor.h"
+#include "ITempSensor.h"
 #include "TempSensor.h"
 #include "OneWireDevices.h"
 #include "Pins.h"

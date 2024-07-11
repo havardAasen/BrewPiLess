@@ -21,6 +21,7 @@
 #ifndef TEMP_SENSOR_DISCONNECTED_H
 #define TEMP_SENSOR_DISCONNECTED_H
 
+#include "ITempSensor.h"
 #include "TempSensor.h"
 
 class DisconnectedTempSensor : public ITempSensor {

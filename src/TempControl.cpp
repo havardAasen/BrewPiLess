@@ -18,7 +18,7 @@
  */
 
 #include "Brewpi.h"
-
+#include "ITempSensor.h"
 #include "Pins.h"
 #include <limits.h>
 

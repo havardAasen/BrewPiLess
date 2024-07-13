@@ -1,33 +1,48 @@
 #ifndef TIMEKEEPER_H
 #define TIMEKEEPER_H
 
-class TimeKeeperClass
-{
+#include <cstdint>
+#include <ctime>
+
+class TimeKeeperClass {
 public:
-	void begin(char* server1,char* server2,char* server3);
-	void begin();
+    void begin();
 
-	void updateTime();
+    void begin(const char *, const char *, const char *);
 
-	time_t getTimeSeconds(); // get Epoch time
-	time_t getLocalTimeSeconds();
-	
-	const char *getDateTimeStr();
+    void updateTime();
 
-	void setCurrentTime(time_t current);
-	void setTimezoneOffset(int32_t offset);
-	int32_t getTimezoneOffset();
-	[[nodiscard]] bool isSynchronized() const { return _ntpSynced; }
+    std::time_t getTimeSeconds(); // get Epoch time
+    std::time_t getLocalTimeSeconds();
+
+    const char *getDateTimeStr();
+
+    void setCurrentTime(std::time_t);
+
+    static void setTimezoneOffset(std::int32_t);
+
+    static std::int32_t getTimezoneOffset();
+
+    [[nodiscard]] bool isSynchronized() const;
+
 private:
-	time_t _referenceEpoc{};
-	time_t _referenceSystemTime{};
-	bool _ntpSynced{};
+    std::time_t reference_epoc_{};
+    std::time_t reference_system_time_{};
+    std::time_t last_saved_{};
+    bool ntp_synced_{};
+    inline static char date_time_str_buff_[128];
 
-	time_t _lastSaved{};
-	void saveTime(time_t t);
-	time_t loadTime();
+    static constexpr std::int16_t time_saving_period = 3600;
+    static constexpr std::uint32_t resync_time = 43200000;
 
-	time_t _queryServer();
+    /** Time gap in seconds from 01.01.1900 (NTP time) to 01.01.1970 (UNIX time). */
+    static constexpr std::uint32_t diff_1900_to_1970 = 2208988800;
+
+    static void saveTime(std::time_t);
+
+    static std::time_t loadTime();
+
+    std::time_t _queryServer();
 };
 
 extern TimeKeeperClass TimeKeeper;

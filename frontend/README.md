@@ -6,7 +6,7 @@ If you just want to test, try or use the new layout, please download the dist/ f
 
 For developing / building the project yourself you need to have nodejs and ruby installed on your system.
 
-Clone the repository and enter the htmljs/ folder, run
+Clone the repository and enter the frontend/ folder, run
 
 ```
 npm install

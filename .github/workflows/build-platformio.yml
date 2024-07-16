@@ -29,12 +29,12 @@ jobs:
               ruby-dev \
               xxd
 
-          npm install htmljs/
+          npm install frontend/
           command -v grunt > /dev/null || npm install --global grunt-cli
           sudo gem install sass
 
       - name: Build frontend
-        working-directory: htmljs
+        working-directory: frontend
         run: |
           grunt i18n
           ./output.sh

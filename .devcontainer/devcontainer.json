@@ -3,7 +3,7 @@
     "build": {
         "dockerfile": "Dockerfile"
     },
-    "postCreateCommand": "npm install htmljs/ && npm install -g grunt-cli && gem install sass",
+    "postCreateCommand": "npm install frontend/ && npm install -g grunt-cli && gem install sass",
     "customizations": {
         "vscode": {
             "settings": {

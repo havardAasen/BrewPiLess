@@ -11,7 +11,8 @@
                 "extensions.autoUpdate": false,
                 "extensions.ignoreRecommendations": true,
                 "telemetry.telemetryLevel": "off",
-                "platformio-ide.disablePIOHomeStartup": true
+                "platformio-ide.disablePIOHomeStartup": true,
+                "platformio-ide.pioHomeServerHttpPort": 8008
             },
             "extensions": [
                 "ms-vscode.cpptools",
@@ -20,10 +21,13 @@
             ]
         }
     },
+    "forwardPorts": [
+        8008
+    ],
     "mounts": [
         "source=/dev,target=/dev,type=bind,consistency=consistent"
     ],
     "runArgs": [
-	"--privileged"
+        "--privileged"
     ]
 }

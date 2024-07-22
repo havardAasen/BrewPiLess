@@ -384,7 +384,7 @@ private:
 	 */
 	double fermentPowerMax;
 
-	double currentRoomTemp;
+	double currentRoomTemp{};
 };
 
 

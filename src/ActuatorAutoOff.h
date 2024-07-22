@@ -52,10 +52,10 @@ public:
 	}
 
 private:
-	uint16_t lastActiveTime;
-	uint16_t timeout;
-	Actuator* target;
-	bool active;
+	uint16_t lastActiveTime{};
+	uint16_t timeout{};
+	Actuator* target{};
+	bool active{};
 };
 
 #endif

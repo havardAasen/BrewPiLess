@@ -1,4 +1,5 @@
 #include <LittleFS.h>
+#include <algorithm>
 
 #include "BrewPiProxy.h"
 #include "BrewLogger.h"
@@ -610,7 +611,7 @@ BrewLogger brewLogger;
 	}
 	void BrewLogger::resetTempData()
 	{
-		for (auto& data : _iTempData) data=INVALID_TEMP_INT;
+		std::fill(_iTempData.begin(), _iTempData.end(), INVALID_TEMP_INT);
 		_extTemp=INVALID_TEMP_INT;
 		_extGravity=INVALID_GRAVITY_INT;
 		_extOriginGravity=INVALID_GRAVITY_INT;

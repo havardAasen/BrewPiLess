@@ -4,6 +4,7 @@
 #include <FS.h>
 #include "BPLSettings.h"
 #include "TimeKeeper.h"
+#include <array>
 
 #define INVALID_RECOVERY_TIME 0xFF
 #define INVALID_TEMPERATURE -250
@@ -116,7 +117,7 @@ private:
 	uint8_t _state{};
 	bool _usePlato{};
 
-	uint16_t  _iTempData[5]{INVALID_TEMP_INT};
+	std::array<std::uint16_t, 5> _iTempData{INVALID_TEMP_INT};
 	uint16_t  _extTemp{INVALID_TEMP_INT};
 	uint16_t  _extGravity{INVALID_GRAVITY_INT};
 	uint16_t  _extOriginGravity{INVALID_GRAVITY_INT};

@@ -61,14 +61,6 @@ void AutoCapControl::capManualSet(const bool capped) const
 }
 
 
-bool AutoCapControl::isPhysicalCapOn()
-{
-    if (capper == &defaultActuator)
-        return false;
-    return capper->isActive();
-}
-
-
 void AutoCapControl::setPhysicalCapOn(const bool on)
 {
     if (capper == &defaultActuator || capper->isActive() == on) {

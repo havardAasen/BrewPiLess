@@ -10,7 +10,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-multi-lang-site-generator');
-  grunt.loadNpmTasks('grunt-postcss');
+  grunt.loadNpmTasks('@lodder/grunt-postcss');
   grunt.loadNpmTasks('grunt-processhtml');
 
   grunt.initConfig({

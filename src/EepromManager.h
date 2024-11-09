@@ -36,9 +36,6 @@ class DeviceConfig;
 // todo - the Eeprom manager should avoid too frequent saves to the eeprom since it supports 100,000 writes.
 class EepromManager {
 public:
-
-	EepromManager();
-
 	/**
 	 * Write -1 to the entire eeprom, emulating the reset performed by avrdude.
 	 */

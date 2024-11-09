@@ -60,15 +60,7 @@ struct EepromFormat
 
 
 // check at compile time that the structure will fit into eeprom
-void eepromSizeTooLarge()
-__attribute__((error("EEPROM data is > 1024 bytes")));
-
-static inline __attribute__((always_inline))
-void eepromSizeCheck() {
-	if constexpr (sizeof(EepromFormat) > EepromFormat::MAX_EEPROM_SIZE) {
-		eepromSizeTooLarge();
-	}
-}
+static_assert(sizeof(EepromFormat) <= EepromFormat::MAX_EEPROM_SIZE, "EEPROM data is > 1024 bytes");
 
 
 /**

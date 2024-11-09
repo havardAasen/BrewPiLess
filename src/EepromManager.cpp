@@ -31,11 +31,6 @@ EepromAccess eepromAccess;
 
 #define pointerOffset(x) offsetof(EepromFormat, x)
 
-EepromManager::EepromManager()
-{
-	eepromSizeCheck();
-}
-
 
 bool EepromManager::hasSettings()
 {

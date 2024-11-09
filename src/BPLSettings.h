@@ -117,7 +117,7 @@ struct FileIndexEntry{
 
 struct FileIndexes
 {
-	FileIndexEntry files[MAX_LOG_FILE_NUMBER];
+	std::array<FileIndexEntry, MAX_LOG_FILE_NUMBER> files;
 	char logname[MaximumLogFileName];
 	unsigned long starttime;
 };

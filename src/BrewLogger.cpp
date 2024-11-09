@@ -114,13 +114,11 @@ _resumeLastLogTime = _pFileInfo->starttime;
 		return false;
 	}
 */
-	int dataRead;
 	size_t offset=0;
 	int    processIndex=0;
-	uint8_t tag, mask;
 
 
-	dataRead=_logFile.read((uint8_t*)_logBuffer,LogBufferSize);
+	int dataRead = _logFile.read((uint8_t*)_logBuffer,LogBufferSize);
 	DBG_PRINTF("read:%d\n",dataRead);
 	if(dataRead < 8){
     DBG_PRINTF("resume failed\n");
@@ -128,8 +126,8 @@ _resumeLastLogTime = _pFileInfo->starttime;
 		return false;
 	}
 
-	tag= _logBuffer[processIndex++];
-	mask = _logBuffer[processIndex++];
+	std::uint8_t tag = _logBuffer[processIndex++];
+	std::uint8_t mask = _logBuffer[processIndex++];
 
 	if(tag == StartLogTag){
 		_calibrating = (mask & 0x20) != 0x20;
@@ -153,10 +151,8 @@ _resumeLastLogTime = _pFileInfo->starttime;
 
 				//TODO: check available data?
 		       	// int numberInRecord=0;
-				size_t recordSize;
-				recordSize =0;
-		        uint8_t bitmask;
-				bitmask=1;
+		       	std::size_t recordSize = 0;
+		        std::uint8_t bitmask = 1;
 				for(int i=0;i<NumberDataBitMask;i++, bitmask=bitmask<<1)
 					if(mask & bitmask)
 						recordSize +=2;
@@ -207,11 +203,11 @@ _resumeLastLogTime = _pFileInfo->starttime;
 		}//while() processing data in buffer
 		int dataLeft=0;
 		offset += processIndex;
-		for(;processIndex < dataRead;){
+		while (processIndex < dataRead) {
 			_logBuffer[dataLeft] = _logBuffer[processIndex];
 			dataLeft++,processIndex++;
 		}
-		size_t len=_logFile.read((uint8_t*)_logBuffer+dataLeft,LogBufferSize - dataLeft);
+		const int len=_logFile.read((uint8_t*)_logBuffer+dataLeft,LogBufferSize - dataLeft);
 		if(len==0) break; // nothing to do
 		dataRead = len +  dataLeft;
 		DBG_PRINTF("read:%u, all:%u\n",len,dataRead);
@@ -316,21 +312,22 @@ void BrewLogger::loop(){
 	logData();
 }
 
-void BrewLogger::logData(){
-	uint8_t state, mode;
-	float fTemps[5];
+void BrewLogger::logData()
+{
+    uint8_t state, mode;
+    constexpr int  size = 5;
+    std::array<float, size> fTemps{};
 
 	//brewPi.getAllStatus(&state,&mode,& beerTemp,& beerSet,& fridgeTemp,& fridgeSet,& roomTemp);
 	brewPi.getAllStatus(&state,&mode,&fTemps[OrderBeerTemp],& fTemps[OrderBeerSet],
 			& fTemps[OrderFridgeTemp],& fTemps[OrderFridgeSet],& fTemps[OrderRoomTemp]);
 
 
-	uint16_t iTemp;
 	uint8_t changeMask=0;
 	int   changeNum=0;
 
-	for(int i=0;i<5;i++){
-		iTemp=convertTemperature(fTemps[i]);
+	for(int i=0;i<size;i++){
+		const std::uint16_t iTemp = convertTemperature(fTemps[i]);
 		if(_iTempData[i] != iTemp){
 			changeMask |= (1 << i);
 			_iTempData[i] = iTemp;
@@ -353,13 +350,13 @@ void BrewLogger::logData(){
 		changeNum ++;
 	}
 
-	int startIdx = allocByte(2+ changeNum * 2);
+	const int startIdx = allocByte(2+ changeNum * 2);
 	if(startIdx < 0) return;
 	int idx=startIdx;
 	writeBuffer(idx++,PeriodTag);
 	writeBuffer(idx++,changeMask);
 
-	for(int i=0;i<5;i++){
+	for(int i=0;i<size;i++){
 		if(changeMask & (1<<i)){
 
 			writeBuffer(idx ++,(_iTempData[i]>> 8) & 0x7F);
@@ -942,17 +939,17 @@ void BrewLogger::saveIdxFile()
 theSettings.save();
 }
 
-void BrewLogger::onFormatFS(){
-	// force to end session
-	if(_recording){
-		_recording=false;
-		_logFile.close();
-		_pFileInfo->logname[0]='\0';
-		_pFileInfo->starttime=0;
-	}
-	// clear all logs
-	int index=0;
-	for(;index<MAX_LOG_FILE_NUMBER;index++){
-		_pFileInfo->files[index].name[0] = 0;
-	}
+void BrewLogger::onFormatFS()
+{
+    // force to end session
+    if (_recording) {
+        _recording=false;
+        _logFile.close();
+        _pFileInfo->logname[0]='\0';
+        _pFileInfo->starttime=0;
+    }
+    // clear all logs
+    for (auto& file : _pFileInfo->files) {
+        file.name[0] = '\0';
+    }
 }

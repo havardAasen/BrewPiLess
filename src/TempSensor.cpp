@@ -61,6 +61,9 @@ bool TempSensor::isConnected() const
 
 void TempSensor::update()
 {
+	if (failedReadCount < 0)
+		return;
+
 	temperature temp;
 	#if FridgeSensorFallBack
 

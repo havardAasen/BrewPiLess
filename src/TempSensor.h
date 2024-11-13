@@ -94,7 +94,7 @@ class TempSensor {
 	#endif
 	// An indication of how stale the data is in the filters. Each time a read fails, this value is incremented.
 	// It's used to reset the filters after a large enough disconnect delay, and on the first init.
-	int8_t failedReadCount{};		// -1 for uninitialized, >=0 afterwards.
+	int8_t failedReadCount{-1};		// -1 for uninitialized, >=0 afterwards.
 
 	friend class DeviceManager;
 };

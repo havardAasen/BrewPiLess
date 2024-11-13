@@ -19,7 +19,7 @@
 
 #include "Brewpi.h"
 #include "BrewpiStrings.h"
-#include <limits.h>
+#include <limits>
 #include <stdint.h>
 
 #include "Display.h"
@@ -65,9 +65,6 @@ void LcdDisplay::init(){
 	lcd.clear();
 }
 
-#ifndef UINT16_MAX
-#define UINT16_MAX 65535
-#endif
 
 //print all temperatures on the LCD
 void LcdDisplay::printAllTemperatures(){
@@ -195,7 +192,7 @@ void LcdDisplay::printMode(){
 
 // print the current state on the last line of the lcd
 void LcdDisplay::printState(){
-	uint16_t time = UINT16_MAX; // init to max
+	uint16_t time = std::numeric_limits<std::uint16_t>::max();
 	uint8_t state = tempControl.getDisplayState();
 	if(state != stateOnDisplay){ //only print static text when state has changed
 		stateOnDisplay = state;
@@ -273,7 +270,7 @@ void LcdDisplay::printState(){
 	else if(state == WAITING_TO_COOL || state == WAITING_TO_HEAT){
 		time = tempControl.getWaitTime();
 	}
-	if(time != UINT16_MAX){
+	if(time != std::numeric_limits<std::uint16_t>::max()){
 		char timeString[10];
 #if DISPLAY_TIME_HMS  // 96 bytes more space required.
 		unsigned int minutes = time/60;

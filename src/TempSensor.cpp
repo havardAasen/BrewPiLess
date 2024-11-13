@@ -25,6 +25,7 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <limits>
 
 void TempSensor::init()
 {
@@ -69,13 +70,13 @@ void TempSensor::update()
 		_useBackupSensor = true;
 	}else{
 		failedReadCount++;
-		failedReadCount = std::min(failedReadCount, static_cast<std::int8_t>(INT8_MAX));
+		failedReadCount = std::min(failedReadCount, std::numeric_limits<std::int8_t>::max());
 		return;
 	}
 	#else
 	if (!_sensor || (temp=_sensor->read())==TEMP_SENSOR_DISCONNECTED) {
 		failedReadCount++;
-		failedReadCount = std::min(failedReadCount, static_cast<std::int8_t>(INT8_MAX));
+		failedReadCount = std::min(failedReadCount, std::numeric_limits<std::int8_t>::max());
 		return;
 	}
 	#endif

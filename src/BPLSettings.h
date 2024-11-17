@@ -4,6 +4,7 @@
 #include <FS.h>
 #include <time.h>
 #include "Config.h"
+
 //*****************************************************
 // 156 bytes
 struct SystemConfiguration{
@@ -145,12 +146,14 @@ struct RemoteLoggingInformation{
 //*****************************************************
 // Auto Cap
 
+enum class AutoCapMode: std::uint8_t;
+
 struct AutoCapSettings{
     union _condition{
         uint32_t targetTime;
         float    targetGravity;
     }condition;
-    uint8_t autoCapMode;
+    AutoCapMode autoCapMode;
 };
 
 //*****************************************************

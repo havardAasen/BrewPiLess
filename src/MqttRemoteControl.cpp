@@ -222,7 +222,7 @@ void MqttRemoteControl::_loadConfig()
         _reportBasePath =settings->reportBasePathOffset ? (char*)settings->_strings + settings->reportBasePathOffset:nullptr;
 
         if(_reportPeriod ==0 || _reportBasePath == nullptr){
-            DBG_PRINTF("Invalid period %d or path %s\n",_reportPeriod, _reportBasePath);
+            DBG_PRINTF("ERROR: %s: Invalid period, %d or invalid base path\n", __func__, _reportPeriod);
             _mode = (_mode == MqttModeBothControlLoggging)? MqttModeControl:MqttModeOff;
         }
     }

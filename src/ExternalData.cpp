@@ -190,8 +190,8 @@ void ExternalData::setAuxTemperatureCelsius(float temp){
 
 float  ExternalData::temperatureCorrection(float sg, float t, float c){
 
-	return sg*((1.00130346-0.000134722124*t+0.00000204052596*t*t -0.00000000232820948*t*t*t)/
-	    (1.00130346-0.000134722124*c+0.00000204052596*c*c-0.00000000232820948*c*c*c));
+	return sg*((1.00130346f-0.000134722124f*t+0.00000204052596f*t*t -0.00000000232820948f*t*t*t)/
+	    (1.00130346f-0.000134722124f*c+0.00000204052596f*c*c-0.00000000232820948f*c*c*c));
 }
 
 bool ExternalData::processGravityReport(char data[], size_t length, bool authenticated,
@@ -258,7 +258,7 @@ bool ExternalData::processGravityReport(char data[], size_t length, bool authent
             if (*TU == 'F')
                 tempC = bpl::fahrenheit_to_celsius(itemp);
             else if (*TU == 'K')
-                tempC = itemp - 273.15;
+                tempC = itemp - 273.15f;
         }
 
         setAuxTemperatureCelsius(tempC);

@@ -241,8 +241,8 @@ String BPLSettings::jsonSystemConfiguration(){
 	// debug
 	#if SerialDebug
 	Serial.print("\nCoefficient:");
-	for(int i=0;i<4;i++){
-	    Serial.print(gdc->ispindelCoefficients[i],10);
+	for(const float coefficient : gdc->ispindelCoefficients){
+	    Serial.print(coefficient, 10);
 	    Serial.print(", ");
 	}
 	Serial.println("");

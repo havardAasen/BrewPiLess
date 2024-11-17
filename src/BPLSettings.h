@@ -2,6 +2,7 @@
 #define BPL_SETTINGS_H
 
 #include <FS.h>
+#include <array>
 #include <time.h>
 #include "Config.h"
 
@@ -34,17 +35,17 @@ struct TimeInformation{
 // gravity device
 //  36
 struct GravityDeviceConfiguration{
-    float ispindelCoefficients[4];
+    std::array<float, 4> ispindelCoefficients;
     float   lpfBeta;
-	uint32_t  numberCalPoints;
-    
+    uint32_t  numberCalPoints;
+
     uint8_t  ispindelEnable;
     uint8_t  ispindelTempCal;
     uint8_t  calculateGravity;
     uint8_t  ispindelCalibrationBaseTemp;
 
-	uint8_t  stableThreshold;
-	uint8_t  usePlato;
+    uint8_t  stableThreshold;
+    uint8_t  usePlato;
 };
 
 //*****************************************************

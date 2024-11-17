@@ -226,8 +226,7 @@ String BPLSettings::jsonSystemConfiguration(){
 	gdc->ispindelEnable=doc[KeyEnableiSpindel];
 	gdc->ispindelTempCal = doc[KeyTempCorrection];
 
-	gdc->ispindelCalibrationBaseTemp =
-		(doc.containsKey(KeyCorrectionTemp))? doc[KeyCorrectionTemp]:20;
+	gdc->ispindelCalibrationBaseTemp = doc[KeyCorrectionTemp].is<int>() ? doc[KeyCorrectionTemp] : 20;
 	gdc->calculateGravity=doc[KeyCalculateGravity];
 	gdc->ispindelCoefficients[0]=doc[KeyCoefficientA0];
 	gdc->ispindelCoefficients[1]=doc[KeyCoefficientA1];
@@ -236,7 +235,7 @@ String BPLSettings::jsonSystemConfiguration(){
 	gdc->lpfBeta =doc[KeyLPFBeta];
 	gdc->stableThreshold=doc[KeyStableGravityThreshold];
 	gdc->numberCalPoints=doc[KeyNumberCalPoints];
-	gdc->usePlato = doc.containsKey(KeyUsePlato)? doc[KeyUsePlato]:0;
+	gdc->usePlato = doc[KeyUsePlato].is<int>() ? doc[KeyUsePlato] : 0;
 	// debug
 	#if SerialDebug
 	Serial.print("\nCoefficient:");
@@ -401,14 +400,8 @@ bool BPLSettings::dejsonBeerProfile(String json)
 		DBG_PRINTF("ERROR: %s: deserializeJson() failed: %s\n", __func__, error.c_str());
 		return false;
 	}
-	if(!doc.containsKey("s")
-		|| !doc.containsKey("u")
-		|| !doc.containsKey("t")){
+	if(!doc["s"].is<const char*>() || !doc["u"].is<const char*>() || !doc["t"].is<JsonArray>()){
 		DBG_PRINTF("JSON file not include necessary fields\n");
-		return false;
-	}
-	if (!doc.as<JsonVariant>()["t"].is<JsonArray>()){
-		DBG_PRINTF("JSON t is not array\n");		
 		return false;
 	}
 	BeerTempSchedule *tempSchedule = & _data.tempSchedule;
@@ -455,34 +448,32 @@ bool BPLSettings::dejsonBeerProfile(String json)
 			float temp=entry["t"];
 			step->temp= ScheduleTempFromJson(temp);
 
-			if(entry.containsKey("g")){
-    			if(entry["g"].is<const char*>()){
-					step->attSpecified=false;
+			if (entry["g"].is<const char*>()) {
+			    step->attSpecified=false;
     			    const char* attStr=entry["g"];
     			    float att=atof(attStr);
     			    if( strchr ( attStr, '%' ) > 0){
 	    			    DBG_PRINTF(" att:%s sg:%d ",attStr,step->gravity.sg);
 						step->attSpecified=true;
 						step->gravity.attenuation =(uint8_t) att;
-                    }
-    			}
+			    }
+			} else if (entry["g"].is<float>()) {
 				if(! step->attSpecified){
-    			    float fsg= entry["g"];
-					if(_data.gdc.usePlato){
-	    		    	step->gravity.sg = PlatoToGravity(fsg);
-					}else{
-	    		    	step->gravity.sg = SGToGravity(fsg);
-					}
-    			    DBG_PRINTF(" sg:%d",step->gravity.sg);
-    		    }
+				    float fsg= entry["g"];
+				    if(_data.gdc.usePlato){
+					step->gravity.sg = PlatoToGravity(fsg);
+				    }else{
+					step->gravity.sg = SGToGravity(fsg);
+				    }
+				DBG_PRINTF(" sg:%d",step->gravity.sg);
+				}
 			}
 
-			if(entry.containsKey("s")){
-    			int st= entry["s"];
-	    		step->stable.stableTime =st;
-	    		step->stable.stablePoint=(entry.containsKey("x"))? entry["x"]:_data.gdc.stableThreshold;
+			if(entry["s"].is<int>()){
+	    		    step->stable.stableTime = entry["s"];
+	    		    step->stable.stablePoint = entry["x"].is<int>() ? entry["x"] : _data.gdc.stableThreshold;
 
-    			DBG_PRINTF("Stable :%d@%d",step->stable.stablePoint,step->stable.stableTime);
+    			    DBG_PRINTF("Stable :%d@%d",step->stable.stablePoint,step->stable.stableTime);
 			}
 
 			DBG_PRINT(" temp:");
@@ -599,12 +590,12 @@ bool BPLSettings::dejsonRemoteLogging(String json)
 	JsonDocument doc;
 	auto error = deserializeJson(doc,json);
 	if(error
-		|| !doc.containsKey("enabled")
-		|| !doc.containsKey("format")
-		|| !doc.containsKey("url")
-		|| !doc.containsKey("type")
-		|| !doc.containsKey("method")
-		|| !doc.containsKey("period")){
+		|| !doc["enabled"].is<bool>()
+		|| !doc["format"].is<const char*>()
+		|| !doc["url"].is<const char*>()
+		|| !doc["type"].is<const char*>()
+		|| !doc["method"].is<const char*>()
+		|| !doc["period"].is<const char*>()){
 		DBG_PRINTF("dejsonRemoteLogging error:%s",error.c_str());
 		return false;
 	}
@@ -635,7 +626,7 @@ bool BPLSettings::dejsonRemoteLogging(String json)
 	strcpy(logInfo->contentType,contentType);
 	logInfo->period = period;
 	logInfo->enabled = enabled;
-	logInfo->service = doc.containsKey("service")? doc["service"]:0;
+	logInfo->service = doc["service"].is<int>() ? doc["service"] : 0;
 
   	return true;
 }
@@ -685,10 +676,10 @@ bool BPLSettings::dejsonParasiteTempControlSettings(String json){
 	JsonDocument doc;
 	auto error = deserializeJson(doc,json);
 	if(error
-		|| !doc.containsKey(SetTempKey)
-		|| !doc.containsKey(TrigerTempKey)
-		|| !doc.containsKey(MinCoolKey)
-		|| !doc.containsKey(MinIdleKey)){
+		|| !doc[SetTempKey].is<float>()
+		|| !doc[TrigerTempKey].is<float>()
+		|| !doc[MinCoolKey].is<std::uint32_t>()
+		|| !doc[MinIdleKey].is<std::uint32_t>()){
             return false;
         }
 	ParasiteTempControlSettings *ps=parasiteTempControlSettings();
@@ -735,9 +726,9 @@ bool BPLSettings::dejsonPressureMonitorSettings(String json){
 	JsonDocument doc;
 	auto error = deserializeJson(doc,json);
 	if(error
-		|| !doc.containsKey(PressureMonitorModeKey)
-		|| !doc.containsKey(ConversionAKey)
-		|| !doc.containsKey(ConversionBKey)){
+		|| !doc[PressureMonitorModeKey].is<std::uint16_t>()
+		|| !doc[ConversionAKey].is<float>()
+		|| !doc[ConversionBKey].is<std::uint16_t>()){
             return false;
         }
 	PressureMonitorSettings *settings=pressureMonitorSettings();
@@ -848,7 +839,7 @@ String BPLSettings::jsonMqttRemoteControlSettings(){
 
 }
 static char *copyIfExist(JsonDocument &doc,const char* key,uint16_t &offset,char* ptr,char* base){
-	if(doc.containsKey(key)){
+	if(doc[key].is<const char*>()){
 		const char* str=doc[key];
 		size_t length = strlen(str) +1;
 		if(length==1){
@@ -873,21 +864,20 @@ static char *copyIfExist(JsonDocument &doc,const char* key,uint16_t &offset,char
 bool BPLSettings::dejsonMqttRemoteControlSettings(String json){
 
 	JsonDocument doc;
-	auto error = deserializeJson(doc,json);
-	if(error
-		|| !doc.containsKey(EnableRemoteControlKey)
-		|| !doc.containsKey(ServerPort)){
-
-		DBG_PRINTF("dejsonMqttRemoteControlSettings error:%s",error.c_str());
-
-        return false;
-    }
+	if (const auto error = deserializeJson(doc,json)) {
+	    DBG_PRINTF("ERROR: %s: deserializeJson() failed: %s\n", __func__, error.c_str());
+	    return false;
+	}
+	if(!doc[EnableRemoteControlKey].is<bool>() || !doc[ServerPort].is<std::uint16_t>()){
+	    DBG_PRINTF("ERROR: %s: Required field(s) is missing\n", __func__);
+	    return false;
+	}
 	MqttRemoteControlSettings *settings=mqttRemoteControlSettings();
 
 	memset((char*)settings,'\0',sizeof(MqttRemoteControlSettings));
 
 	bool rc=doc[EnableRemoteControlKey];
-	if(!doc.containsKey(MqttLoggingKey)){
+	if(!doc[MqttLoggingKey].is<bool>()){
 		settings->mode= rc? MqttModeControl:MqttModeOff;
 		// everything else is "cleared" by memset to zero
 	}else{

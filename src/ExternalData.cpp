@@ -199,7 +199,7 @@ bool ExternalData::processGravityReport(char data[], size_t length, bool authent
 {
     JsonDocument doc;
     auto jsonerror = deserializeJson(doc, data, length);
-    if (jsonerror || !doc.containsKey("name")) {
+    if (jsonerror || !doc["name"].is<String>()) {
         DBG_PRINTF("Invalid JSON\n");
         error = ErrorJSONFormat;
         return false;
@@ -213,7 +213,7 @@ bool ExternalData::processGravityReport(char data[], size_t length, bool authent
             return false;
         }
 
-        if (!doc.containsKey("gravity")) {
+        if (!doc["gravity"].is<float>()) {
             DBG_PRINTF("No gravity\n");
             error = ErrorMissingField;
             return false;
@@ -221,7 +221,7 @@ bool ExternalData::processGravityReport(char data[], size_t length, bool authent
         float gravity = doc["gravity"];
 
         // if(!IsGravityInValidRange(gravity)) return true;
-        if (doc.containsKey("plato")) {
+        if (doc["plato"].is<float>()) {
             if (doc["plato"] && !_cfg->usePlato) {
                 gravity = bpl::brix_to_specific_gravity(gravity);
             } else if (!doc["plato"] && _cfg->usePlato) {
@@ -229,7 +229,7 @@ bool ExternalData::processGravityReport(char data[], size_t length, bool authent
             }
         }
 
-        if (doc.containsKey("og")) {
+        if (doc["og"].is<float>()) {
             setOriginalGravity(gravity);
         } else {
             // gravity data from user
@@ -246,14 +246,14 @@ bool ExternalData::processGravityReport(char data[], size_t length, bool authent
                 strcpy(_ispindelName, name.c_str());
         }
 
-        if (!doc.containsKey("temperature")) {
+        if (!doc["temperature"].is<float>()) {
             DBG_PRINTF("iSpindel report no temperature!\n");
             return false;
         }
 
         float itemp = doc["temperature"];
         float tempC = itemp;
-        if (doc.containsKey("temp_units")) {
+        if (doc["temp_units"].is<signed char>()) {
             const char *TU = doc["temp_units"];
             if (*TU == 'F')
                 tempC = bpl::fahrenheit_to_celsius(itemp);
@@ -266,21 +266,21 @@ bool ExternalData::processGravityReport(char data[], size_t length, bool authent
         // Serial.print("temperature:");
         // Serial.println(itemp);
 
-        if (!doc.containsKey("angle")) {
+        if (!doc["angle"].is<float>()) {
             DBG_PRINTF("iSpindel report no angle!\n");
             return false;
         }
 
         setTilt(doc["angle"], itemp, TimeKeeper.getTimeSeconds());
 
-        if (doc.containsKey("battery"))
+        if (doc["battery"].is<float>())
             setDeviceVoltage(doc["battery"]);
 
-        if (doc.containsKey("RSSI"))
+        if (doc["RSSI"].is<float>())
             setDeviceRssi(doc["RSSI"]);
 
         // setPlato(doc["gravityP"],TimeKeeper.getTimeSeconds());
-        if (doc.containsKey("gravity") && !_cfg->calculateGravity && !_calibrating) {
+        if (!_cfg->calculateGravity && !_calibrating) {
             // gravity information directly from iSpindel
             float sgreading = doc["gravity"];
             setGravity(sgreading, TimeKeeper.getTimeSeconds());

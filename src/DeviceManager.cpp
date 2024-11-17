@@ -118,9 +118,9 @@ void* DeviceManager::createDevice(DeviceConfig& config, DeviceType dt)
 {
 	
 	switch (config.deviceHardware) {
-		case DEVICE_HARDWARE_NONE:
+		case DeviceHardware::none:
 			break;
-		case DEVICE_HARDWARE_PIN:
+		case DeviceHardware::pin:
 			if (dt==DEVICETYPE_SWITCH_SENSOR)
 			#if BREWPI_SIMULATE
 				return new ValueSensor<bool>(false);
@@ -134,14 +134,14 @@ void* DeviceManager::createDevice(DeviceConfig& config, DeviceType dt)
 				// use hardware actuators even for simulator
 				return new DigitalPinActuator(config.hw.pinNr, config.hw.invert);
 #endif
-		case DEVICE_HARDWARE_ONEWIRE_TEMP:
+		case DeviceHardware::onewireTemp:
 		#if BREWPI_SIMULATE
 			return new ExternalTempSensor(false);// initially disconnected, so init doesn't populate the filters with the default value of 0.0
 		#else
 			return new OneWireTempSensor(oneWireBus(config.hw.pinNr), config.hw.address, config.hw.calibration);
 		#endif
 #if BREWPI_EXTERNAL_SENSOR //vito: create sensor object
-		case DEVICE_HARDWARE_EXTERNAL_SENSOR:
+		case DeviceHardware::externalSensor:
 			return new WirelessTempSensor(false,config.hw.calibration);// initially disconnected, so init doesn't populate the filters with the default value of 0.0
 #endif
 
@@ -528,7 +528,7 @@ bool DeviceManager::isDeviceValid(DeviceConfig& config, DeviceConfig& original, 
 	// The highest id will win.
 	DeviceType dt = deviceType(config.deviceFunction);
 	if (!isAssignable(dt, config.deviceHardware)) {
-		logErrorIntInt(ERROR_CANNOT_ASSIGN_TO_HARDWARE, dt, config.deviceHardware);
+		logErrorIntInt(ERROR_CANNOT_ASSIGN_TO_HARDWARE, dt, static_cast<std::uint8_t>(config.deviceHardware));
 		return false;
 	}
 
@@ -574,7 +574,7 @@ void appendAttrib(String& str, char c, int8_t val, bool first = false)
 
 inline bool hasInvert(DeviceHardware hw)
 {
-	return hw==DEVICE_HARDWARE_PIN
+	return hw == DeviceHardware::pin
 #if BREWPI_DS2413
 	|| hw==DEVICE_HARDWARE_ONEWIRE_2413
 #endif
@@ -587,7 +587,7 @@ inline bool hasOnewire(DeviceHardware hw)
 #if BREWPI_DS2413
 	hw==DEVICE_HARDWARE_ONEWIRE_2413 ||
 #endif
-	hw==DEVICE_HARDWARE_ONEWIRE_TEMP;
+	hw == DeviceHardware::onewireTemp;
 }
 
 void DeviceManager::printDevice(device_slot_t slot, DeviceConfig& config, const char* value)
@@ -613,7 +613,7 @@ void DeviceManager::printDevice(device_slot_t slot, DeviceConfig& config, const 
 	appendAttrib(deviceString, DEVICE_ATTRIB_CHAMBER, config.chamber);
 	appendAttrib(deviceString, DEVICE_ATTRIB_BEER, config.beer);
 	appendAttrib(deviceString, DEVICE_ATTRIB_FUNCTION, config.deviceFunction);
-	appendAttrib(deviceString, DEVICE_ATTRIB_HARDWARE, config.deviceHardware);
+	appendAttrib(deviceString, DEVICE_ATTRIB_HARDWARE, static_cast<std::int8_t>(config.deviceHardware));
 	appendAttrib(deviceString, DEVICE_ATTRIB_DEACTIVATED, config.hw.deactivate);
 	appendAttrib(deviceString, DEVICE_ATTRIB_PIN, config.hw.pinNr);
 	if (value && *value) {
@@ -634,9 +634,9 @@ void DeviceManager::printDevice(device_slot_t slot, DeviceConfig& config, const 
 		appendAttrib(deviceString, DEVICE_ATTRIB_PIO, config.hw.pio);
 	}
 #endif
-	if (config.deviceHardware==DEVICE_HARDWARE_ONEWIRE_TEMP
+	if (config.deviceHardware == DeviceHardware::onewireTemp
 #if BREWPI_EXTERNAL_SENSOR
-		||  config.deviceHardware==DEVICE_HARDWARE_EXTERNAL_SENSOR
+		||  config.deviceHardware == DeviceHardware::externalSensor
 #endif	
 	) {
 		tempDiffToString(buf, temperature(config.hw.calibration)<<(TEMP_FIXED_POINT_BITS-CALIBRATION_OFFSET_PRECISION), 3, 8);
@@ -737,13 +737,13 @@ device_slot_t findHardwareDevice(DeviceConfig& find)
 					match &= find.hw.pio==config.hw.pio;
 					// fall through
 #endif
-				case DEVICE_HARDWARE_ONEWIRE_TEMP:
+				case DeviceHardware::onewireTemp:
 					match &= matchAddress(find.hw.address, config.hw.address, 8);
 					// fall through
-				case DEVICE_HARDWARE_PIN:
+				case DeviceHardware::pin:
 					match &= find.hw.pinNr==config.hw.pinNr;
 			#if BREWPI_EXTERNAL_SENSOR
-				case DEVICE_HARDWARE_EXTERNAL_SENSOR:
+				case DeviceHardware::externalSensor:
 					match &= true;
 					break;
 			#endif
@@ -792,7 +792,7 @@ void DeviceManager::handleEnumeratedDevice(DeviceConfig& config, EnumerateHardwa
 	if (h.values) {
 //		logDebug("Fetching device value");
 		switch (config.deviceHardware) {
-			case DEVICE_HARDWARE_ONEWIRE_TEMP:
+			case DeviceHardware::onewireTemp:
 				readTempSensorValue(config.hw, out.value);
 				break;
 			// unassigned pins could be input or output so we can't determine any other details from here.
@@ -809,7 +809,7 @@ void DeviceManager::enumeratePinDevices(EnumerateHardware& h, EnumDevicesCallbac
 {
 	DeviceConfig config;
 	clear((uint8_t*)&config, sizeof(config));
-	config.deviceHardware = DEVICE_HARDWARE_PIN;
+	config.deviceHardware = DeviceHardware::pin;
 	config.chamber = 1; // chamber 1 is default
 
 	int8_t pin;
@@ -849,20 +849,20 @@ void DeviceManager::enumerateOneWireDevices(EnumerateHardware& h, EnumDevicesCal
 				switch (config.hw.address[0]) {
 		#if BREWPI_DS2413
 					case DS2413_FAMILY_ID:
-						config.deviceHardware = DEVICE_HARDWARE_ONEWIRE_2413;
+						config.deviceHardware = DeviceHardware::onewire2413;
 						break;
 		#endif
 					case DS18B20MODEL:
-						config.deviceHardware = DEVICE_HARDWARE_ONEWIRE_TEMP;
+						config.deviceHardware = DeviceHardware::onewireTemp;
 						break;
 					default:
-						config.deviceHardware = DEVICE_HARDWARE_NONE;
+						config.deviceHardware = DeviceHardware::none;
 				}
 
 				switch (config.deviceHardware) {
 		#if BREWPI_DS2413
 					// for 2408 this will require iterating 0..7
-					case DEVICE_HARDWARE_ONEWIRE_2413:
+					case DeviceHardware::onewire2413:
 						// enumerate each pin separately
 						for (uint8_t i=0; i<2; i++) {
 							config.hw.pio = i;
@@ -870,7 +870,7 @@ void DeviceManager::enumerateOneWireDevices(EnumerateHardware& h, EnumDevicesCal
 						}
 						break;
 		#endif
-					case DEVICE_HARDWARE_ONEWIRE_TEMP:
+					case DeviceHardware::onewireTemp:
 		#if !ONEWIRE_PARASITE_SUPPORT
 						{	// check that device is not parasite powered
 							DallasTemperature sensor(wire);
@@ -895,7 +895,7 @@ void DeviceManager::enumerateOneWireDevices(EnumerateHardware& h, EnumDevicesCal
 void DeviceManager::enumerateExternalDevices(EnumerateHardware& h, EnumDevicesCallback callback, DeviceOutput& output){
 	DeviceConfig config;
 	clear((uint8_t*)&config, sizeof(config));
-	config.deviceHardware = DEVICE_HARDWARE_EXTERNAL_SENSOR;
+	config.deviceHardware = DeviceHardware::externalSensor;
 	config.chamber = 1; // chamber 1 is default
 	config.hw.pinNr = -1;
 	handleEnumeratedDevice(config, h, callback, output);

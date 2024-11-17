@@ -81,18 +81,16 @@ enum DeviceFunction {
 
 
 
-/*
-* The concrete type of the device.
-*/
-enum DeviceHardware {
-	DEVICE_HARDWARE_NONE = 0,
-	DEVICE_HARDWARE_PIN = 1,			// a digital pin, either input or output
-	DEVICE_HARDWARE_ONEWIRE_TEMP = 2,	// a onewire temperature sensor
+/** Concrete type of the device. */
+enum class DeviceHardware: std::uint8_t {
+	none = 0,
+	pin = 1,		///< digital pin, either input or output
+	onewireTemp = 2,	///< onewire temperature sensor
 #if BREWPI_DS2413
-	DEVICE_HARDWARE_ONEWIRE_2413 = 3	// a onewire 2-channel PIO input or output.
+	onewire2413 = 3,	///< onewire 2-channel PIO input or output.
 #endif
 #if BREWPI_EXTERNAL_SENSOR
-	DEVICE_HARDWARE_EXTERNAL_SENSOR = 5
+	externalSensor = 5
 #endif
 };
 

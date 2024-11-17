@@ -215,39 +215,38 @@ String BPLSettings::jsonSystemConfiguration(){
 
  bool BPLSettings::dejsonGravityConfig(char* json)
 {
-		JsonDocument doc;
-		auto error = deserializeJson(doc,json);
-		if (error) {
-  			DBG_PRINTF("Invalid JSON config\n");
-  			return false;
-		}
-        GravityDeviceConfiguration *gdc = &_data.gdc;
+	JsonDocument doc;
+	auto error = deserializeJson(doc,json);
+	if (error) {
+	    DBG_PRINTF("Invalid JSON config\n");
+	    return false;
+	}
 
-		gdc->ispindelEnable=doc[KeyEnableiSpindel];
-		gdc->ispindelTempCal = doc[KeyTempCorrection];
+	GravityDeviceConfiguration *gdc = &_data.gdc;
 
-//		if(gdc->ispindelTempCal){
-		    gdc->ispindelCalibrationBaseTemp =
-                (doc.containsKey(KeyCorrectionTemp))? doc[KeyCorrectionTemp]:20;
-//		}
-		gdc->calculateGravity=doc[KeyCalculateGravity];
-		gdc->ispindelCoefficients[0]=doc[KeyCoefficientA0];
-		gdc->ispindelCoefficients[1]=doc[KeyCoefficientA1];
-		gdc->ispindelCoefficients[2]=doc[KeyCoefficientA2];
-		gdc->ispindelCoefficients[3]=doc[KeyCoefficientA3];
-        gdc->lpfBeta =doc[KeyLPFBeta];
-        gdc->stableThreshold=doc[KeyStableGravityThreshold];
-		gdc->numberCalPoints=doc[KeyNumberCalPoints];
-		gdc->usePlato = doc.containsKey(KeyUsePlato)? doc[KeyUsePlato]:0;
-		// debug
-		#if SerialDebug
-		Serial.print("\nCoefficient:");
-		for(int i=0;i<4;i++){
-		    Serial.print(gdc->ispindelCoefficients[i],10);
-		    Serial.print(", ");
-		}
-		Serial.println("");
-		#endif
+	gdc->ispindelEnable=doc[KeyEnableiSpindel];
+	gdc->ispindelTempCal = doc[KeyTempCorrection];
+
+	gdc->ispindelCalibrationBaseTemp =
+		(doc.containsKey(KeyCorrectionTemp))? doc[KeyCorrectionTemp]:20;
+	gdc->calculateGravity=doc[KeyCalculateGravity];
+	gdc->ispindelCoefficients[0]=doc[KeyCoefficientA0];
+	gdc->ispindelCoefficients[1]=doc[KeyCoefficientA1];
+	gdc->ispindelCoefficients[2]=doc[KeyCoefficientA2];
+	gdc->ispindelCoefficients[3]=doc[KeyCoefficientA3];
+	gdc->lpfBeta =doc[KeyLPFBeta];
+	gdc->stableThreshold=doc[KeyStableGravityThreshold];
+	gdc->numberCalPoints=doc[KeyNumberCalPoints];
+	gdc->usePlato = doc.containsKey(KeyUsePlato)? doc[KeyUsePlato]:0;
+	// debug
+	#if SerialDebug
+	Serial.print("\nCoefficient:");
+	for(int i=0;i<4;i++){
+	    Serial.print(gdc->ispindelCoefficients[i],10);
+	    Serial.print(", ");
+	}
+	Serial.println("");
+	#endif
 	return true;
 }
 

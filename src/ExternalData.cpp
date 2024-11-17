@@ -194,98 +194,101 @@ float  ExternalData::temperatureCorrection(float sg, float t, float c){
 	    (1.00130346-0.000134722124*c+0.00000204052596*c*c-0.00000000232820948*c*c*c));
 }
 
-bool ExternalData::processGravityReport(char data[],size_t length, bool authenticated, uint8_t& error)
+bool ExternalData::processGravityReport(char data[], size_t length, bool authenticated,
+                                        uint8_t &error)
 {
-	JsonDocument doc;
-	auto jsonerror=deserializeJson(doc,data,length);
-	if(jsonerror || !doc.containsKey("name")){
-  		DBG_PRINTF("Invalid JSON\n");
-  		error = ErrorJSONFormat;
-  		return false;
-	}
+    JsonDocument doc;
+    auto jsonerror = deserializeJson(doc, data, length);
+    if (jsonerror || !doc.containsKey("name")) {
+        DBG_PRINTF("Invalid JSON\n");
+        error = ErrorJSONFormat;
+        return false;
+    }
 
-	String name= doc["name"];
+    String name = doc["name"];
     // web interface
-	if(name.equals("webjs")){
-		if(! authenticated){
-			error = ErrorAuthenticateNeeded;
-    	    return false;
+    if (name.equals("webjs")) {
+        if (!authenticated) {
+            error = ErrorAuthenticateNeeded;
+            return false;
         }
 
-		if(!doc.containsKey("gravity")){
-  			DBG_PRINTF("No gravity\n");
-  			error = ErrorMissingField;
-  			return false;
-  		}
-		float  gravity = doc["gravity"];
+        if (!doc.containsKey("gravity")) {
+            DBG_PRINTF("No gravity\n");
+            error = ErrorMissingField;
+            return false;
+        }
+        float gravity = doc["gravity"];
 
-		//if(!IsGravityInValidRange(gravity)) return true;
-		if(doc.containsKey("plato")){
-			if(doc["plato"] && !_cfg->usePlato){
-				gravity = bpl::brix_to_specific_gravity(gravity);
-			}else if(!doc["plato"] && _cfg->usePlato){
-				gravity = bpl::specific_gravity_to_brix(gravity);
-			}
-		} 
+        // if(!IsGravityInValidRange(gravity)) return true;
+        if (doc.containsKey("plato")) {
+            if (doc["plato"] && !_cfg->usePlato) {
+                gravity = bpl::brix_to_specific_gravity(gravity);
+            } else if (!doc["plato"] && _cfg->usePlato) {
+                gravity = bpl::specific_gravity_to_brix(gravity);
+            }
+        }
 
-		if(doc.containsKey("og")){
-				setOriginalGravity(gravity);
-		}else{
-				// gravity data from user
-			setGravity(gravity,TimeKeeper.getTimeSeconds());
-		}
-	}else if(name.startsWith("iSpindel")){
-		//{"name": "iSpindel01", "id": "XXXXX-XXXXXX", "temperature": 20.5, "angle": 89.5, "gravityP": 13.6, "battery": 3.87}
-		DBG_PRINTF("%s\n",name.c_str());
+        if (doc.containsKey("og")) {
+            setOriginalGravity(gravity);
+        } else {
+            // gravity data from user
+            setGravity(gravity, TimeKeeper.getTimeSeconds());
+        }
+    } else if (name.startsWith("iSpindel")) {
+        //{"name": "iSpindel01", "id": "XXXXX-XXXXXX", "temperature": 20.5, "angle": 89.5,
+        //"gravityP": 13.6, "battery": 3.87}
+        DBG_PRINTF("%s\n", name.c_str());
 
-		if(!_ispindelName){
-			_ispindelName=(char*) malloc(name.length()+1);
-			if(_ispindelName) strcpy(_ispindelName,name.c_str());
-		}
+        if (!_ispindelName) {
+            _ispindelName = (char *) malloc(name.length() + 1);
+            if (_ispindelName)
+                strcpy(_ispindelName, name.c_str());
+        }
 
-		if(! doc.containsKey("temperature")){
-		    DBG_PRINTF("iSpindel report no temperature!\n");
-		    return false;
-		}
+        if (!doc.containsKey("temperature")) {
+            DBG_PRINTF("iSpindel report no temperature!\n");
+            return false;
+        }
 
-        float itemp=doc["temperature"];
-		float tempC=itemp;
-		if(doc.containsKey("temp_units")){
-			const char *TU=doc["temp_units"];
-			if(*TU == 'F') tempC = bpl::fahrenheit_to_celsius(itemp);
-			else if(*TU == 'K') tempC = itemp- 273.15;
-		}
+        float itemp = doc["temperature"];
+        float tempC = itemp;
+        if (doc.containsKey("temp_units")) {
+            const char *TU = doc["temp_units"];
+            if (*TU == 'F')
+                tempC = bpl::fahrenheit_to_celsius(itemp);
+            else if (*TU == 'K')
+                tempC = itemp - 273.15;
+        }
 
-		setAuxTemperatureCelsius(tempC);
+        setAuxTemperatureCelsius(tempC);
 
-		//Serial.print("temperature:");
-		//Serial.println(itemp);
+        // Serial.print("temperature:");
+        // Serial.println(itemp);
 
-		if(!doc.containsKey("angle")){
-        	DBG_PRINTF("iSpindel report no angle!\n");
-			return false;
-		}
-    	
-        setTilt(doc["angle"],itemp,TimeKeeper.getTimeSeconds());
+        if (!doc.containsKey("angle")) {
+            DBG_PRINTF("iSpindel report no angle!\n");
+            return false;
+        }
 
-        if(doc.containsKey("battery"))
-    	    setDeviceVoltage(doc["battery"]);
+        setTilt(doc["angle"], itemp, TimeKeeper.getTimeSeconds());
 
-        if(doc.containsKey("RSSI"))
-    	    setDeviceRssi(doc["RSSI"]);
+        if (doc.containsKey("battery"))
+            setDeviceVoltage(doc["battery"]);
 
-		//setPlato(doc["gravityP"],TimeKeeper.getTimeSeconds());
-		if(doc.containsKey("gravity") &&
-                ! _cfg->calculateGravity 
-				&& ! _calibrating ){
-			// gravity information directly from iSpindel
-			float sgreading=doc["gravity"];
+        if (doc.containsKey("RSSI"))
+            setDeviceRssi(doc["RSSI"]);
+
+        // setPlato(doc["gravityP"],TimeKeeper.getTimeSeconds());
+        if (doc.containsKey("gravity") && !_cfg->calculateGravity && !_calibrating) {
+            // gravity information directly from iSpindel
+            float sgreading = doc["gravity"];
             setGravity(sgreading, TimeKeeper.getTimeSeconds());
         }
-	}else{
-		    error = ErrorUnknownSource;
-		    return false;
-	}
-	return true;
+    } else {
+        error = ErrorUnknownSource;
+        return false;
+    }
+    return true;
 }
 

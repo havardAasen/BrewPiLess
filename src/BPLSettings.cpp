@@ -216,9 +216,8 @@ String BPLSettings::jsonSystemConfiguration(){
  bool BPLSettings::dejsonGravityConfig(char* json)
 {
 	JsonDocument doc;
-	auto error = deserializeJson(doc,json);
-	if (error) {
-	    DBG_PRINTF("Invalid JSON config\n");
+	if (const auto error = deserializeJson(doc, json)) {
+	    DBG_PRINTF("ERROR: %s: deserializeJson() failed: %s\n", __func__, error.c_str());
 	    return false;
 	}
 
@@ -398,9 +397,8 @@ void makeTime(time_t timeInput, struct tm &tm){
 bool BPLSettings::dejsonBeerProfile(String json)
 {
 	JsonDocument doc;
-	auto error = deserializeJson(doc,json);
-	if (error) {
-		DBG_PRINT("JSON parsing failed\n");
+	if (const auto error = deserializeJson(doc, json)) {
+		DBG_PRINTF("ERROR: %s: deserializeJson() failed: %s\n", __func__, error.c_str());
 		return false;
 	}
 	if(!doc.containsKey("s")

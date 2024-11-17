@@ -190,9 +190,8 @@ void ExternalData::setAuxTemperatureCelsius(float temp){
 
 float  ExternalData::temperatureCorrection(float sg, float t, float c){
 
-	float nsg= sg*((1.00130346-0.000134722124*t+0.00000204052596*t*t -0.00000000232820948*t*t*t)/
+	return sg*((1.00130346-0.000134722124*t+0.00000204052596*t*t -0.00000000232820948*t*t*t)/
 	    (1.00130346-0.000134722124*c+0.00000204052596*c*c-0.00000000232820948*c*c*c));
-	return nsg;
 }
 
 bool ExternalData::processGravityReport(char data[],size_t length, bool authenticated, uint8_t& error)

@@ -26,7 +26,8 @@ function mqttSave() {
         if (ins[i].type != "submit") {
             if (ins[i].name && ins[i].name != "") {
                 var val;
-                if (ins[i].type == "checkbox") val = (ins[i].checked ? 1 : 0);
+                if (ins[i].type === "checkbox") val = ins[i].checked;
+                else if (ins[i].type === "number") val = Number(ins[i].value);
                 else val = ins[i].value.trim();
                 json[ins[i].name.split("_")[1]] = val;
             }

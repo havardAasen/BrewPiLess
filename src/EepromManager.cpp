@@ -80,7 +80,6 @@ void EepromManager::initializeEeprom()
 	// set the version flag - so that storeDevice will work
 	EepromAccess::writeByte(0, EEPROM_FORMAT_VERSION);
 
-	saveDefaultDevices();
 	// set state to startup
 	tempControl.init();
 
@@ -89,13 +88,6 @@ void EepromManager::initializeEeprom()
 	EepromAccess::commit();
 #endif
 }
-
-uint8_t EepromManager::saveDefaultDevices()
-{
-	return 0;
-}
-
-#define arraySize(x) (sizeof(x)/sizeof(x[0]))
 
 
 bool EepromManager::applySettings()

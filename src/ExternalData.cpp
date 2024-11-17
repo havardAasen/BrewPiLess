@@ -59,7 +59,7 @@ void ExternalData::sseNotify(char *buf){
 			strRssi[0]='\0';
 		} 
 		const char *spname=(_ispindelName)? _ispindelName:"Unknown";
-		sprintf(buf,"G:{\"name\":\"%s\",\"battery\":%s,\"sg\":%s,\"angle\":%s %s,\"lu\":%lld,\"lpf\":%s,\"stpt\":%d,\"fpt\":%d,\"ctemp\":%d,\"plato\":%d}",
+		sprintf(buf,R"(G:{"name":"%s","battery":%s,"sg":%s,"angle":%s %s,"lu":%lld,"lpf":%s,"stpt":%d,"fpt":%d,"ctemp":%d,"plato":%d})",
 					spname, 
 					strbattery,
 					strgravity,

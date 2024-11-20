@@ -144,7 +144,15 @@ struct DeviceAlternatives {
 
 
 typedef void (*EnumDevicesCallback)(DeviceConfig*, void* pv);
-class EnumerateHardware;
+
+struct EnumerateHardware
+{
+	int8_t hardware;	///< restrict the types of devices requested
+	int8_t pin;		///< pin to search
+	int8_t values;		///< fetch values for the devices.
+	int8_t unused;		///< 0 don't care about unused state, 1 unused only.
+	int8_t function;	///< restrict to devices that can be used with this function
+};
 
 struct DeviceOutput
 {

@@ -690,14 +690,6 @@ bool DeviceManager::enumDevice(DeviceDisplay& dd, DeviceConfig& dc, uint8_t idx)
 		return (dd.id==idx);						// enumerate only the specific device requested
 }
 
-struct EnumerateHardware
-{
-	int8_t hardware;		// restrict the types of devices requested
-	int8_t pin;				// pin to search
-	int8_t values;			// fetch values for the devices.
-	int8_t unused;			// 0 don't care about unused state, 1 unused only.
-	int8_t function;		// restrict to devices that can be used with this function
-};
 
 void handleHardwareSpec(const char* key, const char* val, void* pv)
 {

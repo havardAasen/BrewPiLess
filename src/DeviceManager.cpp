@@ -55,6 +55,8 @@
 WirelessTempSensor* WirelessTempSensor::theWirelessTempSensor=nullptr;
 #endif
 
+#include <algorithm>
+
 /*
  * Defaults for sensors, actuators and temperature sensors when not defined in the eeprom.
  */
@@ -711,11 +713,7 @@ void handleHardwareSpec(const char* key, const char* val, void* pv)
 inline bool matchAddress(uint8_t* detected, uint8_t* configured, uint8_t count) {
 	if (!configured[0])
 		return true;
-	while (count-->0) {
-		if (detected[count]!=configured[count])
-			return false;
-	}
-	return true;
+	return std::equal(detected, detected + count, configured);
 }
 
 /**

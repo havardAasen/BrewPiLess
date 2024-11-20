@@ -118,31 +118,6 @@ inline DeviceOwner deviceOwner(DeviceFunction id) {
 }
 
 
-/*
- * A union of all device types.
- */
-
-// struct DeviceConfig was moved to EepromStructs.h
-
-/**
- * Provides a single alternative value for a given definition point in a device.
- */
-struct DeviceAlternatives {
-	enum AlternativeType {
-		DA_PIN, DA_ADDRESS, DA_PIO, DA_INVERT, DA_BOOLVALUE
-	};
-	AlternativeType type;
-	union {
-		uint8_t pinNr;					// type == DA_PIN
-		uint8_t pio;					// type == DA_PIO
-		DeviceAddress address;			// type == DA_ADDRESS
-		bool invert;					// type == DA_INVERT
-		bool boolValue;					// type == DA_BOOLVALUE
-	};
-
-};
-
-
 typedef void (*EnumDevicesCallback)(DeviceConfig*, void* pv);
 
 struct EnumerateHardware
@@ -233,12 +208,6 @@ public:
 	}
 
 	static void setupUnconfiguredDevices();
-
-	/*
-	 * Determines if the given device config is complete.
-	 */
-	static bool firstUndefinedAlternative(DeviceConfig& config, DeviceAlternatives& alternatives);
-
 
 	/**
 	 * Creates and Installs a device from the given device config.

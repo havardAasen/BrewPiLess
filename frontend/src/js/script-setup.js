@@ -185,12 +185,9 @@ function detachNode(query) {
     return d;
 }
 
-function init(classic) {
-    if (typeof classic == "undefined") classic = false;
-    if (!classic) {
-        getActiveNavItem();
-        Q("#verinfo").innerHTML = "v" + JSVERSION;
-    }
+function init() {
+    getActiveNavItem();
+    Q("#verinfo").innerHTML = "v" + JSVERSION;
 
     window.sensorContainer = detachNode(".device-container.sensor-device");
     window.pinContainer = detachNode(".device-container.pin-device");

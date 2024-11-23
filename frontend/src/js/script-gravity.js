@@ -43,13 +43,10 @@ function save() {
     });
 }
 
-function init(classic) {
-    if (typeof classic == "undefined") classic = false;
+function init() {
+    getActiveNavItem();
+    Q("#verinfo").innerHTML = "v" + JSVERSION;
 
-    if (!classic) {
-        getActiveNavItem();
-        Q("#verinfo").innerHTML = "v" + JSVERSION;
-    }
     toFixed();
     s_ajax({
         url: gdcurl + "?data",

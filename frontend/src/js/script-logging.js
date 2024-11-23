@@ -464,7 +464,7 @@ function update() {
 
 }
 
-function remote_init(classic) {
+function remote_init() {
     var MinPeriod = { generichttp: 1, thingspeak: 15, brewfather: 900, ubidots: 1 };
     Q("#period").onchange = function() {
         var min = MinPeriod[Q("#service-type").value];
@@ -516,12 +516,9 @@ function serviceChange() {
     serviceOption(Q("#service-type").value);
 }
 
-function init(classic) {
-    if (typeof classic == "undefined") classic = false;
-    if (!classic) {
-        getActiveNavItem();
-        Q("#verinfo").innerHTML = "v" + JSVERSION;
-    }
+function init() {
+    getActiveNavItem();
+    Q("#verinfo").innerHTML = "v" + JSVERSION;
 
     function readingByTemp() {
         var temp = parseFloat(Q("#watertemp").value);
@@ -539,7 +536,7 @@ function init(classic) {
     Q("#caltemp").onchange = readingByTemp;
     Q("#tempunit").onchange = readingByTemp;
 
-    remote_init(classic);
+    remote_init();
     logs.init();
 
     mqttLoadSetting();

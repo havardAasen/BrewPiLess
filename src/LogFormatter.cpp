@@ -83,7 +83,7 @@ size_t dataSprintf(char *buffer,const char *format,const char* invalid)
 				d += printFloat(buffer+d,at,1,IS_FLOAT_TEMP_VALID(at),invalid);
 			}else if(ch == 't'){
 				float tilt=externalData.tiltValue();
-				d += printFloat(buffer+d,tilt,2,true,invalid);
+				d += printFloat(buffer+d,tilt,2,isTiltAngleValid(tilt),invalid);
 			}else if(ch == 'u'){
 				d += sprintf(buffer+d, "%lld",  externalData.lastUpdate());
 			}else if(ch == 'U'){

@@ -17,6 +17,7 @@
 #endif
 #define INVALID_TEMP  -250
 
+inline bool isTiltAngleValid(const float angle) { return angle > 0; }
 #define IsVoltageValid(v) ((v) > 0)
 //#define IsGravityValid(g) ((g) > 0)
 
@@ -63,7 +64,7 @@ protected:
 //	float _og;
 	SimpleFilter filter;
 	char *_ispindelName{};
-	float _ispindelTilt{};
+	float _ispindelTilt{-1};
 	bool  _calibrating{};
 	float _filteredGravity{INVALID_GRAVITY};
 	int16_t _rssi{};

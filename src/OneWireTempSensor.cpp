@@ -27,6 +27,8 @@
 #include "Ticks.h"
 #include "TemperatureFormats.h"
 
+#include <algorithm>
+
 OneWireTempSensor::~OneWireTempSensor(){
 	delete sensor;
 };
@@ -112,7 +114,8 @@ temperature OneWireTempSensor::readAndConstrainTemp()
 		return TEMP_SENSOR_DISCONNECTED;
 	}
 
-	constexpr uint8_t shift = TEMP_FIXED_POINT_BITS-ONEWIRE_TEMP_SENSOR_PRECISION; // difference in precision between DS18B20 format and temperature adt
-	temp = constrainTemp(temp+calibrationOffset+(C_OFFSET>>shift), ((int) MIN_TEMP)>>shift, ((int) MAX_TEMP)>>shift)<<shift;
-	return temp;
+	constexpr std::uint8_t shift = TEMP_FIXED_POINT_BITS-ONEWIRE_TEMP_SENSOR_PRECISION; // difference in precision between DS18B20 format and temperature adt
+	constexpr std::int16_t lower = MIN_TEMP>>shift; // -1024
+	constexpr std::int16_t upper = MAX_TEMP>>shift; // 1023
+	return static_cast<temperature>(std::clamp(static_cast<temperature>(temp+calibrationOffset+(C_OFFSET>>shift)), lower, upper)<<shift);
 }

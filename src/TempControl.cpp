@@ -20,7 +20,8 @@
 #include "Brewpi.h"
 #include "ITempSensor.h"
 #include "Pins.h"
-#include <limits.h>
+#include <algorithm>
+#include <climits>
 
 #include "TemperatureFormats.h"
 #include "TempControl.h"
@@ -199,7 +200,7 @@ void TempControl::updatePID(){
 		// constrain to tempSettingMax or beerSetting + pidMAx, whichever is higher.
 		temperature upperBound = (cs.beerSetting >= cc.tempSettingMax - cc.pidMax) ? cc.tempSettingMax : cs.beerSetting + cc.pidMax;
 
-		cs.fridgeSetting = constrain(constrainTemp16(newFridgeSetting), lowerBound, upperBound);
+		cs.fridgeSetting = std::clamp(constrainTemp16(newFridgeSetting), lowerBound, upperBound);
 	}
 	else if(cs.mode == MODE_FRIDGE_CONSTANT){
 		// FridgeTemperature is set manually, use INVALID_TEMP to indicate beer temp is not active
@@ -497,7 +498,7 @@ void TempControl::detectPeaks(){
 
 // Increase estimator at least 20%, max 50%s
 void TempControl::increaseEstimator(temperature * estimator, temperature error){
-	temperature factor = 614 + constrainTemp(abs(error)>>5, 0, 154); // 1.2 + 3.1% of error, limit between 1.2 and 1.5
+	temperature factor = 614 + std::clamp(abs(error)>>5, 0, 154); // 1.2 + 3.1% of error, limit between 1.2 and 1.5
 	*estimator = multiplyFactorTemperatureDiff(factor, *estimator);
 	if(*estimator < 25){
 		*estimator = intToTempDiff(5)/100; // make estimator at least 0.05
@@ -506,8 +507,8 @@ void TempControl::increaseEstimator(temperature * estimator, temperature error){
 }
 
 // Decrease estimator at least 16.7% (1/1.2), max 33.3% (1/1.5)
-void TempControl::decreaseEstimator(temperature * estimator, temperature error){
-	temperature factor = 426 - constrainTemp(abs(error)>>5, 0, 85); // 0.833 - 3.1% of error, limit between 0.667 and 0.833
+void TempControl::decreaseEstimator(temperature * estimator, const temperature error){
+	const temperature factor = 426 - std::clamp(abs(error)>>5, 0, 85); // 0.833 - 3.1% of error, limit between 0.667 and 0.833
 	*estimator = multiplyFactorTemperatureDiff(factor, *estimator);
 	EepromManager::storeTempSettings();
 }

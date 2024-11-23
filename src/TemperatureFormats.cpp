@@ -209,29 +209,9 @@ temperature tenthsToFixed(int temp){
 	return constrainTemp16(fixedPointTemp);
 }
 
-temperature constrainTemp(long_temperature valLong, temperature lower, temperature upper){
-	temperature val = constrainTemp16(valLong);
-
-	if(val < lower){
-		return lower;
-	}
-
-	if(val > upper){
-		return upper;
-	}
-	return temperature(valLong);
-}
-
-
-temperature constrainTemp16(long_temperature val)
+temperature constrainTemp16(const long_temperature val)
 {
-	if(val<MIN_TEMP){
-		return MIN_TEMP;
-	}
-	if(val>MAX_TEMP){
-		return MAX_TEMP;
-	}
-	return val;
+    return static_cast<temperature>(std::clamp(val, MIN_TEMP, MAX_TEMP));
 }
 
 temperature multiplyFactorTemperatureLong(temperature factor, long_temperature b)

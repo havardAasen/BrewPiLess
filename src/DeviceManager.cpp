@@ -966,10 +966,8 @@ void UpdateDeviceState(DeviceDisplay& dd, DeviceConfig& dc, char* val)
 
 void DeviceManager::listDevices() {
 	DeviceConfig dc;
-	DeviceDisplay dd;
-	fill((int8_t*)&dd, sizeof(dd));
-	dd.empty = 0;
-	PiLink::parseJson(HandleDeviceDisplay, (void*)&dd);
+	DeviceDisplay dd{};
+	PiLink::parseJson(HandleDeviceDisplay, &dd);
 	if (dd.id==-2) {
 		if (dd.write>=0)
 			tempControl.cameraLight.setActive(dd.write!=0);

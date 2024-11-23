@@ -136,10 +136,10 @@ struct DeviceOutput
 };
 
 struct DeviceDisplay {
-	int8_t id;		// -1 for all devices, >=0 for specific device
-	int8_t value;	// set value
-	int8_t write;	// write value
-	int8_t empty;	// show unused devices when id==-1, default is 0
+	int8_t id{-1};		///< -1 for all devices, >=0 for specific device
+	int8_t value{-1};	///< set value
+	int8_t write{-1};	///< write value
+	int8_t empty{}; 	///< show unused devices when id==-1, default is 0
 };
 
 void HandleDeviceDisplay(const char* key, const char* value, void* pv);

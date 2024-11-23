@@ -542,5 +542,5 @@ function init(classic) {
     remote_init(classic);
     logs.init();
 
-    mqttInit();
+    mqttLoadSetting();
 }

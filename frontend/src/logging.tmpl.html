@@ -459,7 +459,7 @@
                 </div>
             </form>
 
-            <div id="mqtt" class="card">
+            <form id="mqtt" class="card" onsubmit="mqttSave(); return false;">
                 <div layout horizontal main-justified cross-center>
                     <h4>
                         <%= mqtt_settings %>
@@ -585,9 +585,9 @@
                     <input name="mqtt_ptc" type="text" size="32" maxlength="64" class="nb mqtt-input">
                 </div>
                 <div class="card-footer">
-                    <input type="submit" id="submitsavemqtt" name="submit" class="btn btn--raised"></input>
+                    <button class="btn btn--raised"><%= log_update %></button>
                 </div>
-            </div>
+            </form>
 
         </div>
     </div>

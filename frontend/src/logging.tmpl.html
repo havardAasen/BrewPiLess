@@ -117,7 +117,7 @@
                 </table>
             </div>
 
-            <div class="card">
+            <form class="card" onsubmit="update(); return false;">
                 <div layout horizontal main-justified cross-center>
                     <h5>
                         <%= log_remote_log %>
@@ -455,10 +455,10 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button type="button" onclick="update();" class="btn btn--raised"><%= log_update %></button>
+                    <button class="btn btn--raised"><%= log_update %></button>
                 </div>
+            </form>
 
-            </div>
             <div id="mqtt" class="card">
                 <div layout horizontal main-justified cross-center>
                     <h4>

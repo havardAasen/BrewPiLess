@@ -51,43 +51,33 @@ inline bool isDefinedSlot(device_slot_t s) { return s>=0; }
 inline constexpr device_slot_t MAX_DEVICE_SLOT = 16;		// exclusive
 inline constexpr device_slot_t INVALID_SLOT = -1;
 
-/*
- * Describes the logical function of each device.
- */
-// DeviceFunction moved to EepromStructs.h
 
-
-/**
- * Describes where the device is most closely associated.
- */
-enum DeviceOwner {
-	DEVICE_OWNER_NONE=0,
-	DEVICE_OWNER_CHAMBER=1,
-	DEVICE_OWNER_BEER=2
+/** Describes where the device is most closely associated. */
+enum class DeviceOwner {
+	none=0,
+	chamber=1,
+	beer=2
 };
 
-enum DeviceType {
-	DEVICETYPE_NONE = 0,
-	DEVICETYPE_TEMP_SENSOR = 1,		/* BasicTempSensor - OneWire */
-	DEVICETYPE_SWITCH_SENSOR = 2,		/* SwitchSensor - direct pin and onewire are supported */
-	DEVICETYPE_SWITCH_ACTUATOR = 3	/* Actuator - both direct pin and onewire are supported */
+enum class DeviceType {
+	none = 0,
+	tempSensor = 1,		///< OneWire temperature sensor
+	switchSensor = 2,	///< direct pin and onewire are supported
+	switchActuator = 3	///< both direct pin and onewire are supported
 };
-
-
-// enum DeviceHardware was moved to EepromStructs.h
 
 
 inline bool isAssignable(DeviceType type, DeviceHardware hardware)
 {
-	return (hardware==DeviceHardware::pin && (type==DEVICETYPE_SWITCH_ACTUATOR || type==DEVICETYPE_SWITCH_SENSOR))
+	return (hardware==DeviceHardware::pin && (type == DeviceType::switchActuator || type == DeviceType::switchSensor))
 #if BREWPI_DS2413
 	|| (hardware==DEVICE_HARDWARE_ONEWIRE_2413 && (type==DEVICETYPE_SWITCH_ACTUATOR || (DS2413_SUPPORT_SENSE && type==DEVICETYPE_SWITCH_SENSOR)))
 #endif
 #if BREWPI_EXTERNAL_SENSOR
-	|| (hardware == DeviceHardware::externalSensor && type==DEVICETYPE_TEMP_SENSOR)
+	|| (hardware == DeviceHardware::externalSensor && type == DeviceType::tempSensor)
 #endif
-	|| (hardware == DeviceHardware::onewireTemp && type==DEVICETYPE_TEMP_SENSOR)
-	|| (hardware == DeviceHardware::none && type== DEVICETYPE_NONE);
+	|| (hardware == DeviceHardware::onewireTemp && type == DeviceType::tempSensor)
+	|| (hardware == DeviceHardware::none && type == DeviceType::none);
 }
 
 inline bool isOneWire(DeviceHardware hardware) {
@@ -114,7 +104,7 @@ inline bool isExternalSensor(DeviceHardware hardware) {
  * Determines where this devices belongs.
  */
 inline DeviceOwner deviceOwner(DeviceFunction id) {
-	return id==0 ? DEVICE_OWNER_NONE : id>=DEVICE_BEER_FIRST ? DEVICE_OWNER_BEER : DEVICE_OWNER_CHAMBER;
+	return id==0 ? DeviceOwner::none : id>=DEVICE_BEER_FIRST ? DeviceOwner::beer : DeviceOwner::chamber;
 }
 
 

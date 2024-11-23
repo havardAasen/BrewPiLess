@@ -123,7 +123,7 @@ void* DeviceManager::createDevice(DeviceConfig& config, DeviceType dt)
 		case DeviceHardware::none:
 			break;
 		case DeviceHardware::pin:
-			if (dt==DEVICETYPE_SWITCH_SENSOR)
+			if (dt == DeviceType::switchSensor)
 			#if BREWPI_SIMULATE
 				return new ValueSensor<bool>(false);
 			#else
@@ -252,9 +252,9 @@ void DeviceManager::uninstallDevice(DeviceConfig& config)
 
 	ITempSensor* s;
 	switch(dt) {
-		case DEVICETYPE_NONE:
+		case DeviceType::none:
 			break;
-		case DEVICETYPE_TEMP_SENSOR:
+		case DeviceType::tempSensor:
 			// sensor may be wrapped in a TempSensor class, or may stand alone.
 			s = &unwrapSensor(config.deviceFunction, *ppv);
 			if (s!=&defaultTempSensor) {
@@ -268,14 +268,14 @@ void DeviceManager::uninstallDevice(DeviceConfig& config)
 				delete s;
 			}
 			break;
-		case DEVICETYPE_SWITCH_ACTUATOR:
+		case DeviceType::switchActuator:
 			if (*ppv!=&defaultActuator) {
 //				DEBUG_ONLY(logInfoInt(INFO_UNINSTALL_ACTUATOR, config.deviceFunction));
 				delete (Actuator*)*ppv;
 				*ppv = &defaultActuator;
 			}
 			break;
-		case DEVICETYPE_SWITCH_SENSOR:
+		case DeviceType::switchSensor:
 			if (*ppv!=&defaultSensor) {
 //				DEBUG_ONLY(logInfoInt(INFO_UNINSTALL_SWITCH_SENSOR, config.deviceFunction));
 				delete (SwitchSensor*)*ppv;
@@ -297,9 +297,9 @@ void DeviceManager::installDevice(DeviceConfig& config)
 	ITempSensor* s;
 	TempSensor* ts;
 	switch(dt) {
-		case DEVICETYPE_NONE:
+		case DeviceType::none:
 			break;
-		case DEVICETYPE_TEMP_SENSOR:
+		case DeviceType::tempSensor:
 			DEBUG_ONLY(logInfoInt(INFO_INSTALL_TEMP_SENSOR, config.deviceFunction));
 			// sensor may be wrapped in a TempSensor class, or may stand alone.
 			s = (ITempSensor*)createDevice(config, dt);
@@ -323,8 +323,8 @@ void DeviceManager::installDevice(DeviceConfig& config)
 			((ExternalTempSensor*)s)->setConnected(true);	// now connect the sensor after init is called
 #endif
 			break;
-		case DEVICETYPE_SWITCH_ACTUATOR:
-		case DEVICETYPE_SWITCH_SENSOR:
+		case DeviceType::switchActuator:
+		case DeviceType::switchSensor:
 			DEBUG_ONLY(logInfoInt(INFO_INSTALL_DEVICE, config.deviceFunction));
 			*ppv = createDevice(config, dt);
 #if (BREWPI_DEBUG > 0)
@@ -518,10 +518,10 @@ bool DeviceManager::isDeviceValid(DeviceConfig& config, DeviceConfig& original, 
 	}
 
 	DeviceOwner owner = deviceOwner(config.deviceFunction);
-	if (!((owner==DEVICE_OWNER_BEER && config.beer) || (owner==DEVICE_OWNER_CHAMBER && config.chamber)
-		|| (owner==DEVICE_OWNER_NONE && !config.beer && !config.chamber)))
+	if (!((owner == DeviceOwner::beer && config.beer) || (owner == DeviceOwner::chamber && config.chamber)
+		|| (owner == DeviceOwner::none && !config.beer && !config.chamber)))
 	{
-		logErrorIntIntInt(ERROR_INVALID_DEVICE_CONFIG_OWNER, owner, config.beer, config.chamber);
+		logErrorIntIntInt(ERROR_INVALID_DEVICE_CONFIG_OWNER, static_cast<std::int8_t>(owner), config.beer, config.chamber);
 		return false;
 	}
 
@@ -530,7 +530,7 @@ bool DeviceManager::isDeviceValid(DeviceConfig& config, DeviceConfig& original, 
 	// The highest id will win.
 	DeviceType dt = deviceType(config.deviceFunction);
 	if (!isAssignable(dt, config.deviceHardware)) {
-		logErrorIntInt(ERROR_CANNOT_ASSIGN_TO_HARDWARE, dt, static_cast<std::uint8_t>(config.deviceHardware));
+		logErrorIntInt(ERROR_CANNOT_ASSIGN_TO_HARDWARE, static_cast<std::int8_t>(dt), static_cast<std::uint8_t>(config.deviceHardware));
 		return false;
 	}
 
@@ -610,7 +610,7 @@ void DeviceManager::printDevice(device_slot_t slot, DeviceConfig& config, const 
 
 
 	appendAttrib(deviceString, DEVICE_ATTRIB_INDEX, slot, true);
-	appendAttrib(deviceString, DEVICE_ATTRIB_TYPE, dt);
+	appendAttrib(deviceString, DEVICE_ATTRIB_TYPE, static_cast<std::int8_t>(dt));
 
 	appendAttrib(deviceString, DEVICE_ATTRIB_CHAMBER, config.chamber);
 	appendAttrib(deviceString, DEVICE_ATTRIB_BEER, config.beer);
@@ -937,28 +937,28 @@ void HandleDeviceDisplay(const char* key, const char* val, void* pv)
 void UpdateDeviceState(DeviceDisplay& dd, DeviceConfig& dc, char* val)
 {
 	DeviceType dt = deviceType(dc.deviceFunction);
-	if (dt==DEVICETYPE_NONE)
+	if (dt == DeviceType::none)
 		return;
 
 	void** ppv = deviceTarget(dc);
 	if (ppv==nullptr)
 		return;
 
-	if (dd.write>=0 && dt==DEVICETYPE_SWITCH_ACTUATOR) {
+	if (dd.write>=0 && dt == DeviceType::switchActuator) {
 		// write value to a specific device. For now, only actuators are relevant targets
 		DEBUG_ONLY(logInfoInt(INFO_SETTING_ACTIVATOR_STATE, dd.write!=0));
 		((Actuator*)*ppv)->setActive(dd.write!=0);
 	}
 	else if (dd.value==1) {		// read values
-		if (dt==DEVICETYPE_SWITCH_SENSOR) {
+		if (dt == DeviceType::switchSensor) {
 			sprintf_P(val, STR_FMT_U, (unsigned int) ((SwitchSensor*)*ppv)->sense()!=0); // cheaper than itoa, because it overlaps with vsnprintf
 		}
-		else if (dt==DEVICETYPE_TEMP_SENSOR) {
+		else if (dt == DeviceType::tempSensor) {
 			ITempSensor& s = unwrapSensor(dc.deviceFunction, *ppv);
 			temperature temp = s.read();
 			tempToString(val, temp, 3, 9);
 		}
-		else if (dt==DEVICETYPE_SWITCH_ACTUATOR) {
+		else if (dt == DeviceType::switchActuator) {
 			sprintf_P(val, STR_FMT_U, (unsigned int) ((Actuator*)*ppv)->isActive()!=0);
 		}
 	}
@@ -992,7 +992,7 @@ void DeviceManager::listDevices() {
 DeviceType deviceType(DeviceFunction id) {
 	switch (id) {
 	case DEVICE_CHAMBER_DOOR:
-		return DEVICETYPE_SWITCH_SENSOR;
+		return DeviceType::switchSensor;
 
 	case DEVICE_CHAMBER_HEAT:
 	case DEVICE_CHAMBER_COOL:
@@ -1006,16 +1006,16 @@ DeviceType deviceType(DeviceFunction id) {
 #if EanbleParasiteTempControl
 	case DEVICE_PTC_COOL:
 #endif
-		return DEVICETYPE_SWITCH_ACTUATOR;
+		return DeviceType::switchActuator;
 
 	case DEVICE_CHAMBER_TEMP:
 	case DEVICE_CHAMBER_ROOM_TEMP:
 	case DEVICE_BEER_TEMP:
 	case DEVICE_BEER_TEMP2:
-		return DEVICETYPE_TEMP_SENSOR;
+		return DeviceType::tempSensor;
 
 	default:
-		return DEVICETYPE_NONE;
+		return DeviceType::none;
 	}
 }
 

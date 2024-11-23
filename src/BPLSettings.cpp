@@ -588,15 +588,17 @@ bool BPLSettings::dejsonRemoteLogging(String json)
 	logInfo->enabled=false;
 
 	JsonDocument doc;
-	auto error = deserializeJson(doc,json);
-	if(error
-		|| !doc["enabled"].is<bool>()
+	if (const auto error = deserializeJson(doc, json)) {
+		DBG_PRINTF("ERROR: %s: deserializeJson() failed: %s\n", __func__, error.c_str());
+		return false;
+	}
+	if(!doc["enabled"].is<bool>()
 		|| !doc["format"].is<const char*>()
 		|| !doc["url"].is<const char*>()
 		|| !doc["type"].is<const char*>()
 		|| !doc["method"].is<const char*>()
 		|| !doc["period"].is<const char*>()){
-		DBG_PRINTF("dejsonRemoteLogging error:%s",error.c_str());
+		DBG_PRINTF("ERROR: %s: Missing required field(s)\n", __func__);
 		return false;
 	}
 

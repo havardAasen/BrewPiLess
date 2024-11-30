@@ -51,7 +51,7 @@ void EepromManager::initializeEeprom()
 {
 	resetEeprom();
 
-	DeviceManager::setupUnconfiguredDevices();
+	DeviceManager::resetAllDevices();
 
 	// fetch the default values
 	tempControl.loadDefaultConstants();
@@ -87,7 +87,7 @@ bool EepromManager::applySettings()
 		return false;
 
 	// start from a clean state
-	DeviceManager::setupUnconfiguredDevices();
+	DeviceManager::resetAllDevices();
 
 	logDebug("Applying settings");
 

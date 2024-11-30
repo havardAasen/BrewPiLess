@@ -197,7 +197,7 @@ public:
 		return -1;
 	}
 
-	static void setupUnconfiguredDevices();
+	static void resetAllDevices();
 
 	/**
 	 * Creates and Installs a device from the given device config.

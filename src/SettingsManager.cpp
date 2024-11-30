@@ -34,7 +34,7 @@ void SettingsManager::loadSettings()
 		tempControl.loadDefaultSettings();
 		tempControl.loadDefaultConstants();
 
-		DeviceManager::setupUnconfiguredDevices();
+		DeviceManager::resetAllDevices();
 
 		logWarning(WARNING_START_IN_SAFE_MODE);
 	}

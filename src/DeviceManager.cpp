@@ -100,7 +100,7 @@ bool DeviceManager::isDefaultTempSensor(ITempSensor* sensor) {
  * Sets devices to their unconfigured states. Each device is initialized to a static no-op instance.
  * This method is idempotent, and is called each time the eeprom is reset.
  */
-void DeviceManager::setupUnconfiguredDevices()
+void DeviceManager::resetAllDevices()
 {
 	// right now, uninstall doesn't care about chamber/beer distinction.
 	// but this will need to match beer/function when multiferment is available

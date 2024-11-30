@@ -18,20 +18,19 @@
  */
 
 #include "Brewpi.h"
+#include "EepromFormat.h"
+#include "EepromManager.h"
 #include "ITempSensor.h"
+#include "PiLink.h"
 #include "Pins.h"
+#include "TempControl.h"
+#include "TempSensor.h"
+#include "TempSensorDisconnected.h"
+#include "TemperatureFormats.h"
+#include "Ticks.h"
+
 #include <algorithm>
 #include <climits>
-
-#include "TemperatureFormats.h"
-#include "TempControl.h"
-#include "PiLink.h"
-#include "TempSensor.h"
-#include "Ticks.h"
-#include "TempSensorMock.h"
-#include "EepromManager.h"
-#include "TempSensorDisconnected.h"
-#include "RotaryEncoder.h"
 
 TempControl tempControl;
 
@@ -563,6 +562,19 @@ void TempControl::loadSettings(eptr_t offset){
 void TempControl::loadDefaultConstants(){
 	memcpy_P((void*) &tempControl.cc, (void*) &tempControl.ccDefaults, sizeof(ControlConstants));
 	initFilters();
+}
+
+void TempControl::storeConstantsAndSettings()
+{
+	for (uint8_t c=0; c<EepromFormat::MAX_CHAMBERS; c++) {
+		eptr_t pv = pointerOffset(chambers)+(c*sizeof(ChamberBlock)) ;
+		storeConstants(pv+offsetof(ChamberBlock, chamberSettings.cc));
+		pv += offsetof(ChamberBlock, beer)+offsetof(BeerBlock, cs);
+		for (uint8_t b=0; b<ChamberBlock::MAX_BEERS; b++) {
+			storeSettings(pv);
+			pv += sizeof(BeerBlock);	// advance to next beer
+		}
+	}
 }
 
 void TempControl::initFilters()

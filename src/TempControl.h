@@ -138,7 +138,7 @@ class TempControl{
 	TEMP_CONTROL_METHOD void storeConstants(eptr_t offset);
 	TEMP_CONTROL_METHOD void loadDefaultConstants();
 
-	//TEMP_CONTROL_METHOD void loadSettingsAndConstants(void);
+	TEMP_CONTROL_METHOD void storeConstantsAndSettings();
 
 	TEMP_CONTROL_METHOD uint16_t timeSinceCooling();
  	TEMP_CONTROL_METHOD uint16_t timeSinceHeating();

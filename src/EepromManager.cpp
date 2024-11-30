@@ -29,8 +29,6 @@
 EepromManager eepromManager;
 EepromAccess eepromAccess;
 
-#define pointerOffset(x) offsetof(EepromFormat, x)
-
 
 bool EepromManager::hasSettings()
 {
@@ -56,18 +54,7 @@ void EepromManager::initializeEeprom()
 	// fetch the default values
 	tempControl.loadDefaultConstants();
 	tempControl.loadDefaultSettings();
-
-	// write the default constants
-	for (uint8_t c=0; c<EepromFormat::MAX_CHAMBERS; c++) {
-		eptr_t pv = pointerOffset(chambers)+(c*sizeof(ChamberBlock)) ;
-		tempControl.storeConstants(pv+offsetof(ChamberBlock, chamberSettings.cc));
-		pv += offsetof(ChamberBlock, beer)+offsetof(BeerBlock, cs);
-		for (uint8_t b=0; b<ChamberBlock::MAX_BEERS; b++) {
-//			logDeveloper(PSTR("EepromManager - saving settings for beer %d at %d"), b, (uint16_t)pv);
-			tempControl.storeSettings(pv);
-			pv += sizeof(BeerBlock);		// advance to next beer
-		}
-	}
+	tempControl.storeConstantsAndSettings();
 
 	// set the version flag - so that storeDevice will work
 	EepromAccess::writeByte(0, EEPROM_FORMAT_VERSION);

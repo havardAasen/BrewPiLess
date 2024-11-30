@@ -51,9 +51,6 @@ void EepromManager::zapEeprom()
 
 void EepromManager::initializeEeprom()
 {
-#ifdef ESP8266
-	EepromAccess::set_manual_commit(true);
-#endif
 	zapEeprom();
 
 	DeviceManager::setupUnconfiguredDevices();
@@ -81,7 +78,6 @@ void EepromManager::initializeEeprom()
 	tempControl.init();
 
 #ifdef ESP8266
-	EepromAccess::set_manual_commit(false);
 	EepromAccess::commit();
 #endif
 }

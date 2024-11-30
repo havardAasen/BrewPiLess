@@ -32,9 +32,6 @@
 class ESPEepromAccess
 {
 public:
-	// TODO - Add a constructor to set the value of manual commit somewhere other than
-//	static bool manual_commit;
-
 	static uint8_t readByte(eptr_t offset) {
 		return EEPROM.read(offset);
 	}
@@ -56,34 +53,28 @@ public:
 
 	static void writeControlSettings(eptr_t target, ControlSettings& source, uint16_t size) {
 		EEPROM.put(target, source);
-//		if (!manual_commit)
-			EEPROM.commit();
+
+		EEPROM.commit();
 //		logWarningIntString(0, size, "writeControlSettings called");
 	}
 
 	static void writeControlConstants(eptr_t target, ControlConstants& source, uint16_t size) {
 		EEPROM.put(target, source);
-//		if(!manual_commit)
-			EEPROM.commit();
+
+		EEPROM.commit();
 //		logWarningIntString(0, size, "writeControlConstants called");
 	}
 
 	static void writeDeviceDefinition(eptr_t target, const DeviceConfig& source, uint16_t size) {
 		EEPROM.put(target, source);
-//		if (!manual_commit)
-			EEPROM.commit();
+
+		EEPROM.commit();
 		logWarningIntString(0, sizeof(source), "writeDeviceDefinition called");
 	}
 
 	static void commit() {
 		EEPROM.commit();
 	}
-
-	static void set_manual_commit(const bool status) {
-//		manual_commit = status;
-	}
-
-
 };
 
 #endif

@@ -39,7 +39,7 @@ public:
 	/**
 	 * Write -1 to the entire eeprom, emulating the reset performed by avrdude.
 	 */
-	static void zapEeprom();
+	static void resetEeprom();
 
 	/**
 	 * Prepare the eeprom to accept device definitions. For RevA boards, the eeprom is populated with devices for

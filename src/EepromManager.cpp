@@ -38,20 +38,18 @@ bool EepromManager::hasSettings()
 	return (version==EEPROM_FORMAT_VERSION);
 }
 
-void EepromManager::zapEeprom()
+void EepromManager::resetEeprom()
 {
 	for (uint16_t offset=0; offset<EepromFormat::MAX_EEPROM_SIZE; offset++)
 		EepromAccess::writeByte(offset, 0xFF);
-#ifdef ESP8266
-	EepromAccess::commit();
-#endif
 
+	EepromAccess::commit();
 }
 
 
 void EepromManager::initializeEeprom()
 {
-	zapEeprom();
+	resetEeprom();
 
 	DeviceManager::setupUnconfiguredDevices();
 

@@ -1366,7 +1366,6 @@ void brewpi_setup()
 #if defined(ESP8266)
 	// We need to initialize the EEPROM on ESP8266
 	EEPROM.begin(MAX_EEPROM_SIZE_LIMIT);
-	EepromAccess::set_manual_commit(false); // TODO - Move this where it should actually belong (a class constructor)
 #endif
 
 #if BREWPI_BUZZER

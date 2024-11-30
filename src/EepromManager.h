@@ -36,10 +36,8 @@ class DeviceConfig;
 // todo - the Eeprom manager should avoid too frequent saves to the eeprom since it supports 100,000 writes.
 class EepromManager {
 public:
-	/**
-	 * Write -1 to the entire eeprom, emulating the reset performed by avrdude.
-	 */
-	static void zapEeprom();
+	/** Write -1 to the entire EEPROM, emulating the reset performed by avrdude. */
+	static void resetEeprom();
 
 	/**
 	 * Prepare the eeprom to accept device definitions. For RevA boards, the eeprom is populated with devices for

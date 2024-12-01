@@ -815,8 +815,7 @@ void greeting(const std::function<void(const char*)>& sendFunc)
 	sendFunc(profile.c_str());
 	//network status:
 
-	String nwstatus=String("W:") + WiFiSetup.status();
-	sendFunc(nwstatus.c_str());
+	WiFiSetup.status(ws);
 
 }
 
@@ -826,7 +825,6 @@ void greeting(const std::function<void(const char*)>& sendFunc)
 
 #if UseWebSocket == true
 
-AsyncWebSocket ws(WS_PATH);
 
 
 #if GreetingInMainLoop

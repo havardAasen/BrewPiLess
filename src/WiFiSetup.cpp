@@ -5,12 +5,15 @@
 #include "Config.h"
 #include "WiFiSetup.h"
 
+#include <ArduinoJson.h>
+#include <ESPAsyncWebServer.h>
 #include <algorithm>
 #include <memory>
 #include <numeric>
 #include <vector>
 
 WiFiSetupClass WiFiSetup;
+extern AsyncWebSocket ws;
 
 
 #if SerialDebug
@@ -165,23 +168,27 @@ bool WiFiSetupClass::isConnected(){
 
 void WiFiSetupClass::onConnected(){
 	if(_eventHandler){
-		_eventHandler(status().c_str());
+		//_eventHandler(status().c_str());
 	}
 }
 
-String WiFiSetupClass::status(){
-	String ret;
-	ret  = String("{\"md\":") + String(_mode) + String(",\"con\":") + String((WiFi.status() == WL_CONNECTED)? 1:0);
+void WiFiSetupClass::status(AsyncWebSocket ws){
+    JsonDocument doc;
+    JsonObject json = doc["W"].to<JsonObject>();
+    json["md"] = _mode;
+    json["con"] = (WiFi.status() == WL_CONNECTED) ? 1 : 0;
 
 	if(_mode != WIFI_AP){
-		ret += String(",\"ssid\":\"") + WiFi.SSID() 
-			 + String("\",\"ip\":\"") + WiFi.localIP().toString()
-			 + String("\",\"gw\":\"") + WiFi.gatewayIP().toString()
-			 + String("\",\"nm\":\"") + WiFi.subnetMask().toString() + String("\"");
+	    json["ssid"] = WiFi.SSID();
+            json["ip"] = WiFi.localIP().toString();
+            json["gw"] = WiFi.gatewayIP().toString();
+            json["nm"] = WiFi.subnetMask().toString();
 	}
+    const size_t len = measureJson(doc);
 
-	ret += String("}");
-	return ret;
+    AsyncWebSocketMessageBuffer* buffer = ws.makeBuffer(len);
+    serializeJson(doc, buffer->get(), len);
+    //ws.textAll(buffer);
 }
 
 bool WiFiSetupClass::stayConnected()
@@ -328,9 +335,8 @@ bool WiFiSetupClass::stayConnected()
 	} // end of connected
 
 	if(_wifiScan == WiFiScan::pending){
-		String nets=scanWifi();
+		scanWifi();
 		_wifiScan = WiFiScan::none;
-		if(_eventHandler) _eventHandler(nets.c_str());
 	}
 
 	return false;
@@ -344,17 +350,17 @@ bool WiFiSetupClass::requestScanWifi() {
 	return false;
 }
 
-String WiFiSetupClass::scanWifi() const {
-	
-	String rst="{\"list\":[";
-	
-	DBG_PRINTF("Scan Networks...\n");
+void WiFiSetupClass::scanWifi() const
+{
+	JsonDocument doc;
+	JsonObject json = doc["W"].to<JsonObject>();
+
+	DBG_PRINTF("%s: Scanning networks\n", __func__);
 	const std::uint8_t available_networks = WiFi.scanNetworks();
-    DBG_PRINTF("Scan done\n");
-    if (available_networks == 0) {
-    	DBG_PRINTF("No networks found\n");
-		rst += "]}";
-		return rst;
+	if (available_networks == 0) {
+		DBG_PRINTF("%s: No networks found\n", __func__);
+		serializeJson(doc, Serial);
+		return;
     }
 
 	std::vector<std::uint8_t> networks(available_networks);
@@ -369,20 +375,16 @@ String WiFiSetupClass::scanWifi() const {
 	std::sort(networks.begin(), networks.end(), [](const std::uint8_t a, const std::uint8_t b)
 			  { return WiFi.RSSI(a) > WiFi.RSSI(b); });
 
-	bool comma = false;
+	DBG_PRINTF("%s: Found %d unique network(s)\n", __func__, networks.size());
 	for (const auto network : networks) {
-		DBG_PRINTF("SSID: %s, RSSI: %d\n", WiFi.SSID(network).c_str(), WiFi.RSSI(network));
-		String item = String("{\"ssid\":\"") + WiFi.SSID(network) +
-					  String("\",\"rssi\":") + WiFi.RSSI(network) +
-					  String(",\"enc\":") + String((WiFi.encryptionType(network) != ENC_TYPE_NONE) ? "1" : "0") + String("}");
-		if (comma)
-			rst += ",";
-		else
-			comma = true;
-		rst += item;
+		auto list = json["list"].add<JsonObject>();
+		list["ssid"] = WiFi.SSID(network);
+		list["rssi"] = WiFi.RSSI(network);
+		list["enc"] = WiFi.encryptionType(network) != ENC_TYPE_NONE ? 1 : 0;
 	}
 
-	rst += "]}";
-	DBG_PRINTF("scan result:%s\n",rst.c_str());
-	return rst;
+	const size_t len = measureJson(doc);
+	AsyncWebSocketMessageBuffer* buffer = ws.makeBuffer(len);
+	serializeJson(doc, buffer->get(), len);
+	ws.textAll(buffer);
 }

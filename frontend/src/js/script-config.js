@@ -120,20 +120,16 @@ var Net = {
         this.setupEvent();
         this.hide();
     },
-    nwevent: function(data) {
-        var me = this;
-        //console.log("ws:" + data);
-        if (typeof data["list"] != "undefined") {
-            me.list(data.list);
-        } else if (typeof data["ssid"] != "undefined") {
-            if (data.ssid != "") {
-                Q("#connnected-ssid").innerHTML = data.ssid;
-            }
-            if (typeof data["ip"] != "undefined")
-                if (data.ip != "") {
-                    Q("#sta-ip").innerHTML = data.ip;
+    nwevent: function(json) {
+        //console.log("ws:" + json);
 
-                }
+        if (json.list) {
+            this.list(json.list);
+        } else if (json.ssid) {
+            Q("#connnected-ssid").innerHTML = json.ssid;
+        }
+        if (json.ip) {
+            Q("#sta-ip").innerHTML = json.ip;
         }
     },
     rssi: function(x) {

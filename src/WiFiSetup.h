@@ -1,6 +1,7 @@
 #ifndef WIFI_SETUP_H
 #define WIFI_SETUP_H
 
+#include <AsyncWebSocket.h>
 #include <DNSServer.h>
 #include <utility>
 
@@ -40,14 +41,14 @@ public:
 	void setSwitchToApWhenDisconnected(bool toAp){  _switchToAp= toAp; }
 	void setAutoReconnect(bool reconnect){ _autoReconnect=reconnect; }
 
-	[[nodiscard]] String scanWifi() const;
+	void scanWifi() const;
 	bool requestScanWifi();
 	bool connect(char const *ssid, const char *passwd=nullptr, const IPAddress& ip=0,
                      const IPAddress& gw=0, const IPAddress& nm=0, const IPAddress& dns=0);
 	bool disconnect();
 
 	bool isConnected();
-	String status();
+	void status(AsyncWebSocket);
 private:
 	WiFiMode _mode{};
 	WiFiState _wifiState{WiFiState::connected};

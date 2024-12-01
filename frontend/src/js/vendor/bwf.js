@@ -35,6 +35,15 @@ var BWF = {
             this.raw(msg);
             return;
         }
+        try {
+            const jsonData = JSON.parse(msg);
+            const key = Object.keys(jsonData)[0];
+            if (this.handlers[key]) {
+                this.handlers[key](jsonData[key]);
+                return;
+            }
+        } catch (e) {}
+
         //console.log("rcv:" + msg);
         eval("m={" + msg + "}");
         //	console.log("json:"+m);

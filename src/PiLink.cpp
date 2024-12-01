@@ -369,6 +369,8 @@ void PiLink::receive(){
 #endif
 
 		case 'E': // initialize eeprom
+			EepromManager::resetEeprom();
+			DeviceManager::resetAllDevices();
 			EepromManager::initializeEeprom();
 			logInfo(INFO_EEPROM_INITIALIZED);
 			SettingsManager::loadSettings();

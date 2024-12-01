@@ -47,24 +47,16 @@ void EepromManager::resetEeprom()
 
 void EepromManager::initializeEeprom()
 {
-	resetEeprom();
-
-	DeviceManager::resetAllDevices();
-
-	// fetch the default values
 	tempControl.loadDefaultConstants();
 	tempControl.loadDefaultSettings();
 	tempControl.storeConstantsAndSettings();
 
 	// set the version flag - so that storeDevice will work
 	EepromAccess::writeByte(0, EEPROM_FORMAT_VERSION);
+	EepromAccess::commit();
 
 	// set state to startup
 	tempControl.init();
-
-#ifdef ESP8266
-	EepromAccess::commit();
-#endif
 }
 
 
@@ -73,37 +65,34 @@ bool EepromManager::applySettings()
 	if (!hasSettings())
 		return false;
 
-	// start from a clean state
-	DeviceManager::resetAllDevices();
-
 	logDebug("Applying settings");
 
-	// load the one chamber and one beer for now
-	eptr_t pv = pointerOffset(chambers);
-	tempControl.loadConstants(pv+offsetof(ChamberBlock, chamberSettings.cc));
-	tempControl.loadSettings(pv+offsetof(ChamberBlock, beer[0].cs));
+	storeTempConstantsAndSettings();
 
 	logDebug("Applied settings");
 
+	applyDevices();
 
-	DeviceConfig deviceConfig;
-	for (uint8_t index = 0; fetchDevice(deviceConfig, index); index++)
-	{
-		if (DeviceManager::isDeviceValid(deviceConfig, deviceConfig, index))
-			DeviceManager::installDevice(deviceConfig);
-		else {
-			clear((uint8_t*)&deviceConfig, sizeof(deviceConfig));
-			EepromManager::storeDevice(deviceConfig, index);
-		}
-	}
 	return true;
+}
+
+void EepromManager::applyDevices()
+{
+    DeviceConfig deviceConfig;
+    for (uint8_t index = 0; fetchDevice(deviceConfig, index); index++)
+    {
+        if (DeviceManager::isDeviceValid(deviceConfig, deviceConfig, index))
+            DeviceManager::installDevice(deviceConfig);
+        else {
+            clear((uint8_t*)&deviceConfig, sizeof(deviceConfig));
+            storeDevice(deviceConfig, index);
+        }
+    }
 }
 
 void EepromManager::storeTempConstantsAndSettings()
 {
-	uint8_t chamber = 0;
 	eptr_t pv = pointerOffset(chambers);
-	pv += sizeof(ChamberBlock)*chamber;
 	tempControl.storeConstants(pv+offsetof(ChamberBlock, chamberSettings.cc));
 
 	storeTempSettings();
@@ -111,9 +100,7 @@ void EepromManager::storeTempConstantsAndSettings()
 
 void EepromManager::storeTempSettings()
 {
-	uint8_t chamber = 0;
 	eptr_t pv = pointerOffset(chambers);
-	pv += sizeof(ChamberBlock)*chamber;
 	// for now assume just one beer.
 	tempControl.storeSettings(pv+offsetof(ChamberBlock, beer[0].cs));
 }

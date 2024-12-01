@@ -69,7 +69,7 @@ public:
 		EEPROM.put(target, source);
 
 		EEPROM.commit();
-		logWarningIntString(0, sizeof(source), "writeDeviceDefinition called");
+		logInfoIntString(0, sizeof(source), "writeDeviceDefinition called");
 	}
 
 	static void commit() {

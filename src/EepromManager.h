@@ -58,6 +58,8 @@ public:
 	 */
 	static bool applySettings();
 
+	static void applyDevices();
+
 	static void dumpEeprom(Print& stream, uint16_t offset);
 
 	/**

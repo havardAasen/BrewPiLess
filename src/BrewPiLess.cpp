@@ -1458,6 +1458,7 @@ void brewpi_setup()
 
 	logDebug("started");
 	tempControl.init();
+	DeviceManager::resetAllDevices();
 	SettingsManager::loadSettings();
 
 #if BREWPI_SIMULATE

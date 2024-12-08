@@ -90,51 +90,50 @@ void MqttRemoteControl::_reportData(){
 
     char data[BUFFERSIZE];
 
-    uint16_t lastID=0;
+    uint16_t packetID=0;
     _publishing = false; // avoid race codition
 
     if(_reportFormat == MqttReportJson){
 
-        int len = nonNullJson(data,BUFFERSIZE);
-        lastID=_client.publish(_reportBasePath,DefaultLogginQoS,true,data,len);
+        const size_t len = nonNullJson(data,BUFFERSIZE);
+        packetID=_client.publish(_reportBasePath,DefaultLogginQoS,true,data,len);
         DBG_PRINTF("Publish Json:%s\n",data);
     }else if(_reportFormat == MqttReportIndividual){
-    	
         uint8_t state, mode;
 	    float beerSet,fridgeSet;
 	    float beerTemp,fridgeTemp,roomTemp;
 
 	    brewPi.getAllStatus(&state,&mode,& beerTemp,& beerSet,& fridgeTemp,& fridgeSet,& roomTemp);
 
-	    if(IS_FLOAT_TEMP_VALID(beerTemp)) lastID=_publish(KeyBeerTemp, beerTemp,1);
-	    if(IS_FLOAT_TEMP_VALID(beerSet)) lastID=_publish(KeyBeerSet, beerSet,1);
-	    if(IS_FLOAT_TEMP_VALID(fridgeTemp)) lastID=_publish(KeyFridgeTemp,fridgeTemp,1);
-	    if(IS_FLOAT_TEMP_VALID(fridgeSet)) lastID=_publish(KeyFridgeSet, fridgeSet,1);
-	    if(IS_FLOAT_TEMP_VALID(roomTemp)) lastID=_publish(KeyRoomTemp, roomTemp,1);
+	    if(IS_FLOAT_TEMP_VALID(beerTemp)) _publish(KeyBeerTemp, beerTemp,1);
+	    if(IS_FLOAT_TEMP_VALID(beerSet)) _publish(KeyBeerSet, beerSet,1);
+	    if(IS_FLOAT_TEMP_VALID(fridgeTemp)) _publish(KeyFridgeTemp,fridgeTemp,1);
+	    if(IS_FLOAT_TEMP_VALID(fridgeSet)) _publish(KeyFridgeSet, fridgeSet,1);
+	    if(IS_FLOAT_TEMP_VALID(roomTemp)) _publish(KeyRoomTemp, roomTemp,1);
 
-        lastID=_publish(KeyMode,(char)mode);
+        packetID=_publish(KeyMode,(char)mode);
     	#if SupportPressureTransducer
-	        if(PressureMonitor.isCurrentPsiValid()) lastID=_publish(KeyPressure,PressureMonitor.currentPsi(),1);
+	        if(PressureMonitor.isCurrentPsiValid()) packetID=_publish(KeyPressure,PressureMonitor.currentPsi(),1);
 	    #endif
     	float sg=externalData.gravity();
 	    if(IsGravityValid(sg)){
-		    lastID=_publish(KeyGravity, sg,5);
-		    lastID=_publish(KeyPlato, externalData.plato(),1);
+		    _publish(KeyGravity, sg,5);
+		    packetID=_publish(KeyPlato, externalData.plato(),1);
 	    }
 
     	// iSpindel data
 	    float vol=externalData.deviceVoltage();
 	    if(IsVoltageValid(vol)){
-		    lastID=_publish(KeyVoltage, vol,2);
+		    _publish(KeyVoltage, vol,2);
 		    float at=externalData.auxTemp();
-		    if(IS_FLOAT_TEMP_VALID(at)) lastID=_publish(KeyAuxTemp, at,1);
+		    if(IS_FLOAT_TEMP_VALID(at)) _publish(KeyAuxTemp, at,1);
 		    float tilt=externalData.tiltValue();
-		    lastID=_publish(KeyTilt,tilt,2);
+		    packetID=_publish(KeyTilt,tilt,2);
 	    }
     }
-    _lastPacketId = lastID;
+    _lastPacketId = packetID;
     _publishing=true;
-     DBG_PRINTF("Mqtt last packet id:%d\n",lastID);
+     DBG_PRINTF("Mqtt last packet ID: %d\n", packetID);
 }
 
 bool MqttRemoteControl::loop(){

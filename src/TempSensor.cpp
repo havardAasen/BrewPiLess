@@ -52,11 +52,9 @@ bool TempSensor::isConnected() const
 #if FridgeSensorFallBack
     if(_useBackupSensor && _backupSensor)
         return _backupSensor->isConnected();
+#endif
 
     return _sensor->isConnected();
-#else
-    return _sensor->isConnected();
-#endif
 }
 
 void TempSensor::update()

@@ -80,8 +80,6 @@ extern "C" {
 
 //WebSocket seems to be unstable, at least on iPhone.
 //Go back to ServerSide Event.
-#define UseWebSocket true
-#define UseServerSideEvent false
 #define ResponseAppleCNA true
 #define CaptivePortalTimeout 180
 
@@ -90,7 +88,6 @@ extern "C" {
 /**************************************************************************************/
 
 #define WS_PATH 		"/ws"
-#define SSE_PATH 		"/getline"
 
 #define POLLING_PATH 	"/getline_p"
 #define PUTLINE_PATH	"/putline"
@@ -178,9 +175,6 @@ DataLogger dataLogger;
 #endif
 
 
-#if UseServerSideEvent == true
-AsyncEventSource sse(SSE_PATH);
-#endif
 
 extern const uint8_t* getEmbeddedFile(const char* filename,bool &gzip, unsigned int &size);
 
@@ -356,25 +350,6 @@ public:
 
 	void handleRequest(AsyncWebServerRequest *request) override{
 		SystemConfiguration *syscfg=theSettings.systemConfiguration();
-
-		#if UseServerSideEvent == true
-	 	if(request->method() == HTTP_GET && request->url() == POLLING_PATH) {
-	 		char *line=brewPi.getLastLine();
-	 		if(line[0]!=0) request->send(200, "text/plain", line);
-	 		else request->send(200, "text/plain;", "");
-	 	}
-		 else if(request->method() == HTTP_POST && request->url() == PUTLINE_PATH){
-	 		String data=request->getParam("data", true, false)->value();
-	 		//DBG_PRINTF("putline:%s\n",data.c_str());
-
-			if(data.startsWith("j") && !request->authenticate((const char*)syscfg->username,(const char*) syscfg->password))
-		        return request->requestAuthentication();
-
-	 		brewPi.putLine(data.c_str());
-	 		request->send(200,"application/json","{}");
-	 	}
-		else
-		#endif
 
 		#if SupportMqttRemoteControl
 		if(request->method() == HTTP_GET && request->url() == MQTT_PATH){
@@ -642,9 +617,7 @@ public:
 	bool canHandle(AsyncWebServerRequest *request) override{
 	 	if(request->method() == HTTP_GET){
 	 		if( request->url() == CONFIG_PATH || request->url() == TIME_PATH
-			#if UseServerSideEvent == true
-			|| request->url() == POLLING_PATH 
-			#endif
+
 			 || request->url() == RESETWIFI_PATH  
 			 || request->url() == GETSTATUS_PATH
 			 || request->url() == BEER_PROFILE_PATH
@@ -674,11 +647,7 @@ public:
 	 	}else if(request->method() == HTTP_DELETE && request->url() == DELETE_PATH){
 				return true;
 	 	}else if(request->method() == HTTP_POST){
-	 		if(
-				#if UseServerSideEvent == true
-				 request->url() == PUTLINE_PATH || 
-				#endif
-			 request->url() == CONFIG_PATH
+	 		if(request->url() == CONFIG_PATH
 	 			|| request->url() ==  FPUTS_PATH || request->url() == FLIST_PATH
 	 			|| request->url() == TIME_PATH
 				|| request->url() == BEER_PROFILE_PATH
@@ -822,10 +791,6 @@ void greeting(const std::function<void(const char*)>& sendFunc)
 
 #define GreetingInMainLoop 1
 
-
-
-#if UseWebSocket == true
-
 AsyncWebSocket ws(WS_PATH);
 
 
@@ -900,19 +865,11 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
       	}
     }
 }
-#endif //#if UseWebSocket == true
 
 void stringAvailable(const char *str)
 {
 	//DBG_PRINTF("BroadCast:%s\n",str);
-
-#if UseWebSocket == true
 	ws.textAll(str,strlen(str));
-#endif
-
-#if UseServerSideEvent == true
-	sse.send(str);
-#endif
 }
 
 void notifyLogStatus()
@@ -994,48 +951,10 @@ void reportRssi()
 #endif
 }
 
-
-#if UseServerSideEvent
-#if GreetingInMainLoop 
-
-AsyncEventSourceClient *_lastClient=nullptr;
-
-void sayHelloSSE()
-{
-	if(! _lastClient) return;
-
-	DBG_PRINTF("SSE Connect\n");
-	greeting([=](const char* msg){
-		_lastClient->send(msg);
-	});
-	_lastClient = nullptr;
-}
-
-void onClientConnected(AsyncEventSourceClient *client)
-{
-	_lastClient = client;
-}
-
-#else
-void onClientConnected(AsyncEventSourceClient *client){
-	DBG_PRINTF("SSE Connect\n");
-	greeting([=](const char* msg){
-		client->send(msg);
-	});
-}
-#endif
-#endif
-
-#if GreetingInMainLoop 
+#if GreetingInMainLoop
 void sayHello()
 {
-#if UseServerSideEvent
-	sayHelloSSE();
-#endif 
-
-#if UseWebSocket == true
 	sayHelloWS();
-#endif
 }
 #endif 
 
@@ -1635,22 +1554,13 @@ void setup(void){
 	ESPUpdateServer_setup(syscfg->username,syscfg->password);
 #endif
 
-	//3.1 Normal serving pages
-	//3.1.1 status report through SSE
-
 #if ResponseAppleCNA == true
 	webServer->addHandler(&appleCNAHandler);
 #endif
 
-#if UseWebSocket == true
 	ws.onEvent(onWsEvent);
 	webServer->addHandler(&ws);
-#endif
 
-#if UseServerSideEvent == true
-	sse.onConnect(onClientConnected);
-	webServer->addHandler(&sse);
-#endif
 
 	webServer->addHandler(&brewPiWebHandler);
 

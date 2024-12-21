@@ -698,7 +698,7 @@ void PiLink::sendJsonValues(char responseType, const JsonOutput* /*PROGMEM*/ jso
 // Send control constants as JSON string. Might contain spaces between minus sign and number. Python will have to strip these
 void PiLink::sendControlConstants(){
 	jsonOutputBase = (uint8_t*)&tempControl.cc;
-	sendJsonValues('C', jsonOutputCCMap, sizeof(jsonOutputCCMap)/sizeof(jsonOutputCCMap[0]));
+	sendJsonValues('C', jsonOutputCCMap, std::size(jsonOutputCCMap));
 }
 
 const PiLink::JsonOutput PiLink::jsonOutputCVMap[] PROGMEM = {

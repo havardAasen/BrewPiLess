@@ -593,11 +593,11 @@ void PiLink::sendControlSettings(){
 uint8_t* jsonOutputBase;
 
 void PiLink::jsonOutputUint8(const char* key, uint8_t offset) {
-	PiLink::sendJsonPair(key, *(jsonOutputBase+offset));
+	sendJsonPair(key, *(jsonOutputBase+offset));
 }
 
 void PiLink::jsonOutputUint16(const char* key, uint8_t offset) {
-	PiLink::sendJsonPair(key, *((uint16_t*) (jsonOutputBase+offset)));
+	sendJsonPair(key, *((uint16_t*) (jsonOutputBase+offset)));
 }
 
 /**
@@ -606,21 +606,21 @@ void PiLink::jsonOutputUint16(const char* key, uint8_t offset) {
  */
 void PiLink::jsonOutputTempToString(const char* key,  uint8_t offset) {
 	char buf[12];
-	PiLink::sendJsonPair(key, tempToString(buf, *((temperature*)(jsonOutputBase+offset)), 1, 12));
+	sendJsonPair(key, tempToString(buf, *((temperature*)(jsonOutputBase+offset)), 1, 12));
 }
 
 void PiLink::jsonOutputFixedPointToString(const char* key, uint8_t offset) {
 	char buf[12];
-	PiLink::sendJsonPair(key, fixedPointToString(buf, *((temperature*)(jsonOutputBase+offset)), 3, 12));
+	sendJsonPair(key, fixedPointToString(buf, *((temperature*)(jsonOutputBase+offset)), 3, 12));
 }
 
 void PiLink::jsonOutputTempDiffToString(const char* key, uint8_t offset) {
 	char buf[12];
-	PiLink::sendJsonPair(key, tempDiffToString(buf, *((temperature*)(jsonOutputBase+offset)), 3, 12));
+	sendJsonPair(key, tempDiffToString(buf, *((temperature*)(jsonOutputBase+offset)), 3, 12));
 }
 
 void PiLink::jsonOutputChar(const char* key, uint8_t offset) {
-	PiLink::sendJsonPair(key, *((char*)(jsonOutputBase+offset)));
+	sendJsonPair(key, *((char*)(jsonOutputBase+offset)));
 }
 
 typedef void (*JsonOutputCCHandler)(const char* key, uint8_t offset);
@@ -635,12 +635,12 @@ enum JsonOutputIndex {
 };
 
 const PiLink::JsonOutputHandler PiLink::JsonOutputHandlers[] = {
-	PiLink::jsonOutputUint8,
-	PiLink::jsonOutputTempToString,
-	PiLink::jsonOutputFixedPointToString,
-	PiLink::jsonOutputTempDiffToString,
-	PiLink::jsonOutputChar,
-	PiLink::jsonOutputUint16,
+	jsonOutputUint8,
+	jsonOutputTempToString,
+	jsonOutputFixedPointToString,
+	jsonOutputTempDiffToString,
+	jsonOutputChar,
+	jsonOutputUint16,
 };
 
 #define JSON_OUTPUT_CC_MAP(name, fn) { JSONKEY_ ## name,  offsetof(ControlConstants, name), fn }

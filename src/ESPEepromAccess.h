@@ -24,7 +24,6 @@
 #endif
 
 #include <EEPROM.h>
-#include "Logger.h" // Remove this once done
 #include "EepromStructs.h"
 
 
@@ -55,21 +54,18 @@ public:
 		EEPROM.put(target, source);
 
 		EEPROM.commit();
-//		logWarningIntString(0, size, "writeControlSettings called");
 	}
 
 	static void writeControlConstants(eptr_t target, ControlConstants& source, uint16_t size) {
 		EEPROM.put(target, source);
 
 		EEPROM.commit();
-//		logWarningIntString(0, size, "writeControlConstants called");
 	}
 
 	static void writeDeviceDefinition(eptr_t target, const DeviceConfig& source, uint16_t size) {
 		EEPROM.put(target, source);
 
 		EEPROM.commit();
-		logWarningIntString(0, sizeof(source), "writeDeviceDefinition called");
 	}
 
 	static void commit() {

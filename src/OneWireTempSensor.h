@@ -82,7 +82,7 @@ public:
 	DeviceAddress sensorAddress{};
 
 	fixed4_4 calibrationOffset;
-	bool connected{true}; // assume connected. Transition from connected to disconnected prints a message.
+	bool connected{};
 
 };
 

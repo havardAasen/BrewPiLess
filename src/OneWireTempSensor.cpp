@@ -33,12 +33,8 @@ OneWireTempSensor::~OneWireTempSensor(){
 	delete sensor;
 };
 
-bool OneWireTempSensor::init(){
-
-	// save address and pinNr for log messages
-	char addressString[17];
-	printBytes(sensorAddress, 8, addressString);
-
+bool OneWireTempSensor::init()
+{
 	DEBUG_ONLY(uint8_t pinNr = oneWirePin);
 
 	bool success = false;
@@ -46,6 +42,9 @@ bool OneWireTempSensor::init(){
 	if (sensor==nullptr) {
 		sensor = new DallasTemperature(oneWire);
 		if (sensor==nullptr) {
+			char addressString[17];
+			printBytes(sensorAddress, 8, addressString);
+
 			logErrorString(ERROR_SRAM_SENSOR, addressString);
 		}
 	}

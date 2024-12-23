@@ -33,12 +33,6 @@ OneWireTempSensor::~OneWireTempSensor(){
 	delete sensor;
 };
 
-/**
- * Initializes the temperature sensor.
- * This method is called when the sensor is first created and also any time the sensor reports it's disconnected.
- * If the result is TEMP_SENSOR_DISCONNECTED then subsequent calls to read() will also return TEMP_SENSOR_DISCONNECTED.
- * Clients should attempt to re-initialize the sensor by calling init() again.
- */
 bool OneWireTempSensor::init(){
 
 	// save address and pinNr for log messages

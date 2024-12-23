@@ -35,11 +35,12 @@ class OneWire;
 class OneWireTempSensor : public ITempSensor {
 public:
 	/**
-	 * Constructs a new onewire temp sensor.
-	 * /param bus	The onewire bus this sensor is on.
-	 * /param address	The onewire address for this sensor. If all bytes are 0 in the address, the first temp sensor
-	 *    on the bus is used.
-	 * /param calibration	A temperature value that is added to all readings. This can be used to calibrate the sensor.
+	 * @brief Constructs a new OneWire temperature sensor.
+	 * @param bus The onewire bus this sensor is on.
+	 * @param address The onewire address for this sensor. If all bytes are 0 in the address,
+	 *                the first temp sensor on the bus is used.
+	 * @param calibrationOffset A temperature value that is added to all readings. This can be
+	 *                          used to calibrate the sensor.
 	 */
 	OneWireTempSensor(OneWire* bus, DeviceAddress address, fixed4_4 calibrationOffset)
 	: oneWire(bus) {
@@ -53,6 +54,14 @@ public:
 		return connected;
 	}
 
+	/**
+	 * @brief Initializes the temperature sensor.
+	 *
+	 * This method is called when the sensor is first created and also any time the sensor reports
+	 * it's disconnected. If the result is @ref TEMP_SENSOR_DISCONNECTED then subsequent calls to
+	 * read() will also return @ref TEMP_SENSOR_DISCONNECTED. Clients should attempt to
+	 * re-initialize the sensor by calling init() again.
+	 */
 	bool init() override;
 	[[nodiscard]] temperature read() override;
 
@@ -65,11 +74,11 @@ public:
 		wait.millis(750);
 	}
 
-
 	/**
-	 * Reads the temperature. If successful, constrains the temp to the range of the temperature type and
-	 * updates lastRequestTime. On successful, leaves lastRequestTime alone and returns DEVICE_DISCONNECTED.
-	 */
+	* @brief Read the temperature and constrain it to a specific range.
+	* @return Temperature in the specified range, or @ref TEMP_SENSOR_DISCONNECTED if the sensor
+	*         is not connected.
+	*/
 	temperature readAndConstrainTemp();
 
 	OneWire * oneWire;

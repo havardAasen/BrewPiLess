@@ -29,6 +29,13 @@
 #include <algorithm>
 #include <DallasTemperature.h>
 
+OneWireTempSensor::OneWireTempSensor(OneWire* bus, DeviceAddress address, const fixed4_4 calibrationOffset)
+: oneWire(bus)
+, calibrationOffset(calibrationOffset)
+{
+	memcpy(sensorAddress, address, sizeof(DeviceAddress));
+};
+
 OneWireTempSensor::~OneWireTempSensor(){
 	delete sensor;
 };

@@ -42,11 +42,7 @@ public:
 	 * @param calibrationOffset A temperature value that is added to all readings. This can be
 	 *                          used to calibrate the sensor.
 	 */
-	OneWireTempSensor(OneWire* bus, DeviceAddress address, fixed4_4 calibrationOffset)
-	: oneWire(bus) {
-		memcpy(sensorAddress, address, sizeof(DeviceAddress));
-		this->calibrationOffset = calibrationOffset;
-	};
+	OneWireTempSensor(OneWire* bus, DeviceAddress address, fixed4_4 calibrationOffset);
 
 	~OneWireTempSensor() override;
 

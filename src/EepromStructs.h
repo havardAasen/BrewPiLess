@@ -1,6 +1,8 @@
 #ifndef EEPROM_STRUCTS_H
 #define EEPROM_STRUCTS_H
 
+#include "TemperatureFormats.h"
+
 // Forward declare type from DallasTemperature.h
 using DeviceAddress = uint8_t[8];
 

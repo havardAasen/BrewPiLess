@@ -37,19 +37,19 @@ bool OneWireTempSensor::init()
 {
 	DEBUG_ONLY(uint8_t pinNr = oneWirePin);
 
-	bool success = false;
-
 	if (sensor==nullptr) {
-		sensor = new DallasTemperature(oneWire);
+		sensor = new(std::nothrow) DallasTemperature(oneWire);
 		if (sensor==nullptr) {
 			char addressString[17];
 			printBytes(sensorAddress, 8, addressString);
 
 			logErrorString(ERROR_SRAM_SENSOR, addressString);
+			return false;
 		}
 	}
 
 	logDebug("init onewire sensor");
+	bool success = false;
 	// This quickly tests if the sensor is connected and initializes the reset detection.
 	// During the main TempControl loop, we don't want to spend many seconds
 	// scanning each sensor since this brings things to a halt.

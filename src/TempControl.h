@@ -85,18 +85,18 @@ struct ControlVariables{
 #define MODE_TEST 't'
 
 
-enum states{
-	IDLE,						// 0
-	STATE_OFF,					// 1
-	DOOR_OPEN,					// 2 used by the Display only
-	HEATING,					// 3
-	COOLING,					// 4
-	WAITING_TO_COOL,			// 5
-	WAITING_TO_HEAT,			// 6
-	WAITING_FOR_PEAK_DETECT,	// 7
-	COOLING_MIN_TIME,			// 8
-	HEATING_MIN_TIME,			// 9
-	NUM_STATES
+enum State : uint8_t {
+	idle,
+	state_off,
+	door_open,
+	heating,
+	cooling,
+	waiting_to_cool,
+	waiting_to_heat,
+	waiting_for_peak_detect,
+	cooling_min_time,
+	heating_min_time,
+	num_states
 };
 
 #define TC_STATE_MASK 0x7;	// 3 bits
@@ -161,7 +161,7 @@ class TempControl{
 		return cs.mode;
 	}
 
-	TEMP_CONTROL_METHOD unsigned char getState(){
+	TEMP_CONTROL_METHOD State getState(){
 		return state;
 	}
 
@@ -193,8 +193,8 @@ class TempControl{
 
 	TEMP_CONTROL_METHOD bool isDoorOpen() { return doorOpen; }
 
-	TEMP_CONTROL_METHOD unsigned char getDisplayState() {
-		return isDoorOpen() ? DOOR_OPEN : getState();
+	TEMP_CONTROL_METHOD State getDisplayState() {
+		return isDoorOpen() ? door_open : getState();
 	}
 
 	private:
@@ -235,7 +235,7 @@ class TempControl{
 
 
 	// State variables
-	TEMP_CONTROL_FIELD uint8_t state;
+	TEMP_CONTROL_FIELD State state;
 	TEMP_CONTROL_FIELD bool doPosPeakDetect;
 	TEMP_CONTROL_FIELD bool doNegPeakDetect;
 	TEMP_CONTROL_FIELD bool doorOpen;

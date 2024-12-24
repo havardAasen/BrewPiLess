@@ -193,48 +193,48 @@ void LcdDisplay::printMode(){
 // print the current state on the last line of the lcd
 void LcdDisplay::printState(){
 	uint16_t time = std::numeric_limits<std::uint16_t>::max();
-	uint8_t state = tempControl.getDisplayState();
+	const State state = tempControl.getDisplayState();
 	if(state != stateOnDisplay){ //only print static text when state has changed
 		stateOnDisplay = state;
 		// Reprint state and clear rest of the line
 		const char * part1 = STR_empty_string;
 		const char * part2 = STR_empty_string;
 		switch (state){
-			case IDLE:
+			case idle:
 				part1 = PSTR("Idl");
 				part2 = STR_ing_for;
 				break;
-			case WAITING_TO_COOL:
+			case waiting_to_cool:
 				part1 = STR_Wait_to_;
 				part2 = STR_Cool;
 				break;
-			case WAITING_TO_HEAT:
+			case waiting_to_heat:
 				part1 = STR_Wait_to_;
 				part2 = STR_Heat;
 				break;
-			case WAITING_FOR_PEAK_DETECT:
+			case waiting_for_peak_detect:
 				part1 = PSTR("Waiting for peak");
 				break;
-			case COOLING:
+			case cooling:
 				part1 = STR_Cool;
 				part2 = STR_ing_for;
 				break;
-			case HEATING:
+			case heating:
 				part1 = STR_Heat;
 				part2 = STR_ing_for;
 				break;
-			case COOLING_MIN_TIME:
+			case cooling_min_time:
 				part1 = STR_Cool;
 				part2 = STR__time_left;
 				break;
-			case HEATING_MIN_TIME:
+			case heating_min_time:
 				part1 = STR_Heat;
 				part2 = STR__time_left;
 				break;
-			case DOOR_OPEN:
+			case door_open:
 				part1 = PSTR("Door open");
 				break;
-			case STATE_OFF:
+			case state_off:
 				part1 = PSTR("Temp. control OFF");
 				break;
 			default:
@@ -246,13 +246,13 @@ void LcdDisplay::printState(){
 		lcd.printSpacesToRestOfLine();
 	}
 	uint16_t sinceIdleTime = tempControl.timeSinceIdle();
-	if(state==IDLE){
+	if(state==idle){
 		time = 	min(tempControl.timeSinceCooling(), tempControl.timeSinceHeating());
 	}
-	else if(state==COOLING || state==HEATING){
+	else if(state==cooling || state==heating){
 		time = sinceIdleTime;
 	}
-	else if(state==COOLING_MIN_TIME){
+	else if(state==cooling_min_time){
 		#if SettableMinimumCoolTime
 		time =(tempControl.cc.minCoolTime > sinceIdleTime)? (tempControl.cc.minCoolTime -sinceIdleTime):0;
 		#else
@@ -260,14 +260,14 @@ void LcdDisplay::printState(){
 		#endif
 	}
 
-	else if(state==HEATING_MIN_TIME){
+	else if(state==heating_min_time){
 		#if SettableMinimumCoolTime
 		time = (tempControl.cc.minHeatTime > sinceIdleTime)? (tempControl.cc.minHeatTime-sinceIdleTime):0;
 		#else
 		time = MIN_HEAT_ON_TIME-sinceIdleTime;
 		#endif
 	}
-	else if(state == WAITING_TO_COOL || state == WAITING_TO_HEAT){
+	else if(state == waiting_to_cool || state == waiting_to_heat){
 		time = tempControl.getWaitTime();
 	}
 	if(time != std::numeric_limits<std::uint16_t>::max()){

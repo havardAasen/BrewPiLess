@@ -48,12 +48,13 @@ public:
 			return TEMP_SENSOR_DISCONNECTED;
 
 		switch (tempControl.getState()) {
-			case COOLING:
+			case cooling:
 				_temperature -= _delta;
 				break;
-			case HEATING:
+			case heating:
 				_temperature += _delta;
 				break;
+			default:;
 		}
 
 		return _temperature;

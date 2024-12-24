@@ -3,12 +3,14 @@
 
 #include "TemperatureFormats.h"
 
+enum Mode : uint8_t;
+
 // Forward declare type from DallasTemperature.h
 using DeviceAddress = uint8_t[8];
 
 // These structs were moved from TempControl.h
 struct ControlSettings {
-	char mode;
+	Mode mode;
 	temperature beerSetting;
 	temperature fridgeSetting;
 	temperature heatEstimator; // updated automatically by self learning algorithm

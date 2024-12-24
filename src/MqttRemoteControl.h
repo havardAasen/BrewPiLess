@@ -8,12 +8,7 @@
 #include <BPLSettings.h>
 
 #include "Config.h"
-
-#define InvalidMode 'x'
-#define ModeOff 'o'
-#define ModeFridgeConst 'f'
-#define ModeBeerConst 'b'
-#define ModeBeerProfile 'p'
+#include "TempControl.h"
 
 #define MaxSettingLength 31
 
@@ -42,7 +37,7 @@ protected:
 
     bool _reconnecting{};
     bool _reloadConfig{};
-    char _lvMode{InvalidMode};
+    Mode _lvMode{off};
     char _lvBeerSet[MaxSettingLength+1]{};
     char _lvFridgeSet[MaxSettingLength+1]{};
 

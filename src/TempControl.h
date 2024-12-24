@@ -78,11 +78,13 @@ struct ControlVariables{
 #define EEPROM_CONTROL_SETTINGS_ADDRESS (EEPROM_TC_SETTINGS_BASE_ADDRESS+sizeof(uint8_t))
 #define EEPROM_CONTROL_CONSTANTS_ADDRESS (EEPROM_CONTROL_SETTINGS_ADDRESS+sizeof(ControlSettings))
 
-#define	MODE_FRIDGE_CONSTANT 'f'
-#define MODE_BEER_CONSTANT 'b'
-#define MODE_BEER_PROFILE 'p'
-#define MODE_OFF 'o'
-#define MODE_TEST 't'
+enum Mode : uint8_t {
+	fridge_constant = 'f',
+	beer_constant = 'b',
+	beer_profile = 'p',
+	off = 'o',
+	test = 't'
+};
 
 
 enum State : uint8_t {
@@ -156,8 +158,8 @@ class TempControl{
 		return ambientSensor->read();
 	}
 
-	TEMP_CONTROL_METHOD void setMode(char newMode, bool force=false);
-	TEMP_CONTROL_METHOD char getMode() {
+	TEMP_CONTROL_METHOD void setMode(Mode newMode, bool force=false);
+	TEMP_CONTROL_METHOD Mode getMode() {
 		return cs.mode;
 	}
 
@@ -186,7 +188,7 @@ class TempControl{
 	TEMP_CONTROL_METHOD bool stateIsCooling();
 	TEMP_CONTROL_METHOD bool stateIsHeating();
 	TEMP_CONTROL_METHOD bool modeIsBeer(){
-		return (cs.mode == MODE_BEER_CONSTANT || cs.mode == MODE_BEER_PROFILE);
+		return (cs.mode == beer_constant || cs.mode == beer_profile);
 	}
 
 	TEMP_CONTROL_METHOD void initFilters();

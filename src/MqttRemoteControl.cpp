@@ -182,9 +182,6 @@ bool MqttRemoteControl::loop(){
 }
 
 void MqttRemoteControl::_runModeCommand(){
-    if(_lvMode == InvalidMode){
-        DBG_PRINTF("MQTT:mode not set\n");
-    }
     brewKeeper.setModeFromRemote(_lvMode);
 }
 
@@ -363,7 +360,7 @@ void MqttRemoteControl::_onMessage(char* topic, uint8_t* payload, size_t len) {
 // Accepting mode and integer.
 void MqttRemoteControl::_onModeChange(const char *payload, const std::size_t len)
 {
-    constexpr std::array<char, 4> modeChars{ModeOff, ModeFridgeConst, ModeBeerConst, ModeBeerProfile};
+    constexpr std::array<Mode, 4> modeChars{off, fridge_constant, beer_constant, beer_profile};
 
 #if SerialDebug
     DBG_PRINTF("MQTT: Mode path value:");
@@ -372,7 +369,7 @@ void MqttRemoteControl::_onModeChange(const char *payload, const std::size_t len
     DBG_PRINTF("\n");
 #endif
 
-    char mode;
+    Mode mode;
     if (*payload >= '0' && *payload <= '3') {
         mode = modeChars[*payload - '0'];
     } else {
@@ -381,7 +378,7 @@ void MqttRemoteControl::_onModeChange(const char *payload, const std::size_t len
             DBG_PRINTF("MQTT: Error, unknown mode\n");
             return;
         }
-        mode = *payload;
+        mode = static_cast<Mode>(*payload);
     }
     DBG_PRINTF("MQTT: Mode: %c\n", mode);
     if (_lvMode != mode) {

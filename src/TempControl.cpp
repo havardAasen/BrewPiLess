@@ -79,7 +79,7 @@ uint16_t TempControl::waitTime;
 
 void TempControl::init(){
 	state=idle;
-	cs.mode = MODE_OFF;
+	cs.mode = off;
 
 	cameraLight.setActive(false);
 
@@ -202,7 +202,7 @@ void TempControl::updatePID(){
 
 		cs.fridgeSetting = std::clamp(constrainTemp16(newFridgeSetting), lowerBound, upperBound);
 	}
-	else if(cs.mode == MODE_FRIDGE_CONSTANT){
+	else if(cs.mode == fridge_constant){
 		// FridgeTemperature is set manually, use INVALID_TEMP to indicate beer temp is not active
 		cs.beerSetting = INVALID_TEMP;
 	}
@@ -225,7 +225,7 @@ void TempControl::updateState(){
 #endif
 	}
 
-	if(cs.mode == MODE_OFF){
+	if(cs.mode == off){
 		state = state_off;
 		stayIdle = true;
 	}
@@ -263,7 +263,7 @@ void TempControl::updateState(){
 				#else
 				tempControl.updateWaitTime(MIN_SWITCH_TIME, sinceHeating);
 				#endif
-				if(cs.mode==MODE_FRIDGE_CONSTANT){
+				if(cs.mode==fridge_constant){
 					tempControl.updateWaitTime(MIN_COOL_OFF_TIME_FRIDGE_CONSTANT, sinceCooling);
 				}
 				else{
@@ -294,7 +294,7 @@ void TempControl::updateState(){
 				tempControl.updateWaitTime(MIN_SWITCH_TIME, sinceCooling);
 				tempControl.updateWaitTime(MIN_HEAT_OFF_TIME, sinceHeating);
 				#endif
-				if(cs.mode!=MODE_FRIDGE_CONSTANT){
+				if(cs.mode!=fridge_constant){
 					if(beerFast > (cs.beerSetting - 16)){ // If beer is already over target, stay/go to idle. 1/2 sensor bit idle zone
 						state = idle;  // beer is already warmer than setting, stay in or go to idle
 						break;
@@ -332,7 +332,7 @@ void TempControl::updateState(){
 			state = cooling; // set to cooling here, so the display of COOLING/COOLING_MIN_TIME is correct
 
 			// stop cooling when estimated fridge temp peak lands on target or if beer is already too cold (1/2 sensor bit idle zone)
-			if(cv.estimatedPeak <= cs.fridgeSetting || (cs.mode != MODE_FRIDGE_CONSTANT && beerFast < (cs.beerSetting - 16))){
+			if(cv.estimatedPeak <= cs.fridgeSetting || (cs.mode != fridge_constant && beerFast < (cs.beerSetting - 16))){
 				#if SettableMinimumCoolTime
 				if(sinceIdle > cc.minCoolTime){
 				#else
@@ -358,7 +358,7 @@ void TempControl::updateState(){
 			state = heating; // reset to heating here, so the display of HEATING/HEATING_MIN_TIME is correct
 
 			// stop heating when estimated fridge temp peak lands on target or if beer is already too warm (1/2 sensor bit idle zone)
-			if(cv.estimatedPeak >= cs.fridgeSetting || (cs.mode != MODE_FRIDGE_CONSTANT && beerFast > (cs.beerSetting + 16))){
+			if(cv.estimatedPeak >= cs.fridgeSetting || (cs.mode != fridge_constant && beerFast > (cs.beerSetting + 16))){
 				#if SettableMinimumCoolTime
 				if(sinceIdle > cc.minHeatTime){
 				#else
@@ -390,7 +390,7 @@ void TempControl::updateEstimatedPeak(uint16_t timeLimit, temperature estimator,
 }
 
 void TempControl::updateOutputs() {
-	if (cs.mode==MODE_TEST)
+	if (cs.mode==test)
 		return;
 
 	cameraLight.update();
@@ -528,9 +528,9 @@ uint16_t TempControl::timeSinceIdle(){
 
 void TempControl::loadDefaultSettings(){
 #if BREWPI_EMULATE
-	setMode(MODE_BEER_CONSTANT);
+	setMode(beer_constant);
 #else
-	setMode(MODE_OFF);
+	setMode(off);
 #endif
 	cs.beerSetting = intToTemp(20);
 	cs.fridgeSetting = intToTemp(20);
@@ -576,7 +576,7 @@ void TempControl::initFilters()
 	beerSensor->setSlopeFilterCoefficients(cc.beerSlopeFilter);
 }
 
-void TempControl::setMode(char newMode, bool force){
+void TempControl::setMode(Mode newMode, bool force){
 	logDebug("TempControl::setMode from %c to %c", cs.mode, newMode);
 
 	if(newMode != cs.mode || state == waiting_to_heat || state == waiting_to_cool || state == waiting_for_peak_detect){
@@ -585,7 +585,7 @@ void TempControl::setMode(char newMode, bool force){
 	}
 	if (force) {
 		cs.mode = newMode;
-		if(newMode == MODE_OFF){
+		if(newMode == off){
 			cs.beerSetting = INVALID_TEMP;
 			cs.fridgeSetting = INVALID_TEMP;
 		}
@@ -625,7 +625,7 @@ void TempControl::setBeerTemp(temperature newTemp){
 	}
 	updatePID();
 	updateState();
-	if(cs.mode != MODE_BEER_PROFILE || abs(storedBeerSetting - newTemp) > intToTempDiff(1)/4){
+	if(cs.mode != beer_profile || abs(storedBeerSetting - newTemp) > intToTempDiff(1)/4){
 		// more than 1/4 degree C difference with EEPROM
 		// Do not store settings every time in profile mode, because EEPROM has limited number of write cycles.
 		// A temperature ramp would cause a lot of writes

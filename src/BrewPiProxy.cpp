@@ -72,7 +72,7 @@ void BrewPiProxy::getTemperature(float *pBeerTemp,float *pBeerSet,float *pFridge
 	*pFridgeSet = temperatureFloatValue(tempControl.getFridgeSetting());
 }
 
-void BrewPiProxy::getControlParameter(char *pUnit,char *pMode,float *pBeerSet, float *pFridgeSet)
+void BrewPiProxy::getControlParameter(char *pUnit, Mode *pMode,float *pBeerSet, float *pFridgeSet)
 {
 	*pUnit=tempControl.cc.tempFormat;
 	*pMode=tempControl.cs.mode;

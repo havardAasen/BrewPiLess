@@ -4,6 +4,7 @@
 
 #include "BrewKeeper.h"
 #include "BrewPiProxy.h"
+#include "TempControl.h"
 #include "TimeKeeper.h"
 #include "common/conversion.h"
 
@@ -37,7 +38,8 @@ void BrewKeeper::keep(time_t now)
 	if((now - _lastSetTemp) < MINIMUM_TEMPERATURE_SETTING_PERIOD) return;
 	_lastSetTemp= now;
 
-	char unit, mode;
+	char unit;
+	Mode mode;
 	float beerSet,fridgeSet;
 	brewPi.getControlParameter(&unit,&mode,&beerSet,&fridgeSet);
 
@@ -65,11 +67,12 @@ void BrewKeeper::keep(time_t now)
 
 	}
 }
-void BrewKeeper::setModeFromRemote(char mode){
-	char unit, ori_mode;
+void BrewKeeper::setModeFromRemote(const Mode mode){
+	char unit;
+	Mode ori_mode;
 	float beerSet,fridgeSet;
 	brewPi.getControlParameter(&unit,&ori_mode,&beerSet,&fridgeSet);
-	if(mode == 'p' && ori_mode != 'p') _profile.setScheduleStartDate(TimeKeeper.getTimeSeconds());
+	if(mode == beer_profile && ori_mode != beer_profile) _profile.setScheduleStartDate(TimeKeeper.getTimeSeconds());
 	char buff[36];
 	sprintf(buff,"j{mode:%c}",mode);
 	DBG_PRINTF("write:%s\n",buff);

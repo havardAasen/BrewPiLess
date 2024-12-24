@@ -111,13 +111,13 @@ void settingSelected() {
 			return;
 		case 1:
 			// switch to beer constant, because beer setting will be set through display
-			tempControl.setMode(MODE_BEER_CONSTANT);
+			tempControl.setMode(beer_constant);
 			display.printMode();
 			Menu::pickBeerSetting();
 			return;
 		case 2:
 			// switch to fridge constant, because fridge setting will be set through display
-			tempControl.setMode(MODE_FRIDGE_CONSTANT);
+			tempControl.setMode(fridge_constant);
 			display.printMode();
 			Menu::pickFridgeSetting();
 			return;
@@ -136,7 +136,7 @@ void Menu::pickSettingToChangeLoop() {
 
 void changedMode() {
 	constexpr char lookup[] = {'b', 'f', 'p', 'o'};
-	tempControl.setMode(lookup[RotaryEncoder::read()]);
+	tempControl.setMode(static_cast<Mode>(lookup[RotaryEncoder::read()]));
 }
 
 void clearMode() {
@@ -144,21 +144,21 @@ void clearMode() {
 }
 
 void selectMode() {
-	char mode = tempControl.getMode();
-	if(mode ==  MODE_BEER_CONSTANT){
+	const Mode mode = tempControl.getMode();
+	if(mode ==  beer_constant){
 		Menu::pickBeerSetting();
 	}
-	else if(mode == MODE_FRIDGE_CONSTANT){
+	else if(mode == fridge_constant){
 		Menu::pickFridgeSetting();
 	}
-	else if(mode == MODE_BEER_PROFILE){
+	else if(mode == beer_profile){
 #ifdef ESP8266
 		PiLink::printTemperaturesJSON("Changed to profile mode in menu.", nullptr);
 #else
 		piLink.printBeerAnnotation(PSTR("Changed to profile mode in menu."));
 #endif
 	}
-	else if(mode == MODE_OFF){
+	else if(mode == off){
 #ifdef ESP8266
 		PiLink::printTemperaturesJSON("Temp control turned off in menu.", nullptr);
 #else
@@ -168,7 +168,7 @@ void selectMode() {
 }
 
 void Menu::pickMode() {
-	char oldSetting = tempControl.getMode();
+	const Mode oldSetting = tempControl.getMode();
 	uint8_t startValue=0;
 	const char* LOOKUP = "bfpo";
 	startValue = indexOf(LOOKUP, oldSetting);

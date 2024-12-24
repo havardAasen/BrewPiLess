@@ -858,7 +858,7 @@ constexpr char STR_FMT_SET_TO[] PROGMEM = "%S set to %s %S";
 #endif
 
 void PiLink::setMode(const char* val) {
-	char mode = val[0];
+	const Mode mode = static_cast<Mode>(val[0]);
 	tempControl.setMode(mode);
 #if 0 //#ifdef ESP8266
 	String annotation = "";
@@ -875,7 +875,7 @@ void PiLink::setBeerSetting(const char* val) {
 #endif
 	const char* source = nullptr;
 	temperature newTemp = stringToTemp(val);
-	if (tempControl.cs.mode == 'p') {
+	if (tempControl.cs.mode == beer_profile) {
 		if (abs(newTemp - tempControl.cs.beerSetting) > 100) { // this excludes gradual updates under 0.2 degrees
 #if 0 //#ifdef ESP8266
 			formatStandardAnnotation(annotation, STR_BEER_TEMP, val, "by temperature profile");
@@ -915,7 +915,7 @@ void formatStandardAnnotation(String &annotation, const char* str_1, const char*
 
 void PiLink::setFridgeSetting(const char* val) {
 	temperature newTemp = stringToTemp(val);
-	if(tempControl.cs.mode == 'f'){
+	if(tempControl.cs.mode == fridge_constant){
 #if 0 //#ifdef ESP8266
 		String annotation = "";
 		formatStandardAnnotation(annotation, STR_FRIDGE_TEMP, val, "in web interface");

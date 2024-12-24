@@ -8,6 +8,8 @@
 // always enabled #if EnableGravitySchedule
 
 
+enum Mode : uint8_t;
+
 class BrewProfile
 {
 	BeerTempSchedule *_schedule;
@@ -62,7 +64,7 @@ public:
 	void profileUpdated(){ _profile.profileUpdated();}
 	void begin(){ _profile.profileUpdated();}
 
-	void setModeFromRemote(char mode);
+	void setModeFromRemote(Mode mode);
 	void setBeerSet(char *tempStr);
 	void setFridgeSet(char *tempStr);
 };

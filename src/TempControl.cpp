@@ -596,9 +596,8 @@ temperature TempControl::getBeerTemp(){
 	if(beerSensor->isConnected()){
 		return beerSensor->readFastFiltered();
 	}
-	else{
-		return INVALID_TEMP;
-	}
+
+	return INVALID_TEMP;
 }
 
 temperature TempControl::getBeerSetting(){
@@ -609,9 +608,8 @@ temperature TempControl::getFridgeTemp(){
 	if(fridgeSensor->isConnected()){
 		return fridgeSensor->readFastFiltered();
 	}
-	else{
-		return INVALID_TEMP;
-	}
+
+	return INVALID_TEMP;
 }
 
 temperature TempControl::getFridgeSetting(){

@@ -23,6 +23,7 @@
 
 #include "Brewpi.h"
 #include "ITempSensor.h"
+#include "TempControl.h"
 #include "TempSensor.h"
 
 class MockTempSensor : public ITempSensor
@@ -46,7 +47,7 @@ public:
 		if (!isConnected())
 			return TEMP_SENSOR_DISCONNECTED;
 
-		switch (tempControl.getMode()) {
+		switch (tempControl.getState()) {
 			case COOLING:
 				_temperature -= _delta;
 				break;

@@ -10,7 +10,7 @@
   "license": "ISC",
   "devDependencies": {
     "@lodder/grunt-postcss": "^3.1.1",
-    "autoprefixer": "^10.4.20",
+    "autoprefixer": "^10.4.21",
     "grunt": "^1.0.1",
     "grunt-combo-html-css-js": "^0.1.2",
     "grunt-contrib-compress": "^2.0.0",

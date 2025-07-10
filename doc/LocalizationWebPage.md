@@ -11,32 +11,38 @@ It's better to make sure that everything will work before you start translating.
 
  * Put the the file, say  wakanda.json, in "locales" subdirectory.
 
- * modify gruntfile.coffee. Find around line 167:
+ * Modify gruntfile.js, around line 210:
 
-``````
-    multi_lang_site_generator:
-      default:
-          options:
-            vocabs:           ['english','chinese','spanish']
-            vocab_directory:  'src/locales'
-            output_directory: 'dist'
-````````
+```js
+multi_lang_site_generator: {
+  default: {
+    options: {
+      vocabs:           ['english', 'chinese', 'spanish'],
+      vocab_directory:  'src/locales',
+      output_directory: 'dist'
+    }
+  }
+}
+```
 
 Add the language to be added, in the same name as the json file.
 
-``````
-    multi_lang_site_generator:
-      default:
-          options:
-            vocabs:           ['english','chinese','spanish', 'wakanda']
-            vocab_directory:  'src/locales'
-            output_directory: 'dist'
-````````
+```js
+multi_lang_site_generator: {
+  default: {
+    options: {
+      vocabs:           ['english', 'chinese', 'spanish', 'wakanda'],
+      vocab_directory:  'src/locales',
+      output_directory: 'dist'
+    }
+  }
+}
+```
 
  * Run grunt by
-``````
+```shell
     grunt i18n
-``````
+```
 
  * if everything goes well, there will be a 'wakanda' subdirectory in "dist" path.
 

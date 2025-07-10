@@ -1,10 +1,10 @@
 The web front pages are built by 'grunt'. Please check the readme in the directory for detail.
 
-https://github.com/vitotai/BrewPiLess/tree/master/htmljs
+[Frontend README](frontend/README.md)
 
 To add localization of the pages, a translation file is necessary. The format of translation file is JSON. A simple and good way to begin is copying the english.json and starting from it.
 
-https://github.com/vitotai/BrewPiLess/tree/master/htmljs/src/locales
+https://github.com/havardaasen/BrewPiLess/tree/maint-3.6/frontend/src/locales
 
 It's better to make sure that everything will work before you start translating. So, you can copy the copy the english.json to another file, and run the following procedure first.
 

@@ -65,9 +65,9 @@ You can find further details in the wiki: [Software Installation](doc/SoftwareIn
 * [System Setup](doc/SystemSetup.md)
   * [SoftAP mode](doc/SoftAPMode.md)
 * [Device Setup](doc/DeviceSetup.md)
-* [Using Buttons & Menu](UsingButtonsAndUI.md)
-* [Temperature Logging](TemperatureLogging.md)
-* [Cloud Logging](CloudLogging.md)
+* [Using Buttons & Menu](doc/UsingButtonsAndUI.md)
+* [Temperature Logging](doc/TemperatureLogging.md)
+* [Cloud Logging](doc/CloudLogging.md)
   * [Generic HTTP](doc/GenericHttpLogging.md)
   * [ubidots.com](doc/ubidots.md)
   * [thingspeak.com](doc/thingspeak.md)
@@ -82,7 +82,7 @@ You can find further details in the wiki: [Software Installation](doc/SoftwareIn
 * [MQTT Remote Control](doc/MQTT.md)
   * [ubidots.com](doc/MQTT.ubidots.md)
 * [Pressure Monitor and Control](doc/PressureMonitor.md)
-* [Other URLs](doc/OtherUrl.md)
+* [Other URLs](doc/OtherURL.md)
   * Clear WiFi setting
   * Format file system
   * OTA update

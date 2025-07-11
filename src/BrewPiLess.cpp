@@ -1399,7 +1399,6 @@ void brewpi_setup()
 void brewpiLoop()
 {
 	static unsigned long lastUpdate = 0;
-	uint8_t oldState;
 
 	if (ticks.millis() - lastUpdate >= (1000)) { //update settings every second
 		lastUpdate = ticks.millis();
@@ -1411,7 +1410,7 @@ void brewpiLoop()
 		tempControl.updateTemperatures();
 		tempControl.detectPeaks();
 		tempControl.updatePID();
-		oldState = tempControl.getState();
+		const uint8_t oldState = tempControl.getState();
 		tempControl.updateState();
 		if (oldState != tempControl.getState()) {
 			PiLink::printTemperatures(); // add a data point at every state transition

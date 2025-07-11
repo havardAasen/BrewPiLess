@@ -213,7 +213,7 @@ class BrewPiWebHandler: public AsyncWebHandler
             		entry.close();
           	}
           	output += "]";
-          	request->send(200, "text/json", output);
+          	request->send(200, "application/json", output);
           	output = String();
         }
         else

@@ -237,7 +237,7 @@ static void handleFileList() {
   }
 
   output += "]";
-  server.send(200, "text/json", output);
+  server.send(200, "application/json", output);
 }
 #endif
 
@@ -277,7 +277,7 @@ void ESPUpdateServer_setup(const char* user, const char* pass){
     json += ", \"analog\":"+String(analogRead(A0));
     json += ", \"gpio\":"+String((uint32_t)(((GPI | GPO) & 0xFFFF) | ((GP16I & 0x01) << 16)));
     json += "}";
-    server.send(200, "text/json", json);
+    server.send(200, "application/json", json);
     json = String();
   });
 

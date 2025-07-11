@@ -1468,8 +1468,6 @@ void requestRestart(bool disc)
 	_systemState =SystemState::restartPending;
 }
 
-#define IS_RESTARTING (_systemState != SystemState::operating)
-
 
 #ifdef EMIWorkaround
 uint32_t _lcdReinitTime;
@@ -1706,21 +1704,22 @@ void loop(void){
 	sayHello();
 	#endif
 
-	if(!IS_RESTARTING){
-		WiFiSetup.stayConnected();
-	}
-
-  	if(_systemState == SystemState::restartPending){
-	  	_time=millis();
-	  	_systemState =SystemState::waitRestart;
-  	}else if(_systemState ==SystemState::waitRestart){
-  		if((millis() - _time) > TIME_RESTART_TIMEOUT){
-  			if(_disconnectBeforeRestart){
-  				WiFi.disconnect();
-  				WiFiSetup.setAutoReconnect(false);
-  				delay(1000);
-  			}
-  			EspClass::restart();
-  		}
-  	}
+    switch (_systemState) {
+        case SystemState::operating:
+            WiFiSetup.stayConnected();
+            break;
+        case SystemState::restartPending:
+            _time = millis();
+            _systemState = SystemState::waitRestart;
+            break;
+        case SystemState::waitRestart:
+            if ((millis() - _time) > TIME_RESTART_TIMEOUT) {
+                if (_disconnectBeforeRestart) {
+                    WiFi.disconnect();
+                    WiFiSetup.setAutoReconnect(false);
+                    delay(1000);
+                }
+                EspClass::restart();
+            }
+    }
 }

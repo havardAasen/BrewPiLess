@@ -1451,23 +1451,24 @@ time_t _displayTime;
 #endif
 
 
-
-#define SystemStateOperating 0
-#define SystemStateRestartPending 1
-#define SystemStateWaitRestart 2
+enum class SystemState {
+    operating,
+    restartPending,
+    waitRestart
+};
 
 #define TIME_RESTART_TIMEOUT 3000
 
 bool _disconnectBeforeRestart;
 static unsigned long _time;
-byte _systemState=SystemStateOperating;
+auto _systemState{SystemState::operating};
 void requestRestart(bool disc)
 {
 	_disconnectBeforeRestart=disc;
-	_systemState =SystemStateRestartPending;
+	_systemState =SystemState::restartPending;
 }
 
-#define IS_RESTARTING (_systemState!=SystemStateOperating)
+#define IS_RESTARTING (_systemState != SystemState::operating)
 
 
 #ifdef EMIWorkaround
@@ -1709,10 +1710,10 @@ void loop(void){
 		WiFiSetup.stayConnected();
 	}
 
-  	if(_systemState ==SystemStateRestartPending){
+  	if(_systemState == SystemState::restartPending){
 	  	_time=millis();
-	  	_systemState =SystemStateWaitRestart;
-  	}else if(_systemState ==SystemStateWaitRestart){
+	  	_systemState =SystemState::waitRestart;
+  	}else if(_systemState ==SystemState::waitRestart){
   		if((millis() - _time) > TIME_RESTART_TIMEOUT){
   			if(_disconnectBeforeRestart){
   				WiFi.disconnect();

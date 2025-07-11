@@ -1211,28 +1211,26 @@ public:
 ExternalDataHandler externalDataHandler;
 
 IPAddress scanIP(char const *str)
-	{
-    	// DBG_PRINTF("Scan IP length=%d :\"%s\"\n",len,buffer);
-    	// this doesn't work. the last byte always 0: ip.fromString(buffer);
+{
+    // DBG_PRINTF("Scan IP length=%d :\"%s\"\n",len,buffer);
+    // this doesn't work. the last byte always 0: ip.fromString(buffer);
 
-    	int Parts[4] = {0,0,0,0};
-    	int Part = 0;
-		char* ptr=(char*)str;
-    	for ( ; *ptr; ptr++)
-    	{
-	    char c = *ptr;
-	    if ( c == '.' )
-	    {
-		    Part++;
-		    continue;
-	    }
-	    Parts[Part] *= 10;
-	    Parts[Part] += c - '0';
-    	}
+    std::array<std::uint8_t, 4> Parts{};
+    std::uint8_t Part = 0;
+    char *ptr = (char *) str;
+    for (; *ptr; ptr++) {
+        char c = *ptr;
+        if (c == '.') {
+            Part++;
+            continue;
+        }
+        Parts[Part] *= 10;
+        Parts[Part] += c - '0';
+    }
 
-    	IPAddress sip( Parts[0], Parts[1], Parts[2], Parts[3] );
-    	return sip;
-	}
+    IPAddress sip(Parts[0], Parts[1], Parts[2], Parts[3]);
+    return sip;
+}
 
 class NetworkConfig:public AsyncWebHandler
 {

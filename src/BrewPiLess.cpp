@@ -242,7 +242,7 @@ class BrewPiWebHandler: public AsyncWebHandler
       		fh.print(c.c_str());
       		fh.close();
         	EspClass::wdtEnable(10);
-            request->send(200,"application/json","{}");
+            request->send(201);
             DBG_PRINTF("fputs path=%s\n",file.c_str());
         } else
           request->send(404);
@@ -361,7 +361,7 @@ public:
 			if(request->hasParam("data", true)){
 				if(theSettings.dejsonMqttRemoteControlSettings(request->getParam("data", true)->value())){
 					theSettings.save();
-					request->send(200,"application/json","{}");
+					request->send(201);
 					mqttRemoteControl.reset();
 				}else{
   					request->send(500);
@@ -392,7 +392,7 @@ public:
 				if(theSettings.dejsonSystemConfiguration(request->getParam("data", true)->value())){
 					theSettings.save();
 					DBG_PRINT("Config saved\n");
-					request->send(200,"application/json","{}");
+					request->send(201);
 					display.setAutoOffPeriod(theSettings.systemConfiguration()->backlite);
 
 					if(oldMode !=  theSettings.systemConfiguration()->wifiMode){
@@ -427,7 +427,7 @@ public:
 				DBG_PRINTF("Set timezone:%ld\n",tvalue->value().toInt());
 			   TimeKeeper.setTimezoneOffset(tvalue->value().toInt());
 		    }		   
-			request->send(200,"application/json","{}");
+			request->send(202);
 			 
 		}else if(request->method() == HTTP_GET &&  request->url() == RESETWIFI_PATH){
 	 	    if(!request->authenticate(syscfg->username, syscfg->password))
@@ -470,7 +470,7 @@ public:
 				if(!request->authenticate(syscfg->username, syscfg->password)) return request->requestAuthentication();
 				if(request->hasParam("data", true)){
 		    		if(theSettings.dejsonRemoteLogging(request->getParam("data", true)->value())){
-		    			request->send(200,"application/json","{}");
+		    			request->send(202);
 						theSettings.save();
 					}else{
 						request->send(401);
@@ -493,7 +493,7 @@ public:
 				if(request->hasParam("c", true)){
 		    		String content=request->getParam("c", true)->value();
 					if(parasiteTempController.updateSettings(content))
-			            request->send(200,"application/json","{}");
+			            request->send(201);
 					else 
 						request->send(400);	
         		} else
@@ -531,7 +531,7 @@ public:
 				request->send(400);
 				response=false;
 			}
-			if(response) request->send(200,"application/json","{}");
+			if(response) request->send(202);
 			capStatusReport();
 		}
 		#endif
@@ -554,7 +554,7 @@ public:
 				if(request->hasParam("data",true)){					
 					if(theSettings.dejsonPressureMonitorSettings(request->getParam("data",true)->value())){
 						theSettings.save();
-						request->send(200,"application/json","{}");
+						request->send(201);
 					}else{
 						DBG_PRINTF("invalid Json\n");
 						request->send(402);
@@ -577,7 +577,7 @@ public:
 					if(theSettings.dejsonBeerProfile(request->getParam("data",true)->value())){
 						theSettings.save();
 						brewKeeper.profileUpdated();
-						request->send(200,"application/json","{}");
+						request->send(201);
 					}else
 						request->send(402);
 				}else{
@@ -1010,7 +1010,7 @@ public:
 
 					brewLogger.addCorrectionTemperature(externalData.hydrometerCalibration());
 
-					request->send(200,"application/json","{}");
+					request->send(202);
 					notifyLogStatus();
 				}else
 					request->send(404);
@@ -1018,7 +1018,7 @@ public:
 				DBG_PRINTF("Stop logging\n");
 				brewLogger.endSession();
 				externalData.setCalibrating(false);
-				request->send(200,"application/json","{}");
+				request->send(202);
 				notifyLogStatus();
 			}else{
 				// default. list information
@@ -1108,7 +1108,7 @@ private:
 		SystemConfiguration *syscfg=theSettings.systemConfiguration();
         uint8_t error;
 		if(externalData.processGravityReport(data,length,request->authenticate(syscfg->username,syscfg->password),error)){
-    		request->send(200,"application/json","{}");
+    		request->send(202);
 		}else{
 		    if(error == ErrorAuthenticateNeeded) return request->requestAuthentication();
 		    else request->send(500);
@@ -1163,7 +1163,7 @@ public:
 
 				brewLogger.addIgnoredCalPointMask(npt & 0xFFFFFF);
   				
-				request->send(200,"application/json","{}");
+				request->send(201);
 			}else{
 				DBG_PRINTF("Invalid parameter\n");
   				request->send(400);
@@ -1174,7 +1174,7 @@ public:
 		// config
 		if(request->method() == HTTP_POST){
   			if(externalData.processconfig(_data)){
-		  		request->send(200,"application/json","{}");
+		  		request->send(201);
 			}else{
 				request->send(400);
 			}
@@ -1243,7 +1243,7 @@ public:
 
 	void handleNetworkScan(AsyncWebServerRequest *request){
 		if(WiFiSetup.requestScanWifi())
-			request->send(200,"application/json","{}");
+			request->send(202);
 		else 
 			request->send(403);
 	}
@@ -1252,7 +1252,7 @@ public:
 		theSettings.systemConfiguration()->wifiMode=WIFI_AP;
 		WiFiSetup.setMode(WIFI_AP);
 
-		request->send(200,"application/json","{}");
+		request->send(202);
 	}
 
 	
@@ -1299,7 +1299,7 @@ public:
 		theSettings.setWiFiConfiguration(ssid.c_str(),pass);
 		theSettings.save();
 
-		request->send(200,"application/json","{}");
+		request->send(201);
 	}
 
 	bool canHandle(AsyncWebServerRequest *request) const override{

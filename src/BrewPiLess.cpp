@@ -248,7 +248,7 @@ class BrewPiWebHandler: public AsyncWebHandler
           request->send(404);
     }
 
-    bool fileExists(const String& path)
+    bool fileExists(const String& path) const
     {
 	    if(LittleFS.exists(path)) return true;
 	    bool dum;
@@ -324,7 +324,7 @@ class BrewPiWebHandler: public AsyncWebHandler
 				return path.equals(p);
 			});
 
-			AsyncWebServerResponse *response = request->beginResponse(LittleFS, path);
+			AsyncWebServerResponse *response = request->beginResponse(LittleFS, path, "");
 			if(nocache)
 				response->addHeader("Cache-Control","no-cache");
 			else
@@ -346,7 +346,7 @@ class BrewPiWebHandler: public AsyncWebHandler
 		}
 	}	  
 public:
-	bool isRequestHandlerTrivial() final {return false;}
+	bool isRequestHandlerTrivial() const final {return false;}
 
 	void handleRequest(AsyncWebServerRequest *request) override{
 		SystemConfiguration *syscfg=theSettings.systemConfiguration();
@@ -417,13 +417,13 @@ public:
 			request->send(response);
 		}else if(request->method() == HTTP_POST &&  request->url() == TIME_PATH){
 			if(request->hasParam("time", true)){
-				  AsyncWebParameter* tvalue = request->getParam("time", true);
+				  const AsyncWebParameter* tvalue = request->getParam("time", true);
 				  time_t time=(time_t)tvalue->value().toInt();
   				DBG_PRINTF("Set Time:%llu from:%s\n",time,tvalue->value().c_str());
 	 			TimeKeeper.setCurrentTime(time);
 			 }
 			 if(request->hasParam("off", true)){
-				AsyncWebParameter* tvalue = request->getParam("off", true);
+				const AsyncWebParameter* tvalue = request->getParam("off", true);
 				DBG_PRINTF("Set timezone:%ld\n",tvalue->value().toInt());
 			   TimeKeeper.setTimezoneOffset(tvalue->value().toInt());
 		    }		   
@@ -515,17 +515,17 @@ public:
 			}
 			bool response=true;
 			if(request->hasParam("cap")){
-				AsyncWebParameter* value = request->getParam("cap");
+				const AsyncWebParameter* value = request->getParam("cap");
 				autoCapControl.capManualSet(value->value().toInt()!=0);
 				// manual
 			}else if(request->hasParam("at")){
 				// time
-				AsyncWebParameter* value = request->getParam("at");
+				const AsyncWebParameter* value = request->getParam("at");
 				autoCapControl.capAtTime(value->value().toInt());
 				
 			}else if(request->hasParam("sg")){
 				// gravity
-				AsyncWebParameter* value = request->getParam("sg");
+				const AsyncWebParameter* value = request->getParam("sg");
 				autoCapControl.catOnGravity(value->value().toFloat());
 			}else{
 				request->send(400);
@@ -614,7 +614,7 @@ public:
 		}
 	 }
 
-	bool canHandle(AsyncWebServerRequest *request) override{
+	bool canHandle(AsyncWebServerRequest *request) const override{
 	 	if(request->method() == HTTP_GET){
 	 		if( request->url() == CONFIG_PATH || request->url() == TIME_PATH
 
@@ -679,7 +679,7 @@ public:
 	void handleRequest(AsyncWebServerRequest *request) override{
 		request->send(200, "text/html", "<HTML><HEAD><TITLE>Success</TITLE></HEAD><BODY>Success</BODY></HTML>");
 	}
-	bool canHandle(AsyncWebServerRequest *request) override{
+	bool canHandle(AsyncWebServerRequest *request) const override{
 		String host=request->host();
 		//DBG_PRINTF("Request host:");
 		//DBG_PRINTF(host.c_str());
@@ -1085,7 +1085,7 @@ public:
 	}
 
 	LogHandler(){}
-	bool canHandle(AsyncWebServerRequest *request) override{
+	bool canHandle(AsyncWebServerRequest *request) const override{
 	 	if(request->url() == CHART_DATA_PATH || request->url() ==LOGLIST_PATH
 		  /*|| request->url() == IGNORE_MASK_PATH */) return true;
 	 	return false;
@@ -1127,7 +1127,7 @@ public:
 		externalData.loadConfig();
 	}
 
-	bool canHandle(AsyncWebServerRequest *request) override{
+	bool canHandle(AsyncWebServerRequest *request) const override{
 		DBG_PRINTF("req: %s\n", request->url().c_str());
 	 	if(request->url() == GRAVITY_PATH	) return true;
 	 	if(request->url() == GravityDeviceConfigPath) return true;
@@ -1206,7 +1206,7 @@ public:
 			DBG_PRINTF("Body total%u data:%s\n", total,_data);
 		}
 	}
-	bool isRequestHandlerTrivial() final {return false;}
+	bool isRequestHandlerTrivial() const final {return false;}
 };
 ExternalDataHandler externalDataHandler;
 
@@ -1304,7 +1304,7 @@ public:
 		request->send(200,"application/json","{}");
 	}
 
-	bool canHandle(AsyncWebServerRequest *request) override{
+	bool canHandle(AsyncWebServerRequest *request) const override{
 		if(request->url() == WIFI_SCAN_PATH) return true; 
 		else if(request->url() == WIFI_CONNECT_PATH) return true;
 		else if(request->url() == WIFI_DISC_PATH) return true;
@@ -1312,7 +1312,7 @@ public:
 	 	return false;
 	}
 
-	bool isRequestHandlerTrivial() final {return false;}
+	bool isRequestHandlerTrivial() const final {return false;}
 };
 
 NetworkConfig networkConfig;

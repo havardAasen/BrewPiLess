@@ -57,32 +57,6 @@ module.exports = function(grunt) {
           'dist/testcmd.htm': 'dist/testcmd.htm',
           'dist/edit.htm': 'dist/edit.htm'
         }
-      },
-      dev: {
-        options: {
-          removeComments: false,
-          collapseWhitespace: false,
-          collapseBooleanAttributes: false,
-          removeAttributeQuotes: false,
-          removeRedundantAttributes: false,
-          removeEmptyAttributes: false,
-          minifyJS: false,
-          minifyCSS: false
-        },
-        files: {
-          'build/index.tmpl.html': 'build/index.tmpl.html',
-          'build/control.tmpl.html': 'build/control.tmpl.html',
-          'build/setup.tmpl.html': 'build/setup.tmpl.html',
-          'build/gravity.tmpl.html': 'build/gravity.tmpl.html',
-          'build/logging.tmpl.html': 'build/logging.tmpl.html',
-          'build/config.tmpl.html': 'build/config.tmpl.html',
-          'build/pressure.tmpl.html': 'build/pressure.tmpl.html',
-          'build/BPLLogViewer.tmpl.html': 'build/BPLLogViewer.tmpl.html',
-          'build/BPLog.tmpl.html': 'build/BPLog.tmpl.html',
-          'build/lcd.html': 'build/lcd.html',
-          'build/testcmd.html': 'build/testcmd.html',
-          'build/edit.html': 'build/edit.html'
-        }
       }
     },
 
@@ -229,7 +203,6 @@ module.exports = function(grunt) {
   grunt.registerTask('debug', [
     'copy',
     'processhtml',
-    'htmlmin:dev',
     'sass:dev',
     'postcss',
     'comboall',
@@ -240,7 +213,6 @@ module.exports = function(grunt) {
   grunt.registerTask('default', [
     'copy',
     'processhtml',
-    'htmlmin:dev',
     'sass:dev',
     'postcss',
     'watch'
@@ -250,11 +222,10 @@ module.exports = function(grunt) {
     'copy',
     'uglify',
     'processhtml',
-    'htmlmin:dev',
     'sass:dev',
     'postcss',
     'comboall',
-    'htmlmin:dist',
+    'htmlmin',
     'multi_lang_site_generator',
     'compress'
   ]);

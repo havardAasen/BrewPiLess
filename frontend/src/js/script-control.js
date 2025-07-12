@@ -1,28 +1,21 @@
+import {
+    Q,
+    s_ajax,
+    formatDate,
+    formatDateForPicker,
+    openDlgLoading,
+    getActiveNavItem,
+    JSVERSION,
+    closeDlgLoading, F2C, C2F
+} from "./shared";
+import { Capper } from "./capper";
+import { BWF } from "./vendor/bwf";
+import { PTC } from "./ptc";
+
 var BPURL = "/tschedule";
 var MAX_STEP = 7;
 
-function formatDate(dt) {
-    //	var y = dt.getFullYear();
-    //	var M = dt.getMonth() +1;
-    //	var d = dt.getDate();
-    var h = dt.getHours();
-    var m = dt.getMinutes();
-    //    var s = dt.getSeconds();
-    function dd(n) {
-        return (n < 10) ? '0' + n : n;
-    }
-    //	return dd(M) + "/" + dd(d) + "/" + y +" "+ dd(h) +":"+dd(m)+":"+dd(s);
-    //	return dd(M) + "/" + dd(d) +" "+ dd(h) +":"+dd(m);
-    return dt.toLocaleDateString() + " " + dd(h) + ":" + dd(m);
-}
 
-function formatDateForPicker(date) {
-    var h = date.getHours();
-    var m = date.getMinutes();
-
-    function dd(n) { return (n < 10) ? '0' + n : n; }
-    return date.getFullYear() + "-" + dd(date.getMonth() + 1) + "-" + dd(date.getDate()) + "T" + dd(h) + ":" + dd(m);
-}
 /* profile.js */
 var profileEditor = {
     dirty: false,
@@ -466,7 +459,7 @@ var profileEditor = {
 
 /* end of profile.js */
 /* PL: profle list */
-var PL = {
+export var PL = {
     pl_path: "P",
     url_list: "/list",
     url_save: "/fputs",
@@ -627,11 +620,11 @@ var ControlChart = {
         t.unit = unit;
 
         var dateFormatter = function(v) {
-            d = new Date(v);
+            const d = new Date(v);
             return d.shortLocalizedString();
         };
         var shortDateFormatter = function(v) {
-            d = new Date(v);
+            const d = new Date(v);
             var y = d.getYear() + 1900;
             var re = new RegExp('[^\d]?' + y + '[^\d]?');
             var n = d.toLocaleDateString();
@@ -789,7 +782,7 @@ var modekeeper = {
     }
 };
 
-function saveprofile() {
+export function saveprofile() {
     //console.log("save");
     var r = profileEditor.getProfile();
     if (r === false) {
@@ -858,7 +851,7 @@ function communicationError() {
     }
 }
 
-function initctrl() {
+export function initctrl() {
     getActiveNavItem();
     Capper.init();
     modekeeper.init();
@@ -893,3 +886,6 @@ function initctrl() {
         }
     });
 }
+
+window.saveprofile = saveprofile
+window.PL = PL

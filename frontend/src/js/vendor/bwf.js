@@ -28,7 +28,7 @@ function invoke(arg) {
         xhttp.send();
 }
 
-var BWF = {
+export var BWF = {
     BrewProfile: "/brewing.json",
     process: function(msg) {
         if (this.raw != null) {

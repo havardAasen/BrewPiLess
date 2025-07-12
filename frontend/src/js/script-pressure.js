@@ -1,3 +1,5 @@
+import { Q, s_ajax } from "./shared";
+
 var PCTRL = {
     init: function() {
         // get values from BPL
@@ -92,6 +94,6 @@ var PCTRL = {
     }
 };
 
-function loaded() {
+export function loaded() {
     PCTRL.init();
 }

@@ -1,3 +1,6 @@
+import { Q, getActiveNavItem, JSVERSION } from "./shared";
+import { BWF } from "./vendor/bwf";
+
 var BackupFile = "/device.cfg";
 var devices = {
     add: function(a, f) {
@@ -100,7 +103,7 @@ function device_apply(a) {
     BWF.send(c)
 }
 
-function backup() {
+export function backup() {
     if (installed_list.length == 0) {
         alert("<%= script_setup_no_installed_devices %>");
         return
@@ -132,7 +135,7 @@ function backup() {
     })
 }
 
-function restore() {
+export function restore() {
     blockscreen("<%= script_setup_restoring %>");
     BWF.load(BackupFile, function(c) {
         var b = JSON.parse(c);
@@ -152,7 +155,7 @@ function restore() {
     })
 }
 
-function list() {
+export function list() {
     blockscreen("<%= script_setup_retrieving %>");
     installed_list = [];
     available_list = [];
@@ -162,7 +165,7 @@ function list() {
     BWF.send("h{u:-1,v:1}")
 }
 
-function erase() {
+export function erase() {
     if (confirm("<%= script_setup_erase_all_setting %>")) BWF.send("E");
 }
 
@@ -185,7 +188,7 @@ function detachNode(query) {
     return d;
 }
 
-function init() {
+export function init() {
     getActiveNavItem();
     Q("#verinfo").innerHTML = "v" + JSVERSION;
 
@@ -217,4 +220,9 @@ function blockscreen(a) {
 
 function unblockscreen() {
     document.getElementById("blockscreen").style.display = "none"
-};
+}
+
+window.list = list
+window.restore = restore
+window.backup = backup
+window.erase = erase

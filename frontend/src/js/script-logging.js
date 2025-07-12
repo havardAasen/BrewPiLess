@@ -1,3 +1,6 @@
+import { Q, s_ajax, getActiveNavItem, JSVERSION} from "./shared";
+import {mqttLoadSetting} from "./mqtt";
+
 var logurl = "log";
 
 Number.prototype.format = function(n, x, s, c) {
@@ -516,7 +519,7 @@ function serviceChange() {
     serviceOption(Q("#service-type").value);
 }
 
-function init() {
+export function init() {
     getActiveNavItem();
     Q("#verinfo").innerHTML = "v" + JSVERSION;
 

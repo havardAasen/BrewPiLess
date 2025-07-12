@@ -1,3 +1,5 @@
+import { Q, s_ajax } from './shared';
+
 function TabPane(modes) {
     var t = this;
     t.cmode = null;
@@ -37,7 +39,7 @@ function TabPane(modes) {
     t.select = select;
 }
 
-var Capper = {
+export var Capper = {
     target_psi: 0,
     psi_valid: false,
     hidepset: function(hide) {

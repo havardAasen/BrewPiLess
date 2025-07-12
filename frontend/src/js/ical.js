@@ -1,3 +1,5 @@
+import { Q } from "./shared";
+
     /* ispindel calibration */
     var PolyRegression = {
         allpoints: [],

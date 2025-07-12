@@ -107,8 +107,6 @@ extern "C" {
 #define FLIST_PATH       "/list"
 #define DELETE_PATH       "/rm"
 
-#define CHART_LIB_PATH       "/dygraph-combined.js"
-
 #define GRAVITY_PATH       "/gravity"
 
 #define BEER_PROFILE_PATH       "/tschedule"
@@ -263,7 +261,6 @@ class BrewPiWebHandler: public AsyncWebHandler
 	    unsigned int dum2;
 
 	    if(getEmbeddedFile(path.c_str(),dum,dum2)) return true;
-		if(path.endsWith(CHART_LIB_PATH) && LittleFS.exists(CHART_LIB_PATH)) return true;
 		// safari workaround.
 		if(path.endsWith(".js")){
 			String pathWithJgz = path.substring(0,path.lastIndexOf('.')) + ".jgz";
@@ -597,7 +594,6 @@ public:
 
 			String path=request->url();
 	 		if(path.endsWith("/")) path +=DEFAULT_INDEX_FILE;
-	 		else if(path.endsWith(CHART_LIB_PATH)) path = CHART_LIB_PATH;
 
 	 		if(request->url().equals("/")){
 		 		if(!syscfg->passwordLcd){

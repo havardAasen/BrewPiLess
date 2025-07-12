@@ -3,6 +3,7 @@
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-combo-html-css-js');
   grunt.loadNpmTasks('grunt-contrib-compress');
+  grunt.loadNpmTasks('grunt-rollup');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -14,19 +15,44 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-processhtml');
 
   grunt.initConfig({
+
     copy: {
-      jsfiles: {
+      dev: {
         files: [
-          { expand: true, cwd: './src/js', src: '**/*.js', dest: './build/js/' }
+          {
+            src: 'src/js/vendor/dygraph-combined.js',
+            dest: 'build/dygraph.js'
+          }
         ]
+      },
+      debug: {
+        files: [
+          {
+            src: 'src/js/vendor/dygraph-combined.js',
+            dest: 'dist/dygraph.js'
+          }
+        ]
+      }
+    },
+
+    rollup: {
+      dev: {
+        files: {
+          'build/bundle.js': ['src/js/main.js']
+        }
+      },
+      prod: {
+        files: {
+          'dist/bundle.js': ['src/js/main.js']
+        }
       }
     },
 
     uglify: {
       target: {
         files: [
-          { 'dist/bwf.min.js': ['src/js/vendor/bwf.js'] },
-          { 'dist/dygraph.min.js': ['src/js/vendor/dygraph-combined.js'] },
+          { 'dist/bundle.js': 'dist/bundle.js' },
+          { 'dist/dygraph.js': 'src/js/vendor/dygraph-combined.js' }
         ]
       }
     },
@@ -143,9 +169,9 @@ module.exports = function(grunt) {
           {
             expand: true,
             cwd: 'dist/',
-            src: ['**/*.min.js'],
+            src: ['*.js'],
             dest: 'dist/',
-            ext: '.gz.js'
+            ext: '.js'  // keep the same name for consistent HTML reference
           }
         ]
       }
@@ -199,9 +225,9 @@ module.exports = function(grunt) {
   });
 
 
-
   grunt.registerTask('debug', [
-    'copy',
+    'copy:debug',
+    'rollup:prod',
     'processhtml',
     'sass:dev',
     'postcss',
@@ -211,15 +237,17 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('default', [
-    'copy',
+    'copy:dev',
+    'rollup:dev',
     'processhtml',
     'sass:dev',
     'postcss',
+    'comboall',
     'watch'
   ]);
 
   grunt.registerTask('build', [
-    'copy',
+    'rollup:prod',
     'uglify',
     'processhtml',
     'sass:dev',

@@ -1,3 +1,8 @@
+import { Q, getActiveNavItem, s_ajax, openDlgLoading, closeDlgLoading, JSVERSION, ModeString, StateText } from './shared';
+import { BrewChart, GravityFilter, GravityTracker } from "./vendor/chart";
+import { Capper } from "./capper";
+import { BWF } from "./vendor/bwf";
+
     var T_CHART_REQUEST = 12000;
     var T_CHART_RETRYTO = 6000;
     var T_CHART_ZERODATA = 10000;
@@ -251,27 +256,6 @@
         status.FridgeSet = T(info.fs);
         status.RoomTemp = T(info.rt);
 
-        var ModeString = {
-            o: "<%= mode_off %>",
-            b: "<%= mode_beer_const %>",
-            f: "<%= mode_fridge_const %>",
-            p: "<%= mode_beer_profile %>",
-            i: "Invalid"
-        };
-        var StateText = [
-            "<%= state_text_idle %>",
-            "<%= state_text_off %>",
-            "<%= state_text_door_Open %>",
-            "<%= state_text_heating %>",
-            "<%= state_text_cooling %>",
-            "<%= state_text_wait_to_cool %>",
-            "<%= state_text_wait_to_heat %>",
-            "<%= state_text_wait_for_peak %>",
-            "<%= state_text_cooling_min_time %>",
-            "<%= state_text_heating_min_time %>",
-            "<%= state_text_invalid %>"
-        ];
-
         function genStateText(state, duration) {
             if (typeof duration == "undefined") return StateText[state];
 
@@ -306,14 +290,6 @@
     var roomOfridge = false;
 
     function simLcd(info) {
-
-        var ModeString = {
-            o: "Off",
-            b: "Beer Const.",
-            f: "Fridge Const.",
-            p: "Beer Profile",
-            i: "Invalid"
-        };
 
         function showTemp(tp) {
             // always takes 5 chars
@@ -785,7 +761,7 @@
         setTimeout(function() { BChart.start(); }, T_LOAD_CHART);
     }
 
-    function init() {
+    export function init() {
         Q("#pressure-info-pane").style.display = "none";
         window.plato = false;
         BChart.init("div_g", Q('#ylabel').innerHTML, Q('#y2label').innerHTML);

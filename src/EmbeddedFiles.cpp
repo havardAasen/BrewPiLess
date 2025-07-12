@@ -40,13 +40,11 @@ struct EmbeddedFileMapEntry{
 	bool  gzipped;
 };
 
-#include "bwf_js.h"
-constexpr char file_bwf_js [] PROGMEM="/bwf.js";
-
 #include "testcmd_htm.h"
 constexpr char file_testcmd_htm [] PROGMEM="/testcmd.htm";
 
 #include "dygraph_js.h"
+#include "bundle_js.h"
 
 
 constexpr char file_lcd_htm [] PROGMEM="/lcd";
@@ -62,7 +60,8 @@ constexpr char file_lcd_htm [] PROGMEM="/lcd";
 #include PressureHtmFile
 
 constexpr char file_index_htm [] PROGMEM="/index.htm";
-constexpr char file_dygraph_js [] PROGMEM="/dygraph-combined.js";
+constexpr char file_dygraph_js [] PROGMEM="/dygraph.js";
+constexpr char file_bundle_js [] PROGMEM="/bundle.js";
 constexpr char file_control_htm [] PROGMEM="/control.htm";
 constexpr char file_setup_htm [] PROGMEM="/setup.htm";
 constexpr char file_logconfig [] PROGMEM="/logging.htm";
@@ -71,9 +70,9 @@ constexpr char file_config [] PROGMEM="/config.htm";
 constexpr char file_pressure [] PROGMEM="/pressure.htm";
 
 EmbeddedFileMapEntry fileMaps[]={
-{file_bwf_js,data_bwf_min_js_gz,sizeof(data_bwf_min_js_gz),true},
 {file_index_htm,data_index_htm_gz,sizeof(data_index_htm_gz),true},
-{file_dygraph_js,dygraph_combined_js_gz,sizeof(dygraph_combined_js_gz),true},
+{file_dygraph_js,data_dygraph_js,sizeof(data_dygraph_js),true},
+{file_bundle_js,data_bundle_js,sizeof(data_bundle_js),true},
 {file_control_htm,control_htm_gz,sizeof(control_htm_gz),true},
 {file_setup_htm,setup_htm_gz,sizeof(setup_htm_gz),true},
 {file_logconfig,logging_htm_gz,sizeof(logging_htm_gz),true},

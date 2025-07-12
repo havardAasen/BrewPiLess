@@ -1,6 +1,8 @@
+import { Q } from "../shared";
+
         /* chart.js */
         // gravity tracking
-        var GravityFilter = {
+        export var GravityFilter = {
             b: 0.1,
             y: 0,
             reset: function() {
@@ -15,7 +17,7 @@
                 this.b = beta;
             }
         };
-        var GravityTracker = {
+        export var GravityTracker = {
             NumberOfSlots: 48,
             InvalidValue: 0xFF,
             ridx: 0,
@@ -84,7 +86,7 @@
         var TiltAngleIndex = 7;
         var RoomTemperatureIndex = 4;
 
-        var BrewChart = function(div) {
+        export var BrewChart = function(div) {
             var t = this;
             t.cid = div;
             t.ctime = 0;

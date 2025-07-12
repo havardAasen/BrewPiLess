@@ -1,3 +1,5 @@
+import { Q, getActiveNavItem, JSVERSION, s_ajax } from './shared';
+
 var gdcurl = "/gdc";
 
 function toFixed() {
@@ -43,7 +45,7 @@ function save() {
     });
 }
 
-function init() {
+export function init() {
     getActiveNavItem();
     Q("#verinfo").innerHTML = "v" + JSVERSION;
 

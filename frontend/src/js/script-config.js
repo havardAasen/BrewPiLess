@@ -1,3 +1,6 @@
+import { Q, getActiveNavItem, s_ajax, JSVERSION } from './shared';
+import { BWF } from "./vendor/bwf";
+
 function formatIP(ip) {
     if (ip == "0.0.0.0") return "";
     return ip;
@@ -76,7 +79,7 @@ function save() {
     });
 }
 
-function load() {
+export function load() {
     if (Q("#verinfo")) {
         Q("#verinfo").innerHTML = "v" + JSVERSION;
         getActiveNavItem();
@@ -108,7 +111,7 @@ function validIP(t) {
 
 function modechange(sel) {}
 
-var Net = {
+export var Net = {
     select: function(l) {
         document.getElementById('ssid').value = l.innerText || l.textContent;
         document.getElementById('nwpass').focus();
@@ -202,3 +205,5 @@ var Net = {
         Q("#networkselection").style.display = "none";
     }
 };
+
+window.Net = Net

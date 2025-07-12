@@ -1,6 +1,6 @@
-var JSVERSION = "3.6";
+export const JSVERSION = "3.6";
 
-function s_ajax(b) {
+export function s_ajax(b) {
     var c = new XMLHttpRequest();
     c.onreadystatechange = function() {
         if (c.readyState == 4) {
@@ -26,27 +26,27 @@ function s_ajax(b) {
     } else c.send()
 }
 
-var Q = function(d) {
+export let Q = function(d) {
     return document.querySelector(d);
 };
 
-function C2F(c) {
+export function C2F(c) {
     return Math.round((c * 1.8 + 32) * 10) / 10
 }
 
-function F2C(f) {
+export function F2C(f) {
     return Math.round((f - 32) / 1.8 * 10) / 10
 }
 
-function openDlgLoading() {
+export function openDlgLoading() {
     document.getElementById('dlg_loading').style.display = "block";
 }
 
-function closeDlgLoading() {
+export function closeDlgLoading() {
     document.getElementById('dlg_loading').style.display = "none";
 }
 
-var BrewMath = {
+export var BrewMath = {
     abv: function(og, fg) {
         return ((76.08 * (og - fg) / (1.775 - og)) * (fg / 0.794)).toFixed(1);
     },
@@ -95,32 +95,53 @@ Date.prototype.shortLocalizedString = function() {
     return ds + " " + T(HH) + ":" + T(MM);
 };
 
-function getActiveNavItem() {
+export function getActiveNavItem() {
     var path = window.location.pathname.split("/").pop();
     if (path == "") path = "index.htm";
     var element = Q('.options>li>a[href="/' + path + '"]');
     element.className += 'active';
 }
 
-function formatDate(dt) {
+function dd(n) { return (n < 10) ? '0' + n : n; }
+
+export function formatDate(dt) {
     //	var y = dt.getFullYear();
     //	var M = dt.getMonth() +1;
     //	var d = dt.getDate();
     var h = dt.getHours();
     var m = dt.getMinutes();
     //    var s = dt.getSeconds();
-    function dd(n) {
-        return (n < 10) ? '0' + n : n;
-    }
+
     //	return dd(M) + "/" + dd(d) + "/" + y +" "+ dd(h) +":"+dd(m)+":"+dd(s);
     //	return dd(M) + "/" + dd(d) +" "+ dd(h) +":"+dd(m);
     return dt.toLocaleDateString() + " " + dd(h) + ":" + dd(m);
 }
 
-function formatDateForPicker(date) {
+export function formatDateForPicker(date) {
     var h = date.getHours();
     var m = date.getMinutes();
 
-    function dd(n) { return (n < 10) ? '0' + n : n; }
     return date.getFullYear() + "-" + dd(date.getMonth() + 1) + "-" + dd(date.getDate()) + "T" + dd(h) + ":" + dd(m);
 }
+
+export const ModeString = {
+    o: "<%= mode_off %>",
+    b: "<%= mode_beer_const %>",
+    f: "<%= mode_fridge_const %>",
+    p: "<%= mode_beer_profile %>",
+    i: "Invalid"
+};
+
+export const StateText = [
+    "<%= state_text_idle %>",
+    "<%= state_text_off %>",
+    "<%= state_text_door_Open %>",
+    "<%= state_text_heating %>",
+    "<%= state_text_cooling %>",
+    "<%= state_text_wait_to_cool %>",
+    "<%= state_text_wait_to_heat %>",
+    "<%= state_text_wait_for_peak %>",
+    "<%= state_text_cooling_min_time %>",
+    "<%= state_text_heating_min_time %>",
+    "<%= state_text_invalid %>"
+];

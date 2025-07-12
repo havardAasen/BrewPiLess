@@ -1,4 +1,6 @@
-function mqttLoadSetting() {
+import { s_ajax, Q } from "./shared";
+
+export function mqttLoadSetting() {
     s_ajax({
         url: "mqtt",
         m: "GET",

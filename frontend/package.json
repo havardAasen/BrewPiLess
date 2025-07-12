@@ -23,6 +23,7 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-multi-lang-site-generator": "^0.6.0",
     "grunt-processhtml": "^0.4.4",
+    "grunt-rollup": "^12.0.0",
     "postcss": "^8.5.6"
   }
 }

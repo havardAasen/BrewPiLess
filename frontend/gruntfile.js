@@ -238,16 +238,7 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('build', [
-    'copy',
-    'processhtml',
-    'htmlmin:dev',
-    'sass:dev',
-    'postcss',
-    'comboall',
-    'htmlmin:dist',
-    'compress'
-  ]);
+
 
   grunt.registerTask('debug', [
     'copy',
@@ -269,7 +260,7 @@ module.exports = function(grunt) {
     'watch'
   ]);
 
-  grunt.registerTask('i18n', [
+  grunt.registerTask('build', [
     'copy',
     'uglify',
     'processhtml',

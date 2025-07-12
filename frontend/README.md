@@ -29,11 +29,6 @@ If you want to build the project run:
 grunt build
 ```
 
-After v3.1, run:
-```
-grunt i18n
-```
-
 
 ## ToDo
 

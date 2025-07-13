@@ -332,17 +332,18 @@ class BrewPiWebHandler: public AsyncWebHandler
 			request->send(response);
 			return;
 		}
-		//else, embedded html file
+
+		// Embedded HTML or JS file
 		bool gzip;
 		uint32_t size;
-		const uint8_t* file=getEmbeddedFile(path.c_str(),gzip,size);
-		if(file){
-			DBG_PRINTF("using embedded file:%s\n",path.c_str());
-			if(gzip){
-                AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", file, size);
-                response->addHeader("Content-Encoding", "gzip");
-                request->send(response);
-			}else sendProgmem(request,(const char*)file);
+		if (const uint8_t *file = getEmbeddedFile(path.c_str(), gzip, size)) {
+			assert(gzip == true && "All files must be gzipped");
+			DBG_PRINTF("using embedded file: '%s'\n",path.c_str());
+			const char *contentType = path.endsWith(".js") ? "application/javascript" : "text/html";
+			AsyncWebServerResponse *response = request->beginResponse_P(200, contentType, file, size);
+			response->addHeader("Cache-Control","max-age=2592000");
+			response->addHeader("Content-Encoding", "gzip");
+			request->send(response);
 		}
 	}	  
 public:

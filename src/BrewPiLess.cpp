@@ -152,15 +152,15 @@ const char *nocache_list[]={
 		if(filename.endsWith(".htm")) return "text/html";
 		else if(filename.endsWith(".html")) return "text/html";
 		else if(filename.endsWith(".css")) return "text/css";
-		else if(filename.endsWith(".js")) return "application/javascript";
+		else if(filename.endsWith(".js")) return "text/javascript";
 		else if(filename.endsWith(".png")) return "image/png";
 		else if(filename.endsWith(".gif")) return "image/gif";
 		else if(filename.endsWith(".jpg")) return "image/jpeg";
 		else if(filename.endsWith(".ico")) return "image/x-icon";
 		else if(filename.endsWith(".xml")) return "text/xml";
-		else if(filename.endsWith(".pdf")) return "application/x-pdf";
-		else if(filename.endsWith(".zip")) return "application/x-zip";
-		else if(filename.endsWith(".gz")) return "application/x-gzip";
+		else if(filename.endsWith(".pdf")) return "application/pdf";
+		else if(filename.endsWith(".zip")) return "application/zip";
+		else if(filename.endsWith(".gz")) return "application/gzip";
 		return "text/plain";
 	  }
 
@@ -290,7 +290,7 @@ class BrewPiWebHandler: public AsyncWebHandler
 		if(path.endsWith(".js")){
 			String pathWithJgz = path.substring(0,path.lastIndexOf('.')) + ".jgz";
 			if(LittleFS.exists(pathWithJgz)){
-				AsyncWebServerResponse * response = request->beginResponse(LittleFS, pathWithJgz,"application/javascript");
+				AsyncWebServerResponse * response = request->beginResponse(LittleFS, pathWithJgz,"text/javascript");
 				response->addHeader("Content-Encoding", "gzip");
 				response->addHeader("Cache-Control","max-age=2592000");
 				request->send(response);
@@ -339,7 +339,7 @@ class BrewPiWebHandler: public AsyncWebHandler
 		if (const uint8_t *file = getEmbeddedFile(path.c_str(), gzip, size)) {
 			assert(gzip == true && "All files must be gzipped");
 			DBG_PRINTF("using embedded file: '%s'\n",path.c_str());
-			const char *contentType = path.endsWith(".js") ? "application/javascript" : "text/html";
+			const char *contentType = path.endsWith(".js") ? "text/javascript" : "text/html";
 			AsyncWebServerResponse *response = request->beginResponse_P(200, contentType, file, size);
 			response->addHeader("Cache-Control","max-age=2592000");
 			response->addHeader("Content-Encoding", "gzip");

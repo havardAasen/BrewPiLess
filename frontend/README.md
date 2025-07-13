@@ -25,8 +25,8 @@ This will automatically recompile the code, you will just need to refresh the br
 
 ### Build
 If you want to build the project run:
-```
-grunt build
+```bash
+npm run build
 ```
 
 

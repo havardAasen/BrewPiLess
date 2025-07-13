@@ -36,7 +36,7 @@ jobs:
       - name: Build frontend
         working-directory: frontend
         run: |
-          grunt i18n -v
+          grunt build -v
           ./output.sh
 
       - name: Build ${{ matrix.environment }}

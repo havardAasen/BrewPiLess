@@ -725,13 +725,14 @@ device_slot findHardwareDevice(DeviceConfig& find)
 #if BREWPI_DS2413
 				case DEVICE_HARDWARE_ONEWIRE_2413:
 					match &= find.hw.pio==config.hw.pio;
-					// fall through
+					[[fallthrough]];
 #endif
 				case DeviceHardware::onewireTemp:
 					match &= matchAddress(find.hw.address, config.hw.address, 8);
-					// fall through
+					[[fallthrough]];
 				case DeviceHardware::pin:
 					match &= find.hw.pinNr==config.hw.pinNr;
+					break;
 			#if BREWPI_EXTERNAL_SENSOR
 				case DeviceHardware::externalSensor:
 					match &= true;

@@ -22,6 +22,7 @@
 #define GravityHtmFile EVALUATOR(WebPageLanguage,_gdc_htm.h)
 #define ConfigHtmFile EVALUATOR(WebPageLanguage,_config_htm.h)
 #define PressureHtmFile EVALUATOR(WebPageLanguage,_pressure_htm.h)
+#define BundleJs EVALUATOR(WebPageLanguage,_bundle_js.h)
 
 
 
@@ -44,7 +45,6 @@ struct EmbeddedFileMapEntry{
 constexpr char file_testcmd_htm [] PROGMEM="/testcmd.htm";
 
 #include "dygraph_js.h"
-#include "bundle_js.h"
 
 
 constexpr char file_lcd_htm [] PROGMEM="/lcd";
@@ -58,6 +58,7 @@ constexpr char file_lcd_htm [] PROGMEM="/lcd";
 #include GravityHtmFile
 #include ConfigHtmFile
 #include PressureHtmFile
+#include BundleJs
 
 constexpr char file_index_htm [] PROGMEM="/index.htm";
 constexpr char file_dygraph_js [] PROGMEM="/dygraph.js";

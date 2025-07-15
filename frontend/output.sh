@@ -8,23 +8,23 @@ if [ ! -d $OUTDIR ]; then
 fi
 rm -f $OUTDIR/*.h
 
-htmlfiles=(index.htm.gz control.htm.gz config.htm.gz setup.htm.gz logging.htm.gz gravity.htm.gz pressure.htm.gz)
-variables=(data_index_htm_gz control_htm_gz config_htm_gz setup_htm_gz logging_htm_gz gravity_htm_gz pressure_htm_gz)
-outfiles=(index_htm control_htm config_htm setup_htm log_htm gdc_htm pressure_htm)
+translated_files=(index.htm.gz control.htm.gz config.htm.gz setup.htm.gz logging.htm.gz gravity.htm.gz pressure.htm.gz bundle.js)
+variables=(data_index_htm_gz control_htm_gz config_htm_gz setup_htm_gz logging_htm_gz gravity_htm_gz pressure_htm_gz data_bundle_js)
+outfiles=(index_htm control_htm config_htm setup_htm log_htm gdc_htm pressure_htm bundle_js)
 languages=(english spanish portuguese-br slovak chinese)
 
-non_translated_files=(lcd.htm.gz edit.htm.gz testcmd.htm.gz bundle.js dygraph.js)
-non_translated_variables=(lcd_htm_gz edit_htm_gz testcmd_htm_gz data_bundle_js data_dygraph_js)
-non_translated_out=(lcd_htm edit_html_gz testcmd_htm bundle_js dygraph_js)
+non_translated_files=(lcd.htm.gz edit.htm.gz testcmd.htm.gz dygraph.js)
+non_translated_variables=(lcd_htm_gz edit_htm_gz testcmd_htm_gz data_dygraph_js)
+non_translated_out=(lcd_htm edit_html_gz testcmd_htm dygraph_js)
 
 gen_C_file()
 {
 lang=$1
-for ((index=0; index<${#htmlfiles[@]}; index++)); do
+for ((index=0; index<${#translated_files[@]}; index++)); do
     srcdir="dist/$lang"
 
-#   echo "[$index]: ${htmlfiles[$index]}"
-   input="$srcdir/${htmlfiles[$index]}"
+#   echo "[$index]: ${translated_files[$index]}"
+   input="$srcdir/${translated_files[$index]}"
    output="$OUTDIR/${lang}_${outfiles[$index]}.h"
    variable=${variables[$index]}
    #echo "input: $input output file: $output with variables $variable "

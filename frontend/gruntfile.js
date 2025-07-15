@@ -9,22 +9,46 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-multi-lang-site-generator');
   grunt.loadNpmTasks('@lodder/grunt-postcss');
   grunt.loadNpmTasks('grunt-processhtml');
 
+  const languages =  ['english', 'chinese', 'spanish', 'portuguese-br', 'slovak']
+  const translations = {}
+
+  languages.forEach(language => {
+    translations[language] = grunt.file.readJSON(`src/locales/${language}.json`)
+  })
+
+  const replaceConfig = {}
+  languages.forEach(language => {
+    const patterns = Object.entries(translations[language])
+    .map(([key, value]) => ({
+      match: new RegExp(`<%=\\s*${key}\\s*%>`, 'g'),
+      replacement: value,
+    }))
+
+    replaceConfig[language] = {
+      options: {
+        patterns,
+        silent: true
+      },
+      files: [
+        {
+          expand: true,
+          cwd: 'dist',
+          src: ['bundle.js'],
+          dest: `dist/${language}/`
+        }
+      ]
+    }
+  })
+
   grunt.initConfig({
 
     copy: {
-      dev: {
-        files: [
-          {
-            src: 'src/js/vendor/dygraph-combined.js',
-            dest: 'build/dygraph.js'
-          }
-        ]
-      },
       debug: {
         files: [
           {
@@ -36,12 +60,7 @@ module.exports = function(grunt) {
     },
 
     rollup: {
-      dev: {
-        files: {
-          'build/bundle.js': ['src/js/main.js']
-        }
-      },
-      prod: {
+      default: {
         files: {
           'dist/bundle.js': ['src/js/main.js']
         }
@@ -168,9 +187,8 @@ module.exports = function(grunt) {
           },
           {
             expand: true,
-            cwd: 'dist/',
-            src: ['*.js'],
-            dest: 'dist/',
+            src: ['dist/**/*.js'],
+            dest: '.',
             ext: '.js'  // keep the same name for consistent HTML reference
           }
         ]
@@ -199,7 +217,7 @@ module.exports = function(grunt) {
     multi_lang_site_generator: {
       default: {
         options: {
-          vocabs: ['english', 'chinese', 'spanish', 'portuguese-br', 'slovak'],
+          vocabs: languages,
           vocab_directory: 'src/locales',
           output_directory: 'dist',
           template_directory: 'dist'
@@ -218,27 +236,31 @@ module.exports = function(grunt) {
       }
     },
 
+    replace: replaceConfig,
+
     watch: {
       files: ['src/**/*'],
       tasks: ['default']
     }
   });
 
+  const multi_lang_js_gen = languages.map(lang => `replace:${lang}`)
 
   grunt.registerTask('debug', [
-    'copy:debug',
-    'rollup:prod',
+    'copy',
+    'rollup',
     'processhtml',
     'sass:dev',
     'postcss',
     'comboall',
     'multi_lang_site_generator',
+      ...multi_lang_js_gen,
     'compress'
   ]);
 
   grunt.registerTask('default', [
-    'copy:dev',
-    'rollup:dev',
+    'copy',
+    'rollup',
     'processhtml',
     'sass:dev',
     'postcss',
@@ -247,7 +269,7 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('build', [
-    'rollup:prod',
+    'rollup',
     'uglify',
     'processhtml',
     'sass:dev',
@@ -255,6 +277,7 @@ module.exports = function(grunt) {
     'comboall',
     'htmlmin',
     'multi_lang_site_generator',
+    ...multi_lang_js_gen,
     'compress'
   ]);
 };

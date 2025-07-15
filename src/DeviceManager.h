@@ -40,7 +40,7 @@
  * Since the data has to be persisted to EEPROM, references to the actual uses of the devices have to be encoded.  This is the function of the deviceID.
  */
 
-class DeviceConfig;
+struct DeviceConfig;
 
 using device_slot = int8_t;
 inline bool isDefinedSlot(device_slot s) { return s>=0; }

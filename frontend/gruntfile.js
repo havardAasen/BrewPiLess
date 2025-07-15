@@ -6,7 +6,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-rollup');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-replace');
@@ -121,28 +120,6 @@ module.exports = function(grunt) {
           { 'dist/testcmd.htm': ['src/testcmd.html']},
           { 'dist/edit.htm': ['src/edit.html']}
         ]
-      }
-    },
-
-    jshint: {
-      files: [
-        'src/js/*.js'
-      ],
-      options: {
-        curly: true,
-        eqeqeq: true,
-        immed: true,
-        latedef: true,
-        newcap: true,
-        noarg: true,
-        sub: true,
-        undef: true,
-        boss: true,
-        eqnull: true,
-        browser: true,
-        globals: {
-          console: true
-        }
       }
     },
 

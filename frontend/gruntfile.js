@@ -164,11 +164,7 @@ module.exports = function(grunt) {
           {
             expand: true,
             src: [
-              'dist/english/*.htm',
-              'dist/chinese/*.htm',
-              'dist/spanish/*.htm',
-              'dist/portuguese-br/*.htm',
-              'dist/slovak/*.htm',
+              'dist/*/*.htm',
               'dist/lcd.htm',
               'dist/testcmd.htm',
               'dist/edit.htm'

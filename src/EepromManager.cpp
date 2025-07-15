@@ -34,8 +34,7 @@ EepromAccess eepromAccess;
 
 bool EepromManager::hasSettings()
 {
-	uint8_t version = EepromAccess::readByte(pointerOffset(version));
-	return (version==EEPROM_FORMAT_VERSION);
+	return EepromAccess::readByte(pointerOffset(version)) == EEPROM_FORMAT_VERSION;
 }
 
 void EepromManager::resetEeprom()

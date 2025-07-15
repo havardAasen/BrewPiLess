@@ -718,7 +718,7 @@ inline bool matchAddress(uint8_t* detected, uint8_t* configured, uint8_t count) 
 device_slot findHardwareDevice(DeviceConfig& find)
 {
 	DeviceConfig config;
-	for (device_slot slot= 0; deviceManager.allDevices(config, slot); slot++) {
+	for (device_slot slot= 0; DeviceManager::allDevices(config, slot); slot++) {
 		if (find.deviceHardware==config.deviceHardware) {
 			bool match = true;
 			switch (find.deviceHardware) {
@@ -776,7 +776,7 @@ void DeviceManager::handleEnumeratedDevice(DeviceConfig& config, EnumerateHardwa
 		if (h.unused)	// only list unused devices, and this one is already used
 			return;
 		// display the actual matched value
-		deviceManager.allDevices(config, out.slot);
+		DeviceManager::allDevices(config, out.slot);
 	}
 
 	out.value[0] = 0;
@@ -974,14 +974,14 @@ void DeviceManager::listDevices() {
 			tempControl.cameraLight.setActive(dd.write!=0);
 		return;
 	}
-	DeviceManager::beginDeviceOutput();
-	for (device_slot idx=0; DeviceManager::allDevices(dc, idx); idx++) {
-		if (DeviceManager::enumDevice(dd, dc, idx))
+	beginDeviceOutput();
+	for (device_slot idx=0; allDevices(dc, idx); idx++) {
+		if (enumDevice(dd, dc, idx))
 		{
 			char val[10];
 			val[0] = 0;
 			UpdateDeviceState(dd, dc, val);
-			DeviceManager::printDevice(idx, dc, val);
+			printDevice(idx, dc, val);
 		}
 	}
 }

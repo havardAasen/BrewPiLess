@@ -106,7 +106,7 @@ bool EepromManager::applySettings()
 			DeviceManager::installDevice(deviceConfig);
 		else {
 			clear((uint8_t*)&deviceConfig, sizeof(deviceConfig));
-			EepromManager::storeDevice(deviceConfig, index);
+			storeDevice(deviceConfig, index);
 		}
 	}
 	return true;

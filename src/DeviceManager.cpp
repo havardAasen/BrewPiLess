@@ -96,10 +96,7 @@ bool DeviceManager::isDefaultTempSensor(ITempSensor* sensor) {
 	return sensor==&defaultTempSensor;
 }
 
-/**
- * Sets devices to their unconfigured states. Each device is initialized to a static no-op instance.
- * This method is idempotent, and is called each time the eeprom is reset.
- */
+
 void DeviceManager::setupUnconfiguredDevices()
 {
 	// right now, uninstall doesn't care about chamber/beer distinction.
@@ -113,9 +110,6 @@ void DeviceManager::setupUnconfiguredDevices()
 }
 
 
-/**
- * Creates a new device for the given config.
- */
 void* DeviceManager::createDevice(DeviceConfig& config, DeviceType dt)
 {
 	
@@ -237,11 +231,6 @@ inline void setSensor(DeviceFunction f, void** ppv, ITempSensor* sensor) {
 		((TempSensor*)*ppv)->setSensor(sensor);
 }
 
-/**
- * Removes an installed device.
- * /param config The device to remove. The fields that are used are
- *		chamber, beer, hardware and function.
- */
 
 void DeviceManager::uninstallDevice(DeviceConfig& config)
 {
@@ -285,9 +274,6 @@ void DeviceManager::uninstallDevice(DeviceConfig& config)
 	}
 }
 
-/**
- * Creates and installs a device in the current chamber.
- */
 void DeviceManager::installDevice(DeviceConfig& config)
 {
 	DeviceType dt = deviceType(config.deviceFunction);
@@ -348,9 +334,7 @@ struct DeviceDefinition {
 	int8_t calibrationAdjust;
 	DeviceAddress address;
 
-	/**
-	 * Lists the first letter of the key name for each attribute.
-	 */
+	/** Lists the first letter of the key name for each attribute. */
 	static constexpr char ORDER[12] = "icbfhpxndja";
 };
 
@@ -403,10 +387,7 @@ void assignIfSet(int8_t value, uint8_t* target) {
 		*target = (uint8_t)value;
 }
 
-/**
- * Updates the device definition. Only changes that result in a valid device, with no conflicts with other devices
- * are allowed.
- */
+
 void DeviceManager::parseDeviceDefinition()
 {
 	static DeviceDefinition dev;
@@ -481,16 +462,7 @@ void DeviceManager::parseDeviceDefinition()
 	PiLink::printNewLine();
 }
 
-/**
- * Determines if a given device definition is valid.
- * chamber/beer must be within bounds
- * device function must match the chamber/beer spec, and must not already be defined for the same chamber/beer combination
- * device hardware type must be applicable with the device function
- * pinNr must be unique for digital pin devices?
- * pinNr must be a valid OneWire bus for one wire devices.
- * for onewire temp devices, address must be unique.
- * for onewire ds2413 devices, address+pio must be unique.
- */
+
 bool DeviceManager::isDeviceValid(DeviceConfig& config, DeviceConfig& original, uint8_t deviceIndex)
 {
 #if 1
@@ -986,9 +958,6 @@ void DeviceManager::listDevices() {
 	}
 }
 
-/**
- * Determines the class of device for the given DeviceID.
- */
 
 DeviceType deviceType(DeviceFunction id) {
 	switch (id) {

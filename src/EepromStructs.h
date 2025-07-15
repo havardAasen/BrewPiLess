@@ -54,9 +54,7 @@ struct ControlConstants {
 
 
 
-/*
-* Describes the logical function of each device.
-*/
+/** Describes the logical function of a device. */
 enum DeviceFunction {
 	DEVICE_NONE = 0,			// used as a sentry to mark end of list
 	// chamber devices

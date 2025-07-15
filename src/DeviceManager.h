@@ -88,6 +88,7 @@ inline bool isDigitalPin(DeviceHardware hardware) {
 	return hardware == DeviceHardware::pin;
 }
 
+/** Determines the class of device for the given DeviceID. */
 extern DeviceType deviceType(DeviceFunction id);
 
 #if BREWPI_EXTERNAL_SENSOR
@@ -96,9 +97,7 @@ inline bool isExternalSensor(DeviceHardware hardware) {
 }
 #endif
 
-/**
- * Determines where this devices belongs.
- */
+/** Determines where device belongs. */
 inline DeviceOwner deviceOwner(DeviceFunction id) {
 	return id==0 ? DeviceOwner::none : id>=DEVICE_BEER_FIRST ? DeviceOwner::beer : DeviceOwner::chamber;
 }
@@ -130,9 +129,7 @@ struct DeviceDisplay {
 
 void HandleDeviceDisplay(const char* key, const char* value, void* pv);
 
-/**
- * Reads or writes a value to a device.
- */
+/** Reads or writes a value to a device. */
 void UpdateDeviceState(DeviceDisplay& dd, DeviceConfig& dc, char* val);
 
 class OneWire;
@@ -174,9 +171,6 @@ public:
 		return -1;
 	}
 
-	/* Enumerates the 1-wire pins.
-	 *
-	 */
 	int8_t enumOneWirePins(uint8_t offset)
 	{
 #ifdef ARDUINO
@@ -193,31 +187,59 @@ public:
 		return -1;
 	}
 
+	/**
+	 * @brief Sets devices to their unconfigured states.
+	 *
+	 * Each device is initialized to a static no-op instance. This method is
+	 * idempotent, and is called each time the EEPROM is reset.
+	 */
 	static void setupUnconfiguredDevices();
 
 	/**
-	 * Creates and Installs a device from the given device config.
-	 * /return true if a device was installed. false if the config is not complete.
+	 * @brief Creates and Installs a device from the given device config.
+	 * @return true if a device was installed. false if the config is not complete.
 	 */
 	static void installDevice(DeviceConfig& config);
 
+	/**
+	 * @brief Removes an installed device.
+	 * @param config The device to remove. The fields that are used are
+	 *               chamber, beer, hardware and function.
+	 */
 	static void uninstallDevice(DeviceConfig& config);
 
+	/**
+	 * @brief Updates the device definition.
+	 *
+	 * Only changes that result in a valid device, with no conflicts with other
+	 * devices are allowed.
+	 */
 	static void parseDeviceDefinition();
 	static void printDevice(device_slot slot, DeviceConfig& config, const char* value);
 
 	/**
-	 * Iterate over the defined devices.
+	 * @brief Iterate over the defined devices.
+	 *
 	 * Caller first calls with deviceIndex 0. If the return value is true, config is filled out with the
 	 * config for the device. The caller can then increment deviceIndex and try again.
 	 */
 	static bool allDevices(DeviceConfig& config, uint8_t deviceIndex);
 
+	/**
+	 * @brief Determines if a given device definition is valid.
+	 *
+	 * - Chamber/beer must be within bounds.
+	 * - The device function must be compatible with the specified chamber or beer,
+	 *   and must not already be assigned to that same chamber/beer combination.
+	 * - The hardware type of the device must be appropriate for the specified function.
+	 * - For digital pin devices, the pin number (`pinNr`) must be unique.
+	 * - For OneWire devices, the pin number must correspond to a valid OneWire bus.
+	 * - For OneWire temperature devices, the address must be unique.
+	 * - For OneWire DS2413 devices, the combination of address and PIO must be unique.
+	 */
 	static bool isDeviceValid(DeviceConfig& config, DeviceConfig& original, uint8_t deviceIndex);
 
-	/**
-	 * read hardware spec from stream and output matching devices
-	 */
+	/** Read hardware spec from stream and output matching devices */
 	static void enumerateHardware();
 
 	static bool enumDevice(DeviceDisplay& dd, DeviceConfig& dc, uint8_t idx);
@@ -234,7 +256,7 @@ private:
 	static void handleEnumeratedDevice(DeviceConfig& config, EnumerateHardware& h, EnumDevicesCallback callback, DeviceOutput& out);
 	static void readTempSensorValue(DeviceConfig::Hardware hw, char* out);
 
-
+	/** @brief Creates a new device for the given @p config. */
 	static void* createDevice(DeviceConfig& config, DeviceType dc);
 	static void* createOneWireGPIO(DeviceConfig& config, DeviceType dt);
 

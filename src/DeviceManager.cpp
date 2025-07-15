@@ -592,7 +592,7 @@ inline bool hasOnewire(DeviceHardware hw)
 	hw == DeviceHardware::onewireTemp;
 }
 
-void DeviceManager::printDevice(device_slot_t slot, DeviceConfig& config, const char* value)
+void DeviceManager::printDevice(device_slot slot, DeviceConfig& config, const char* value)
 {
 	String deviceString;
 	char buf[17];
@@ -715,10 +715,10 @@ inline bool matchAddress(uint8_t* detected, uint8_t* configured, uint8_t count) 
  *   pinNr+address for one-wire devices
  *   pinNr+address+pio for 2413
  */
-device_slot_t findHardwareDevice(DeviceConfig& find)
+device_slot findHardwareDevice(DeviceConfig& find)
 {
 	DeviceConfig config;
-	for (device_slot_t slot= 0; deviceManager.allDevices(config, slot); slot++) {
+	for (device_slot slot= 0; deviceManager.allDevices(config, slot); slot++) {
 		if (find.deviceHardware==config.deviceHardware) {
 			bool match = true;
 			switch (find.deviceHardware) {
@@ -974,7 +974,7 @@ void DeviceManager::listDevices() {
 		return;
 	}
 	DeviceManager::beginDeviceOutput();
-	for (device_slot_t idx=0; DeviceManager::allDevices(dc, idx); idx++) {
+	for (device_slot idx=0; DeviceManager::allDevices(dc, idx); idx++) {
 		if (DeviceManager::enumDevice(dd, dc, idx))
 		{
 			char val[10];

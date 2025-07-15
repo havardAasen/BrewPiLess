@@ -42,10 +42,10 @@
 
 class DeviceConfig;
 
-typedef int8_t device_slot_t;
-inline bool isDefinedSlot(device_slot_t s) { return s>=0; }
-inline constexpr device_slot_t MAX_DEVICE_SLOT = 16;		// exclusive
-inline constexpr device_slot_t INVALID_SLOT = -1;
+using device_slot = int8_t;
+inline bool isDefinedSlot(device_slot s) { return s>=0; }
+inline constexpr device_slot MAX_DEVICE_SLOT = 16;		// exclusive
+inline constexpr device_slot INVALID_SLOT = -1;
 
 
 /** Describes where the device is most closely associated. */
@@ -117,7 +117,7 @@ struct EnumerateHardware
 
 struct DeviceOutput
 {
-	device_slot_t	slot;
+	device_slot	slot;
 	char value[10];
 };
 
@@ -204,7 +204,7 @@ public:
 	static void uninstallDevice(DeviceConfig& config);
 
 	static void parseDeviceDefinition();
-	static void printDevice(device_slot_t slot, DeviceConfig& config, const char* value);
+	static void printDevice(device_slot slot, DeviceConfig& config, const char* value);
 
 	/**
 	 * Iterate over the defined devices.

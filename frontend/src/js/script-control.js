@@ -6,7 +6,10 @@ import {
     openDlgLoading,
     getActiveNavItem,
     JSVERSION,
-    closeDlgLoading, F2C, C2F
+    closeDlgLoading,
+    F2C,
+    C2F,
+    updateOriginGravity
 } from "./shared";
 import { Capper } from "./capper";
 import { BWF } from "./vendor/bwf";
@@ -215,14 +218,14 @@ var profileEditor = {
         if (rowlist.length == 0) return [];
 
         var utime = this.sd.getTime();
-        var row = rowlist[0];
+        let row = rowlist[0];
         var start = this.rowTemp(row);
 
         var list = [];
         list.push([new Date(utime), start]);
 
         for (var i = 0; i < rowlist.length; i++) {
-            var row = rowlist[i];
+            row = rowlist[i];
             var temp;
             if (row.type == "r") {
                 temp = this.rowTemp(rowlist[i + 1]);
@@ -255,7 +258,7 @@ var profileEditor = {
         } else {
             var lastRow = rowlist[rowlist.length - 1];
 
-            var tr = this.row.cloneNode(true);
+            let tr = this.row.cloneNode(true);
             this.initrow(tr, {
                 c: "r",
                 d: 1
@@ -269,7 +272,7 @@ var profileEditor = {
             };
         }
 
-        var tr = this.row.cloneNode(true);
+        let tr = this.row.cloneNode(true);
         this.initrow(tr, stage);
         tb.appendChild(tr);
 
@@ -351,7 +354,6 @@ var profileEditor = {
     clear: function() {
         var rl = this.rowList();
 
-        var count = rl.length;
         for (var i = rl.length - 1; i >= 0; i--) {
             var tr = rl[i];
             tr.parentNode.removeChild(tr);
@@ -362,7 +364,7 @@ var profileEditor = {
         var rl = this.rowList();
         var lastdate = 0;
         var temps = [];
-        for (var i = 0; i < rl.length; i++) {
+        for (let i = 0; i < rl.length; i++) {
             var tr = rl[i];
             var day = this.rowTime(tr);
             if (isNaN(day)) return false;
@@ -448,7 +450,7 @@ var profileEditor = {
         if (u == this.tempUnit) return;
         this.tempUnit = u;
         var rl = this.rowList();
-        for (var i = 0; i < rl.length; i++) {
+        for (let i = 0; i < rl.length; i++) {
             var tcell = rl[i].querySelector('td.stage-temp');
             var temp = parseFloat(tcell.innerHTML);
             if (!isNaN(temp)) tcell.innerHTML = (u == 'C') ? F2C(temp) : C2F(temp);
@@ -507,7 +509,7 @@ export var PL = {
         var a = this;
         var h = Q(a.div).querySelector(".profile-list");
         var lis = h.querySelectorAll("li");
-        for (var i = 0; i < lis.length; i++) {
+        for (let i = 0; i < lis.length; i++) {
             h.removeChild(lis[i]);
         }
         var b = a.row;
@@ -588,7 +590,6 @@ export var PL = {
         }
         var f = this;
         var c = "path=" + f.path(e) + "&content=" + encodeURIComponent(JSON.stringify(g));
-        var f = this;
         s_ajax({
             url: f.url_save,
             m: "POST",

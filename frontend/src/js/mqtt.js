@@ -40,10 +40,12 @@ function mqttSave() {
         data: "data=" + encodeURIComponent(JSON.stringify(json)),
         m: "POST",
         success: function(data) {
-            alert("done");
+            alert("<%= done %>!");
         },
         fail: function(d) {
             alert("<%= script_config_error_saving_data %>:" + d);
         }
     });
 }
+
+window.mqttSave = mqttSave;

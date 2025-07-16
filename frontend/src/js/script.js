@@ -1,16 +1,17 @@
-import { Q, getActiveNavItem, s_ajax, openDlgLoading, closeDlgLoading, JSVERSION, ModeString, StateText } from './shared';
-import { BrewChart, GravityFilter, GravityTracker } from "./vendor/chart";
+import { Q, getActiveNavItem, s_ajax, openDlgLoading, C2F, BrewMath, closeDlgLoading, JSVERSION, ModeString, StateText, updateOriginGravity, updateGravity } from './shared';
+import { BrewChart, checkfgstate, GravityFilter, GravityTracker } from "./vendor/chart";
 import { Capper } from "./capper";
 import { BWF } from "./vendor/bwf";
 
-    var T_CHART_REQUEST = 12000;
-    var T_CHART_RETRYTO = 6000;
-    var T_CHART_ZERODATA = 10000;
-    var T_CHART_REFRESH = 2500;
-    var T_CHART_RETRY = 10000;
-    var T_LOAD_CHART = 150;
-    var T_BWF_RECONNECT = 10000;
-    var T_BWF_LCD = 10000;
+    const T_CHART_REQUEST = 12000;
+    const T_CHART_RETRYTO = 6000;
+    const T_CHART_ZERODATA = 10000;
+    const T_CHART_REFRESH = 2500;
+    const T_CHART_RETRY = 10000;
+    const T_LOAD_CHART = 150;
+    const T_BWF_RECONNECT = 10000;
+    const T_BWF_LCD = 10000;
+
     var BChart = {
         offset: 0,
         url: 'chart.php',
@@ -41,7 +42,7 @@ import { BWF } from "./vendor/bwf";
             // recalcualte data
             // re process data to get correct calibration points
             var t = this;
-            for (var i = 0; i < t.bdata.length; i++)
+            for (let i = 0; i < t.bdata.length; i++)
                 t.chart.process(t.bdata[i]);
         },
         updateChartResult: function() {
@@ -212,7 +213,6 @@ import { BWF } from "./vendor/bwf";
 
     function parseStatusLine(line) {
         var status = {};
-        var i = 0;
         var statePatterns = [
             /Idling\s+for\s+(\S+)\s*$/i,
             /control\s+OFF/i,
@@ -226,7 +226,7 @@ import { BWF } from "./vendor/bwf";
             /Heat\s+Time\s+left\s+(\S+)\s*$/i
         ];
         status.ControlStateSince = "";
-        for (i = 0; i < statePatterns.length; i++) {
+        for (var i = 0; i < statePatterns.length; i++) {
             var match = statePatterns[i].exec(line);
             if (match) {
                 if (typeof match[1] !== "undefined") status.ControlStateSince = match[1];
@@ -314,7 +314,7 @@ import { BWF } from "./vendor/bwf";
     }
 
     function displayLcdText(lines) {
-        for (var i = 0; i < 4; i++) {
+        for (let i = 0; i < 4; i++) {
             var d = document.getElementById("lcd-line-" + i);
             if (d) d.innerHTML = lines[i];
         }
@@ -330,7 +330,7 @@ import { BWF } from "./vendor/bwf";
 
     function hideErrorMsgs() {
         var msgs = document.querySelectorAll(".errormsg");
-        for (var i = 0; i < msgs.length; i++)
+        for (let i = 0; i < msgs.length; i++)
             msgs[i].style.display = "none";
     }
 
@@ -432,25 +432,6 @@ import { BWF } from "./vendor/bwf";
             window.caltemp = msg["ctemp"];
     }
 
-
-    function updateGravity(sg) {
-        //if(typeof window.sg != "undefined") return;
-        window.sg = sg;
-        Q("#gravity-sg").innerHTML = window.plato ? sg.toFixed(1) : sg.toFixed(3);
-        if (typeof window.og != "undefined") {
-            Q("#gravity-att").innerHTML = window.plato ? BrewMath.attP(window.og, sg) : BrewMath.att(window.og, sg);
-            Q("#gravity-abv").innerHTML = window.plato ? BrewMath.abvP(window.og, sg) : BrewMath.abv(window.og, sg);
-        }
-    }
-
-    function updateOriginGravity(og) {
-        if (typeof window.og != "undefined" && window.og == og) return;
-        window.og = og;
-        Q("#gravity-og").innerHTML = window.plato ? og.toFixed(1) : og.toFixed(3);
-        if (typeof window.sg != "undefined")
-            updateGravity(window.sg);
-    }
-
     function showgravitydlg(msg) {
         Q('#dlg_addgravity .og').style.display = "none";
         Q('#dlg_addgravity .sg').style.display = "none";
@@ -468,7 +449,7 @@ import { BWF } from "./vendor/bwf";
             Q("#dlg_addgravity .tempinput").value = defaultTemp;
 
             var tus = document.querySelectorAll("#dlg_addgravity .temp-unit");
-            for (var i = 0; i < tus.length; i++)
+            for (let i = 0; i < tus.length; i++)
                 tus[i].innerHTML = window.tempUnit;
         } else window.celsius = true;
     }
@@ -487,21 +468,21 @@ import { BWF } from "./vendor/bwf";
         // calibration temperature always use celsius.
         Q("#sginput-hm-cal-temp").innerHTML = caltemp;
         if (window.plato) {
-            var correctedSg = BrewMath.pTempCorrection(window.celsius, gravity, temp, caltemp);
+            const correctedSg = BrewMath.pTempCorrection(window.celsius, gravity, temp, caltemp);
             Q("#sginput-hmc").innerHTML = correctedSg.toFixed(2);
 
         } else {
-            var correctedSg = BrewMath.tempCorrection(window.celsius, gravity, temp, caltemp);
+            const correctedSg = BrewMath.tempCorrection(window.celsius, gravity, temp, caltemp);
             Q("#sginput-hmc").innerHTML = correctedSg.toFixed(3);
         }
         // if iSpindel info is available, or beer temp is available.
         if (typeof window.beerTemp != "undefined") {
             Q("#sginput-ispindel-temp").innerHTML = window.beerTemp;
             if (window.plato) {
-                var sgc = BrewMath.pTempCorrection(window.celsius, gravity, temp, window.beerTemp);
+                const sgc = BrewMath.pTempCorrection(window.celsius, gravity, temp, window.beerTemp);
                 Q("#sginput-sg-ispindel").innerHTML = sgc.toFixed(2);
             } else {
-                var sgc = BrewMath.tempCorrection(window.celsius, gravity, temp, window.beerTemp);
+                const sgc = BrewMath.tempCorrection(window.celsius, gravity, temp, window.beerTemp);
                 Q("#sginput-sg-ispindel").innerHTML = sgc.toFixed(3);
             }
         }
@@ -561,7 +542,7 @@ import { BWF } from "./vendor/bwf";
             if (strength[bar] < x) break;
         }
         var bars = Q(did).getElementsByClassName("rssi-bar");
-        for (var i = 0; i < bars.length; i++) {
+        for (let i = 0; i < bars.length; i++) {
             bars[i].style.backgroundColor = (i < bar) ? window.rssiBarColor : "rgba(255,255,255,0.05)";
         }
         Q(did).title = (x > 0) ? "?" : Math.min(Math.max(2 * (x + 100), 0), 100);
@@ -636,7 +617,7 @@ import { BWF } from "./vendor/bwf";
 
     function showPlatoUnit() {
         var units = document.querySelectorAll(".platounit");
-        for (var i = 0; i < units.length; i++) {
+        for (let i = 0; i < units.length; i++) {
             units[i].style.display = "inline-block";
         }
     }

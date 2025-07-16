@@ -1,4 +1,5 @@
 import { Q } from "./shared";
+import { regression } from "./vendor/regression";
 
     /* ispindel calibration */
     var PolyRegression = {
@@ -6,8 +7,7 @@ import { Q } from "./shared";
         clear: function() {
             var tbody = document.getElementById("pointlist").getElementsByTagName("tbody")[0];
             var rl = tbody.querySelectorAll("tr.pl_calpoint");
-            var count = rl.length;
-            for (var i = rl.length - 1; i >= 0; i--) {
+            for (let i = rl.length - 1; i >= 0; i--) {
                 var tr = rl[i];
                 tr.parentNode.removeChild(tr);
             }
@@ -39,7 +39,7 @@ import { Q } from "./shared";
             var ilist = tbody.querySelectorAll("input.pl_ignored_cb");
             var mask = 0;
             var notignored = 0;
-            for (var i = 0; i < ilist.length; i++) {
+            for (let i = 0; i < ilist.length; i++) {
                 if (ilist[i].checked) mask = mask | (0x1 << i);
                 else notignored++;
             }
@@ -58,7 +58,7 @@ import { Q } from "./shared";
             }
             this.getFormula();
             var tbody = this.clear();
-            for (var i = 0; i < this.ptlist.length; i++) {
+            for (let i = 0; i < this.ptlist.length; i++) {
                 tbody.appendChild(this.newrow(this.ptlist[i]));
             }
             this.chart();
@@ -67,7 +67,7 @@ import { Q } from "./shared";
             var t = this;
             if (t.allpoints.length < 2) return;
             t.points = [];
-            for (var i = 0; i < t.allpoints.length; i++) {
+            for (let i = 0; i < t.allpoints.length; i++) {
                 if (!((0x1 << i) & t.cal_igmask)) t.points.push(t.allpoints[i]);
             }
             if (t.points.length < 2) {
@@ -100,7 +100,7 @@ import { Q } from "./shared";
 
             var point_list = [];
 
-            for (var i = 0; i < t.allpoints.length; i++) {
+            for (let i = 0; i < t.allpoints.length; i++) {
                 var tilt = t.allpoints[i][0];
                 var realsg = t.allpoints[i][1];
                 var cal_sg = t.sgByTilt(tilt);
@@ -174,3 +174,7 @@ import { Q } from "./shared";
         Q("#polynomialpane").style.display = "none";
     }
     /* end of calibration */
+
+window.applyIgnoreMask = applyIgnoreMask
+window.openpolynomialpane = openpolynomialpane
+window.closepolynomialpane = closepolynomialpane

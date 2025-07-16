@@ -173,10 +173,10 @@ function listGot() {
     document.getElementById("detected-list").innerHTML = "";
     document.getElementById("installed-list").innerHTML = "";
     var a = 0;
-    for (var b = 0; b < installed_list.length; b++) {
+    for (let b = 0; b < installed_list.length; b++) {
         devices.add(a++, installed_list[b])
     }
-    for (var b = 0; b < available_list.length; b++) {
+    for (let b = 0; b < available_list.length; b++) {
         devices.add(a++, available_list[b])
     }
     unblockscreen()

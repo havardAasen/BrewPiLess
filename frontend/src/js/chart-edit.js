@@ -1,3 +1,6 @@
+import { BrewChart, BeerSetLine, BeerTempLine, FridgeSetLine, FridgeTempLine, RoomTempLine, AuxTempLine } from "./vendor/chart";
+import { BrewMath } from "./shared";
+
 BrewChart.prototype.partial = function(start, end) {
     var me = this;
 
@@ -123,7 +126,7 @@ BrewChart.prototype.partial = function(start, end) {
         // check annotation.
         var time = me.data[r][0].getTime();
         if (aidx < anno.length && time >= anno[aidx].x && anno[aidx].shortText == 'R') {
-            tdiff = Math.round((time - start) / 1000);
+            const tdiff = Math.round((time - start) / 1000);
             data.push(new Uint8Array([0xFE, (tdiff >> 16) & 0xFF, (tdiff >> 8) & 0xFF, tdiff && 0xFF]));
             aidx++;
         }
@@ -145,10 +148,9 @@ BrewChart.prototype.partial = function(start, end) {
 
 BrewChart.prototype.getModeBeforeTime = function(start) {
     var anno = this.anno;
-    var i = 0;
     var mode = anno[0].shortText;
     var allmode = "OBPF";
-    for (var i = 0; i < anno.length; i++) {
+    for (let i = 0; i < anno.length; i++) {
         if (anno[i].x > start) break;
         if (allmode.indexOf(anno[i].shortText) >= 0) {
             // mode annotiin
@@ -286,7 +288,7 @@ BrewChart.prototype.partial2Plato = function(start, end) {
         // check annotation.
         var time = me.data[r][0].getTime();
         if (aidx < anno.length && time >= anno[aidx].x && anno[aidx].shortText == 'R') {
-            tdiff = Math.round((time - start) / 1000);
+            const tdiff = Math.round((time - start) / 1000);
             data.push(new Uint8Array([0xFE, (tdiff >> 16) & 0xFF, (tdiff >> 8) & 0xFF, tdiff && 0xFF]));
             aidx++;
         }
@@ -308,10 +310,9 @@ BrewChart.prototype.partial2Plato = function(start, end) {
 
 BrewChart.prototype.getModeBeforeTime = function(start) {
     var anno = this.anno;
-    var i = 0;
     var mode = anno[0].shortText;
     var allmode = "OBPF";
-    for (var i = 0; i < anno.length; i++) {
+    for (let i = 0; i < anno.length; i++) {
         if (anno[i].x > start) break;
         if (allmode.indexOf(anno[i].shortText) >= 0) {
             // mode annotiin

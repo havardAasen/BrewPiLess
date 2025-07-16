@@ -66,9 +66,8 @@ export var BrewMath = {
         return 1 + (pla / (258.6 - ((pla / 258.2) * 227.1)));
     },
     tempCorrectionF(sg, t, c) {
-        var nsg = sg * ((1.00130346 - 0.000134722124 * t + 0.00000204052596 * t * t - 0.00000000232820948 * t * t * t) /
+        return sg * ((1.00130346 - 0.000134722124 * t + 0.00000204052596 * t * t - 0.00000000232820948 * t * t * t) /
             (1.00130346 - 0.000134722124 * c + 0.00000204052596 * c * c - 0.00000000232820948 * c * c * c));
-        return nsg;
     },
     pTempCorrectionF(sg, t, c) {
         return BrewMath.sg2pla(BrewMath.tempCorrectionF(BrewMath.pla2sg(sg), t, c));
@@ -122,6 +121,24 @@ export function formatDateForPicker(date) {
     var m = date.getMinutes();
 
     return date.getFullYear() + "-" + dd(date.getMonth() + 1) + "-" + dd(date.getDate()) + "T" + dd(h) + ":" + dd(m);
+}
+
+export function updateGravity(sg) {
+    //if(typeof window.sg != "undefined") return;
+    window.sg = sg;
+    Q("#gravity-sg").innerHTML = window.plato ? sg.toFixed(1) : sg.toFixed(3);
+    if (typeof window.og != "undefined") {
+        Q("#gravity-att").innerHTML = window.plato ? BrewMath.attP(window.og, sg) : BrewMath.att(window.og, sg);
+        Q("#gravity-abv").innerHTML = window.plato ? BrewMath.abvP(window.og, sg) : BrewMath.abv(window.og, sg);
+    }
+}
+
+export function updateOriginGravity(og) {
+    if (typeof window.og != "undefined" && window.og == og) return;
+    window.og = og;
+    Q("#gravity-og").innerHTML = window.plato ? og.toFixed(1) : og.toFixed(3);
+    if (typeof window.sg != "undefined")
+        updateGravity(window.sg);
 }
 
 export const ModeString = {

@@ -73,7 +73,7 @@ import { Q } from "../shared";
             Q("#fgstate").style.backgroundColor = Color[duration];
         }
 
-        function checkfgstate() {
+        export function checkfgstate() {
             if (GravityTracker.stable(12)) {
                 if (GravityTracker.stable(24)) {
                     if (GravityTracker.stable(48)) fgstate(48);
@@ -109,7 +109,7 @@ import { Q } from "../shared";
         var colorCoolingMinTime = "rgba(0, 0, 255, 0.6)";
         var colorWaitingPeakDetect = "rgba(0, 0, 0, 0.2)";
         var STATE_LINE_WIDTH = 15;
-        var STATES = [{
+        export var STATES = [{
             name: "IDLE",
             color: colorIdle,
             text: "<%= chart_state_idle %>"
@@ -169,14 +169,14 @@ import { Q } from "../shared";
         BrewChart.Colors = ["rgb(240, 100, 100)", "rgb(41,170,41)", "rgb(89, 184, 255)", "rgb(255, 161, 76)", "#AAAAAA", "#f5e127", "rgb(153,0,153)", "#000abb"];
         BrewChart.Labels = ['Time', 'beerSet', 'beerTemp', 'fridgeTemp', 'fridgeSet', 'roomTemp', 'auxTemp', 'gravity', 'filtersg'];
         BrewChart.ClassLabels = ['', 'beer-set', 'beer-temp', 'fridge-temp', 'fridge-set', 'room-temp', 'aux-temp', 'gravity', 'filtersg'];
-        var BeerTempLine = 2;
-        var BeerSetLine = 1;
-        var FridgeTempLine = 3;
-        var FridgeSetLine = 4;
-        var RoomTempLine = 5;
-        var AuxTempLine = 6;
-        var GravityLine = 7;
-        var FilteredSgLine = 8;
+        export const BeerTempLine = 2;
+        export const BeerSetLine = 1;
+        export const FridgeTempLine = 3;
+        export const FridgeSetLine = 4;
+        export const RoomTempLine = 5;
+        export const AuxTempLine = 6;
+        const GravityLine = 7;
+        const FilteredSgLine = 8;
 
         BrewChart.prototype.clearData = function() {
             this.laststat = [NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN];

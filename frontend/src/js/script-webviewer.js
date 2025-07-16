@@ -1,3 +1,6 @@
+import { Q } from "./shared";
+import { BrewChart } from "./vendor/chart";
+
         var BChart = {
             toggle: function(type) {
                 this.chart.toggleLine(type);

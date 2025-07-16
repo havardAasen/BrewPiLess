@@ -1,4 +1,4 @@
-import { Q, s_ajax, getActiveNavItem, JSVERSION} from "./shared";
+import { Q, s_ajax, C2F, BrewMath, getActiveNavItem, JSVERSION } from "./shared";
 import {mqttLoadSetting} from "./mqtt";
 
 var logurl = "log";
@@ -314,14 +314,14 @@ function thingspeak_set(r) {
 
     var values = {};
     var fields = r.format.split('&');
-    for (var i = 0; i < fields.length; i++) {
+    for (let i = 0; i < fields.length; i++) {
         var pair = fields[i].split("=");
         values[pair[0]] = pair[1];
     }
 
     Q("#thingspeak-apikey").value = values["api_key"];
 
-    for (var i = 1; i < 9; i++)
+    for (let i = 1; i < 9; i++)
         Q("select[name=thingspeak-f" + i + "]").value = (typeof values["field" + i] == "undefined") ?
         "unused" : values["field" + i].substring(1);
 }
@@ -396,11 +396,11 @@ function brewersfriend_set(r) {
 }
 
 function brewersfriend_get(r) {
-    var gf = "%g";
-    var gu = "G";
+    let gf = "%g";
+    let gu = "G";
     if (Q('input[name="BF-gu"]:checked').value == "gu-plato") {
-        var gf = "%p";
-        var gu = "P";
+        gf = "%p";
+        gu = "P";
     }
     //http://log.brewersfriend.com/stream/[API KEY]
     var url = Q("#brewersfriend-url").value.trim();

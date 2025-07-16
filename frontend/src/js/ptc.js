@@ -1,4 +1,4 @@
-import { s_ajax } from "./shared";
+import { Q, s_ajax } from "./shared";
 
 var valueurl = "/ptc";
 var saveurl = "/ptc"

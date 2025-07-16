@@ -1,3 +1,6 @@
+import { Q } from "./shared";
+import { BrewChart, STATES } from "./vendor/chart";
+
         var BChart = {
             toggle: function(type) {
                 this.chart.toggleLine(type);
@@ -108,13 +111,13 @@
             if (typeof window.file == "undefined") return;
             // generate data
             var csv = "Time, Unix Time";
-            for (var i = 1; i < BrewChart.Labels.length; i++) {
+            for (let i = 1; i < BrewChart.Labels.length; i++) {
                 csv = csv + ((i == 0) ? "" : ",") + BrewChart.Labels[i];
             }
             csv = csv + ",Tilt,state\n";
 
             for (var row = 0; row < BChart.chart.data.length; row++) {
-                for (var i = 0; i < BrewChart.Labels.length; i++) {
+                for (let i = 0; i < BrewChart.Labels.length; i++) {
                     var v = BChart.chart.chart.getValue(row, i);
                     if (v === null) v = "";
                     else if (isNaN(v)) v = "";

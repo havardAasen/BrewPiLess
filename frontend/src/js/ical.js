@@ -1,5 +1,5 @@
 import { Q } from "./shared";
-import { regression } from "./vendor/regression";
+import regression from 'regression';
 
     /* ispindel calibration */
     var PolyRegression = {
@@ -76,7 +76,7 @@ import { regression } from "./vendor/regression";
                 t.cal_igmask = 0;
             }
 
-            var poly = regression('polynomial', t.points, (t.points.length > 3) ? 3 : ((t.points.length > 2) ? 2 : 1), {
+            const poly = regression.polynomial(t.points, (t.points.length > 3) ? 3 : ((t.points.length > 2) ? 2 : 1), {
                 precision: 9
             });
             t.regression = poly;

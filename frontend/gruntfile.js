@@ -3,7 +3,7 @@
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-combo-html-css-js');
   grunt.loadNpmTasks('grunt-contrib-compress');
-  grunt.loadNpmTasks('grunt-rollup');
+  grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-contrib-sass');
@@ -58,18 +58,18 @@ module.exports = function(grunt) {
       }
     },
 
-    rollup: {
-      default: {
-        files: {
-          'dist/bundle.js': ['src/js/main.js']
-        }
+    shell: {
+      debug: {
+        command: 'NODE_ENV=development rollup -c'
+      },
+      prod: {
+        command: 'NODE_ENV=production rollup -c'
       }
     },
 
     uglify: {
       target: {
         files: [
-          { 'dist/bundle.js': 'dist/bundle.js' },
           { 'dist/dygraph.js': 'src/js/vendor/dygraph-combined.js' }
         ]
       }
@@ -225,7 +225,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('debug', [
     'copy',
-    'rollup',
+    'shell:debug',
     'processhtml',
     'sass:dev',
     'postcss',
@@ -237,7 +237,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', [
     'copy',
-    'rollup',
+    'shell:debug',
     'processhtml',
     'sass:dev',
     'postcss',
@@ -246,7 +246,7 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('build', [
-    'rollup',
+    'shell:prod',
     'uglify',
     'processhtml',
     'sass:dev',

@@ -13,6 +13,9 @@
   "devDependencies": {
     "@eslint/js": "^9.31.0",
     "@lodder/grunt-postcss": "^3.1.1",
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.31.0",
     "globals": "^16.3.0",
@@ -27,8 +30,9 @@
     "grunt-multi-lang-site-generator": "^0.6.0",
     "grunt-processhtml": "^0.4.4",
     "grunt-replace": "^2.0.2",
-    "grunt-rollup": "^12.0.0",
-    "postcss": "^8.5.6"
+    "grunt-shell": "^4.0.0",
+    "postcss": "^8.5.6",
+    "rollup": "^4.45.1"
   },
   "dependencies": {
     "regression": "^2.0.1"

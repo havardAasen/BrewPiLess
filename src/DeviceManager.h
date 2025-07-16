@@ -43,7 +43,7 @@
 struct DeviceConfig;
 
 using device_slot = int8_t;
-inline bool isDefinedSlot(device_slot s) { return s>=0; }
+inline bool isDefinedSlot(const device_slot s) { return s>=0; }
 inline constexpr device_slot MAX_DEVICE_SLOT = 16;		// exclusive
 inline constexpr device_slot INVALID_SLOT = -1;
 
@@ -84,7 +84,7 @@ inline bool isOneWire(DeviceHardware hardware) {
 	hardware == DeviceHardware::onewireTemp;
 }
 
-inline bool isDigitalPin(DeviceHardware hardware) {
+inline bool isDigitalPin(const DeviceHardware hardware) {
 	return hardware == DeviceHardware::pin;
 }
 
@@ -92,13 +92,13 @@ inline bool isDigitalPin(DeviceHardware hardware) {
 extern DeviceType deviceType(DeviceFunction id);
 
 #if BREWPI_EXTERNAL_SENSOR
-inline bool isExternalSensor(DeviceHardware hardware) {
+inline bool isExternalSensor(const DeviceHardware hardware) {
 	return hardware == DeviceHardware::externalSensor;
 }
 #endif
 
 /** Determines where device belongs. */
-inline DeviceOwner deviceOwner(DeviceFunction id) {
+inline DeviceOwner deviceOwner(const DeviceFunction id) {
 	return id==0 ? DeviceOwner::none : id>=DEVICE_BEER_FIRST ? DeviceOwner::beer : DeviceOwner::chamber;
 }
 
@@ -138,7 +138,7 @@ class DeviceManager
 {
 public:
 
-	bool isDefaultTempSensor(ITempSensor* sensor);
+	bool isDefaultTempSensor(const ITempSensor* sensor);
 
 	int8_t enumerateActuatorPins(uint8_t offset)
 	{
@@ -163,7 +163,7 @@ public:
 		return -1;
 	}
 
-	int8_t enumerateSensorPins(uint8_t offset) {
+	int8_t enumerateSensorPins(const uint8_t offset) {
 #if BREWPI_SENSOR_PINS && defined(ARDUINO)
 		if (offset==0)
 			return doorPin;

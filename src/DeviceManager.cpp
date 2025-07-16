@@ -92,7 +92,7 @@ OneWire* DeviceManager::oneWireBus(uint8_t pin) {
 
 bool DeviceManager::firstDeviceOutput;
 
-bool DeviceManager::isDefaultTempSensor(ITempSensor* sensor) {
+bool DeviceManager::isDefaultTempSensor(const ITempSensor* sensor) {
 	return sensor==&defaultTempSensor;
 }
 
@@ -161,7 +161,7 @@ void* DeviceManager::createDevice(DeviceConfig& config, DeviceType dt)
  * For Temperature sensors, the returned pointer points to a TempSensor*. The basic device can be fetched by calling
  * TempSensor::getSensor().
  */
-inline void** deviceTarget(DeviceConfig& config)
+inline void** deviceTarget(const DeviceConfig& config)
 {
 	// for multichamber, will write directly to the multi-chamber managed storage.
 	// later...
@@ -215,16 +215,16 @@ inline void** deviceTarget(DeviceConfig& config)
 
 // A pointer to a "temp sensor" may be a TempSensor* or a BasicTempSensor* .
 // These functions allow uniform treatment.
-inline bool isBasicSensor(DeviceFunction function) {
+inline bool isBasicSensor(const DeviceFunction function) {
 	// currently only ambient sensor is basic. The others are wrapped in a TempSensor.
 	return function==DEVICE_CHAMBER_ROOM_TEMP;
 }
 
-inline ITempSensor& unwrapSensor(DeviceFunction f, void* pv) {
+inline ITempSensor& unwrapSensor(const DeviceFunction f, void* pv) {
 	return isBasicSensor(f) ? *(ITempSensor*)pv : ((TempSensor*)pv)->sensor();
 }
 
-inline void setSensor(DeviceFunction f, void** ppv, ITempSensor* sensor) {
+inline void setSensor(const DeviceFunction f, void** ppv, ITempSensor* sensor) {
 	if (isBasicSensor(f))
 		*ppv = sensor;
 	else
@@ -374,15 +374,15 @@ void handleDeviceDefinition(const char* key, const char* val, void* pv)
 		((uint8_t*)def)[idx] = (uint8_t)atol(val);
 }
 
-bool inRangeUInt8(uint8_t val, uint8_t min, int8_t max) {
+bool inRangeUInt8(const uint8_t val, const uint8_t min, const int8_t max) {
 	return min<=val && val<=max;
 }
 
-bool inRangeInt8(int8_t val, int8_t min, int8_t max) {
+bool inRangeInt8(const int8_t val, const int8_t min, const int8_t max) {
 	return min<=val && val<=max;
 }
 
-void assignIfSet(int8_t value, uint8_t* target) {
+void assignIfSet(const int8_t value, uint8_t* target) {
 	if (value>=0)
 		*target = (uint8_t)value;
 }
@@ -525,7 +525,7 @@ bool DeviceManager::isDeviceValid(DeviceConfig& config, DeviceConfig& original, 
 	return true;
 }
 
-void printAttrib(Print& p, char c, int8_t val, bool first=false)
+void printAttrib(Print& p, const char c, const int8_t val, const bool first=false)
 {
 	if (!first)
         	p.print(',');
@@ -564,7 +564,7 @@ inline bool hasOnewire(DeviceHardware hw)
 	hw == DeviceHardware::onewireTemp;
 }
 
-void DeviceManager::printDevice(device_slot slot, DeviceConfig& config, const char* value)
+void DeviceManager::printDevice(const device_slot slot, DeviceConfig& config, const char* value)
 {
 	String deviceString;
 	char buf[17];
@@ -622,7 +622,7 @@ void DeviceManager::printDevice(device_slot slot, DeviceConfig& config, const ch
 	PiLink::print_P(deviceString.c_str());
 }
 
-bool DeviceManager::allDevices(DeviceConfig& config, uint8_t deviceIndex)
+bool DeviceManager::allDevices(DeviceConfig& config, const uint8_t deviceIndex)
 {
 	return EepromManager::fetchDevice(config, deviceIndex);
 }
@@ -637,7 +637,7 @@ void parseBytes(uint8_t* data, const char* s, uint8_t len) {
 	}
 }
 
-void printBytes(uint8_t* data, uint8_t len, char* buf) // prints 8-bit data in hex
+void printBytes(const uint8_t* data, const uint8_t len, char* buf) // prints 8-bit data in hex
 {
 	for (int i=0; i<len; i++) {
 		uint8_t b = (data[i] >> 4) & 0x0f;
@@ -674,7 +674,7 @@ void handleHardwareSpec(const char* key, const char* val, void* pv)
 	}
 }
 
-inline bool matchAddress(uint8_t* detected, uint8_t* configured, uint8_t count) {
+inline bool matchAddress(uint8_t* detected, uint8_t* configured, const uint8_t count) {
 	if (!configured[0])
 		return true;
 	return std::equal(detected, detected + count, configured);
@@ -959,7 +959,7 @@ void DeviceManager::listDevices() {
 }
 
 
-DeviceType deviceType(DeviceFunction id) {
+DeviceType deviceType(const DeviceFunction id) {
 	switch (id) {
 	case DEVICE_CHAMBER_DOOR:
 		return DeviceType::switchSensor;

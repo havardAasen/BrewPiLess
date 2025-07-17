@@ -479,9 +479,6 @@ var PL = {
     path: function(a) {
         return "/" + this.pl_path + "/" + a
     },
-    depath: function(a) {
-        return a.substring(this.pl_path.length + 1)
-    },
     rm: function(e) {
         var f = this;
         var c = "path=" + f.path(f.plist[e]);
@@ -556,7 +553,7 @@ var PL = {
                 var b = JSON.parse(c);
                 b.forEach(function(e) {
                     if (e.type == "file") {
-                        a.plist.push(a.depath(e.name))
+                        a.plist.push(e.name)
                     }
                 });
                 a.list(a.plist)

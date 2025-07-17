@@ -195,30 +195,30 @@ void capStatusReport();
 #endif
 class BrewPiWebHandler: public AsyncWebHandler
 {
-	void handleFileList(AsyncWebServerRequest *request) {
-		if(request->hasParam("dir",true)){
-        	String path = request->getParam("dir",true)->value();
-          	Dir dir = LittleFS.openDir(path);
-          	path = String();
-          	String output = "[";
-          	while(dir.next()){
-            	File entry = dir.openFile("r");
-            	if (output != "[") output += ',';
-            		bool isDir = false;
-            		output += "{\"type\":\"";
-            		output += (isDir)?"dir":"file";
-            		output += "\",\"name\":\"";
-            		output += String(entry.name()).substring(1);
-            		output += "\"}";
-            		entry.close();
-          	}
-          	output += "]";
-          	request->send(200, "application/json", output);
-          	output = String();
+    static void handleFileList(AsyncWebServerRequest *request)
+    {
+        if (!request->hasParam("dir", true)) {
+            request->send(400, "text/plain", "BAD ARGS");
+            return;
         }
-        else
-          request->send(400);
-	}
+
+        const String path = request->getParam("dir", true)->value();
+        Dir dir = LittleFS.openDir(path);
+
+        String output = "[";
+        while (dir.next()) {
+            if (output != "[") {
+                output += ',';
+            }
+            output += R"({"type":")";
+            output += dir.isDirectory() ? "dir" : "file";
+            output += R"(","name":")";
+            output += dir.fileName();
+            output += "\"}";
+        }
+        output += "]";
+        request->send(200, "application/json", output);
+    }
 
 	void handleFileDelete(AsyncWebServerRequest *request){
 		if(request->hasParam("path", true)){

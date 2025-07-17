@@ -2,10 +2,12 @@ function s_ajax(b) {
     var c = new XMLHttpRequest();
     c.onreadystatechange = function() {
         if (c.readyState == 4) {
-            if (c.status == 200) {
+            if (c.status >= 200 && c.status < 300) {
                 b.success(c.responseText)
             } else {
-                c.onerror(c.status)
+                if (typeof b.error === 'function') {
+                    b.error(c.status, c.statusText, c.responseText);
+                }
             }
         }
     };

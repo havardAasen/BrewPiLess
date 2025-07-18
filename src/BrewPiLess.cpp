@@ -220,32 +220,40 @@ class BrewPiWebHandler: public AsyncWebHandler
         request->send(200, "application/json", output);
     }
 
-	void handleFileDelete(AsyncWebServerRequest *request){
-		if(request->hasParam("path", true)){
-        	EspClass::wdtDisable(); LittleFS.remove(request->getParam("path", true)->value()); EspClass::wdtEnable(10);
-            request->send(200, "", "DELETE: "+request->getParam("path", true)->value());
-        } else
-          request->send(404);
+
+    static void handleFileDelete(AsyncWebServerRequest *request)
+    {
+        if (!request->hasParam("path", true)) {
+            request->send(400, "text/plain", "BAD ARGS");
+            return;
+        }
+
+        EspClass::wdtDisable();
+        LittleFS.remove(request->getParam("path", true)->value());
+        EspClass::wdtEnable(10);
+        request->send(200, "text/plain", "DELETE: " + request->getParam("path", true)->value());
     }
 
-	void handleFilePuts(AsyncWebServerRequest *request){
-		if(request->hasParam("path", true)
-			&& request->hasParam("content", true)){
-        	EspClass::wdtDisable();
-    		String file=request->getParam("path", true)->value();
-    		File fh= LittleFS.open(file, "w");
-    		if(!fh){
-    			request->send(500);
-    			return;
-    		}
-    		String c=request->getParam("content", true)->value();
-      		fh.print(c.c_str());
-      		fh.close();
-        	EspClass::wdtEnable(10);
-            request->send(201);
-            DBG_PRINTF("fputs path=%s\n",file.c_str());
-        } else
-          request->send(404);
+
+    static void handleFilePuts(AsyncWebServerRequest *request)
+    {
+        if (!request->hasParam("path", true) && !request->hasParam("content", true)) {
+            request->send(400, "text/plain", "BAD ARGS");
+            return;
+        }
+
+        EspClass::wdtDisable();
+        const String file = request->getParam("path", true)->value();
+        File fh = LittleFS.open(file, "w");
+        if (!fh) {
+            request->send(500);
+            return;
+        }
+        fh.print(request->getParam("content", true)->value());
+        fh.close();
+        EspClass::wdtEnable(10);
+        request->send(201);
+        DBG_PRINTF("fputs path=%s\n", file.c_str());
     }
 
     bool fileExists(const String& path) const

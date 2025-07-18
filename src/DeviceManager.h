@@ -218,14 +218,6 @@ public:
 	static void printDevice(device_slot slot, DeviceConfig& config, const char* value);
 
 	/**
-	 * @brief Iterate over the defined devices.
-	 *
-	 * Caller first calls with deviceIndex 0. If the return value is true, config is filled out with the
-	 * config for the device. The caller can then increment deviceIndex and try again.
-	 */
-	static bool allDevices(DeviceConfig& config, uint8_t deviceIndex);
-
-	/**
 	 * @brief Determines if a given device definition is valid.
 	 *
 	 * - Chamber/beer must be within bounds.

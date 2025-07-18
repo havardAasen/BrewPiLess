@@ -622,10 +622,6 @@ void DeviceManager::printDevice(const device_slot slot, DeviceConfig& config, co
 	PiLink::print_P(deviceString.c_str());
 }
 
-bool DeviceManager::allDevices(DeviceConfig& config, const uint8_t deviceIndex)
-{
-	return EepromManager::fetchDevice(config, deviceIndex);
-}
 
 void parseBytes(uint8_t* data, const char* s, uint8_t len) {
 	char c;
@@ -690,7 +686,7 @@ inline bool matchAddress(uint8_t* detected, uint8_t* configured, const uint8_t c
 device_slot findHardwareDevice(DeviceConfig& find)
 {
 	DeviceConfig config;
-	for (device_slot slot= 0; DeviceManager::allDevices(config, slot); slot++) {
+	for (device_slot slot= 0; EepromManager::fetchDevice(config, slot); slot++) {
 		if (find.deviceHardware==config.deviceHardware) {
 			bool match = true;
 			switch (find.deviceHardware) {
@@ -748,7 +744,7 @@ void DeviceManager::handleEnumeratedDevice(DeviceConfig& config, EnumerateHardwa
 		if (h.unused)	// only list unused devices, and this one is already used
 			return;
 		// display the actual matched value
-		DeviceManager::allDevices(config, out.slot);
+		EepromManager::fetchDevice(config, out.slot);
 	}
 
 	out.value[0] = 0;
@@ -947,7 +943,7 @@ void DeviceManager::listDevices() {
 		return;
 	}
 	beginDeviceOutput();
-	for (device_slot idx=0; allDevices(dc, idx); idx++) {
+	for (device_slot idx=0; EepromManager::fetchDevice(dc, idx); idx++) {
 		if (enumDevice(dd, dc, idx))
 		{
 			char val[10];

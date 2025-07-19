@@ -42,11 +42,9 @@ size_t dataSprintf(char *buffer,const char *format,const char* invalid)
 
 	brewPi.getAllStatus(&state,&mode,& beerTemp,& beerSet,& fridgeTemp,& fridgeSet,& roomTemp);
 
-	int i=0;
 	size_t d=0;
-	for(i=0;i< (int) strlen(format);i++){
-		char ch=format[i];
-		if( ch == '%'){
+	for(size_t i= 0; i < strlen(format); i++) {
+		if (char ch = format[i]; ch == '%') {
 			i++;
 			ch=format[i];
 			if(ch == '%'){
@@ -161,20 +159,18 @@ size_t nonNullJson(char* buffer,size_t size)
 	#if SupportPressureTransducer
 	if(PressureMonitor.isCurrentPsiValid()) doc[KeyPressure]= PressureMonitor.currentPsi();
 	#endif
-	float sg=externalData.gravity();
-	if(IsGravityValid(sg)){
+	if (const float sg = externalData.gravity(); IsGravityValid(sg)) {
 		doc[KeyGravity] = sg;
 		doc[KeyPlato] = externalData.plato();
 	}
 
 	// iSpindel data
-	float vol=externalData.deviceVoltage();
-	if(IsVoltageValid(vol)){
-		 doc[KeyVoltage] = vol;
-		float at=externalData.auxTemp();
-		if(IS_FLOAT_TEMP_VALID(at)) doc[KeyAuxTemp] = at;
-		float tilt=externalData.tiltValue();
-		doc[KeyTilt]=tilt;
+	if (const float vol=externalData.deviceVoltage(); IsVoltageValid(vol)) {
+		doc[KeyVoltage] = vol;
+		if (const float at = externalData.auxTemp(); IS_FLOAT_TEMP_VALID(at)) {
+			doc[KeyAuxTemp] = at;
+		}
+		doc[KeyTilt]=externalData.tiltValue();
 	}
 	return	serializeJson(doc,buffer,size);
 }

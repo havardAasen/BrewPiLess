@@ -121,13 +121,11 @@ void WiFiSetupClass::begin(const WiFiMode mode, const char *ssid, const char *pa
 		}
 		WiFi.setAutoReconnect(true);
 
-		wl_status_t status;
-		if (targetSSID)
-			status = WiFi.begin(targetSSID, targetPass);
-		else
-			status = WiFi.begin();
+		const auto status = targetSSID
+				? WiFi.begin(targetSSID, targetPass)
+				: WiFi.begin();
+		DBG_PRINTF("WiFi.begin() return: %d\n", status);
 
-		DBG_PRINTF("WiFi.begin() return:%d\n", status);
 		_time = millis();
 	}
 	_wifiState = (mode2use == WIFI_AP)

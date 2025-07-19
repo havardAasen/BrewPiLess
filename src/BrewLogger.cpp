@@ -60,11 +60,15 @@ String BrewLogger::loggingStatus()
 
 	ret += ",\"list\":[";
 
-	for(int i=0;i<MAX_LOG_FILE_NUMBER;i++){
-		if(_pFileInfo->files[i].name[0] == 0) break;
-		if(i!=0) ret +=",";
-		ret +="{\"name\":\"" + String(_pFileInfo->files[i].name);
-		ret +="\",\"time\":" +String(_pFileInfo->files[i].time) +"}";
+	for(const auto& [name, time] : _pFileInfo->files) {
+		if (name[0] == '\0') {
+			break;
+		}
+		if (!ret.endsWith("[")) {
+			ret += ",";
+		}
+		ret +="{\"name\":\"" + String(name);
+		ret +="\",\"time\":" +String(time) +"}";
 	}
 	ret += "]}";
 

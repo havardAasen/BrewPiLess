@@ -600,7 +600,6 @@ public:
 	 		else if(path.endsWith(CHART_LIB_PATH)) path = CHART_LIB_PATH;
 
 	 		if(request->url().equals("/")){
-				SystemConfiguration *syscfg=theSettings.systemConfiguration();
 		 		if(!syscfg->passwordLcd){
 		 			sendFile(request,path); //request->send(LittleFS, path);
 		 			return;

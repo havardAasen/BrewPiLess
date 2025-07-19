@@ -29,10 +29,9 @@ size_t printFloat(char* buffer,float value,int precision,bool valid,const char* 
 {
 	if(valid){
 		return sprintf(buffer, "%.*f", precision, value);
-	}else{
-        strcpy(buffer,invalidstr);
-        return strlen(invalidstr);
 	}
+	strcpy(buffer,invalidstr);
+	return strlen(invalidstr);
 }
 
 size_t dataSprintf(char *buffer,const char *format,const char* invalid)

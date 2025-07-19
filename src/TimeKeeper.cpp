@@ -149,7 +149,7 @@ void TimeKeeperClass::setTimezoneOffset(const std::int32_t offset)
 }
 
 
-std::int32_t TimeKeeperClass::getTimezoneOffset()
+std::uint32_t TimeKeeperClass::getTimezoneOffset()
 {
     return theSettings.timeInformation()->timezoneoffset;
 }

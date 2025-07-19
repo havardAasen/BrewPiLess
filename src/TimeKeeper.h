@@ -21,7 +21,7 @@ public:
 
     static void setTimezoneOffset(std::int32_t);
 
-    static std::int32_t getTimezoneOffset();
+    static std::uint32_t getTimezoneOffset();
 
     [[nodiscard]] bool isSynchronized() const;
 

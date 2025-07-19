@@ -766,21 +766,21 @@ void greeting(const std::function<void(const char*)>& sendFunc)
 	
 	String ptcstate= parasiteTempController.getSettings();
 
-	sprintf(buf,"A:{\"nn\":\"%s\",\"ver\":\"%s\",\"rssi\":%d,\"tm\":%lld,\"off\":%ld,\"log\":\"%s\",\"cap\":{%s},\"ptcs\":%s}"
+	sprintf(buf,"A:{\"nn\":\"%s\",\"ver\":\"%s\",\"rssi\":%d,\"tm\":%lld,\"off\":%u,\"log\":\"%s\",\"cap\":{%s},\"ptcs\":%s}"
 		,syscfg->titlelabel,BPL_VERSION,WiFi.RSSI(),
-		TimeKeeper.getTimeSeconds(),(long int)TimeKeeper.getTimezoneOffset(),
+		TimeKeeper.getTimeSeconds(),TimeKeeper.getTimezoneOffset(),
 		logname, capstate.c_str(),ptcstate.c_str());
 
 
 #else
-	sprintf(buf,"A:{\"nn\":\"%s\",\"ver\":\"%s\",\"rssi\":%d,\"tm\":%lu,\"off\":%ld,\"log\":\"%s\",\"cap\":{%s}}"
+	sprintf(buf,"A:{\"nn\":\"%s\",\"ver\":\"%s\",\"rssi\":%d,\"tm\":%lld,\"off\":%u,\"log\":\"%s\",\"cap\":{%s}}"
 		,syscfg->titlelabel,BPL_VERSION,WiFi.RSSI(),
-		TimeKeeper.getTimeSeconds(),(long int)TimeKeeper.getTimezoneOffset(),
+		TimeKeeper.getTimeSeconds(),TimeKeeper.getTimezoneOffset(),
 		logname, capstate.c_str());
 #endif
 	
 #else
-	sprintf(buf,"A:{\"nn\":\"%s\",\"ver\":\"%s\",\"rssi\":%d,\"tm\":%lu,\"off\":%ld, \"log\":\"%s\"}"
+	sprintf(buf,"A:{\"nn\":\"%s\",\"ver\":\"%s\",\"rssi\":%d,\"tm\":%lld,\"off\":%u, \"log\":\"%s\"}"
 		,syscfg->titlelabel,BPL_VERSION,WiFi.RSSI(),
 		TimeKeeper.getTimeSeconds(),TimeKeeper.getTimezoneOffset(),
 		logname);

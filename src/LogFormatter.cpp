@@ -10,7 +10,6 @@
 #if SupportPressureTransducer
 #include "PressureMonitor.h"
 #endif
-extern BrewPiProxy brewPi;
 
 
 [[nodiscard]] static constexpr char modeInInteger(const char mode){

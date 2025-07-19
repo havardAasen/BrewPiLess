@@ -107,38 +107,6 @@ size_t dataSprintf(char *buffer,const char *format,const char* invalid)
 	return d;
 }
 
-/*
-int _copyName(char *buf,char *name,bool concate)
-{
-	char *ptr=buf;
-	if(name ==nullptr) return 0;
-	if(concate){
-		*ptr='&';
-		ptr++;
-	}
-	int len=strlen(name);
-	strcpy(ptr,name);
-	ptr+=len;
-	*ptr = '=';
-	ptr++;
-	return (ptr - buf);
-}
-
-int copyTemp(char* buf,char* name,float value, bool concate)
-{
-	int n;
-	if((n = _copyName(buf,name,concate))!=0){
-		if(IS_FLOAT_TEMP_VALID(value)){
-			n += sprintf(buf + n, "%.*f", 2, value);
-		}else{
-			strcpy(buf + n,"null");
-			n += 4;
-		}
-
-	}
-	return n;
-}
-*/
 
 size_t nonNullJson(char* buffer,size_t size)
 {

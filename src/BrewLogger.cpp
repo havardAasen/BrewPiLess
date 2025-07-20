@@ -41,7 +41,7 @@ const char* BrewLogger::currentLog()
 	if(!_recording) return nullptr;
 	if(_pFileInfo->logname[0] != '\0')
 		return _pFileInfo->logname;
-	else return nullptr;
+	return nullptr;
 }
 
 String BrewLogger::loggingStatus()
@@ -726,10 +726,8 @@ int BrewLogger::freeBufferSpace()
 	//DBG_PRINTF("_logHead:%d, _logIndex: %d\n",_logHead,_logIndex);
 	if(_logIndex >= (size_t)_logHead){
 		return LogBufferSize - _logIndex -1 + _logHead;
-	}else {
-		// _logIndex < _logHead
-		return _logHead - _logIndex - 1;
 	}
+	return _logHead - _logIndex - 1;
 }
 
 void BrewLogger::dropData()

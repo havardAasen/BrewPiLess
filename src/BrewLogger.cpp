@@ -292,10 +292,13 @@ void BrewLogger::endSession(){
 	{
 		if(_pFileInfo->files[index].name[0] == 0) break;
 	}
-	// exceptional case.
+
+	// Frontend has checks to prevent us from creating to many logs, though
+	// it is possible to circumvent them. If this happens we will overwrite
+	// the first log file.
 	if(index == MAX_LOG_FILE_NUMBER){
-		rmLog(0);
-		index = -1;
+		index = 0;
+		rmLog(index);
 	}
 	strcpy(_pFileInfo->files[index].name,_pFileInfo->logname);
 	_pFileInfo->files[index].time = _pFileInfo->starttime;

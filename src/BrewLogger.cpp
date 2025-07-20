@@ -39,7 +39,7 @@ String BrewLogger::fsinfo()
 const char* BrewLogger::currentLog()
 {
 	if(!_recording) return nullptr;
-	if(_pFileInfo->logname[0] != 0)
+	if(_pFileInfo->logname[0] != '\0')
 		return _pFileInfo->logname;
 	else return nullptr;
 }
@@ -290,7 +290,7 @@ void BrewLogger::endSession(){
 	int index=0;
 	for(;index<MAX_LOG_FILE_NUMBER;index++)
 	{
-		if(_pFileInfo->files[index].name[0] == 0) break;
+		if(_pFileInfo->files[index].name[0] == '\0') break;
 	}
 
 	// Frontend has checks to prevent us from creating to many logs, though

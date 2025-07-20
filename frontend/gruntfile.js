@@ -4,10 +4,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-combo-html-css-js');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-shell');
-  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-contrib-sass');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-multi-lang-site-generator');
@@ -47,35 +45,12 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
 
-    copy: {
-      debug: {
-        files: [
-          {
-            src: 'src/js/vendor/dygraph-combined.js',
-            dest: 'dist/dygraph.js'
-          },
-          {
-            src: 'src/js/vendor/dygraph-combined.js',
-            dest: 'build/dygraph.js'
-          }
-        ]
-      }
-    },
-
     shell: {
       debug: {
         command: 'NODE_ENV=development rollup -c'
       },
       prod: {
         command: 'NODE_ENV=production rollup -c'
-      }
-    },
-
-    uglify: {
-      target: {
-        files: [
-          { 'dist/dygraph.js': 'src/js/vendor/dygraph-combined.js' }
-        ]
       }
     },
 
@@ -228,7 +203,6 @@ module.exports = function(grunt) {
   const multi_lang_js_gen = languages.map(lang => `replace:${lang}`)
 
   grunt.registerTask('debug', [
-    'copy',
     'shell:debug',
     'processhtml',
     'sass:dev',
@@ -240,7 +214,6 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('default', [
-    'copy',
     'shell:debug',
     'processhtml',
     'sass:dev',
@@ -250,9 +223,7 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('build', [
-    'copy',
     'shell:prod',
-    'uglify',
     'processhtml',
     'sass:dev',
     'postcss',

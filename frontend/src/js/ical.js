@@ -1,4 +1,5 @@
 import { Q } from "./shared";
+import Dygraph from "dygraphs";
 import regression from 'regression';
 
     /* ispindel calibration */

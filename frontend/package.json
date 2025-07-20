@@ -22,10 +22,8 @@
     "grunt": "^1.0.1",
     "grunt-combo-html-css-js": "^0.1.2",
     "grunt-contrib-compress": "^2.0.0",
-    "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-htmlmin": "^3.1.0",
     "grunt-contrib-sass": "^2.0.0",
-    "grunt-contrib-uglify": "^5.2.2",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-multi-lang-site-generator": "^0.6.0",
     "grunt-processhtml": "^0.4.4",
@@ -35,6 +33,7 @@
     "rollup": "^4.45.1"
   },
   "dependencies": {
+    "dygraphs": "^1.1.1",
     "regression": "^2.0.1"
   }
 }

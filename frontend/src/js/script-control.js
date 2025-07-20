@@ -14,6 +14,7 @@ import {
 import { Capper } from "./capper";
 import { BWF } from "./vendor/bwf";
 import { PTC } from "./ptc";
+import Dygraph from "dygraphs";
 
 var BPURL = "/tschedule";
 var MAX_STEP = 7;

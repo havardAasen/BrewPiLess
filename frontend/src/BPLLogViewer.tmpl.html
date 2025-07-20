@@ -8,6 +8,7 @@
     <title>BrewPiLess Log Viewer v3.0</title>
     <meta name=apple-mobile-web-app-title content=BrewPiLess>
     <meta name=apple-mobile-web-app-capable content=yes>
+    <script src="dygraph.js"></script>
     <script src="bundle.js" ignore></script>
     <link rel="icon" href="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
     <style>
@@ -883,7 +884,7 @@
     </style>
 </head>
 
-<body onload=loaded()>
+<body data-page="logViewer">
     <header layout horizontal main-justified cross-center relative class=header>
         <h1 class=header_title><span id=hostname>BPL LogViewer</span> <span id=verinfo class=header_version-display>v3.0</span></h1>
         <div id="fileinputgrp">

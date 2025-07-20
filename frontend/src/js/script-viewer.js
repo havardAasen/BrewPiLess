@@ -33,7 +33,7 @@ import { BrewChart, STATES } from "./vendor/chart";
             }
         }
 
-        function loaded() {
+        export function loaded() {
             function openfile(f) {
                 if (f) {
                     var r = new FileReader();
@@ -152,3 +152,6 @@ import { BrewChart, STATES } from "./vendor/chart";
             var data = BChart.chart.partial2Plato(ranges[0], ranges[1]);
             download(new Blob(data, { type: 'octet/stream' }), window.file.name + "-partial");
         }
+
+window.cutrange = cutrange;
+window.exportcsv = exportcsv;

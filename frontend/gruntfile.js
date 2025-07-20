@@ -53,6 +53,10 @@ module.exports = function(grunt) {
           {
             src: 'src/js/vendor/dygraph-combined.js',
             dest: 'dist/dygraph.js'
+          },
+          {
+            src: 'src/js/vendor/dygraph-combined.js',
+            dest: 'build/dygraph.js'
           }
         ]
       }
@@ -246,6 +250,7 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('build', [
+    'copy',
     'shell:prod',
     'uglify',
     'processhtml',

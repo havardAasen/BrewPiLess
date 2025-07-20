@@ -62,7 +62,7 @@ import { BrewChart } from "./vendor/chart";
             }
         }
 
-        function loaded() {
+        export function loaded() {
             // get range, if any
             var range = getParameterByName("r");
             if (range) {

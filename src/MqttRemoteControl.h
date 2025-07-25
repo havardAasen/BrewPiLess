@@ -16,10 +16,6 @@
 #define ReconnectTimer 10000
 #define ReconnectTimerLong 600000
 
-#define CapStateOn 1
-#define CapStateOff 0
-#define CapStateUnknown 2
-
 #define PtcRemoteControlRange 3
 
 #define DefaultLogginQoS 1

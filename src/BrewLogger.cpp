@@ -883,7 +883,7 @@ void BrewLogger::addOG(uint16_t og){
 }
 
 
-void BrewLogger::addMode(char mode){
+void BrewLogger::addMode(const uint8_t mode){
 	int idx = allocByte(2);
 	if(idx < 0) return;
 	writeBuffer(idx,ModeTag); //*ptr = ModeTag;
@@ -891,7 +891,7 @@ void BrewLogger::addMode(char mode){
 	commitData(idx,2);
 }
 
-void BrewLogger::addState(char state){
+void BrewLogger::addState(const uint8_t state){
 	int idx = allocByte(2);
 	if(idx <0) return;
 	writeBuffer(idx,StateTag); //*ptr = StateTag;

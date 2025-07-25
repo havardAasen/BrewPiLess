@@ -148,8 +148,8 @@ private:
 	void writeBuffer(int idx,uint8_t data);
 	void commitData(int idx,int len);
 	void addOG(uint16_t og);
-	void addMode(char mode);
-	void addState(char state);
+	void addMode(uint8_t mode);
+	void addState(uint8_t state);
 	uint16_t convertTemperature(float temp);
 	void addResumeTag();
 

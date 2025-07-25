@@ -136,7 +136,7 @@ private:
 	void addOG(uint16_t og);
 	void addMode(uint8_t mode);
 	void addState(uint8_t state);
-	uint16_t convertTemperature(float temp);
+	static uint16_t convertTemperature(float temp);
 	void addResumeTag();
 
 	void loadIdxFile();

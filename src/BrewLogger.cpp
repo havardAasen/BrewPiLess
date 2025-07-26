@@ -7,6 +7,22 @@
 BrewLogger brewLogger;
 
 
+namespace {
+    enum DataField {
+        beerSet,
+        beerTemp,
+        fridgeTemp,
+        fridgeSet,
+        roomTemp,
+        extTemp,
+        gravity,
+        tiltAngle,
+
+        dataFieldCount
+    };
+}
+
+
 bool BrewLogger::begin()
 {
 bool resumeSuccess=false;
@@ -157,7 +173,7 @@ _resumeLastLogTime = _pFileInfo->starttime;
 		       	// int numberInRecord=0;
 		       	std::size_t recordSize = 0;
 		        std::uint8_t bitmask = 1;
-				for(int i=0;i<NumberDataBitMask;i++, bitmask=bitmask<<1)
+				for(int i=0;i<dataFieldCount;i++, bitmask=bitmask<<1)
 					if(mask & bitmask)
 						recordSize +=2;
 
@@ -166,14 +182,14 @@ _resumeLastLogTime = _pFileInfo->starttime;
 					break;
 				}
 				bitmask=1;
-        		for(int i=0;i<NumberDataBitMask;i++, bitmask=bitmask<<1){
+        		for(int i=0;i<dataFieldCount;i++, bitmask=bitmask<<1){
 	        		if(mask & bitmask){
 							#if SerialDebug
 						int d0=_logBuffer[processIndex++];
     			    	int d1=_logBuffer[processIndex++];
 						   #endif
 						// get gravity data that we need
-		        		if( i == OrderGravity){
+		        		if( i == gravity){
 							#if SerialDebug
 							int gravityInt = (d0 << 8) | d1;
                         DBG_PRINTF("resume@%u, SG:%d\n",_resumeLastLogTime,gravityInt);
@@ -326,8 +342,8 @@ void BrewLogger::logData()
     std::array<float, size> fTemps{};
 
 	//brewPi.getAllStatus(&state,&mode,& beerTemp,& beerSet,& fridgeTemp,& fridgeSet,& roomTemp);
-	brewPi.getAllStatus(&state,&mode,&fTemps[OrderBeerTemp],& fTemps[OrderBeerSet],
-			& fTemps[OrderFridgeTemp],& fTemps[OrderFridgeSet],& fTemps[OrderRoomTemp]);
+	brewPi.getAllStatus(&state,&mode,&fTemps[beerTemp],& fTemps[beerSet],
+			& fTemps[fridgeTemp],& fTemps[fridgeSet],& fTemps[roomTemp]);
 
 
 	uint8_t changeMask=0;
@@ -343,17 +359,17 @@ void BrewLogger::logData()
 		}
 	}
 	if( _extTemp != INVALID_TEMP_INT){
-			changeMask |= (1 << OrderExtTemp);
+			changeMask |= (1 << extTemp);
 			changeNum ++;
 	}
 
 	if( _extGravity != INVALID_GRAVITY_INT){
-			changeMask |= (1 << OrderGravity);
+			changeMask |= (1 << gravity);
 			changeNum ++;
 	}
 
 	if( _extTileAngle != INVALID_TILT_ANGLE){
-		changeMask |= (1 << OrderTiltAngle);
+		changeMask |= (1 << tiltAngle);
 		changeNum ++;
 	}
 
@@ -708,7 +724,7 @@ void BrewLogger::startLog(bool fahrenheit,bool calibrating)
 
 void BrewLogger::startVolatileLog()
 {
-	DBG_PRINTF("startVolatileLog, mode=%c, beerteemp=%d\n",_mode,_iTempData[OrderBeerTemp]);
+	DBG_PRINTF("startVolatileLog, mode=%c, beerteemp=%d\n",_mode,_iTempData[beerTemp]);
 	_headTime=TimeKeeper.getTimeSeconds();
 	_logHead = 0;
 	_logIndex = 0;
@@ -758,7 +774,7 @@ void BrewLogger::dropData()
 	DBG_PRINTF("before tag %d, mask=%x\n",dataDrop,mask);
 
 
-	for(int i=0;i<NumberDataBitMask;i++){
+	for(int i=0;i<dataFieldCount;i++){
 		if(mask & (1<<i)){
 			if(idx >= LogBufferSize) idx -= LogBufferSize;
 			byte d0=_logBuffer[idx++];

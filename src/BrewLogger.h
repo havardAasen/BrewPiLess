@@ -34,20 +34,6 @@
 #define INVALID_GRAVITY_INT 0x7FFF
 #define VolatileHeaderSize 28
 
-#define OrderBeerSet 0
-#define OrderBeerTemp 1
-#define OrderFridgeTemp 2
-#define OrderFridgeSet 3
-#define OrderRoomTemp 4
-#define OrderExtTemp 5
-#define OrderGravity 6
-
-#define NumberDataBitMask 7
-
-#undef NumberDataBitMask
-#define NumberDataBitMask 8
-
-#define OrderTiltAngle 7
 #define TiltEncode(g) (uint16_t)(100.0 * (g) + 0.5)
 #define INVALID_TILT_ANGLE 0x7FFF
 

@@ -788,14 +788,10 @@ void BrewLogger::dropData()
 	DBG_PRINTF("Drop %d\n",dataDrop);
 }
 
-int BrewLogger::volatileLoggingAlloc(int size)
+int BrewLogger::volatileLoggingAlloc(const int size)
 {
-	int space=freeBufferSpace();
-;
-	while(space < size){
-		//DBG_PRINTF("Free %d req: %d\n",space,size);
+	while (freeBufferSpace() < size) {
 		dropData();
-		space=freeBufferSpace();
 	}
 
 	return _logIndex;

@@ -33,7 +33,7 @@
     "rollup": "^4.45.1"
   },
   "dependencies": {
-    "dygraphs": "^1.1.1",
+    "dygraphs": "^2.2.1",
     "regression": "^2.0.1"
   }
 }

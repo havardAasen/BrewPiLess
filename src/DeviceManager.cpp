@@ -863,13 +863,7 @@ void DeviceManager::enumerateExternalDevices(EnumerateHardware& h, EnumDevicesCa
 
 void DeviceManager::enumerateHardware()
 {
-	EnumerateHardware spec;
-	// set up defaults
-	spec.unused = 0;			// list all devices
-	spec.values = 0;			// don't list values
-	spec.pin = -1;				// any pin
-	spec.hardware = -1;			// any hardware
-	spec.function = 0;			// no function restriction
+	EnumerateHardware spec{};
 
 	PiLink::parseJson(handleHardwareSpec, &spec);
 	DeviceOutput out;

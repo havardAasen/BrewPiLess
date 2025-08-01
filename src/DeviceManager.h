@@ -105,13 +105,18 @@ inline DeviceOwner deviceOwner(const DeviceFunction id) {
 
 typedef void (*EnumDevicesCallback)(DeviceConfig*, void* pv);
 
+/** This struct is only used as temporary storage when enumerating hardware. */
 struct EnumerateHardware
 {
-	int8_t hardware;	///< restrict the types of devices requested
-	int8_t pin;		///< pin to search
-	int8_t values;		///< fetch values for the devices.
-	int8_t unused;		///< 0 don't care about unused state, 1 unused only.
-	int8_t function;	///< restrict to devices that can be used with this function
+    /**
+     * Restrict type of device requested, -1 for all types, else see
+     * @c DeviceHardware for possible values. @see DeviceHardware
+     */
+    int8_t hardware{-1};
+    int8_t pin{-1};         ///< Pin to search for, -1 for all types.
+    int8_t values{};        ///< Fetch values for the devices.
+    int8_t unused{};        ///< 0 don't care about unused state, 1 unused only.
+    int8_t function{};      ///< Restrict to devices that can be used with this function
 };
 
 struct DeviceOutput

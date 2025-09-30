@@ -2,7 +2,7 @@
   "name": "brewpiless",
   "version": "1.0.0",
   "description": "Brewpiless' frontend",
-  "main": "bwf.js",
+  "main": "main.ts",
   "type": "module",
   "scripts": {
     "lint": "eslint src/js",
@@ -31,7 +31,9 @@
     "grunt-replace": "^2.0.2",
     "grunt-shell": "^4.0.0",
     "postcss": "^8.5.6",
-    "rollup": "^4.52.5"
+    "rollup": "^4.52.5",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.9.2"
   },
   "dependencies": {
     "dygraphs": "^1.1.1",

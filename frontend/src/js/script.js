@@ -731,17 +731,6 @@ import { BWF } from "./vendor/bwf";
         });
     }
 
-    function init_classic() {
-        window.plato = false;
-        BChart.init("div_g", Q('#ylabel').innerHTML, Q('#y2label').innerHTML);
-        initRssi();
-        Capper.init();
-        BWF.gotMsg = true;
-        initctrl_C();
-        connBWF();
-        setTimeout(function() { BChart.start(); }, T_LOAD_CHART);
-    }
-
     export function init() {
         Q("#pressure-info-pane").style.display = "none";
         window.plato = false;

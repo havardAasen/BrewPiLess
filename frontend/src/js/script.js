@@ -352,21 +352,43 @@ import { BWF } from "./vendor/bwf";
         } else displayLcdText(["Controller not", "updating data", "...", ""]);
     }
 
-    function checkTime(time, tzoff) {
-        var d = new Date();
-        var tmoff = 0 - d.getTimezoneOffset() * 60;
-        var tm = Math.round(d.getTime() / 1000);
-        if (tzoff != tmoff || Math.abs(tm - time) > 1800) {
-            // update time & timezone
-            s_ajax({
-                url: "time",
-                m: "POST",
-                mime: "application/x-www-form-urlencoded",
-                data: "time=" + tm + "&off=" + tmoff,
-                success: function() {}
-            });
+    /**
+     * Checks if the client's time or timezone offset differs significantly from
+     * the provided values.
+     *
+     * If the difference exceeds 30 minutes or the timezone offset has changed,
+     * it sends an update to the server.
+     *
+     * @param serverTime The reference time from the server (in seconds).
+     * @param serverOffset The reference timezone offset from the server (in seconds).
+     */
+    function syncClientTimeIfNeeded(serverTime, serverOffset) {
+        const now = new Date();
+        const clientOffset = -now.getTimezoneOffset() * 60;
+        const clientTime = Math.round(now.getTime() / 1000);
 
+        const timeDifference = Math.abs(clientTime - serverTime);
+        const offsetMismatch = serverOffset !== clientOffset;
+
+        if (offsetMismatch || timeDifference > 1800) {
+            sendTimeUpdate(clientTime, clientOffset);
         }
+    }
+
+    /**
+     * Sends the current time and timezone offset to the server.
+     *
+     * @param time Current client time in seconds.
+     * @param offset Current timezone offset in seconds.
+     */
+    function sendTimeUpdate(time, offset) {
+    s_ajax({
+        url: "time",
+        m: "POST",
+        mime: "application/x-www-form-urlencoded",
+        data: `time=${time}&off=${offset}`,
+        success: () => {}
+    });
     }
 
     function gravityDevice(msg) {
@@ -646,7 +668,7 @@ import { BWF } from "./vendor/bwf";
             Q("#verinfo").innerHTML = "v" + c["ver"];
         }
         if (typeof c["tm"] != "undefined" && typeof c["off"] != "undefined") {
-            checkTime(c.tm, c.off);
+            syncClientTimeIfNeeded(c.tm, c.off);
         }
         if (typeof c["log"] != "undefined") {
             Q("#recording").innerHTML = c.log;

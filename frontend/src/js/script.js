@@ -596,12 +596,37 @@ import { BWF } from "./vendor/bwf";
         var mode = msg.ptc;
         var time = msg.pt;
 
-        function fortime(t) {
-            var hour = Math.floor(t / 3600);
-            var min = Math.floor((t - hour * 3600) / 60);
-            var sec = t - hour * 3600 - min * 60;
-            return ((hour) ? (hour + "H") : "") + ((hour + min) ? (min + "M") : "") + sec + "S";
+        /**
+         * Converts a duration in seconds into a human-readable string format.
+         *
+         * Output includes hours (h), minutes (m), and seconds (s), omitting zero units except seconds.
+         *
+         * @example
+         * // return "1h 5m 0s"
+         * formatDuration(3900)
+         * @example
+         * // return "1m 40s"
+         * formatDuration(100)
+         * @example
+         * // return "0s"
+         * formatDuration(0)
+         *
+         * @param totalSeconds The total duration in seconds.
+         * @returns A formatted time string.
+         */
+        function formatDuration(totalSeconds) {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            const parts = [];
+            if (hours > 0) parts.push(`${hours}h`);
+            if (hours + minutes > 0) parts.push(`${minutes}m`);
+            parts.push(`${seconds}s`);
+
+            return parts.join(" ");
         }
+
         var pane = Q("#ptc-pane");
         if (pane) {
             if (mode == "o") pane.style.display = "none";
@@ -625,7 +650,7 @@ import { BWF } from "./vendor/bwf";
         }
 
         var tinfo = Q("#ptc-time");
-        if (tinfo) tinfo.innerHTML = fortime(time);
+        if (tinfo) tinfo.innerHTML = formatDuration(time);
         if (typeof msg["ptctp"] != "undefined") {
             var temp = Q("#ptc-temp");
 

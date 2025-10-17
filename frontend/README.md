@@ -30,12 +30,3 @@ If you want to build the frontend run:
 ```bash
 npm run build
 ```
-
-
-## ToDo
-
-- the "Waiting to Cool, Cooling, Heating"-text, etc on the STATUS could be color coded to match the colors that used to show under the graph
-- unified header for all pages
-- ~~add better mobile support~~
-- ~~missing the heat/cool colors under the graph from the old one~~
-- ~~legend jumps for long states~~

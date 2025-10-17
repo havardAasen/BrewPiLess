@@ -219,6 +219,8 @@ module.exports = function(grunt) {
     'sass:dev',
     'postcss',
     'comboall',
+    'multi_lang_site_generator',
+      ...multi_lang_js_gen,
     'watch'
   ]);
 

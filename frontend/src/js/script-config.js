@@ -48,7 +48,7 @@ function waitrestart() {
     }, 15000);
 }
 
-function saveSystemSettings() {
+export function saveSystemSettings() {
     const inputs = document.querySelectorAll("#sysconfig input");
     let json = {};
     let reboot = false;
@@ -88,12 +88,6 @@ export function load() {
     }
     loadSetting();
     Net.init();
-
-    Q("#submitsave").onclick = function(e) {
-        e.preventDefault();
-        saveSystemSettings();
-        return false;
-    };
 }
 
 
@@ -210,3 +204,4 @@ export var Net = {
 };
 
 window.Net = Net
+window.saveSystemSettings = saveSystemSettings

@@ -25,7 +25,7 @@
         <div id="inputform" main>
 
             <div id="sysconfig" class="card">
-                <form action="/setconfig" action="post">
+                <form onsubmit="saveSystemSettings(); return false;">
                     <h5>
                         <%= config_page_title %>
                     </h5>
@@ -97,7 +97,7 @@
                     </div>
 
                     <div class="card-footer">
-                        <input type="submit" id="submitsave" name="submit" class="btn"></input>
+                        <button class="btn"><%= config_save_change %></button>
                     </div>
                 </form>
             </div>

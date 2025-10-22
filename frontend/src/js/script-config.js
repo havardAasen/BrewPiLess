@@ -127,7 +127,7 @@ export var Net = {
             me.list(data.list);
         } else if (typeof data["ssid"] != "undefined") {
             if (data.ssid != "") {
-                Q("#connnected-ssid").innerHTML = data.ssid;
+                Q("#connected-ssid").innerHTML = data.ssid;
             }
             if (typeof data["ip"] != "undefined")
                 if (data.ip != "") {

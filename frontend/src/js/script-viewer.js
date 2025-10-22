@@ -1,4 +1,4 @@
-import { Q } from "./shared";
+import { select } from "./shared";
 import { BrewChart, STATES } from "./vendor/chart";
 
         var BChart = {
@@ -48,11 +48,11 @@ import { BrewChart, STATES } from "./vendor/chart";
                                 BChart.chart.getFormula();
                                 //  do it again
                                 BChart.chart.process(data);
-                                if (BChart.chart.calculateSG) Q("#formula-btn").style.display = "block";
+                                if (BChart.chart.calculateSG) select("#formula-btn").style.display = "block";
                             }
                             BChart.chart.updateChart();
                             var date = new Date(BChart.chart.starttime * 1000);
-                            Q("#log-start").innerHTML = BChart.chart.formatDate(date);
+                            select("#log-start").innerHTML = BChart.chart.formatDate(date);
                             if (BChart.chart.plato) showPlatoUnit();
                         } else {
                             alert("<%= script_viewer_invalid_log %>");
@@ -64,23 +64,23 @@ import { BrewChart, STATES } from "./vendor/chart";
                 }
             }
 
-            BChart.init("div_g", Q('#ylabel').innerHTML, Q('#y2label').innerHTML);
+            BChart.init("div_g", select('#ylabel').innerHTML, select('#y2label').innerHTML);
 
-            if (Q('#dropfile')) {
-                Q('#dropfile').ondragover = function(e) {
+            if (select('#dropfile')) {
+                select('#dropfile').ondragover = function(e) {
                     e.stopPropagation();
                     e.preventDefault();
                     e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
                 };
 
-                Q('#dropfile').ondrop = function(e) {
+                select('#dropfile').ondrop = function(e) {
                     e.stopPropagation();
                     e.preventDefault();
                     var f = e.dataTransfer.files[0];
                     openfile(f);
                 };
             }
-            Q('#fileinput').onchange = function(evt) {
+            select('#fileinput').onchange = function(evt) {
                 //Retrieve the first (and only!) File from the FileList object
                 var f = evt.target.files[0];
                 openfile(f);

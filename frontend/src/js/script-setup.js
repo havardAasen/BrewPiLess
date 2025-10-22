@@ -1,4 +1,4 @@
-import { Q, getActiveNavItem, JSVERSION } from "./shared";
+import { select, getActiveNavItem, JSVERSION } from "./shared";
 import { BWF } from "./vendor/bwf";
 
 var BackupFile = "/device.cfg";
@@ -190,7 +190,7 @@ function detachNode(query) {
 
 export function init() {
     getActiveNavItem();
-    Q("#verinfo").innerHTML = "v" + JSVERSION;
+    select("#verinfo").innerHTML = "v" + JSVERSION;
 
     window.sensorContainer = detachNode(".device-container.sensor-device");
     window.pinContainer = detachNode(".device-container.pin-device");

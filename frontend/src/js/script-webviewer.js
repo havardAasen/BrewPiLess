@@ -1,4 +1,4 @@
-import { Q } from "./shared";
+import { select } from "./shared";
 import { BrewChart } from "./vendor/chart";
 
         var BChart = {
@@ -68,13 +68,13 @@ import { BrewChart } from "./vendor/chart";
             if (range) {
                 window.iniRange = range.split("-");
             }
-            BChart.init("div_g", Q('#ylabel').innerHTML, Q('#y2label').innerHTML);
-            Q("#div_g").oncontextmenu = function(ev) {
+            BChart.init("div_g", select('#ylabel').innerHTML, select('#y2label').innerHTML);
+            select("#div_g").oncontextmenu = function(ev) {
                 ev = ev || window.event;
 
-                Q("#myDropdown").classList.toggle("show");
-                Q("#myDropdown").style.left = ev.clientX + "px";
-                Q("#myDropdown").style.top = ev.clientY + "px";
+                select("#myDropdown").classList.toggle("show");
+                select("#myDropdown").style.left = ev.clientX + "px";
+                select("#myDropdown").style.top = ev.clientY + "px";
                 ev.stopPropagation();
                 ev.preventDefault();
                 return false;
@@ -82,18 +82,18 @@ import { BrewChart } from "./vendor/chart";
 
 
             window.addEventListener("click", function() {
-                var dd = Q("#myDropdown");
+                var dd = select("#myDropdown");
                 if (dd.classList.contains("show")) dd.classList.remove("show");
             });
 
-            Q("#open-selection").onclick = function() {
+            select("#open-selection").onclick = function() {
                 var ranges = BChart.chart.getXRange();
                 console.log("range:" + ranges[0] + "-" + ranges[1]);
                 window.open(getRangeURL(ranges), '_blank');
                 return false;
             };
 
-            Q("#viewlogname").innerHTML = getFilename();
+            select("#viewlogname").innerHTML = getFilename();
 
             var xhr = new XMLHttpRequest();
             xhr.open('GET', dataUrl());
@@ -115,11 +115,11 @@ import { BrewChart } from "./vendor/chart";
                         BChart.chart.getFormula();
                         //  do it again
                         BChart.chart.process(data);
-                        if (BChart.chart.calculateSG) Q("#formula-btn").style.display = "block";
+                        if (BChart.chart.calculateSG) select("#formula-btn").style.display = "block";
                     }
                     BChart.chart.updateChart();
                     var date = new Date(BChart.chart.starttime * 1000);
-                    Q("#log-start").innerHTML = BChart.chart.formatDate(date);
+                    select("#log-start").innerHTML = BChart.chart.formatDate(date);
                     if (typeof window.iniRange !== "undefined") BChart.chart.setXRange(window.iniRange);
                     if (BChart.chart.plato) showPlatoUnit();
                 } else {

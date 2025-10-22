@@ -1,10 +1,10 @@
-import { Q, getActiveNavItem, JSVERSION, s_ajax } from './shared';
+import { select, getActiveNavItem, JSVERSION, s_ajax } from './shared';
 
 var gdcurl = "/gdc";
 
 function fill(setting) {
     for (var name in setting) {
-        var ele = Q("input[name=" + name + "]");
+        var ele = select("input[name=" + name + "]");
         if (ele) {
             if (ele.type == "checkbox") ele.checked = setting[name];
             else ele.value = setting[name];
@@ -37,7 +37,7 @@ function save() {
 
 export function init() {
     getActiveNavItem();
-    Q("#verinfo").innerHTML = "v" + JSVERSION;
+    select("#verinfo").innerHTML = "v" + JSVERSION;
 
     s_ajax({
         url: gdcurl + "?data",

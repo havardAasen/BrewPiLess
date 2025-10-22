@@ -1,4 +1,4 @@
-import { Q } from "./shared";
+import { select } from "./shared";
 import Dygraph from "dygraphs";
 import regression from 'regression';
 
@@ -54,7 +54,7 @@ import regression from 'regression';
         },
         show: function() {
             if (!this.row) {
-                this.row = Q("#pointlist tr.pl_calpoint");
+                this.row = select("#pointlist tr.pl_calpoint");
                 this.row.parentNode.removeChild(this.row);
             }
             this.getFormula();
@@ -81,7 +81,7 @@ import regression from 'regression';
                 precision: 9
             });
             t.regression = poly;
-            Q("#polynormial").innerHTML = poly.string;
+            select("#polynormial").innerHTML = poly.string;
             // caluate errors
 
             t.sgByTilt = (t.points.length > 3) ?
@@ -164,7 +164,7 @@ import regression from 'regression';
     }
 
     function openpolynomialpane() {
-        Q("#polynomialpane").style.display = "block";
+        select("#polynomialpane").style.display = "block";
         PolyRegression.allpoints = BChart.chart.calibrationPoints;
         PolyRegression.cal_igmask = BChart.chart.cal_igmask;
         PolyRegression.plato = BChart.chart.plato;
@@ -172,7 +172,7 @@ import regression from 'regression';
     }
 
     function closepolynomialpane() {
-        Q("#polynomialpane").style.display = "none";
+        select("#polynomialpane").style.display = "none";
     }
     /* end of calibration */
 

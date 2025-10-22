@@ -1,5 +1,7 @@
 export const JSVERSION = "3.6";
 
+export const select = document.querySelector.bind(document);
+
 interface AjaxOptions {
     url: string;
     m: string; // HTTP method: "GET", "POST", etc.
@@ -48,10 +50,6 @@ export function s_ajax(b: AjaxOptions) {
         c.send();
     }
 }
-
-export let Q = function (selector: string): Element | null {
-    return document.querySelector(selector);
-};
 
 export function C2F(c: number) {
     return Math.round((c * 1.8 + 32) * 10) / 10;
@@ -138,7 +136,7 @@ Date.prototype.shortLocalizedString = function (): string {
 export function getActiveNavItem() {
     var path = window.location.pathname.split("/").pop();
     if (path == "") path = "index.htm";
-    var element = Q('.options>li>a[href="/' + path + '"]');
+    var element = select('.options>li>a[href="/' + path + '"]');
     if (element) element.className += "active";
 }
 
@@ -173,14 +171,14 @@ export function formatDateForPicker(date: Date) {
 export function updateGravity(sg: number): void {
     window.sg = sg;
 
-    const gravitySg = Q("#gravity-sg");
+    const gravitySg = select("#gravity-sg");
     if (gravitySg) {
-        gravitySg.innerHTML = window.plato ? sg.toFixed(1) : sg.toFixed(3);
+      gravitySg.innerHTML = window.plato ? sg.toFixed(1) : sg.toFixed(3);
     }
 
     if (typeof window.og !== "undefined") {
-        const gravityAtt = Q("#gravity-att");
-        const gravityAbv = Q("#gravity-abv");
+      const gravityAtt = select("#gravity-att");
+      const gravityAbv = select("#gravity-abv");
 
         if (gravityAtt) {
             gravityAtt.innerHTML = window.plato
@@ -200,7 +198,7 @@ export function updateOriginGravity(og: number): void {
     if (typeof window.og !== "undefined" && window.og === og) return;
     window.og = og;
 
-    const gravityOg = Q("#gravity-og");
+    const gravityOg = select("#gravity-og");
     if (gravityOg) {
         gravityOg.innerHTML = window.plato ? og.toFixed(1) : og.toFixed(3);
     }

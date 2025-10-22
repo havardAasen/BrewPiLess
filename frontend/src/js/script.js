@@ -1,4 +1,4 @@
-import { Q, getActiveNavItem, s_ajax, openDlgLoading, C2F, BrewMath, closeDlgLoading, JSVERSION, ModeString, StateText, updateOriginGravity, updateGravity } from './shared';
+import { select, getActiveNavItem, s_ajax, openDlgLoading, C2F, BrewMath, closeDlgLoading, JSVERSION, ModeString, StateText, updateOriginGravity, updateGravity } from './shared';
 import { BrewChart, checkfgstate, GravityFilter, GravityTracker } from "./vendor/chart";
 import { Capper } from "./capper";
 import { BWF } from "./vendor/bwf";
@@ -114,7 +114,7 @@ import { BWF } from "./vendor/bwf";
                         //  do it again
                         t.chart.process(data);
                         if (t.chart.calculateSG) {
-                            Q("#formula-btn").style.display = "block";
+                            select("#formula-btn").style.display = "block";
                             // update formula
                             t.updateFormula();
                         }
@@ -240,7 +240,7 @@ import { BWF } from "./vendor/bwf";
 
 
     function renderLcdText(info) {
-        var div = Q(".error");
+        var div = select(".error");
         if (div) div.style.display = "none";
 
         function T(temp) {
@@ -271,7 +271,7 @@ import { BWF } from "./vendor/bwf";
         }
 
         Object.keys(status).map(function(key, i) {
-            var div = Q("#lcd" + key);
+            var div = select("#lcd" + key);
             if (div) {
                 if (key == "ControlMode") div.innerHTML = ModeString[status[key]];
                 else if (key == "ControlState") div.innerHTML = genStateText(status[key], status.ControlStateSince);
@@ -335,19 +335,19 @@ import { BWF } from "./vendor/bwf";
     }
 
     function communicationError() {
-        var div = Q('.error');
+        var div = select('.error');
         if (div) {
             hideErrorMsgs();
-            Q('#error_connect').style.display = "block";
+            select('#error_connect').style.display = "block";
             div.style.display = "block";
         } else displayLcdText(["Failed to", "connect to", "Server", ""]);
     }
 
     function controllerError() {
-        var div = Q('.error');
+        var div = select('.error');
         if (div) {
             hideErrorMsgs();
-            Q('#error_noupdate').style.display = "block";
+            select('#error_noupdate').style.display = "block";
             div.style.display = "block";
         } else displayLcdText(["Controller not", "updating data", "...", ""]);
     }
@@ -412,34 +412,34 @@ import { BWF } from "./vendor/bwf";
         if (msg.name.startsWith("iSpindel"))
             if (typeof window.iSpindel == "undefined") {
                 window.iSpindel = true;
-                if (Q("#iSpindel-pane"))
-                    Q("#iSpindel-pane").style.display = "block";
+                if (select("#iSpindel-pane"))
+                    select("#iSpindel-pane").style.display = "block";
             }
-        var ndiv = Q("#iSpindel-name");
+        var ndiv = select("#iSpindel-name");
         if (ndiv) ndiv.innerHTML = msg.name;
 
-        if (typeof msg["battery"] != "undefined" && Q("#iSpindel-battery"))
-            Q("#iSpindel-battery").innerHTML = msg.battery;
+        if (typeof msg["battery"] != "undefined" && select("#iSpindel-battery"))
+            select("#iSpindel-battery").innerHTML = msg.battery;
 
         var lu;
         if (typeof msg["lu"] != "undefined")
             lu = new Date(msg.lu * 1000);
         else
             lu = new Date();
-        if (Q("#iSpindel-last"))
-            Q("#iSpindel-last").innerHTML = lu.shortLocalizedString();
+        if (select("#iSpindel-last"))
+            select("#iSpindel-last").innerHTML = lu.shortLocalizedString();
 
         if (!BChart.chart.calibrating && typeof msg["sg"] != "undefined" &&
             msg.sg > 0)
             updateGravity(msg.sg);
 
         if (typeof msg["angle"] != "undefined") {
-            if (Q("#iSpindel-tilt"))
-                Q("#iSpindel-tilt").innerHTML = "" + msg["angle"];
+            if (select("#iSpindel-tilt"))
+                select("#iSpindel-tilt").innerHTML = "" + msg["angle"];
         }
         if (typeof msg["rssi"] != "undefined"){
-            if(Q("#ispindel-rssi")){
-                Q("#ispindel-rssi").classList.remove("no-display");
+            if(select("#ispindel-rssi")){
+                select("#ispindel-rssi").classList.remove("no-display");
                 wifibar("#ispindel-rssi",msg.rssi);
             }
         }
@@ -455,10 +455,10 @@ import { BWF } from "./vendor/bwf";
     }
 
     function showgravitydlg(msg) {
-        Q('#dlg_addgravity .og').style.display = "none";
-        Q('#dlg_addgravity .sg').style.display = "none";
-        Q('#dlg_addgravity .' + msg).style.display = "block";
-        Q('#dlg_addgravity').style.display = "block";
+        select('#dlg_addgravity .og').style.display = "none";
+        select('#dlg_addgravity .sg').style.display = "none";
+        select('#dlg_addgravity .' + msg).style.display = "block";
+        select('#dlg_addgravity').style.display = "block";
         // update temp.
         if (typeof window["tempUnit"] != "undefined") {
             window.celsius = false;
@@ -468,7 +468,7 @@ import { BWF } from "./vendor/bwf";
                 window.celsius = true;
                 defaultTemp = 20;
             }
-            Q("#dlg_addgravity .tempinput").value = defaultTemp;
+            select("#dlg_addgravity .tempinput").value = defaultTemp;
 
             var tus = document.querySelectorAll("#dlg_addgravity .temp-unit");
             for (let i = 0; i < tus.length; i++)
@@ -477,41 +477,41 @@ import { BWF } from "./vendor/bwf";
     }
 
     function dismissgravity() {
-        Q('#dlg_addgravity').style.display = "none";
+        select('#dlg_addgravity').style.display = "none";
     }
 
     function inputsg_change() {
-        var gravity = parseFloat(Q("#dlg_addgravity .sginput").value);
-        var temp = parseFloat(Q("#dlg_addgravity .tempinput").value);
+        var gravity = parseFloat(select("#dlg_addgravity .sginput").value);
+        var temp = parseFloat(select("#dlg_addgravity .tempinput").value);
         if (isNaN(gravity) || isNaN(temp)) return;
         // if calibration info is avilable
         var caltemp = (typeof window.caltemp != "undefined") ? window.caltemp : 20;
         caltemp = window.celsius ? caltemp : C2F(caltemp);
         // calibration temperature always use celsius.
-        Q("#sginput-hm-cal-temp").innerHTML = caltemp;
+        select("#sginput-hm-cal-temp").innerHTML = caltemp;
         if (window.plato) {
             const correctedSg = BrewMath.pTempCorrection(window.celsius, gravity, temp, caltemp);
-            Q("#sginput-hmc").innerHTML = correctedSg.toFixed(2);
+            select("#sginput-hmc").innerHTML = correctedSg.toFixed(2);
 
         } else {
             const correctedSg = BrewMath.tempCorrection(window.celsius, gravity, temp, caltemp);
-            Q("#sginput-hmc").innerHTML = correctedSg.toFixed(3);
+            select("#sginput-hmc").innerHTML = correctedSg.toFixed(3);
         }
         // if iSpindel info is available, or beer temp is available.
         if (typeof window.beerTemp != "undefined") {
-            Q("#sginput-ispindel-temp").innerHTML = window.beerTemp;
+            select("#sginput-ispindel-temp").innerHTML = window.beerTemp;
             if (window.plato) {
                 const sgc = BrewMath.pTempCorrection(window.celsius, gravity, temp, window.beerTemp);
-                Q("#sginput-sg-ispindel").innerHTML = sgc.toFixed(2);
+                select("#sginput-sg-ispindel").innerHTML = sgc.toFixed(2);
             } else {
                 const sgc = BrewMath.tempCorrection(window.celsius, gravity, temp, window.beerTemp);
-                Q("#sginput-sg-ispindel").innerHTML = sgc.toFixed(3);
+                select("#sginput-sg-ispindel").innerHTML = sgc.toFixed(3);
             }
         }
     }
 
     function inputgravity() {
-        var gravity = parseFloat(Q("#sginput-hmc").innerHTML);
+        var gravity = parseFloat(select("#sginput-hmc").innerHTML);
 
         if (!window.plato && (gravity < 0.8 || gravity > 1.25)) return;
 
@@ -563,30 +563,30 @@ import { BWF } from "./vendor/bwf";
         for (; bar >= 0; bar--) {
             if (strength[bar] < x) break;
         }
-        var bars = Q(did).getElementsByClassName("rssi-bar");
+        var bars = select(did).getElementsByClassName("rssi-bar");
         for (let i = 0; i < bars.length; i++) {
             bars[i].style.backgroundColor = (i < bar) ? window.rssiBarColor : "rgba(255,255,255,0.05)";
         }
-        Q(did).title = (x > 0) ? "?" : Math.min(Math.max(2 * (x + 100), 0), 100);
+        select(did).title = (x > 0) ? "?" : Math.min(Math.max(2 * (x + 100), 0), 100);
 
     }
 
     function displayrssi(x) {
-        Q("#rssi").title = (x > 0) ? "?" : Math.min(Math.max(2 * (x + 100), 0), 100);
+        select("#rssi").title = (x > 0) ? "?" : Math.min(Math.max(2 * (x + 100), 0), 100);
         wifibar("#rssi",x);
-        if (Q("#wifisignal"))
-            Q("#wifisignal").innerHTML = (x > 0) ? "?" : Math.min(Math.max(2 * (x + 100), 0), 100);
+        if (select("#wifisignal"))
+            select("#wifisignal").innerHTML = (x > 0) ? "?" : Math.min(Math.max(2 * (x + 100), 0), 100);
     }
 
     function initRssi() {
-        var rssi = Q("#rssi");
-        window.rssiBarColor = window.getComputedStyle(Q('.rssi-bar1')).getPropertyValue('background-color');
-        if (Q("#wifisignal")) {
+        var rssi = select("#rssi");
+        window.rssiBarColor = window.getComputedStyle(select('.rssi-bar1')).getPropertyValue('background-color');
+        if (select("#wifisignal")) {
             rssi.onmouseover = function() {
-                Q("#wifisignal").style.display = "block";
+                select("#wifisignal").style.display = "block";
             };
             rssi.onmouseout = function() {
-                Q("#wifisignal").style.display = "none";
+                select("#wifisignal").style.display = "none";
             };
         }
     }
@@ -627,19 +627,19 @@ import { BWF } from "./vendor/bwf";
             return parts.join(" ");
         }
 
-        var pane = Q("#ptc-pane");
+        var pane = select("#ptc-pane");
         if (pane) {
             if (mode == "o") pane.style.display = "none";
             else {
                 pane.style.display = "block";
             }
         } else return;
-        var state = Q("#ptc-state");
+        var state = select("#ptc-state");
         if (state) state.style.backgroundColor = (mode == "c") ? "lightgreen" : "gray";
 
-        var textstateidle = Q("#ptc-state-idle");
+        var textstateidle = select("#ptc-state-idle");
         if (textstateidle) {
-            var textstaterun = Q("#ptc-state-run");
+            var textstaterun = select("#ptc-state-run");
             if (mode == "c") {
                 textstateidle.style.display = "none";
                 textstaterun.style.display = "block";
@@ -649,15 +649,15 @@ import { BWF } from "./vendor/bwf";
             }
         }
 
-        var tinfo = Q("#ptc-time");
+        var tinfo = select("#ptc-time");
         if (tinfo) tinfo.innerHTML = formatDuration(time);
         if (typeof msg["ptctp"] != "undefined") {
-            var temp = Q("#ptc-temp");
+            var temp = select("#ptc-temp");
 
             if (temp) temp.innerHTML = (msg.ptctp < -100) ? "NA" : ((msg.ptctp / 100) + "&deg;C");
         }
         if (typeof msg["ptclo"] != "undefined" && typeof msg["ptcup"] != "undefined") {
-            var ts = Q("#ptc-set");
+            var ts = select("#ptc-set");
             if (ts) ts.innerHTML = (msg.ptclo / 100) + " ~ " + (msg.ptcup / 100) + "&deg;C";
         }
     }
@@ -681,22 +681,22 @@ import { BWF } from "./vendor/bwf";
         if (typeof c["reload"] != "undefined") {
             console.log("Forced reload chart");
             BChart.reqnow();
-            if (!Q("#recording").innerHTML || Q("#recording").innerHTML != c.log)
+            if (!select("#recording").innerHTML || select("#recording").innerHTML != c.log)
                 window.npt = 0; // delete formula to force update to BPL.                
         }
         if (typeof c["nn"] != "undefined") {
-            Q("#hostname").innerHTML = c["nn"];
+            select("#hostname").innerHTML = c["nn"];
             document.title = c.nn; // + document.title.replace("BrewPiLess", "");
         }
         if (typeof c["ver"] != "undefined") {
             if (JSVERSION != c["ver"]) alert("<%= script_control_version_mismatched %>");
-            Q("#verinfo").innerHTML = "v" + c["ver"];
+            select("#verinfo").innerHTML = "v" + c["ver"];
         }
         if (typeof c["tm"] != "undefined" && typeof c["off"] != "undefined") {
             syncClientTimeIfNeeded(c.tm, c.off);
         }
         if (typeof c["log"] != "undefined") {
-            Q("#recording").innerHTML = c.log;
+            select("#recording").innerHTML = c.log;
         }
         if (typeof c["cap"] != "undefined")
             Capper.status(c["cap"]);
@@ -707,8 +707,8 @@ import { BWF } from "./vendor/bwf";
 
         if (typeof c["pm"] != "undefined" && typeof c["psi"] != "undefined") {
             if (c.pm != 0) {
-                Q("#pressure-info-pane").style.display = "block";
-                Q("#pressure-psi").innerHTML = c.psi;
+                select("#pressure-info-pane").style.display = "block";
+                select("#pressure-psi").innerHTML = c.psi;
             }
         }
 
@@ -779,9 +779,9 @@ import { BWF } from "./vendor/bwf";
     }
 
     export function init() {
-        Q("#pressure-info-pane").style.display = "none";
+        select("#pressure-info-pane").style.display = "none";
         window.plato = false;
-        BChart.init("div_g", Q('#ylabel').innerHTML, Q('#y2label').innerHTML);
+        BChart.init("div_g", select('#ylabel').innerHTML, select('#y2label').innerHTML);
         initRssi();
         Capper.init();
         BWF.gotMsg = true;

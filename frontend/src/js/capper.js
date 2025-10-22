@@ -1,4 +1,4 @@
-import { Q, s_ajax, formatDate, formatDateForPicker} from './shared';
+import { select, s_ajax, formatDate, formatDateForPicker} from './shared';
 
 function TabPane(modes) {
     var t = this;
@@ -63,13 +63,13 @@ export var Capper = {
         //  Tom's : info-pane only in index.htm
         //  Tom's UI: capper-frame(control) in control.htm
 
-        var cp = Q(".capping-info-pane");
+        var cp = select(".capping-info-pane");
         if (cp) {
             // classic or Tom's index.htm, do no harm in classic
             cp.style.display = "none";
         }
 
-        var cf = Q("#capper-frame");
+        var cf = select("#capper-frame");
         if (cf) {
             // classic or Tom's control.htm
             cf.style.display = "none";
@@ -79,7 +79,7 @@ export var Capper = {
     initCtrl: function() {
         var t = this;
         t.tabs = new TabPane(["tab-gravity", "tab-time", "tab-manual"]);
-        var date_in = Q("#captimeinput");
+        var date_in = select("#captimeinput");
         t.time = new Date();
         date_in.onchange = function() {
             var nd = new Date(date_in.value);
@@ -90,24 +90,24 @@ export var Capper = {
                 t.setInputTime(nd);
             }
         };
-        Q("#cap-apply").onclick = function() {
+        select("#cap-apply").onclick = function() {
             // get psi when needed
             var psiarg = t.psi_valid ? "psi=" + t.target_psi + "&" : "";
 
             var mode = t.tabs.cmode;
             if (mode == "tab-gravity") {
-                var sg = Q("#capgravityinput").value;
+                var sg = select("#capgravityinput").value;
                 /*if (isNaN(sg) || sg > 2 || sg < 0.8) alert("<%= capper_invalid_gravity %>");
                 else*/
                 t.send(psiarg + "sg=" + sg);
             } else if (mode == "tab-time") {
-                var time = new Date(Q("#captimeinput").value);
+                var time = new Date(select("#captimeinput").value);
                 if (isNaN(time.getTime())) {
                     alert("<%= capper_invalid_time %>");
                     return;
                 } else t.send(psiarg + "at=" + (time.getTime() / 1000));
             } else {
-                if (Q("#capswitch").checked) t.send(psiarg + "cap=1");
+                if (select("#capswitch").checked) t.send(psiarg + "cap=1");
                 else t.send(psiarg + "cap=0");
             }
         };
@@ -134,18 +134,18 @@ export var Capper = {
 
     },
     setcap: function(capped) {
-        if (!Q("#capstate-open")) return;
+        if (!select("#capstate-open")) return;
         if (capped) {
-            Q("#capstate-open").style.display = "none";
-            Q("#capstate-close").style.display = "inline-block";
+            select("#capstate-open").style.display = "none";
+            select("#capstate-close").style.display = "inline-block";
         } else {
-            Q("#capstate-open").style.display = "inline-block";
-            Q("#capstate-close").style.display = "none";
+            select("#capstate-open").style.display = "inline-block";
+            select("#capstate-close").style.display = "none";
         }
     },
     setInputTime: function(d) {
         this.time = d;
-        var date_in = Q("#captimeinput");
+        var date_in = select("#captimeinput");
         date_in.value = (date_in.type == "datetime-local") ? formatDateForPicker(d) : formatDate(d);
     },
     status: function(capst) {
@@ -159,7 +159,7 @@ export var Capper = {
     },
     statusInfo: function(capst) {
         // cap status
-        var cp = Q(".capping-info-pane");
+        var cp = select(".capping-info-pane");
         if (cp) {
             cp.style.display = "block";
 
@@ -167,25 +167,25 @@ export var Capper = {
             // info: cap condition
             var IDs = ["", "cs-manopen", "cs-mancap", "cs-timecon", "cs-sgcon"];
             for (var i = 1; i < IDs.length; i++) {
-                if (i == capst.m) Q("#" + IDs[i]).style.display = "inline-block";
-                else Q("#" + IDs[i]).style.display = "none";
+                if (i == capst.m) select("#" + IDs[i]).style.display = "inline-block";
+                else select("#" + IDs[i]).style.display = "none";
             }
 
             if (typeof capst["g"] != "undefined")
-                Q("#capgravityset").innerHTML = capst["g"];
+                select("#capgravityset").innerHTML = capst["g"];
 
             if (typeof capst["t"] != "undefined")
-                Q("#captimeset").innerHTML = formatDate(new Date(capst["t"] * 1000));
+                select("#captimeset").innerHTML = formatDate(new Date(capst["t"] * 1000));
         }
     },
     updateCtrl: function(capst) {
         // cap control
-        var cf = Q("#capper-frame");
+        var cf = select("#capper-frame");
         if (cf) {
             cf.style.display = "block";
 
             if (typeof capst["g"] != "undefined")
-                Q("#capgravityinput").value = capst["g"];
+                select("#capgravityinput").value = capst["g"];
 
             if (typeof capst["t"] != "undefined")
                 this.setInputTime(new Date(capst["t"] * 1000));
@@ -193,8 +193,8 @@ export var Capper = {
                 this.setInputTime(new Date());
 
             // check mode
-            if (capst.m == 1) Q("#capswitch").checked = false;
-            else if (capst.m == 2) Q("#capswitch").checked = true;
+            if (capst.m == 1) select("#capswitch").checked = false;
+            else if (capst.m == 2) select("#capswitch").checked = true;
             // pressure control mode
             if (capst.pm == 2) {
                 this.hidepset(false);

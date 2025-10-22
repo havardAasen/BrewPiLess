@@ -1,4 +1,4 @@
-import { Q, getActiveNavItem, s_ajax, JSVERSION } from './shared';
+import { select, getActiveNavItem, s_ajax, JSVERSION } from './shared';
 import { BWF } from "./vendor/bwf";
 
 function formatIP(ip) {
@@ -24,8 +24,8 @@ function loadSetting() {
             window.oridata = json;
 
             Object.entries(json).forEach(([key, value]) => {
-                let input = Q(`input[id=${key}]`);
-                let wifiMode = Q(`select[id=${key}]`);
+                let input = select(`input[id=${key}]`);
+                let wifiMode = select(`select[id=${key}]`);
 
                 if (input) {
                     updateInput(input, value);
@@ -41,8 +41,8 @@ function loadSetting() {
 }
 
 function waitrestart() {
-    Q("#waitprompt").style.display = "block";
-    Q("#inputform").style.display = "none";
+    select("#waitprompt").style.display = "block";
+    select("#inputform").style.display = "none";
     setTimeout(function() {
         window.location.reload();
     }, 15000);
@@ -80,8 +80,8 @@ export function saveSystemSettings() {
 }
 
 export function load() {
-    if (Q("#verinfo")) {
-        Q("#verinfo").innerHTML = "v" + JSVERSION;
+    if (select("#verinfo")) {
+        select("#verinfo").innerHTML = "v" + JSVERSION;
         getActiveNavItem();
     }
     loadSetting();
@@ -113,7 +113,7 @@ export var Net = {
         return false;
     },
     init: function() {
-        this.litem = Q(".nwlist");
+        this.litem = select(".nwlist");
         this.litem.parentNode.removeChild(this.litem);
         this.setupEvent();
         this.hide();
@@ -125,11 +125,11 @@ export var Net = {
             me.list(data.list);
         } else if (typeof data["ssid"] != "undefined") {
             if (data.ssid != "") {
-                Q("#connected-ssid").innerHTML = data.ssid;
+                select("#connected-ssid").innerHTML = data.ssid;
             }
             if (typeof data["ip"] != "undefined")
                 if (data.ip != "") {
-                    Q("#sta-ip").innerHTML = data.ip;
+                    select("#sta-ip").innerHTML = data.ip;
 
                 }
         }
@@ -138,7 +138,7 @@ export var Net = {
         return (x > 0) ? "?" : Math.min(Math.max(2 * (x + 100), 0), 100);
     },
     list: function(nwlist) {
-        var nws = Q("#networks");
+        var nws = select("#networks");
         nws.innerHTML = "";
         for (var i = 0; i < nwlist.length; i++) {
             var nl = this.litem.cloneNode(true);
@@ -161,7 +161,7 @@ export var Net = {
         });
     },
     scan: function() {
-        var lists = Q("#networks");
+        var lists = select("#networks");
         lists.innerHTML = "Scanning...";
 
         s_ajax({
@@ -172,17 +172,17 @@ export var Net = {
         return false;
     },
     save: function() {
-        var data = "nw=" + encodeURIComponent(Q("#ssid").value);
-        if (Q("#nwpass").value != "") data = data + "&pass=" + encodeURIComponent(Q("#nwpass").value);
-        var ip = validIP(Q("#staticip").value);
-        var gw = validIP(Q("#gateway").value);
-        var nm = validIP(Q("#netmask").value);
-        var dns = validIP(Q("#dns").value);
+        var data = "nw=" + encodeURIComponent(select("#ssid").value);
+        if (select("#nwpass").value != "") data = data + "&pass=" + encodeURIComponent(select("#nwpass").value);
+        var ip = validIP(select("#staticip").value);
+        var gw = validIP(select("#gateway").value);
+        var nm = validIP(select("#netmask").value);
+        var dns = validIP(select("#dns").value);
         if (ip && gw && nm) {
-            data = data + "&ip=" + Q("#staticip").value.trim() +
-                "&gw=" + Q("#gateway").value.trim() +
-                "&nm=" + Q("#netmask").value.trim() +
-                "&dns=" + Q("#dns").value.trim();
+            data = data + "&ip=" + select("#staticip").value.trim() +
+                "&gw=" + select("#gateway").value.trim() +
+                "&nm=" + select("#netmask").value.trim() +
+                "&dns=" + select("#dns").value.trim();
         }
         s_ajax({
             m: "POST",
@@ -194,10 +194,10 @@ export var Net = {
         return false;
     },
     show: function() {
-        Q("#networkselection").style.display = "block";
+        select("#networkselection").style.display = "block";
     },
     hide: function() {
-        Q("#networkselection").style.display = "none";
+        select("#networkselection").style.display = "none";
     }
 };
 

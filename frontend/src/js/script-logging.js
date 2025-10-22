@@ -1,4 +1,4 @@
-import { Q, s_ajax, C2F, BrewMath, getActiveNavItem, JSVERSION } from "./shared";
+import { select, s_ajax, C2F, BrewMath, getActiveNavItem, JSVERSION } from "./shared";
 import {mqttLoadSetting} from "./mqtt";
 
 var logurl = "log";
@@ -43,9 +43,9 @@ var logs = {
         return ret;
     },
     fsinfo: function(s, u) {
-        Q("#fssize").innerHTML = s.format(0, 3, ',');
-        Q("#fsused").innerHTML = u.format(0, 3, ',');
-        Q("#fsfree").innerHTML = (s - u).format(0, 3, ',');
+        select("#fssize").innerHTML = s.format(0, 3, ',');
+        select("#fsused").innerHTML = u.format(0, 3, ',');
+        select("#fsfree").innerHTML = (s - u).format(0, 3, ',');
     },
     stoplog: function() {
         var t = this;
@@ -53,7 +53,7 @@ var logs = {
             // stop
             if (confirm("<%= script_logging_stop_current_logging %>")) {
                 //console.log("Stop logging");
-                var n = Q("#logname").value.trim();
+                var n = select("#logname").value.trim();
                 s_ajax({
                     url: t.stopurl + n,
                     m: "GET",
@@ -78,7 +78,7 @@ var logs = {
                 alert("<%= script_logging_not_free_space %>");
                 return;
             }
-            var name = Q("#logname").value.trim();
+            var name = select("#logname").value.trim();
             if (t.vname(name) === false) {
                 alert("<%= script_logging_invalid_file_name %>");
                 return;
@@ -88,10 +88,10 @@ var logs = {
                 return;
             }
             var arg = "";
-            var calispindel = Q("#calispindel").checked;
+            var calispindel = select("#calispindel").checked;
             if (calispindel) {
-                var tilt = parseFloat(Q("#tiltinw").value.trim());
-                var reading = parseFloat(Q("#hydrometer").value.trim());
+                var tilt = parseFloat(select("#tiltinw").value.trim());
+                var reading = parseFloat(select("#hydrometer").value.trim());
                 if (window.plato) reading = 0;
                 if (isNaN(tilt)) {
                     alert("<%= script_logging_tilt_value_necessary %>");
@@ -120,15 +120,15 @@ var logs = {
     recording: function(n, t) {
         this.logging = true;
         var d = new Date(t * 1000);
-        Q("#start-log-date").innerHTML = d.toLocaleString();
-        Q("#loggingtitle").innerHTML = n;
-        Q("#logstartinput").style.display = "none";
-        Q("#logstopinput").style.display = "block";
+        select("#start-log-date").innerHTML = d.toLocaleString();
+        select("#loggingtitle").innerHTML = n;
+        select("#logstartinput").style.display = "none";
+        select("#logstopinput").style.display = "block";
     },
     stop: function() {
         this.logging = false;
-        Q("#logstartinput").style.display = "block";
-        Q("#logstopinput").style.display = "none";
+        select("#logstartinput").style.display = "block";
+        select("#logstopinput").style.display = "none";
     },
     //view:function(n){
     //	alert("View " + this.ll[n].name);
@@ -159,7 +159,7 @@ var logs = {
         window.open(this.dlurl + n);
     },
     list: function(l) {
-        var tb = Q("#loglist").querySelector("tbody");
+        var tb = select("#loglist").querySelector("tbody");
         var tr;
         while (tr = tb.querySelector("tr:nth-of-type(2)"))
             tb.removeChild(tr);
@@ -185,14 +185,14 @@ var logs = {
     },
     init: function() {
         var t = this;
-        Q("#startlogbutton").onclick = function() {
+        select("#startlogbutton").onclick = function() {
             t.startlog();
         };
-        Q("#stoplogbutton").onclick = function() {
+        select("#stoplogbutton").onclick = function() {
             t.stoplog();
         };
 
-        t.row = Q("#loglist").querySelector("tr:nth-of-type(2)");
+        t.row = select("#loglist").querySelector("tr:nth-of-type(2)");
         t.row.parentNode.removeChild(t.row);
         s_ajax({
             url: t.url,
@@ -229,7 +229,7 @@ function checkformat(ta) {
     if (ta.value.length > 256) {
         ta.value = t.value.substring(0, 256);
     }
-    Q("#fmthint").innerHTML = "" + ta.value.length + "/256";
+    select("#fmthint").innerHTML = "" + ta.value.length + "/256";
 }
 
 function cmethod(c) {
@@ -248,7 +248,7 @@ function generichttp_get() {
         alert("<%= script_logging_select_method %>");
         return null;
     }
-    var format = Q("#format").value.trim();
+    var format = select("#format").value.trim();
 
     if (window.selectedMethod == "GET") {
         var myRe = new RegExp("\s", "g");
@@ -259,45 +259,45 @@ function generichttp_get() {
     }
 
     var r = {};
-    r.url = Q("#url").value.trim();
+    r.url = select("#url").value.trim();
     r.format = encodeURIComponent(format.escapeJSON());
-    r.method = (Q("#m_post").checked) ? "POST" : "GET";
-    r.type = Q("#data-type").value.trim();
+    r.method = (select("#m_post").checked) ? "POST" : "GET";
+    r.type = select("#data-type").value.trim();
     r.service = 0;
     return r;
 }
 
 function generichttp_set(r) {
-    Q("#service-type").value = "generichttp";
+    select("#service-type").value = "generichttp";
     serviceOption("generichttp");
     window.selectedMethod = r.method;
-    Q("#m_" + r.method.toLowerCase()).checked = true;
-    Q("#url").value = (r.url === undefined) ? "" : r.url;
-    Q("#data-type").value = (r.type === undefined) ? "" : r.type;
-    Q("#format").value = (r.format === undefined) ? "" : r.format;
-    checkformat(Q("#format"));
+    select("#m_" + r.method.toLowerCase()).checked = true;
+    select("#url").value = (r.url === undefined) ? "" : r.url;
+    select("#data-type").value = (r.type === undefined) ? "" : r.type;
+    select("#format").value = (r.format === undefined) ? "" : r.format;
+    checkformat(select("#format"));
 }
 // ubidots.com
 function ubidots_set(r) {
-    Q("#service-type").value = "ubidots";
+    select("#service-type").value = "ubidots";
     serviceOption("ubidots");
 
     // different api    
     var match = /http:\/\/([\w\.]+)\.ubidots\.com\/api\/v1\.6\/devices\/(\w+)\/\?token=(\w+)$/.exec(r.url);
 
-    Q("select[name=ubidots-account]").value = (match[1] == "things") ? 1 : 2;
-    Q("#ubidots-device").value = match[2];
-    Q("#ubidots-token").value = match[3];
+    select("select[name=ubidots-account]").value = (match[1] == "things") ? 1 : 2;
+    select("#ubidots-device").value = match[2];
+    select("#ubidots-token").value = match[3];
 
 }
 
 function ubidots_get() {
-    var device = Q("#ubidots-device").value.trim();
+    var device = select("#ubidots-device").value.trim();
     if (!device) return null;
-    var token = Q("#ubidots-token").value.trim();
+    var token = select("#ubidots-token").value.trim();
     if (!token) return null;
     var info = {};
-    info.url = (Q("select[name=ubidots-account]").value == 1) ?
+    info.url = (select("select[name=ubidots-account]").value == 1) ?
         "http://things.ubidots.com/api/v1.6/devices/" + device + "/?token=" + token :
         "http://industrial.api.ubidots.com/v1.6/devices/" + device + "/?token=" + token;
 
@@ -309,7 +309,7 @@ function ubidots_get() {
 }
 // thingspeak.com
 function thingspeak_set(r) {
-    Q("#service-type").value = "thingspeak";
+    select("#service-type").value = "thingspeak";
     serviceOption("thingspeak");
 
     var values = {};
@@ -319,20 +319,20 @@ function thingspeak_set(r) {
         values[pair[0]] = pair[1];
     }
 
-    Q("#thingspeak-apikey").value = values["api_key"];
+    select("#thingspeak-apikey").value = values["api_key"];
 
     for (let i = 1; i < 9; i++)
-        Q("select[name=thingspeak-f" + i + "]").value = (typeof values["field" + i] == "undefined") ?
+        select("select[name=thingspeak-f" + i + "]").value = (typeof values["field" + i] == "undefined") ?
         "unused" : values["field" + i].substring(1);
 }
 
 function thingspeak_get() {
-    var apikey = Q("#thingspeak-apikey").value.trim();
+    var apikey = select("#thingspeak-apikey").value.trim();
     if (!apikey) return null;
     apikey = "api_key=" + apikey;
     var format = apikey;
     for (var i = 1; i < 9; i++) {
-        var v = Q("select[name=thingspeak-f" + i + "]").value;
+        var v = select("select[name=thingspeak-f" + i + "]").value;
         if (v != "unused") format = format + "&field" + i + "=%" + v;
     }
     if (format == apikey) return null;
@@ -347,18 +347,18 @@ function thingspeak_get() {
 }
 //brewfahter
 function brewfather_set(r) {
-    Q("#service-type").value = "brewfather";
+    select("#service-type").value = "brewfather";
     serviceOption("brewfather");
 
     var match = /http:\/\/log\.brewfather\.net\/brewpiless\?id=(\w+)$/.exec(r.url);
-    Q("#brewfather-id").value = match[1];
+    select("#brewfather-id").value = match[1];
     var idmatch = /"id":"([^"]+)"/.exec(r.format);
-    Q("#brewfather-device").value = idmatch[1];
+    select("#brewfather-device").value = idmatch[1];
 }
 
 function brewfather_get(r) {
-    var uid = Q("#brewfather-id").value.trim();
-    var device = Q("#brewfather-device").value.trim();
+    var uid = select("#brewfather-id").value.trim();
+    var device = select("#brewfather-device").value.trim();
     if (!uid || !device) return null;
 
     var info = {};
@@ -377,34 +377,34 @@ function brewfather_get(r) {
 
 //brewfahter
 function brewersfriend_set(r) {
-    Q("#service-type").value = "brewersfriend";
+    select("#service-type").value = "brewersfriend";
     serviceOption("brewersfriend");
 
-    Q("#brewersfriend-url").value = r.url;
+    select("#brewersfriend-url").value = r.url;
 
     var beermatch = /"beer":"([^"]+)"/.exec(r.format);
-    Q("#brewersfriend-beer").value = beermatch[1];
+    select("#brewersfriend-beer").value = beermatch[1];
 
     var gumatch = /"gravity_unit":"([P|G])"/.exec(r.format);
     if (gumatch[1] == "P") {
-        Q("#gu-sg").checked = false;
-        Q("#gu-plato").checked = true;
+        select("#gu-sg").checked = false;
+        select("#gu-plato").checked = true;
     } else {
-        Q("#gu-sg").checked = true;
-        Q("#gu-plato").checked = false;
+        select("#gu-sg").checked = true;
+        select("#gu-plato").checked = false;
     }
 }
 
 function brewersfriend_get(r) {
     let gf = "%g";
     let gu = "G";
-    if (Q('input[name="BF-gu"]:checked').value == "gu-plato") {
+    if (select('input[name="BF-gu"]:checked').value == "gu-plato") {
         gf = "%p";
         gu = "P";
     }
     //http://log.brewersfriend.com/stream/[API KEY]
-    var url = Q("#brewersfriend-url").value.trim();
-    var beer = Q("#brewersfriend-beer").value.trim();
+    var url = select("#brewersfriend-url").value.trim();
+    var beer = select("#brewersfriend-beer").value.trim();
 
     var format = "{\"name\":\"BrewPiLess\",\"temp\": %b,\"temp_unit\": \"%U\",\"gravity\":" + gf +
         ",\"gravity_unit\":\"" + gu + "\",\"ph\": \"\",\"comment\": \"\",\"beer\":\"" + beer + "\",\"battery\":%v,\"RSSI\": \"\",\"angle\": %t}";
@@ -436,9 +436,9 @@ function service_set(r) {
 }
 
 function update() {
-    var service = Q("#service-type").value;
+    var service = select("#service-type").value;
     var r;
-    var enabled = Q("#enabled").checked;
+    var enabled = select("#enabled").checked;
     if (service == "generichttp") r = generichttp_get();
     else if (service == "ubidots") r = ubidots_get();
     else if (service == "thingspeak") r = thingspeak_get();
@@ -451,7 +451,7 @@ function update() {
         r = { url: "", format: "", method: "POST", type: "", service: 0 };
     }
     r.enabled = enabled;
-    r.period = Q("#period").value;
+    r.period = select("#period").value;
     if (r.period < 60) r.period = 60;
     s_ajax({
         url: logurl,
@@ -469,9 +469,9 @@ function update() {
 
 function remote_init() {
     var MinPeriod = { generichttp: 1, thingspeak: 15, brewfather: 900, ubidots: 1 };
-    Q("#period").onchange = function() {
-        var min = MinPeriod[Q("#service-type").value];
-        if (Q("#period").value < min) Q("#period").value = min;
+    select("#period").onchange = function() {
+        var min = MinPeriod[select("#service-type").value];
+        if (select("#period").value < min) select("#period").value = min;
     };
 
     serviceOption("generichttp");
@@ -482,8 +482,8 @@ function remote_init() {
         success: function(d) {
                 var r = JSON.parse(d);
                 if (typeof r.enabled == "undefined") return;
-                Q("#enabled").checked = r.enabled;
-                Q("#period").value = (r.period === undefined) ? 300 : r.period;
+                select("#enabled").checked = r.enabled;
+                select("#period").value = (r.period === undefined) ? 300 : r.period;
                 service_set(r);
             }
             /*,
@@ -494,7 +494,7 @@ function remote_init() {
 }
 
 function showformat(lab) {
-    var f = Q("#formatlist");
+    var f = select("#formatlist");
     var rec = lab.getBoundingClientRect();
     f.style.display = "block";
     f.style.left = (rec.right + 5) + "px";
@@ -502,7 +502,7 @@ function showformat(lab) {
 }
 
 function hideformat() {
-    Q("#formatlist").style.display = "none";
+    select("#formatlist").style.display = "none";
 }
 
 function serviceOption(opt) {
@@ -512,32 +512,32 @@ function serviceOption(opt) {
         if (div.id == opt) div.style.display = "block";
         else div.style.display = "none";
     }
-    Q("#period").onchange();
+    select("#period").onchange();
 }
 
 function serviceChange() {
-    serviceOption(Q("#service-type").value);
+    serviceOption(select("#service-type").value);
 }
 
 export function init() {
     getActiveNavItem();
-    Q("#verinfo").innerHTML = "v" + JSVERSION;
+    select("#verinfo").innerHTML = "v" + JSVERSION;
 
     function readingByTemp() {
-        var temp = parseFloat(Q("#watertemp").value);
-        var ctemp = parseFloat(Q("#caltemp").value);
-        var unit = Q("#tempunit").value;
+        var temp = parseFloat(select("#watertemp").value);
+        var ctemp = parseFloat(select("#caltemp").value);
+        var unit = select("#tempunit").value;
         if (isNaN(temp) || isNaN(ctemp)) return;
         if (unit == 'C') {
             ctemp = C2F(ctemp);
             temp = C2F(temp);
         }
         var reading = BrewMath.tempCorrectionF(1.0, ctemp, temp);
-        Q("#hydrometer").value = reading.toFixed(3);
+        select("#hydrometer").value = reading.toFixed(3);
     }
-    Q("#watertemp").onchange = readingByTemp;
-    Q("#caltemp").onchange = readingByTemp;
-    Q("#tempunit").onchange = readingByTemp;
+    select("#watertemp").onchange = readingByTemp;
+    select("#caltemp").onchange = readingByTemp;
+    select("#tempunit").onchange = readingByTemp;
 
     remote_init();
     logs.init();

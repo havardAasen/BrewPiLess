@@ -1,4 +1,4 @@
-import { s_ajax, Q } from "./shared";
+import { s_ajax, select } from "./shared";
 
 export function mqttLoadSetting() {
     s_ajax({
@@ -8,7 +8,7 @@ export function mqttLoadSetting() {
             var j = JSON.parse(data);
             Object.keys(j).map(function(key) {
                 var name = "mqtt_" + key;
-                var div = Q(".mqtt-input[name=" + name + "]");
+                var div = select(".mqtt-input[name=" + name + "]");
                 if (div) {
                     if (div.type == "checkbox") div.checked = (j[key] != 0);
                     else div.value = j[key];

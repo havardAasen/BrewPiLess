@@ -1,4 +1,4 @@
-import { Q } from "../shared";
+import { select } from "../shared";
 import Dygraph from "dygraphs";
 
         /* chart.js */
@@ -71,7 +71,7 @@ import Dygraph from "dygraphs";
                 24: "yellow",
                 48: "green"
             };
-            Q("#fgstate").style.backgroundColor = Color[duration];
+            select("#fgstate").style.backgroundColor = Color[duration];
         }
 
         export function checkfgstate() {
@@ -221,25 +221,25 @@ import Dygraph from "dygraphs";
 
         BrewChart.prototype.showLegend = function(date, row) {
             var d = new Date(date);
-            Q(".beer-chart-legend-time").innerHTML = this.formatDate(d);
-            if (Q(".beer-chart-legend-elapse")) Q(".beer-chart-legend-elapse").innerHTML = this.formatDuration(d.getTime() / 1000 - this.starttime);
+            select(".beer-chart-legend-time").innerHTML = this.formatDate(d);
+            if (select(".beer-chart-legend-elapse")) select(".beer-chart-legend-elapse").innerHTML = this.formatDuration(d.getTime() / 1000 - this.starttime);
 
-            Q(".chart-legend-row.beer-temp .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, BeerTempLine));
-            Q(".chart-legend-row.beer-set .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, BeerSetLine));
-            Q(".chart-legend-row.fridge-temp .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, FridgeTempLine));
-            Q(".chart-legend-row.fridge-set .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, FridgeSetLine));
-            Q(".chart-legend-row.room-temp .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, RoomTempLine));
+            select(".chart-legend-row.beer-temp .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, BeerTempLine));
+            select(".chart-legend-row.beer-set .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, BeerSetLine));
+            select(".chart-legend-row.fridge-temp .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, FridgeTempLine));
+            select(".chart-legend-row.fridge-set .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, FridgeSetLine));
+            select(".chart-legend-row.room-temp .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, RoomTempLine));
 
-            Q(".chart-legend-row.aux-temp .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, AuxTempLine));
+            select(".chart-legend-row.aux-temp .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, AuxTempLine));
 
             var g = this.chart.getValue(row, GravityLine);
-            Q(".chart-legend-row.gravity .legend-value").innerHTML = (!g || isNaN(g)) ? "--" : (this.plato ? g.toFixed(2) + "&deg;P" : g.toFixed(4));
+            select(".chart-legend-row.gravity .legend-value").innerHTML = (!g || isNaN(g)) ? "--" : (this.plato ? g.toFixed(2) + "&deg;P" : g.toFixed(4));
             var filteredG = this.chart.getValue(row, FilteredSgLine);
-            Q(".chart-legend-row.filtersg .legend-value").innerHTML = (!filteredG || isNaN(filteredG)) ? "--" : (this.plato ? filteredG.toFixed(2) + "&deg;P" : filteredG.toFixed(4));
+            select(".chart-legend-row.filtersg .legend-value").innerHTML = (!filteredG || isNaN(filteredG)) ? "--" : (this.plato ? filteredG.toFixed(2) + "&deg;P" : filteredG.toFixed(4));
 
             var state = parseInt(this.state[row]);
             if (!isNaN(state)) {
-                Q('.beer-chart-state').innerHTML = STATES[state].text;
+                select('.beer-chart-state').innerHTML = STATES[state].text;
             }
         };
 
@@ -248,8 +248,8 @@ import Dygraph from "dygraphs";
             v.forEach(function(val) {
                 val.innerHTML = "--";
             });
-            Q(".beer-chart-legend-time").innerHTML = this.dateLabel; //"Date/Time";
-            Q('.beer-chart-state').innerHTML = "<%= chart_state_label %>";
+            select(".beer-chart-legend-time").innerHTML = this.dateLabel; //"Date/Time";
+            select('.beer-chart-state').innerHTML = "<%= chart_state_label %>";
         };
 
         BrewChart.prototype.tempFormat = function(y) {
@@ -260,23 +260,23 @@ import Dygraph from "dygraphs";
         };
         BrewChart.prototype.initLegend = function() {
             // init color
-            if (Q(".beer-temp .toggle")) {
+            if (select(".beer-temp .toggle")) {
                 for (var i = 1; i < BrewChart.ClassLabels.length; i++) {
                     var label = BrewChart.ClassLabels[i];
-                    Q(".chart-legend-row." + label).style.color = BrewChart.Colors[i - 1];
-                    Q("." + label + ".toggle").style.backgroundColor = BrewChart.Colors[i - 1];
+                    select(".chart-legend-row." + label).style.color = BrewChart.Colors[i - 1];
+                    select("." + label + ".toggle").style.backgroundColor = BrewChart.Colors[i - 1];
                 }
             }
-            this.dateLabel = Q(".beer-chart-legend-time").innerHTML;
+            this.dateLabel = select(".beer-chart-legend-time").innerHTML;
         };
         BrewChart.prototype.toggleLine = function(line) {
             this.shownlist[line] = !this.shownlist[line];
             var divclass = BrewChart.ClassLabels[line];
             if (this.shownlist[line]) {
-                if (Q("." + divclass + " .toggle")) Q("." + divclass + " .toggle").style.backgroundColor = Q(".chart-legend-row." + divclass).style.color;
+                if (select("." + divclass + " .toggle")) select("." + divclass + " .toggle").style.backgroundColor = select(".chart-legend-row." + divclass).style.color;
                 this.chart.setVisibility(line - 1, true);
             } else {
-                if (Q("." + divclass + " .toggle")) Q("." + divclass + " .toggle").style.backgroundColor = "transparent";
+                if (select("." + divclass + " .toggle")) select("." + divclass + " .toggle").style.backgroundColor = "transparent";
                 this.chart.setVisibility(line - 1, false);
             }
         };

@@ -1,5 +1,5 @@
 import {
-    Q,
+    select,
     s_ajax,
     formatDate,
     formatDateForPicker,
@@ -35,11 +35,11 @@ var profileEditor = {
     },
     setStartDate: function(d) {
         this.sd = d;
-        var date_in = Q(this.C_startday_Id);
+        var date_in = select(this.C_startday_Id);
         date_in.value = (date_in.type == "datetime-local") ? formatDateForPicker(d) : formatDate(d);
     },
     startDayChange: function() {
-        var nd = new Date(Q(this.C_startday_Id).value);
+        var nd = new Date(select(this.C_startday_Id).value);
         if (isNaN(nd.getTime())) {
             // console.log("invalid date");
             this.setStartDate(this.sd);
@@ -508,7 +508,7 @@ export var PL = {
     },
     list: function(i) {
         var a = this;
-        var h = Q(a.div).querySelector(".profile-list");
+        var h = select(a.div).querySelector(".profile-list");
         var lis = h.querySelectorAll("li");
         for (let i = 0; i < lis.length; i++) {
             h.removeChild(lis[i]);
@@ -538,7 +538,7 @@ export var PL = {
     init: function() {
         var a = this;
         a.initialized = true;
-        a.row = Q(a.div).querySelector("li");
+        a.row = select(a.div).querySelector("li");
         a.row.parentNode.removeChild(a.row);
         s_ajax({
             url: a.url_list,
@@ -565,19 +565,19 @@ export var PL = {
         }
         this.shown = !this.shown;
         if (this.shown) {
-            Q(this.div).style.display = "block";
+            select(this.div).style.display = "block";
         } else {
-            Q(this.div).style.display = "none";
+            select(this.div).style.display = "none";
         }
     },
     saveas: function() {
-        Q("#dlg_saveas").style.display = "block"
+        select("#dlg_saveas").style.display = "block"
     },
     cancelSave: function() {
-        Q("#dlg_saveas").style.display = "none"
+        select("#dlg_saveas").style.display = "none"
     },
     doSave: function() {
-        var e = Q("#dlg_saveas input").value;
+        var e = select("#dlg_saveas input").value;
         if (e == "") {
             return
         }
@@ -753,7 +753,7 @@ var modekeeper = {
             document.getElementById('dlg_beerprofilereminder').style.display = "block";
             document.getElementById('dlg_beerprofilereminder').querySelector("button.ok").onclick = function() {
                 document.getElementById('dlg_beerprofilereminder').style.display = "none";
-                var gravity = parseFloat(Q("#dlg_beerprofilereminder input").value);
+                var gravity = parseFloat(select("#dlg_beerprofilereminder input").value);
                 if (typeof updateOriginGravity == "function") updateOriginGravity(gravity);
                 var data = {
                     name: "webjs",
@@ -846,7 +846,7 @@ function initctrl_C(next) {
 }
 
 function communicationError() {
-    var div = Q('.error');
+    var div = select('.error');
     if (div) {
         div.innerHTML = "Failed to connect to server.";
         div.style.display = "block";
@@ -857,7 +857,7 @@ export function initctrl() {
     getActiveNavItem();
     Capper.init();
     modekeeper.init();
-    PTC.init(Q("#ptc-control"));
+    PTC.init(select("#ptc-control"));
     openDlgLoading();
 
     BWF.init({
@@ -872,11 +872,11 @@ export function initctrl() {
         handlers: {
             A: function(c) {
                 if (typeof c["nn"] != "undefined") {
-                    Q("#hostname").innerHTML = c["nn"];
+                    select("#hostname").innerHTML = c["nn"];
                 }
                 if (typeof c["ver"] != "undefined") {
                     if (JSVERSION != c["ver"]) alert("<%= script_control_version_mismatched %>");
-                    Q("#verinfo").innerHTML = "v" + c["ver"];
+                    select("#verinfo").innerHTML = "v" + c["ver"];
                 }
                 if (typeof c["cap"] != "undefined")
                     Capper.status(c["cap"]);

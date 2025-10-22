@@ -1,4 +1,4 @@
-import { Q, s_ajax } from "./shared";
+import { select, s_ajax } from "./shared";
 
 var valueurl = "/ptc";
 var saveurl = "/ptc"
@@ -6,7 +6,7 @@ var saveurl = "/ptc"
 export var PTC = {
     fill: function(setting) {
         for (var name in setting) {
-            var ele = Q("input[name=" + name + "]");
+            var ele = select("input[name=" + name + "]");
             if (ele) {
                 ele.value = setting[name];
             }

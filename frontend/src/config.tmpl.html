@@ -26,73 +26,51 @@
 
             <div id="sysconfig" class="card">
                 <form onsubmit="saveSystemSettings(); return false;">
-                    <h5>
-                        <%= config_page_title %>
-                    </h5>
+                    <h5><%= config_page_title %></h5>
                     <div layout horizontal cross-center>
-                        <h6 class="inline-header">
-                            <%= config_lcd_auto_off %>
-                        </h6>
-                        <input name="aoff" type="text" size="5" maxlength="5" class="nb">
+                        <label for="aoff" class="inline-header h6"><%= config_lcd_auto_off %></label>
+                        <input id="aoff" type="text" size="5" maxlength="5" class="nb">
                     </div>
                     <div layout horizontal cross-center>
-                        <h6 class="inline-header">
-                            <%= config_title %>
-                        </h6>
-                        <input name="title" type="text" size="12" maxlength="24">
+                        <label for="title" class="inline-header h6"><%= config_title %></label>
+                        <input id="title" type="text" size="12" maxlength="24">
                     </div>
                     <div layout horizontal cross-center>
-                        <h6 class="inline-header">
-                            <%= config_host_network_name %>
-                        </h6>
-                        <input name="name" type="text" size="12" maxlength="16">
+                        <label for="name" class="inline-header h6"><%= config_host_network_name %></label>
+                        <input id="name" type="text" size="12" maxlength="16">
                     </div>
                     <div layout horizontal cross-center>
-                        <h6 class="inline-header">
-                            <%= config_http_port %>
-                        </h6>
-                        <input name="port" type="text" size="5" maxlength="5">
+                        <label for="port" class="inline-header h6"><%= config_http_port %></label>
+                        <input id="port" type="text" size="5" maxlength="5">
                     </div>
                     <div layout horizontal cross-center>
-                        <h6 class="inline-header">
-                            <%= config_username %>
-                        </h6>
-                        <input name="user" type="text" size="12" maxlength="16">
+                        <label for="user" class="inline-header h6"><%= config_username %></label>
+                        <input id="user" type="text" size="12" maxlength="16">
                     </div>
                     <div layout horizontal cross-center>
-                        <h6 class="inline-header">
-                            <%= config_password %>
-                        </h6>
-                        <input name="pass" type="password" size="12" maxlength="16">
+                        <label for="pass" class="inline-header h6"><%= config_password %></label>
+                        <input id="pass" type="password" size="12" maxlength="16">
                     </div>
                     <div layout horizontal cross-center>
-                        <h6 class="inline-header">
-                            <%= config_always_password %>
-                        </h6>
+                        <label class="inline-header h6"><%= config_always_password %></label>
                         <input type="checkbox" id="protect" name="protect" class="switch-input" checked>
                         <label for="protect" class="switch-label" style="min-width: 0;"></label>
                     </div>
 
                     <div layout horizontal cross-center>
-                        <h6 class="inline-header">
-                            <%= config_network_mode %>
-                        </h6>
-                        <select name="wifi">
-                            <option value="1"><%= config_station %></option>    
+                        <label for="wifi" class="inline-header h6"><%= config_network_mode %></label>
+                        <select id="wifi">
+                            <option value="1"><%= config_station %></option>
                             <option value="2"><%= config_ap %></option>
                             <option value="3"><%= config_stationap %></option>
                         </select>
                     </div>
                     <div layout horizontal cross-center>
-                        <h6 class="inline-header">
-                            <%= config_network %>
-                        </h6>
+                        <label class="inline-header h6"><%= config_network %></label>
                         <button id="connnected-ssid" class="btn" onclick="Net.show();return false;">...</button>
                     </div>
                     <div layout horizontal cross-center>
-                        <h6 class="inline-header">
-                            <%= config_ip %>
-                        </h6>
+                        <label class="inline-header h6"><%= config_ip %></label>
                         <span id="sta-ip"></span>
                     </div>
 
@@ -121,12 +99,12 @@
                 </a>
             </div>
             <form method="get" action="#">
-                <input id="ssid" name="ssid" length="32" placeholder="SSID"><br>
-                <input id="nwpass" name="nwpass" length="64" type="password" placeholder="password"><br><br>
-                <input id="staticip" name="ip" length="1" placeholder="<%= config_fixedip %>" class="nb iptype"><br>
-                <input id="gateway" name="gw" length="1" placeholder="<%= config_gateway %>" class="nb iptype"><br>
-                <input id="netmask" name="mask" length="1" placeholder="<%= config_netmask %>" class="nb iptype"><br>
-                <input id="dns" name="dns" length="1" placeholder="<%= config_dns %>" class="nb iptype"><br><br>
+                <input id="ssid" length="32" placeholder="SSID"><br>
+                <input id="nwpass" length="64" type="password" placeholder="password"><br><br>
+                <input id="ip" length="1" placeholder="<%= config_fixedip %>" class="nb iptype"><br>
+                <input id="gw" length="1" placeholder="<%= config_gateway %>" class="nb iptype"><br>
+                <input id="mask" length="1" placeholder="<%= config_netmask %>" class="nb iptype"><br>
+                <input id="dns" length="1" placeholder="<%= config_dns %>" class="nb iptype"><br><br>
                 <button type="button" onclick="return Net.save()"><%= config_save_change %></button>
                 <button onclick="Net.hide();return false;"><%= dlg_cancel %></button>
             </form>

@@ -24,8 +24,8 @@ function loadSetting() {
             window.oridata = json;
 
             Object.entries(json).forEach(([key, value]) => {
-                let input = Q(`input[name=${key}]`);
-                let wifiMode = Q(`select[name=${key}]`);
+                let input = Q(`input[id=${key}]`);
+                let wifiMode = Q(`select[id=${key}]`);
 
                 if (input) {
                     updateInput(input, value);
@@ -54,17 +54,17 @@ export function saveSystemSettings() {
     let reboot = false;
 
     inputs.forEach(input => {
-        if (!input.name) return;
+        if (!input.id) return;
 
         const val = input.type === "checkbox" ? (input.checked ? 1 : 0) : input.value.trim();
-        json[input.name] = val;
+        json[input.id] = val;
 
-        if (window.oridata?.[input.name] !== val && !input.classList.contains("nb")) {
+        if (window.oridata?.[input.id] !== val && !input.classList.contains("nb")) {
             reboot = true;
         }
     });
 
-    var div = Q("select[name=wifi]");
+    var div = Q("select[id=wifi]");
     json["wifi"] = div.value;
     console.log(JSON.stringify(json));
     var url = "config" + (reboot ? "" : "?nb");

@@ -1,4 +1,4 @@
-import { select, getActiveNavItem, s_ajax, openDlgLoading, C2F, BrewMath, closeDlgLoading, JSVERSION, ModeString, StateText, updateOriginGravity, updateGravity } from './shared';
+import { byId, select, getActiveNavItem, s_ajax, openDlgLoading, C2F, BrewMath, closeDlgLoading, JSVERSION, ModeString, StateText, updateOriginGravity, updateGravity } from './shared';
 import { BrewChart, checkfgstate, GravityFilter, GravityTracker } from "./vendor/chart";
 import { Capper } from "./capper";
 import { BWF } from "./vendor/bwf";
@@ -315,7 +315,7 @@ import { BWF } from "./vendor/bwf";
 
     function displayLcdText(lines) {
         for (let i = 0; i < 4; i++) {
-            var d = document.getElementById("lcd-line-" + i);
+            var d = byId("lcd-line-" + i);
             if (d) d.innerHTML = lines[i];
         }
     }

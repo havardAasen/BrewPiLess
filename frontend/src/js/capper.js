@@ -1,31 +1,31 @@
-import { select, s_ajax, formatDate, formatDateForPicker} from './shared';
+import { byId, select, s_ajax, formatDate, formatDateForPicker} from './shared';
 
 function TabPane(modes) {
     var t = this;
     t.cmode = null;
 
     function dselect(m) {
-        var d = document.getElementById(m + "-m");
-        //        var nc = document.getElementById(m + "-m").className.replace(/\snav-selected/, '');
+        var d = byId(m + "-m");
+        //        var nc = byId(m + "-m").className.replace(/\snav-selected/, '');
         var nc = d.className.replace(/\snav-selected/, '');
         d.className = nc;
 
-        document.getElementById(m + "-s").style.display = "none";
+        byId(m + "-s").style.display = "none";
     }
 
     function select(m) {
-        var d = document.getElementById(m + "-m");
+        var d = byId(m + "-m");
         if (d.className.indexOf("nav-selected") < 0)
             d.className += ' nav-selected';
 
-        document.getElementById(m + "-s").style.display = "block";
+        byId(m + "-s").style.display = "block";
         t.cmode = m;
     }
 
     for (var i = 0; i < modes.length; i++) {
         var m = modes[i];
-        document.getElementById(m + "-s").style.display = "none";
-        document.getElementById(m + "-m").onclick = function() {
+        byId(m + "-s").style.display = "none";
+        byId(m + "-m").onclick = function() {
             var tm = this.id.replace(/-m$/, '');
             //deselect current selected 
             dselect(t.cmode);

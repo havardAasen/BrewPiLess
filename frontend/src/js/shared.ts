@@ -1,6 +1,7 @@
 export const JSVERSION = "3.6";
 
 export const select = document.querySelector.bind(document);
+export const byId = document.getElementById.bind(document);
 
 interface AjaxOptions {
     url: string;
@@ -60,12 +61,12 @@ export function F2C(f: number) {
 }
 
 export function openDlgLoading(): void {
-    const dlg = document.getElementById("dlg_loading");
+    const dlg = byId("dlg_loading");
     if (dlg) dlg.style.display = "block";
 }
 
 export function closeDlgLoading(): void {
-    const dlg = document.getElementById("dlg_loading");
+    const dlg = byId("dlg_loading");
     if (dlg) dlg.style.display = "none";
 }
 

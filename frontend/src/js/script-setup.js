@@ -1,4 +1,4 @@
-import { select, getActiveNavItem, JSVERSION } from "./shared";
+import { byId, select, getActiveNavItem, JSVERSION } from "./shared";
 import { BWF } from "./vendor/bwf";
 
 var BackupFile = "/device.cfg";
@@ -47,7 +47,7 @@ var devices = {
         g.hardwaretype = f.h;
         g.pinnumber = f.p;
         var b = (f.i < 0) ? "detected-list" : "installed-list";
-        var e = document.getElementById(b);
+        var e = byId(b);
         e.appendChild(g);
         e.appendChild(document.createElement("br"))
     }
@@ -159,8 +159,8 @@ export function list() {
     blockscreen("<%= script_setup_retrieving %>");
     installed_list = [];
     available_list = [];
-    document.getElementById("detected-list").innerHTML = "";
-    document.getElementById("installed-list").innerHTML = "";
+    byId("detected-list").innerHTML = "";
+    byId("installed-list").innerHTML = "";
     BWF.send("d{r:1}");
     BWF.send("h{u:-1,v:1}")
 }
@@ -170,8 +170,8 @@ export function erase() {
 }
 
 function listGot() {
-    document.getElementById("detected-list").innerHTML = "";
-    document.getElementById("installed-list").innerHTML = "";
+    byId("detected-list").innerHTML = "";
+    byId("installed-list").innerHTML = "";
     var a = 0;
     for (let b = 0; b < installed_list.length; b++) {
         devices.add(a++, installed_list[b])
@@ -214,12 +214,12 @@ export function init() {
 }
 
 function blockscreen(a) {
-    document.getElementById("blockscreencontent").innerHTML = a;
-    document.getElementById("blockscreen").style.display = "block"
+    byId("blockscreencontent").innerHTML = a;
+    byId("blockscreen").style.display = "block"
 }
 
 function unblockscreen() {
-    document.getElementById("blockscreen").style.display = "none"
+    byId("blockscreen").style.display = "none"
 }
 
 window.list = list

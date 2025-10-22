@@ -1,4 +1,4 @@
-import { select } from "./shared";
+import { byId, select } from "./shared";
 import Dygraph from "dygraphs";
 import regression from 'regression';
 
@@ -6,7 +6,7 @@ import regression from 'regression';
     var PolyRegression = {
         allpoints: [],
         clear: function() {
-            var tbody = document.getElementById("pointlist").getElementsByTagName("tbody")[0];
+            var tbody = byId("pointlist").getElementsByTagName("tbody")[0];
             var rl = tbody.querySelectorAll("tr.pl_calpoint");
             for (let i = rl.length - 1; i >= 0; i--) {
                 var tr = rl[i];
@@ -36,7 +36,7 @@ import regression from 'regression';
             return tr;
         },
         igchanged: function(checkbox) {
-            var tbody = document.getElementById("pointlist").getElementsByTagName("tbody")[0];
+            var tbody = byId("pointlist").getElementsByTagName("tbody")[0];
             var ilist = tbody.querySelectorAll("input.pl_ignored_cb");
             var mask = 0;
             var notignored = 0;
@@ -118,7 +118,7 @@ import regression from 'regression';
             }
             if (typeof this.graph == "undefined") {
                 this.graph = new Dygraph(
-                    document.getElementById("graph"), data, {
+                    byId("graph"), data, {
                         labels: ["Tilt", "SG", "Interpolated"],
                         colors: ["rgb(240, 100, 100)", "rgb(89, 184, 255)"],
                         series: {

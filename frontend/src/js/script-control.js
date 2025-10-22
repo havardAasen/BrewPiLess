@@ -1,4 +1,5 @@
 import {
+    byId,
     select,
     s_ajax,
     formatDate,
@@ -28,7 +29,7 @@ var profileEditor = {
     C_savebtn_Id: "savebtn",
     markdirty: function(d) {
         this.dirty = d;
-        document.getElementById(this.C_savebtn_Id).innerHTML = (d) ? "Save*" : "Save";
+        byId(this.C_savebtn_Id).innerHTML = (d) ? "Save*" : "Save";
     },
     getStartDate: function() {
         return this.sd;
@@ -58,7 +59,7 @@ var profileEditor = {
         ControlChart.update(this.chartdata(), this.tempUnit);
     },
     rowList: function() {
-        var tb = document.getElementById("profile_t").getElementsByTagName("tbody")[0];
+        var tb = byId("profile_t").getElementsByTagName("tbody")[0];
         return tb.getElementsByTagName("tr");
     },
     sgChange: function(td) {
@@ -239,7 +240,7 @@ var profileEditor = {
         return list;
     },
     addRow: function() {
-        var tb = document.getElementById("profile_t").getElementsByTagName("tbody")[0];
+        var tb = byId("profile_t").getElementsByTagName("tbody")[0];
         var rowlist = tb.getElementsByTagName("tr");
 
         if (rowlist.length >= MAX_STEP) {
@@ -332,7 +333,7 @@ var profileEditor = {
     renderRows: function(g) {
         if (typeof g.length == "undefined")
             console.log("error!");
-        var e = document.getElementById("profile_t").getElementsByTagName("tbody")[0];
+        var e = byId("profile_t").getElementsByTagName("tbody")[0];
         for (var f = 0; f < g.length; f++) {
             var c = this.row.cloneNode(true);
             this.initrow(c, g[f]);
@@ -344,7 +345,7 @@ var profileEditor = {
     initable: function(c, e) {
         this.setStartDate(e);
         if (!this.row) {
-            var b = document.getElementById("profile_t").getElementsByTagName("tbody")[0];
+            var b = byId("profile_t").getElementsByTagName("tbody")[0];
             this.row = b.getElementsByTagName("tr")[0];
             b.removeChild(this.row);
         } else {
@@ -638,13 +639,13 @@ var ControlChart = {
         };
 
         t.chart = new Dygraph(
-            document.getElementById(div), t.data, {
+            byId(div), t.data, {
                 colors: ['rgb(89, 184, 255)'],
                 axisLabelFontSize: 12,
                 gridLineColor: '#ccc',
                 gridLineWidth: '0.1px',
                 labels: ["<%= script_control_time %>", "<%= script_control_temperature %>"],
-                labelsDiv: document.getElementById(div + "-label"),
+                labelsDiv: byId(div + "-label"),
                 legend: 'always',
                 labelsDivStyles: {
                     'textAlign': 'right'
@@ -694,15 +695,15 @@ var modekeeper = {
     modes: ["profile", "beer", "fridge", "off"],
     cmode: 0,
     dselect: function(m) {
-        var d = document.getElementById(m + "-m");
-        var nc = document.getElementById(m + "-m").className.replace(/\snav-selected/, '');
+        var d = byId(m + "-m");
+        var nc = byId(m + "-m").className.replace(/\snav-selected/, '');
         d.className = nc;
 
-        document.getElementById(m + "-s").style.display = "none";
+        byId(m + "-s").style.display = "none";
     },
     select: function(m) {
-        document.getElementById(m + "-m").className += ' nav-selected';
-        document.getElementById(m + "-s").style.display = "block";
+        byId(m + "-m").className += ' nav-selected';
+        byId(m + "-s").style.display = "block";
     },
     init: function() {
         var me = this;
@@ -710,8 +711,8 @@ var modekeeper = {
         me.initiated = true;
         for (var i = 0; i < 4; i++) {
             var m = me.modes[i];
-            document.getElementById(m + "-s").style.display = "none";
-            document.getElementById(m + "-m").onclick = function() {
+            byId(m + "-s").style.display = "none";
+            byId(m + "-m").onclick = function() {
                 var tm = this.id.replace(/-m/, '');
                 me.dselect(me.cmode);
                 me.select(tm);
@@ -728,7 +729,7 @@ var modekeeper = {
             //		return;
         }
         if ((this.cmode == "beer") || (this.cmode == "fridge")) {
-            var v = document.getElementById(this.cmode + "-t").value;
+            var v = byId(this.cmode + "-t").value;
             if (v == '' || isNaN(v) || (v > BrewPiSetting.maxDegree || v < BrewPiSetting.minDegree)) {
                 alert("<%= script_control_invalid_temperature %>" + v);
                 return;
@@ -750,9 +751,9 @@ var modekeeper = {
                 return;
             }
             //console.log("j{mode:p}");
-            document.getElementById('dlg_beerprofilereminder').style.display = "block";
-            document.getElementById('dlg_beerprofilereminder').querySelector("button.ok").onclick = function() {
-                document.getElementById('dlg_beerprofilereminder').style.display = "none";
+            byId('dlg_beerprofilereminder').style.display = "block";
+            byId('dlg_beerprofilereminder').querySelector("button.ok").onclick = function() {
+                byId('dlg_beerprofilereminder').style.display = "none";
                 var gravity = parseFloat(select("#dlg_beerprofilereminder input").value);
                 if (typeof updateOriginGravity == "function") updateOriginGravity(gravity);
                 var data = {
@@ -773,12 +774,12 @@ var modekeeper = {
                     }
                 });
             };
-            document.getElementById('dlg_beerprofilereminder').querySelector("button.oknog").onclick = function() {
-                document.getElementById('dlg_beerprofilereminder').style.display = "none";
+            byId('dlg_beerprofilereminder').querySelector("button.oknog").onclick = function() {
+                byId('dlg_beerprofilereminder').style.display = "none";
                 BWF.send("j{mode:p}");
             };
-            document.getElementById('dlg_beerprofilereminder').querySelector("button.cancel").onclick = function() {
-                document.getElementById('dlg_beerprofilereminder').style.display = "none";
+            byId('dlg_beerprofilereminder').querySelector("button.cancel").onclick = function() {
+                byId('dlg_beerprofilereminder').style.display = "none";
             };
         }
     }

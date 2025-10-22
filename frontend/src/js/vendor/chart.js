@@ -1,4 +1,4 @@
-import { select } from "../shared";
+import { byId, select } from "../shared";
 import Dygraph from "dygraphs";
 
         /* chart.js */
@@ -371,7 +371,7 @@ import Dygraph from "dygraphs";
                                         }
                                     }*/
             };
-            t.chart = new Dygraph(document.getElementById(t.cid), t.data, opt);
+            t.chart = new Dygraph(byId(t.cid), t.data, opt);
         };
 
         BrewChart.prototype.findNearestRow = function(g, time) {

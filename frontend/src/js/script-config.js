@@ -1,4 +1,4 @@
-import { select, getActiveNavItem, s_ajax, JSVERSION } from './shared';
+import { byId, select, getActiveNavItem, s_ajax, JSVERSION } from './shared';
 import { BWF } from "./vendor/bwf";
 
 function formatIP(ip) {
@@ -108,8 +108,8 @@ function modechange(sel) {}
 
 export var Net = {
     select: function(l) {
-        document.getElementById('ssid').value = l.innerText || l.textContent;
-        document.getElementById('nwpass').focus();
+        byId('ssid').value = l.innerText || l.textContent;
+        byId('nwpass').focus();
         return false;
     },
     init: function() {

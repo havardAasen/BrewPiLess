@@ -1,4 +1,4 @@
-import { ModeString, StateText } from "./shared";
+import { byId, ModeString, StateText } from "./shared";
 import { BWF } from "./vendor/bwf";
 
 function genStateText(state, duration) {
@@ -49,13 +49,13 @@ function simLcd(info) {
 
 function displayLcdText(lines) {
     for (var i = 0; i < 4; i++) {
-        var d = document.getElementById("lcd-line-" + i);
+        var d = byId("lcd-line-" + i);
         if (d) d.innerHTML = lines[i];
     }
 }
 
 function setLcdText(id, html) {
-    var d = document.getElementById(id);
+    var d = byId(id);
     d.innerHTML = html;
 }
 
@@ -82,8 +82,8 @@ export function init() {
     window.addEventListener("resize", function() {
         resize();
     }, false);
-    document.getElementById("lcd").onclick = function() {
-        document.getElementById("myDropdown").classList.toggle("show");
+    byId("lcd").onclick = function() {
+        byId("myDropdown").classList.toggle("show");
         event.stopPropagation();
     };
 

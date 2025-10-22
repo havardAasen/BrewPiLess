@@ -2,8 +2,7 @@ import { Q, getActiveNavItem, s_ajax, JSVERSION } from './shared';
 import { BWF } from "./vendor/bwf";
 
 function formatIP(ip) {
-    if (ip == "0.0.0.0") return "";
-    return ip;
+    return ip === "0.0.0.0" ? "" : ip;
 }
 
 
@@ -95,17 +94,18 @@ export function load() {
 }
 
 
-function validIP(t) {
-    var digits = t.split(".");
-    var value = 0;
-    if (digits.length != 4) return false;
-    for (var i = 0; i < 4; i++) {
-        var di = parseInt(digits[i]);
-        value = (value << 8) + di;
-        if (di > 255) {
-            return false;
-        }
+function validIP(ip) {
+    const parts = ip.split(".");
+    if (parts.length !== 4) return false;
+
+    let value = 0;
+    for (const part of parts) {
+        if (!/^\d+$/.test(part)) return false; // Reject non-numeric or empty strings
+        const num = Number(part);
+        if (num < 0 || num > 255) return false;
+        value = (value << 8) + num;
     }
+
     return value;
 }
 

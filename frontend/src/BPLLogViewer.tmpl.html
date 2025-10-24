@@ -12,7 +12,6 @@
     <link rel="icon" href="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
     <style>
         * {
-            -webkit-box-sizing: border-box;
             box-sizing: border-box;
             margin: 0;
             padding: 0
@@ -159,26 +158,19 @@
         
         html [layout][center-center],
         html [layout][cross-center] {
-            -webkit-box-align: center;
-            -ms-flex-align: center;
             align-items: center
         }
         
         html [layout][center-center],
         html [layout][main-center] {
-            -webkit-box-pack: center;
-            -ms-flex-pack: center;
             justify-content: center
         }
         
         html [layout][main-justified] {
-            -webkit-box-pack: justify;
-            -ms-flex-pack: justify;
             justify-content: space-between
         }
         
         html [layout][main-distributed] {
-            -ms-flex-pack: distribute;
             justify-content: space-around
         }
         
@@ -193,7 +185,6 @@
         .header {
             height: 64px;
             background: #009688;
-            -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, .14), 0 4px 8px rgba(0, 0, 0, .28);
             box-shadow: 0 0 4px rgba(0, 0, 0, .14), 0 4px 8px rgba(0, 0, 0, .28);
             padding: 0 16px;
             z-index: 2
@@ -218,9 +209,6 @@
                 position: relative;
                 z-index: 1;
                 top: 3px;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
                 user-select: none
             }
         }
@@ -243,24 +231,20 @@
                 -webkit-touch-callout: none
             }
             [navigation] input:checked~ul {
-                -webkit-transform: scale(1, 1);
                 transform: scale(1, 1);
                 opacity: 1
             }
             [navigation] input:checked~span {
                 opacity: 1;
-                -webkit-transform: rotate(45deg) translate(-2px, -1px);
                 transform: rotate(45deg) translate(-2px, -1px);
                 background: #232323
             }
             [navigation] input:checked~span:nth-last-child(3) {
                 opacity: 0;
-                -webkit-transform: rotate(0) scale(.2, .2);
                 transform: rotate(0) scale(.2, .2)
             }
             [navigation] input:checked~span:nth-last-child(2) {
                 opacity: 1;
-                -webkit-transform: rotate(-45deg) translate(0, -1px);
                 transform: rotate(-45deg) translate(0, -1px)
             }
         }
@@ -279,19 +263,13 @@
                 background: #fff;
                 border-radius: 3px;
                 z-index: 1;
-                -webkit-transform-origin: 4px 0;
                 transform-origin: 4px 0;
-                -webkit-transition: background .5s cubic-bezier(.77, .2, .05, 1), opacity .55s ease, -webkit-transform .5s cubic-bezier(.77, .2, .05, 1);
-                transition: background .5s cubic-bezier(.77, .2, .05, 1), opacity .55s ease, -webkit-transform .5s cubic-bezier(.77, .2, .05, 1);
                 transition: transform .5s cubic-bezier(.77, .2, .05, 1), background .5s cubic-bezier(.77, .2, .05, 1), opacity .55s ease;
-                transition: transform .5s cubic-bezier(.77, .2, .05, 1), background .5s cubic-bezier(.77, .2, .05, 1), opacity .55s ease, -webkit-transform .5s cubic-bezier(.77, .2, .05, 1)
             }
             [navigation] span:first-child {
-                -webkit-transform-origin: 0 0;
                 transform-origin: 0 0
             }
             [navigation] span:nth-last-child(2) {
-                -webkit-transform-origin: 0 100%;
                 transform-origin: 0 100%
             }
         }
@@ -335,14 +313,9 @@
                 background: #ededed;
                 list-style-type: none;
                 -webkit-font-smoothing: antialiased;
-                -webkit-transform-origin: 0 0;
                 transform-origin: 0 0;
-                -webkit-transform: translate(100%, 0);
                 transform: translate(100%, 0);
-                -webkit-transition: -webkit-transform .5s cubic-bezier(.77, .2, .05, 1);
-                transition: -webkit-transform .5s cubic-bezier(.77, .2, .05, 1);
                 transition: transform .5s cubic-bezier(.77, .2, .05, 1);
-                transition: transform .5s cubic-bezier(.77, .2, .05, 1), -webkit-transform .5s cubic-bezier(.77, .2, .05, 1)
             }
             [navigation] .options>li {
                 display: block;
@@ -425,7 +398,6 @@
             padding: 12px 24px 17px 24px;
             vertical-align: middle;
             color: #fff;
-            -webkit-box-shadow: 0 7px 18px rgba(0, 0, 0, .2);
             box-shadow: 0 7px 18px rgba(0, 0, 0, .2)
         }
         
@@ -444,7 +416,6 @@
             border-bottom: solid 1px #009688;
             -webkit-transition: all .3s cubic-bezier(.64, .09, .08, 1);
             transition: all .3s cubic-bezier(.64, .09, .08, 1);
-            background: -webkit-gradient(linear, left top, left bottom, color-stop(96%, rgba(255, 255, 255, 0)), color-stop(4%, #009688));
             background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 96%, #009688 4%);
             background-position: -100% 0;
             background-size: 100% 100%;
@@ -466,10 +437,8 @@
         input[type=text]:focus::-webkit-input-placeholder {
             color: #009688;
             font-size: 11px;
-            -webkit-transform: translateY(-20px);
             transform: translateY(-20px);
             visibility: visible!important;
-            -webkit-transition: all .3s ease-in-out;
             transition: all .3s ease-in-out
         }
         
@@ -480,7 +449,6 @@
             font-size: 11px;
             transform: translateY(-20px);
             visibility: visible!important;
-            -webkit-transition: all .3s ease-in-out;
             transition: all .3s ease-in-out
         }
         
@@ -489,7 +457,6 @@
         input[type=text]:focus::placeholder {
             color: #009688;
             font-size: 11px;
-            -webkit-transform: translateY(-20px);
             transform: translateY(-20px);
             visibility: visible!important;
             -webkit-transition: all .3s ease-in-out;
@@ -499,7 +466,6 @@
         input[type=datetime-local]:invalid,
         input[type=number]:invalid,
         input[type=text]:invalid {
-            background: -webkit-gradient(linear, left top, left bottom, color-stop(96%, rgba(255, 255, 255, 0)), color-stop(4%, red));
             background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 96%, red 4%)
         }
         
@@ -529,7 +495,6 @@
             margin: 0;
             outline: 0;
             top: 50%;
-            -webkit-transform: translate(0, -50%);
             transform: translate(0, -50%);
             -webkit-transition: all .3s ease;
             transition: all .3s ease
@@ -549,13 +514,11 @@
             height: 20px;
             background-color: #fafafa;
             border-radius: 50%;
-            -webkit-box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .14), 0 2px 2px 0 rgba(0, 0, 0, .098), 0 1px 5px 0 rgba(0, 0, 0, .084);
             box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .14), 0 2px 2px 0 rgba(0, 0, 0, .098), 0 1px 5px 0 rgba(0, 0, 0, .084)
         }
         
         .switch-input:checked+.switch-label:after {
             background-color: #4caf50;
-            -webkit-transform: translate(80%, -50%);
             transform: translate(80%, -50%)
         }
         
@@ -593,11 +556,7 @@
         
         .modal {
             display: none;
-            -webkit-box-align: center;
-            -ms-flex-align: center;
             align-items: center;
-            -webkit-box-pack: center;
-            -ms-flex-pack: center;
             justify-content: center;
             position: fixed;
             top: 0;
@@ -607,9 +566,7 @@
             overflow-y: auto;
             overflow-x: hidden;
             z-index: 1000;
-            -webkit-transition: all .5s cubic-bezier(.23, 1, .32, 1);
             transition: all .5s cubic-bezier(.23, 1, .32, 1);
-            -webkit-transition-delay: 0s;
             transition-delay: 0s;
             background: rgba(0, 0, 0, .3)
         }
@@ -619,9 +576,7 @@
             padding: 2.4rem;
             background: #fff;
             background-clip: padding-box;
-            -webkit-box-shadow: 0 12px 15px 0 rgba(0, 0, 0, .25);
             box-shadow: 0 12px 15px 0 rgba(0, 0, 0, .25);
-            -webkit-transition: all .25s cubic-bezier(.23, 1, .32, 1);
             transition: all .25s cubic-bezier(.23, 1, .32, 1);
             max-width: 600px;
             padding: 2rem
@@ -671,7 +626,6 @@
         .btn--raised {
             background-color: #009688;
             color: #fff;
-            -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
             box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12)
         }
         
@@ -689,7 +643,6 @@
         }
         
         [side] {
-            -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12), 0 3px 1px -2px rgba(0, 0, 0, .2);
             box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12), 0 3px 1px -2px rgba(0, 0, 0, .2);
             width: 300px;
             padding: 16px;

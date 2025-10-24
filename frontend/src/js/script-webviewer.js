@@ -1,5 +1,5 @@
 import { select } from "./shared";
-import { BrewChart } from "./vendor/chart";
+import { BrewChart } from "./chart-edit.js";
 
         var BChart = {
             toggle: function(type) {

@@ -1,5 +1,6 @@
 import { byId, select, getActiveNavItem, s_ajax, openDlgLoading, C2F, BrewMath, closeDlgLoading, JSVERSION, ModeString, StateText, updateOriginGravity, updateGravity } from './shared';
-import { BrewChart, checkfgstate, GravityFilter, GravityTracker } from "./vendor/chart";
+import { checkfgstate, GravityFilter, GravityTracker } from "./vendor/chart";
+import { BrewChart } from "./chart-edit.js";
 import { Capper } from "./capper";
 import { BWF } from "./vendor/bwf";
 

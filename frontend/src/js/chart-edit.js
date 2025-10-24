@@ -1,5 +1,20 @@
-import { BrewChart, BeerSetLine, BeerTempLine, FridgeSetLine, FridgeTempLine, RoomTempLine, AuxTempLine } from "./vendor/chart";
+import { BeerSetLine, BeerTempLine, FridgeSetLine, FridgeTempLine, RoomTempLine, AuxTempLine } from "./vendor/chart";
 import { BrewMath } from "./shared";
+
+export var BrewChart = function(div) {
+    var t = this;
+    t.cid = div;
+    t.ctime = 0;
+    t.interval = 60;
+    t.numLine = 7;
+    t.numData = 8;
+    t.calculateSG = false;
+    t.calibrating = false;
+
+    t.lidx = 0;
+    t.celius = true;
+    t.clearData();
+};
 
 BrewChart.prototype.partial = function(start, end) {
     var me = this;

@@ -1,4 +1,5 @@
 import { byId, select } from "../shared";
+import { BrewChart } from "../chart-edit.js";
 import Dygraph from "dygraphs";
 
 // gravity tracking
@@ -86,20 +87,6 @@ var GravityIndex = 6;
 var TiltAngleIndex = 7;
 var RoomTemperatureIndex = 4;
 
-export var BrewChart = function(div) {
-    var t = this;
-    t.cid = div;
-    t.ctime = 0;
-    t.interval = 60;
-    t.numLine = 7;
-    t.numData = 8;
-    t.calculateSG = false;
-    t.calibrating = false;
-
-    t.lidx = 0;
-    t.celius = true;
-    t.clearData();
-};
 var colorIdle = "white";
 var colorCool = "rgba(0, 0, 255, 0.4)";
 var colorHeat = "rgba(255, 0, 0, 0.4)";

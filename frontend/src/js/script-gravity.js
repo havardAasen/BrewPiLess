@@ -34,7 +34,7 @@ function save() {
     s_ajax({
         url: gdcurl,
         m: "POST",
-        mime: "aplication/json",
+        mime: "application/json",
         data: JSON.stringify(setting),
         success: function(a) {
             alert("<%= done %>");

@@ -2,16 +2,6 @@ import { Q, getActiveNavItem, JSVERSION, s_ajax } from './shared';
 
 var gdcurl = "/gdc";
 
-function toFixed() {
-    var texts = document.querySelectorAll("input[type=text]");
-    for (var i = 0; i < texts.length; i++) {
-        texts[i].onchange = function() {
-            if (this.value.match(/[\-\d\.]+e[\+\-][\d]+/))
-                this.value = Number(this.value).toFixed(9);
-        };
-    }
-}
-
 function fill(setting) {
     for (var name in setting) {
         var ele = Q("input[name=" + name + "]");
@@ -49,7 +39,6 @@ export function init() {
     getActiveNavItem();
     Q("#verinfo").innerHTML = "v" + JSVERSION;
 
-    toFixed();
     s_ajax({
         url: gdcurl + "?data",
         m: "GET",

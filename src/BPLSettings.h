@@ -36,16 +36,16 @@ struct TimeInformation{
 //  36
 struct GravityDeviceConfiguration{
     std::array<float, 4> ispindelCoefficients;
-    float   lpfBeta;
-    uint32_t  numberCalPoints;
+    float    lpfBeta{0.1};
+    uint32_t numberCalPoints{0};
 
-    uint8_t  ispindelEnable;
-    uint8_t  ispindelTempCal;
-    uint8_t  calculateGravity;
-    uint8_t  ispindelCalibrationBaseTemp;
+    uint8_t  ispindelEnable{0};
+    uint8_t  ispindelTempCal{0};
+    uint8_t  calculateGravity{0};
+    uint8_t  ispindelCalibrationBaseTemp{0};
 
-    uint8_t  stableThreshold;
-    uint8_t  usePlato;
+    uint8_t  stableThreshold{1};
+    uint8_t  usePlato{0};
 };
 
 //*****************************************************
@@ -308,7 +308,6 @@ protected:
 
     void defaultSystemConfiguration();
     void defaultTimeInformation();
-    void defaultGravityConfig();
     void defaultBeerProfile();
     void defaultLogFileIndexes();
     void defaultRemoteLogging();

@@ -84,7 +84,6 @@ void BPLSettings::setDefault()
 	// 
 	defaultSystemConfiguration();
     defaultTimeInformation();
-    defaultGravityConfig();
     defaultBeerProfile();
     defaultLogFileIndexes();
     defaultRemoteLogging();
@@ -273,20 +272,6 @@ String BPLSettings::jsonGravityConfig(){
     return ret;
 }	
 
-void BPLSettings::defaultGravityConfig()
-{
-	GravityDeviceConfiguration *gdc = &_data.gdc;
-
-	//gdc->ispindelEnable=0;
-	//gdc->ispindelTempCal =0;
-
-	//gdc->calculateGravity= 0;
-    gdc->lpfBeta = 0.1;
-    gdc->stableThreshold=1;
-	//gdc->numberCalPoints=0;
-	
-}
-  
 //***************************************************************
 // Beer profile
 

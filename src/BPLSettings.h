@@ -4,24 +4,35 @@
 #include <FS.h>
 #include <array>
 #include <time.h>
+#include <ESP8266WiFi.h>
+#include <IPAddress.h>
 #include "Config.h"
 
 //*****************************************************
 // 156 bytes
 struct SystemConfiguration{
-    char  username[32];
-    char  password[32];
-    char  hostnetworkname[32];
-    char  titlelabel[32];
-    uint32_t  backlite;
-    uint32_t  ip;
-    uint32_t  gw;
-    uint32_t  netmask;
-    uint16_t  port;
-    uint8_t passwordLcd;
-    uint8_t wifiMode;
-    uint32_t dns;
+    char  username[32]{DEFAULT_USERNAME};
+    char  password[32]{DEFAULT_PASSWORD};
+    char  hostnetworkname[32]{DEFAULT_HOSTNAME};
+    char  titlelabel[32]{DEFAULT_PAGE_TITLE};
+    uint32_t  backlite{0};
+    uint32_t  ip{IPAddress(0,0,0,0)};
+    uint32_t  gw{IPAddress(0,0,0,0)};
+    uint32_t  netmask{IPAddress(0,0,0,0)};
+    uint16_t  port{80};
+    uint8_t passwordLcd{false};
+    uint8_t wifiMode{WIFI_AP_STA};
+    uint32_t dns{IPAddress(0,0,0,0)};
 };
+
+static_assert(sizeof(DEFAULT_USERNAME) <= sizeof(SystemConfiguration::username),
+              "DEFAULT_USERNAME is too long for field");
+static_assert(sizeof(DEFAULT_PASSWORD) <= sizeof(SystemConfiguration::password),
+              "DEFAULT_PASSWORD is too long for field");
+static_assert(sizeof(DEFAULT_HOSTNAME) <= sizeof(SystemConfiguration::hostnetworkname),
+              "DEFAULT_HOSTNAME is too long for field");
+static_assert(sizeof(DEFAULT_PAGE_TITLE) <= sizeof(SystemConfiguration::titlelabel),
+              "DEFAULT_PAGE_TITLE is too long for field");
 
 //*****************************************************
 // time information
@@ -306,7 +317,6 @@ protected:
 
     void    setDefault();
 
-    void defaultSystemConfiguration();
     void defaultBeerProfile();
     void defaultRemoteLogging();
 };

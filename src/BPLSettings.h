@@ -240,21 +240,21 @@ struct WiFiConfiguration{
 // whole structure
 struct Settings{
     SystemConfiguration syscfg; //0:156
-    TimeInformation  timeinfo; //156:12
+    TimeInformation  timeinfo{}; //156:12
     GravityDeviceConfiguration gdc;  //168:36
     BeerTempSchedule tempSchedule; // 204:96
-    BrewStatus  brewStatus; // 300:20
-    FileIndexes  logFileIndexes; // 320:316
+    BrewStatus  brewStatus{}; // 300:20
+    FileIndexes  logFileIndexes{}; // 320:316
     RemoteLoggingInformation remoteLogginInfo; // 636: 444
-    AutoCapSettings autoCapSettings; // 1080: 12
+    AutoCapSettings autoCapSettings{}; // 1080: 12
     ParasiteTempControlSettings parasiteTempControlSettings; //1092: 20
-    WiFiConfiguration wifiConfiguration;
+    WiFiConfiguration wifiConfiguration{};
 
 #if SupportPressureTransducer
-    PressureMonitorSettings pressureMonitorSettings; // 16
+    PressureMonitorSettings pressureMonitorSettings{}; // 16
 #endif
 #if SupportMqttRemoteControl
-    MqttRemoteControlSettings mqttRemoteControlSettings;
+    MqttRemoteControlSettings mqttRemoteControlSettings{};
 #endif
 };
 
@@ -314,8 +314,6 @@ public:
 #endif
 protected:
     Settings _data{};
-
-    void    setDefault();
 };
 
 extern BPLSettings theSettings;

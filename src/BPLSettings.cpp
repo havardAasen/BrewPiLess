@@ -50,7 +50,6 @@ void BPLSettings::load()
 
 	fs::File f = LittleFS.open(BPLSettingFileName, "r");
 	if(!f){
-		setDefault();
 		return;
 	}
 	f.read((uint8_t*)&_data,sizeof(_data));
@@ -59,7 +58,7 @@ void BPLSettings::load()
 	SystemConfiguration *cfg=  systemConfiguration();
 	if( *( cfg->hostnetworkname) == '\0'
 		|| cfg->wifiMode ==0){
-			setDefault();
+			_data = Settings{};
 			DBG_PRINTF("invalid system configuration!\n");
 	}
 		
@@ -74,14 +73,6 @@ void BPLSettings::save()
 	}
     f.write((uint8_t*)&_data,sizeof(_data));
     f.close();
-}
-
-
-void BPLSettings::setDefault()
-{
-	// clear. to be safe
-	memset((char*)&_data,'\0',sizeof(_data));
-	// 
 }
 
 

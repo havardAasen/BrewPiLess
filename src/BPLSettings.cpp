@@ -85,10 +85,6 @@ void BPLSettings::setDefault()
 	defaultSystemConfiguration();
     defaultBeerProfile();
     defaultRemoteLogging();
-
-#if EanbleParasiteTempControl
-    defaultParasiteTempControlSettings();
-#endif
 }
 
 
@@ -641,16 +637,6 @@ String BPLSettings::jsonRemoteLogging()
 #define TrigerTempKey "stemp"
 #define MinCoolKey "mincool"
 #define MinIdleKey "minidle"
-
-
-void BPLSettings::defaultParasiteTempControlSettings()
-{
-	ParasiteTempControlSettings *ps=parasiteTempControlSettings();
-    ps->minIdleTime = 300 * 1000;
-    ps->minCoolingTime = 300 * 1000;
-    ps->setTemp = 0;
-    ps->maxIdleTemp = 4;
-}
 
 bool BPLSettings::dejsonParasiteTempControlSettings(String json){
 	JsonDocument doc;

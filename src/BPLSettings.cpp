@@ -83,21 +83,14 @@ void BPLSettings::setDefault()
 	memset((char*)&_data,'\0',sizeof(_data));
 	// 
 	defaultSystemConfiguration();
-    defaultTimeInformation();
     defaultBeerProfile();
-    defaultLogFileIndexes();
     defaultRemoteLogging();
-    defaultAutoCapSettings();
 
 #if EanbleParasiteTempControl
     defaultParasiteTempControlSettings();
 #endif
 }
 
-void BPLSettings::defaultTimeInformation(){}
-void BPLSettings::defaultAutoCapSettings(){}
-
-void BPLSettings::defaultLogFileIndexes(){}
 
 //***************************************************************
 // system configuration

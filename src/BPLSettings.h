@@ -307,12 +307,9 @@ protected:
     void    setDefault();
 
     void defaultSystemConfiguration();
-    void defaultTimeInformation();
     void defaultBeerProfile();
-    void defaultLogFileIndexes();
     void defaultRemoteLogging();
-    void defaultAutoCapSettings();
-#if EanbleParasiteTempControl   
+#if EanbleParasiteTempControl
     void defaultParasiteTempControlSettings();
 #endif
 };

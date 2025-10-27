@@ -145,13 +145,13 @@ struct FileIndexes
 #define mHTTP_PUT 2 
 
 struct RemoteLoggingInformation{
-	char url[MaximumUrlLength];
-	char format[MaximumFormatLength];
-	char contentType[MaximumContentTypeLength];
-	time_t period;
-	uint8_t method;
-	uint8_t enabled;
-	uint8_t service;
+	char url[MaximumUrlLength]{};
+	char format[MaximumFormatLength]{};
+	char contentType[MaximumContentTypeLength]{};
+	time_t period{0};
+	uint8_t method{0};
+	uint8_t enabled{0};
+	uint8_t service{0};
 };
 
 
@@ -318,7 +318,6 @@ protected:
     void    setDefault();
 
     void defaultBeerProfile();
-    void defaultRemoteLogging();
 };
 
 extern BPLSettings theSettings;

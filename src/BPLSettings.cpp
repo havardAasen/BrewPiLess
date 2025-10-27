@@ -83,7 +83,6 @@ void BPLSettings::setDefault()
 	memset((char*)&_data,'\0',sizeof(_data));
 	// 
     defaultBeerProfile();
-    defaultRemoteLogging();
 }
 
 
@@ -531,10 +530,6 @@ String BPLSettings::jsonBeerProfile()
 
 //***************************************************************
 // Remote data logging
-void BPLSettings::defaultRemoteLogging()
-{
-	// OK for all zero
-}
 
 bool BPLSettings::dejsonRemoteLogging(String json)
 {

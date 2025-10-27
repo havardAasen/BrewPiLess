@@ -82,7 +82,6 @@ void BPLSettings::setDefault()
 	// clear. to be safe
 	memset((char*)&_data,'\0',sizeof(_data));
 	// 
-    defaultBeerProfile();
 }
 
 
@@ -335,17 +334,6 @@ void makeTime(time_t timeInput, struct tm &tm){
   tm.tm_mon = month + 1;  // jan is month 1
   tm.tm_mday = time + 1;     // day of month
 }
-
- void BPLSettings::defaultBeerProfile()
- {
-	BeerTempSchedule *tempSchedule = & _data.tempSchedule;
-	tempSchedule->unit = 'C';
-	tempSchedule->numberOfSteps =1;
-	ScheduleStep *step = &tempSchedule->steps[0];
-	step->condition = 't';
-	step->days = ScheduleDayFromJson(7);
-	step->temp = ScheduleTempFromJson(20);
- }
 
 bool BPLSettings::dejsonBeerProfile(String json)
 {

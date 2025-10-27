@@ -82,7 +82,6 @@ void BPLSettings::setDefault()
 	// clear. to be safe
 	memset((char*)&_data,'\0',sizeof(_data));
 	// 
-	defaultSystemConfiguration();
     defaultBeerProfile();
     defaultRemoteLogging();
 }
@@ -118,24 +117,6 @@ static void stringNcopy(char *dst,const char *src,size_t n){
 	}
 }
 
-
-void BPLSettings::defaultSystemConfiguration(){
-    SystemConfiguration *syscfg=&_data.syscfg;
-
-    stringNcopy(syscfg->titlelabel,DEFAULT_PAGE_TITLE,32);
-    stringNcopy(syscfg->hostnetworkname,DEFAULT_HOSTNAME,32);
-    stringNcopy(syscfg->username,DEFAULT_USERNAME,32);
-    stringNcopy(syscfg->password,DEFAULT_PASSWORD,32);
-
-    syscfg->port = 80;
-    syscfg->passwordLcd = false;
-    syscfg->wifiMode = WIFI_AP_STA;
-    syscfg->backlite = 0;
-    syscfg->ip = (uint32_t) IPAddress(0,0,0,0);
-    syscfg->gw = (uint32_t) IPAddress(0,0,0,0);
-    syscfg->netmask = (uint32_t) IPAddress(0,0,0,0);
-    syscfg->dns = (uint32_t) IPAddress(0,0,0,0);
-}
 
 bool BPLSettings::dejsonSystemConfiguration(String json){
 

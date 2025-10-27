@@ -87,8 +87,8 @@ typedef int16_t Gravity;
 
 // 12
 struct ScheduleStep{
-    int16_t   temp;
-    uint16_t  days;
+    int16_t   temp{ScheduleTempFromJson(20)};
+    uint16_t  days{ScheduleDayFromJson(7)};
     union GravityT{
         uint16_t  sg;
         uint16_t  attenuation;
@@ -98,15 +98,15 @@ struct ScheduleStep{
         uint8_t  stablePoint;
     } stable;
     uint8_t  attSpecified;
-    char     condition;
+    char     condition{'t'};
 }; // 12bytes
 
 // 12 * 7 +12 = 96
 struct BeerTempSchedule{
 	ScheduleStep steps[MaximumSteps];
 	time_t   startDay;
-    uint8_t  numberOfSteps;
-    char     unit;
+    uint8_t  numberOfSteps{1};
+    char     unit{'C'};
 };
 
 struct BrewStatus{
@@ -316,8 +316,6 @@ protected:
     Settings _data{};
 
     void    setDefault();
-
-    void defaultBeerProfile();
 };
 
 extern BPLSettings theSettings;

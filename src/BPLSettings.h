@@ -160,10 +160,10 @@ struct AutoCapSettings{
 //*****************************************************
 // Parasite temp control
 struct ParasiteTempControlSettings{
-    float setTemp;
-    float maxIdleTemp;
-    uint32_t minCoolingTime;
-    uint32_t minIdleTime;
+    float    setTemp{0};
+    float    maxIdleTemp{4};
+    uint32_t minCoolingTime{300 * 1000};
+    uint32_t minIdleTime{300 * 1000};
 };
 
 //*****************************************************
@@ -309,9 +309,6 @@ protected:
     void defaultSystemConfiguration();
     void defaultBeerProfile();
     void defaultRemoteLogging();
-#if EanbleParasiteTempControl
-    void defaultParasiteTempControlSettings();
-#endif
 };
 
 extern BPLSettings theSettings;

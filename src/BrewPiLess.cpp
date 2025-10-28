@@ -392,7 +392,6 @@ public:
 	        return request->requestAuthentication();
 
 			if(request->hasParam("data", true)){
-				uint8_t oldMode = theSettings.systemConfiguration()->wifiMode;
 				DBG_PRINTF("Config to save: %s\n",request->getParam("data", true)->value().c_str());
 
 				if(theSettings.dejsonSystemConfiguration(request->getParam("data", true)->value())){
@@ -401,9 +400,7 @@ public:
 					request->send(201);
 					display.setAutoOffPeriod(theSettings.systemConfiguration()->backlite);
 
-					if(oldMode !=  theSettings.systemConfiguration()->wifiMode){
-						WiFiSetup.setMode((WiFiMode)theSettings.systemConfiguration()->wifiMode);
-					}
+					WiFiSetup.setMode(static_cast<WiFiMode>(theSettings.systemConfiguration()->wifiMode));
 
 					if(!request->hasParam("nb")){
 						requestRestart(false);

@@ -10,11 +10,11 @@
 
 //*****************************************************
 // 156 bytes
-struct SystemConfiguration{
-    char  username[32]{DEFAULT_USERNAME};
-    char  password[32]{DEFAULT_PASSWORD};
-    char  hostnetworkname[32]{DEFAULT_HOSTNAME};
-    char  titlelabel[32]{DEFAULT_PAGE_TITLE};
+struct SystemConfiguration {
+    char  username[max_config_string_length]{DEFAULT_USERNAME};
+    char  password[max_config_string_length]{DEFAULT_PASSWORD};
+    char  hostnetworkname[max_config_string_length]{DEFAULT_HOSTNAME};
+    char  titlelabel[max_config_string_length]{DEFAULT_PAGE_TITLE};
     uint32_t  backlite{0};
     uint32_t  ip{IPAddress(0,0,0,0)};
     uint32_t  gw{IPAddress(0,0,0,0)};

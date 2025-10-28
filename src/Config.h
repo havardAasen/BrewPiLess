@@ -21,7 +21,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-
+#include <cstdint>
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -448,6 +448,7 @@
 #define DEFAULT_HOSTNAME "brewpiless"
 #define DEFAULT_USERNAME "brewpiless"
 #define DEFAULT_PASSWORD "brewpiless"
+constexpr std::uint8_t max_config_string_length = 32;
 
 //#define english 0
 //#define spanish 1

@@ -409,10 +409,8 @@ public:
 						requestRestart(false);
 					}
 				}else{
-  					request->send(500);
-					DBG_PRINTF("json format error\n");
-  					return;
-  				}			
+					request->send(400, asyncsrv::T_text_plain, "Invalid configuration data.");
+				}
 			}else{
 	  			request->send(400);
 				DBG_PRINTF("no data in post\n");

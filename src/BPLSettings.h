@@ -1,6 +1,7 @@
 #ifndef BPL_SETTINGS_H
 #define BPL_SETTINGS_H
 
+#include <ArduinoJson.h>
 #include <FS.h>
 #include <array>
 #include <time.h>
@@ -314,6 +315,9 @@ public:
 #endif
 protected:
     Settings _data{};
+
+private:
+    static bool isValidSystemConfiguration(const JsonDocument& doc);
 };
 
 extern BPLSettings theSettings;

@@ -54,14 +54,6 @@ void BPLSettings::load()
 	}
 	f.read((uint8_t*)&_data,sizeof(_data));
 	f.close();
-	// check invalid value, and correct
-	SystemConfiguration *cfg=  systemConfiguration();
-	if( *( cfg->hostnetworkname) == '\0'
-		|| cfg->wifiMode ==0){
-			_data = Settings{};
-			DBG_PRINTF("invalid system configuration!\n");
-	}
-		
 }
 
 void BPLSettings::save()
@@ -96,39 +88,55 @@ extern IPAddress scanIP(const char *str);
 SystemConfiguration* BPLSettings::systemConfiguration(){
     return &_data.syscfg;
 }
-    // decode json
-static void stringNcopy(char *dst,const char *src,size_t n){
-	if(strlen(src) < n){
-		strcpy(dst,src);
-	}else{
-		strncpy(dst,src,n-1);
-		dst[n-1]='\0';
-	}
+
+
+bool
+BPLSettings::isValidSystemConfiguration(const JsonDocument& doc)
+{
+    auto isValidString = [](const JsonVariantConst v, const size_t maxLen) {
+        return v.is<const char*>() && std::strlen(v.as<const char*>()) < maxLen;
+    };
+
+    if (!isValidString(doc[KeyUsername], max_config_string_length)) return false;
+    if (!isValidString(doc[KeyPassword], max_config_string_length)) return false;
+    if (!isValidString(doc[KeyHostName], max_config_string_length)) return false;
+    if (!isValidString(doc[KeyPageTitle], max_config_string_length)) return false;
+
+    if(std::strlen(doc[KeyHostName]) == 0 || doc[KeyWifi] == static_cast<std::uint8_t>(WIFI_OFF)) return false;
+
+    return true;
 }
 
 
-bool BPLSettings::dejsonSystemConfiguration(String json){
-
-	SystemConfiguration *syscfg=&_data.syscfg;
-
-	JsonDocument doc;
-	auto error = deserializeJson(doc,json);
-
-	if(!error)
-	{
-        stringNcopy(syscfg->titlelabel,doc[KeyPageTitle],32);
-        stringNcopy(syscfg->hostnetworkname,doc[KeyHostName],32);
-        stringNcopy(syscfg->username,doc[KeyUsername],32);
-        stringNcopy(syscfg->password,doc[KeyPassword],32);
-
-        syscfg->port = doc[KeyPort];
-        syscfg->passwordLcd = doc[KeyProtect];
-        syscfg->wifiMode = doc[KeyWifi];
-        syscfg->backlite = doc[KeyLcdBackLight];
-		return true;
+bool BPLSettings::dejsonSystemConfiguration(String json)
+{
+    JsonDocument doc;
+    if (const auto json_error = deserializeJson(doc, json); json_error) {
+        DBG_PRINTF("ERROR: %s: deserializeJson() failed: %s\n", __func__, json_error.c_str());
+        return false;
     }
-	return false;
+
+    if (!isValidSystemConfiguration(doc)) {
+        DBG_PRINT("Invalid configuration values.");
+        return false;
+    }
+
+    SystemConfiguration *syscfg=&_data.syscfg;
+
+    std::strncpy(syscfg->username, doc[KeyUsername], max_config_string_length - 1);
+    std::strncpy(syscfg->password, doc[KeyPassword], max_config_string_length - 1);
+    std::strncpy(syscfg->hostnetworkname, doc[KeyHostName], max_config_string_length - 1);
+    std::strncpy(syscfg->titlelabel, doc[KeyPageTitle], max_config_string_length - 1);
+
+    syscfg->port = doc[KeyPort];
+    syscfg->passwordLcd = doc[KeyProtect];
+    syscfg->wifiMode = doc[KeyWifi];
+    syscfg->backlite = doc[KeyLcdBackLight];
+
+    return true;
 }
+
+
     // encod json
 String BPLSettings::jsonSystemConfiguration(){
     SystemConfiguration *syscfg=&_data.syscfg;

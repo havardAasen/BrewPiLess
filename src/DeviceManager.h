@@ -193,12 +193,12 @@ public:
 	}
 
 	/**
-	 * @brief Sets devices to their unconfigured states.
+	 * @brief Sets devices to their non-configured state.
 	 *
 	 * Each device is initialized to a static no-op instance. This method is
 	 * idempotent, and is called each time the EEPROM is reset.
 	 */
-	static void setupUnconfiguredDevices();
+	static void resetAllDevices();
 
 	/**
 	 * @brief Creates and Installs a device from the given device config.

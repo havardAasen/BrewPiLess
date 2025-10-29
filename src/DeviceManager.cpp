@@ -97,7 +97,7 @@ bool DeviceManager::isDefaultTempSensor(const ITempSensor* sensor) {
 }
 
 
-void DeviceManager::setupUnconfiguredDevices()
+void DeviceManager::resetAllDevices()
 {
 	// right now, uninstall doesn't care about chamber/beer distinction.
 	// but this will need to match beer/function when multiferment is available

@@ -36,11 +36,12 @@ size_t printFloat(char* buffer,float value,int precision,bool valid,const char* 
 
 size_t dataSprintf(char *buffer,const char *format,const char* invalid)
 {
-	uint8_t state, mode;
+	State state;
+	Mode mode;
 	float beerSet,fridgeSet;
 	float beerTemp,fridgeTemp,roomTemp;
 
-	brewPi.getAllStatus(&state,&mode,& beerTemp,& beerSet,& fridgeTemp,& fridgeSet,& roomTemp);
+	brewPi.getAllStatus(state,mode,& beerTemp,& beerSet,& fridgeTemp,& fridgeSet,& roomTemp);
 
 	size_t d=0;
 	for(size_t i= 0; i < strlen(format); i++) {
@@ -110,11 +111,12 @@ size_t dataSprintf(char *buffer,const char *format,const char* invalid)
 
 size_t nonNullJson(char* buffer,size_t size)
 {
-	uint8_t state, mode;
+	State state;
+	Mode mode;
 	float beerSet,fridgeSet;
 	float beerTemp,fridgeTemp,roomTemp;
 
-	brewPi.getAllStatus(&state,&mode,& beerTemp,& beerSet,& fridgeTemp,& fridgeSet,& roomTemp);
+	brewPi.getAllStatus(state,mode,& beerTemp,& beerSet,& fridgeTemp,& fridgeSet,& roomTemp);
 
 	JsonDocument doc;
 	if(IS_FLOAT_TEMP_VALID(beerTemp)) doc[KeyBeerTemp] = beerTemp;

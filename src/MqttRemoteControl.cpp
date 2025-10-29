@@ -99,11 +99,12 @@ void MqttRemoteControl::_reportData(){
         packetID=_client.publish(_reportBasePath,DefaultLogginQoS,true,data,len);
         DBG_PRINTF("Publish Json:%s\n",data);
     }else if(_reportFormat == MqttReportIndividual){
-        uint8_t state, mode;
+	    State state;
+	    Mode mode;
 	    float beerSet,fridgeSet;
 	    float beerTemp,fridgeTemp,roomTemp;
 
-	    brewPi.getAllStatus(&state,&mode,& beerTemp,& beerSet,& fridgeTemp,& fridgeSet,& roomTemp);
+	    brewPi.getAllStatus(state,mode,& beerTemp,& beerSet,& fridgeTemp,& fridgeSet,& roomTemp);
 
 	    if(IS_FLOAT_TEMP_VALID(beerTemp)) _publish(KeyBeerTemp, beerTemp,1);
 	    if(IS_FLOAT_TEMP_VALID(beerSet)) _publish(KeyBeerSet, beerSet,1);

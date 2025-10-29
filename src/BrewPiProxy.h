@@ -10,6 +10,7 @@
 
 
 enum Mode : uint8_t;
+enum State : uint8_t;
 
 class BrewPiProxy{
 public:
@@ -26,7 +27,7 @@ public:
 	void getTemperatureSetting(char *pUnit,float *pMinSetTemp,float *pMaxSetTemp);
 	void getControlParameter(char *pUnit,Mode *pMode,float *pBeerSet, float *pFridgeSet);
 	void getLogInfo(char *pUnit,uint8_t *pMode,uint8_t *pState);
-	void getAllStatus(uint8_t *pState,uint8_t *pMode,float *pBeerTemp,float *pBeerSet,float *pFridgeTemp, float *pFridgeSet, float *pRoomTemp);
+	void getAllStatus(State&, Mode& ,float *pBeerTemp,float *pBeerSet,float *pFridgeTemp, float *pFridgeSet, float *pRoomTemp);
 
 	bool ambientSensorConnected();
 

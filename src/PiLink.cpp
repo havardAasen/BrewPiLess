@@ -858,7 +858,7 @@ constexpr char STR_FMT_SET_TO[] PROGMEM = "%S set to %s %S";
 #endif
 
 void PiLink::setMode(const char* val) {
-	const Mode mode = static_cast<Mode>(val[0]);
+	const auto mode = static_cast<Mode>(val[0]);
 	tempControl.setMode(mode);
 #if 0 //#ifdef ESP8266
 	String annotation = "";

@@ -337,12 +337,13 @@ void BrewLogger::loop(){
 
 void BrewLogger::logData()
 {
-    uint8_t state, mode;
+    State state;
+    Mode mode;
     constexpr int  size = 5;
     std::array<float, size> fTemps{};
 
 	//brewPi.getAllStatus(&state,&mode,& beerTemp,& beerSet,& fridgeTemp,& fridgeSet,& roomTemp);
-	brewPi.getAllStatus(&state,&mode,&fTemps[beerTemp],& fTemps[beerSet],
+	brewPi.getAllStatus(state,mode,&fTemps[beerTemp],& fTemps[beerSet],
 			& fTemps[fridgeTemp],& fTemps[fridgeSet],& fTemps[roomTemp]);
 
 

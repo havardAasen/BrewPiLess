@@ -451,9 +451,10 @@ public:
 
 			handleFilePuts(request);
 		}else if(request->method() == HTTP_GET && request->url() == GETSTATUS_PATH){
-			uint8_t mode, state;
+			Mode mode;
+			State state;
 			float beerSet, beerTemp, fridgeTemp, fridgeSet, roomTemp;
-			brewPi.getAllStatus(&state, &mode, &beerTemp, &beerSet, &fridgeTemp, &fridgeSet, &roomTemp);
+			brewPi.getAllStatus(state, mode, &beerTemp, &beerSet, &fridgeTemp, &fridgeSet, &roomTemp);
 			#define TEMPorNull(a) (IS_FLOAT_TEMP_VALID(a)?  String(a):String("null"))
 			String json=String("{\"mode\":\"") + String((char) mode)
 			+ String("\",\"state\":") + String(state)
@@ -884,13 +885,14 @@ void reportRssi()
 {
 	char buf[256];
 
-	uint8_t mode, state;
+	Mode mode;
+	State state;
 	char unit;
 	float beerSet, beerTemp, fridgeTemp, fridgeSet, roomTemp;
 	float min,max;
 	char statusLine[21];
 	brewPi.getTemperatureSetting(&unit,&min,&max);
-	brewPi.getAllStatus(&state, &mode, &beerTemp, &beerSet, &fridgeTemp, &fridgeSet, &roomTemp);
+	brewPi.getAllStatus(state, mode, &beerTemp, &beerSet, &fridgeTemp, &fridgeSet, &roomTemp);
 	display.getLine(3,statusLine);
 
 #if EanbleParasiteTempControl
@@ -1409,7 +1411,7 @@ void brewpiLoop()
 		tempControl.updateTemperatures();
 		tempControl.detectPeaks();
 		tempControl.updatePID();
-		const uint8_t oldState = tempControl.getState();
+		const State oldState = tempControl.getState();
 		tempControl.updateState();
 		if (oldState != tempControl.getState()) {
 			PiLink::printTemperatures(); // add a data point at every state transition

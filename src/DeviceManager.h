@@ -201,8 +201,8 @@ public:
 	static void resetAllDevices();
 
 	/**
-	 * @brief Creates and Installs a device from the given device config.
-	 * @return true if a device was installed. false if the config is not complete.
+	 * @brief Install a device from the given @c config.
+	 * @return @c true if a device was installed, @c false otherwise.
 	 */
 	static void installDevice(DeviceConfig& config);
 

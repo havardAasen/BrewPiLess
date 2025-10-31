@@ -1180,14 +1180,15 @@ public:
 			}else{
 				request->send(400);
 			}
-		}//else{
-			// get
-		if(request->hasParam("data")){
-			request->send(200,asyncsrv::T_application_json,theSettings.jsonGravityConfig());
-		}else{
-			// get the HTML
-			request->redirect(request->url() + asyncsrv::T__htm);
-		    //request->send_P(200, asyncsrv::T_text_html, externalData.html());
+		} else {
+		    // get
+		    if(request->hasParam("data")){
+		        request->send(200,asyncsrv::T_application_json,theSettings.jsonGravityConfig());
+		    }else{
+		        // get the HTML
+		        request->redirect(request->url() + asyncsrv::T__htm);
+		        //request->send_P(200, asyncsrv::T_text_html, externalData.html());
+		    }
 		}
 	}
 

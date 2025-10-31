@@ -6,8 +6,9 @@
 #include <FS.h>
 #include <LittleFS.h>
 #include <ArduinoJson.h>
-
+#include <literals.h>
 #include <utility>
+
 #include "Config.h"
 #include "ExternalData.h"
 #include "BPLSettings.h"
@@ -215,29 +216,29 @@ static void handleFileCreate(){
   path = String();
 }
 
-static void handleFileList() {
-  if(!server.hasArg("dir")) {server.send(500, "text/plain", "BAD ARGS"); return;}
+static void handleFileList()
+{
+    if (!server.hasArg("dir")) {
+        server.send(400, asyncsrv::T_text_plain, "BAD ARGS");
+        return;
+    }
 
-  String path = server.arg("dir");
-  DBG_PRINTLN("handleFileList: " + path);
-  Dir dir = LittleFS.openDir(path);
-  path = String();
+    const String path = server.arg("dir");
+    DBG_PRINTLN("handleFileList: " + path);
+    Dir dir = LittleFS.openDir(path);
 
-  String output = "[";
-  while(dir.next()){
-    File entry = dir.openFile("r");
-    if (output != "[") output += ',';
-    bool isDir = false;
-    output += "{\"type\":\"";
-    output += (isDir)?"dir":"file";
-    output += "\",\"name\":\"";
-    output += String(entry.name()).substring(1);
-    output += "\"}";
-    entry.close();
-  }
+    JsonDocument doc;
+    while (dir.next()) {
+        auto array = doc.add<JsonObject>();
+        array["type"] = dir.isDirectory() ? "dir" : "file";
+        array["name"] = dir.fileName();
+    }
 
-  output += "]";
-  server.send(200, "application/json", output);
+    String output;
+    doc.shrinkToFit();
+    serializeJson(doc, output);
+
+    server.send(200, asyncsrv::T_application_json, output);
 }
 #endif
 

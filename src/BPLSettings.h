@@ -57,7 +57,7 @@ struct GravityDeviceConfiguration{
     uint8_t  ispindelCalibrationBaseTemp{0};
 
     uint8_t  stableThreshold{1};
-    uint8_t  usePlato{0};
+    bool     usePlato{false};
 };
 
 //*****************************************************

@@ -201,7 +201,7 @@ String BPLSettings::jsonSystemConfiguration(){
 	gdc->lpfBeta =doc[KeyLPFBeta];
 	gdc->stableThreshold=doc[KeyStableGravityThreshold];
 	gdc->numberCalPoints=doc[KeyNumberCalPoints];
-	gdc->usePlato = doc[KeyUsePlato].is<int>() ? doc[KeyUsePlato] : 0;
+	gdc->usePlato = doc[KeyUsePlato].is<bool>() ? doc[KeyUsePlato] : false;
 	// debug
 	#if SerialDebug
 	Serial.print("\nCoefficient:");

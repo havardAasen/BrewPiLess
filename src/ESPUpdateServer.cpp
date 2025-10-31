@@ -145,7 +145,7 @@ static File fsUploadFile;
 extern String getContentType(String filename);
 
 String getResponseContentType(String filename){
-  if(server.hasArg("download")) return "application/octet-stream";
+  if(server.hasArg("download")) return asyncsrv::T_application_octet_stream;
   return getContentType(std::move(filename));
 }
 
@@ -153,10 +153,10 @@ static bool handleFileRead(String path){
   DBG_PRINTLN("handleFileRead: " + path);
   if(path.endsWith("/")) path += "index.htm";
   String contentType = getResponseContentType(path);
-  String pathWithGz = path + ".gz";
+  String pathWithGz = path + asyncsrv::T__gz;
   if(LittleFS.exists(pathWithGz) || LittleFS.exists(path)){
     if(LittleFS.exists(pathWithGz))
-      path += ".gz";
+      path += asyncsrv::T__gz;
     File file = LittleFS.open(path, "r");
     /*size_t sent = */ server.streamFile(file, contentType);
     file.close();
@@ -186,33 +186,33 @@ static void handleFileUpload(){
 }
 
 static void handleFileDelete(){
-  if(server.args() == 0) return server.send(500, "text/plain", "BAD ARGS");
+  if(server.args() == 0) return server.send(500, asyncsrv::T_text_plain, "BAD ARGS");
   String path = server.arg(0);
   DBG_PRINTLN("handleFileDelete: " + path);
   if(path == "/")
-    return server.send(500, "text/plain", "BAD PATH");
+    return server.send(500, asyncsrv::T_text_plain, "BAD PATH");
   if(!LittleFS.exists(path))
-    return server.send(404, "text/plain", "FileNotFound");
+    return server.send(404, asyncsrv::T_text_plain, "FileNotFound");
   LittleFS.remove(path);
-  server.send(200, "text/plain", "");
+  server.send(200, asyncsrv::T_text_plain, "");
   path = String();
 }
 
 static void handleFileCreate(){
   if(server.args() == 0)
-    return server.send(500, "text/plain", "BAD ARGS");
+    return server.send(500, asyncsrv::T_text_plain, "BAD ARGS");
   String path = server.arg(0);
   DBG_PRINTLN("handleFileCreate: " + path);
   if(path == "/")
-    return server.send(500, "text/plain", "BAD PATH");
+    return server.send(500, asyncsrv::T_text_plain, "BAD PATH");
   if(LittleFS.exists(path))
-    return server.send(500, "text/plain", "FILE EXISTS");
+    return server.send(500, asyncsrv::T_text_plain, "FILE EXISTS");
   File file = LittleFS.open(path, "w");
   if(file)
     file.close();
   else
-    return server.send(500, "text/plain", "CREATE FAILED");
-  server.send(200, "text/plain", "");
+    return server.send(500, asyncsrv::T_text_plain, "CREATE FAILED");
+  server.send(200, asyncsrv::T_text_plain, "");
   path = String();
 }
 
@@ -252,9 +252,9 @@ void ESPUpdateServer_setup(const char* user, const char* pass){
   server.on("/list", HTTP_GET, handleFileList);
   //load editor
   server.on(FILE_MANAGEMENT_PATH, HTTP_GET, [](){
-//    if(!handleFileRead("/edit.htm")) server.send(404, "text/plain", "FileNotFound");
-	  server.sendHeader("Content-Encoding", "gzip");
-	   server.send_P(200,"text/html",reinterpret_cast<const char*>(edit_htm_gz),dist_edit_htm_gz_len);
+//    if(!handleFileRead("/edit.htm")) server.send(404, asyncsrv::T_text_plain, "FileNotFound");
+	  server.sendHeader(asyncsrv::T_Content_Encoding, asyncsrv::T_gzip);
+	   server.send_P(200,asyncsrv::T_text_html,reinterpret_cast<const char*>(edit_htm_gz),dist_edit_htm_gz_len);
   });
   //create file
   server.on("/edit", HTTP_PUT, handleFileCreate);
@@ -262,13 +262,13 @@ void ESPUpdateServer_setup(const char* user, const char* pass){
   server.on("/edit", HTTP_DELETE, handleFileDelete);
   //first callback is called after the request has ended with all parsed arguments
   //second callback handles file uploads at that location
-  server.on("/edit", HTTP_POST, [](){ server.send(200, "text/plain", ""); }, handleFileUpload);
+  server.on("/edit", HTTP_POST, [](){ server.send(200, asyncsrv::T_text_plain, ""); }, handleFileUpload);
 
   //called when the url is not defined here
   //use it to load content from LittleFS
   server.onNotFound([](){
     if(!handleFileRead(server.uri()))
-      server.send(404, "text/plain", "FileNotFound");
+      server.send(404, asyncsrv::T_text_plain, "FileNotFound");
   });
 
   //get heap status, analog input value and all GPIO statuses in one json call
@@ -278,17 +278,17 @@ void ESPUpdateServer_setup(const char* user, const char* pass){
     json += ", \"analog\":"+String(analogRead(A0));
     json += ", \"gpio\":"+String((uint32_t)(((GPI | GPO) & 0xFFFF) | ((GP16I & 0x01) << 16)));
     json += "}";
-    server.send(200, "application/json", json);
+    server.send(200, asyncsrv::T_application_json, json);
     json = String();
   });
 
   server.on(SPIFFS_FORMAT_PATH,HTTP_GET, [](){
-     server.sendHeader("Content-Encoding", "gzip");
-	    server.send_P(200,"text/html",spiffsformat_html,sizeof(spiffsformat_html));
+     server.sendHeader(asyncsrv::T_Content_Encoding, asyncsrv::T_gzip);
+	    server.send_P(200,asyncsrv::T_text_html,spiffsformat_html,sizeof(spiffsformat_html));
   });
   server.on(SPIFFS_FORMATTING_PATH,HTTP_GET, [](){
-      server.sendHeader("Content-Encoding", "gzip");
-	    server.send_P(200,"text/html",spiffsformating_html,sizeof(spiffsformating_html));
+      server.sendHeader(asyncsrv::T_Content_Encoding, asyncsrv::T_gzip);
+	    server.send_P(200,asyncsrv::T_text_html,spiffsformating_html,sizeof(spiffsformating_html));
       theSettings.preFormat();
       LittleFS.format();
       theSettings.postFormat();
@@ -299,7 +299,7 @@ void ESPUpdateServer_setup(const char* user, const char* pass){
 #if EXTERNALDATA_ON_SYNC_SERVER
      server.on("/gravity",HTTP_POST, [](){
         if (server.hasArg("plain")== false){ //Check if body received
-            server.send(200, "text/plain", "");
+            server.send(200, asyncsrv::T_text_plain, "");
             return;
         }
         uint8_t error;
@@ -311,7 +311,7 @@ void ESPUpdateServer_setup(const char* user, const char* pass){
         }
         strcpy(data,json.c_str());
 		if(externalData.processGravityReport(data,json.length(),false,error)){
-    		server.send(200,"application/json","{}");
+    		server.send(200,asyncsrv::T_application_json,"{}");
 		}else{
 		     server.send(500);
 		}

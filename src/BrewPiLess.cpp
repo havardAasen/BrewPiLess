@@ -8,6 +8,7 @@
 #include <ArduinoOTA.h>
 #include <FS.h>
 #include <LittleFS.h>
+#include <literals.h>
 
 //#include <Hash.h>
 
@@ -147,19 +148,19 @@ const char *nocache_list[]={
 //*******************************************
 
 	String getContentType(String filename){
-		if(filename.endsWith(".htm")) return "text/html";
-		else if(filename.endsWith(".html")) return "text/html";
-		else if(filename.endsWith(".css")) return "text/css";
-		else if(filename.endsWith(".js")) return "text/javascript";
-		else if(filename.endsWith(".png")) return "image/png";
-		else if(filename.endsWith(".gif")) return "image/gif";
-		else if(filename.endsWith(".jpg")) return "image/jpeg";
-		else if(filename.endsWith(".ico")) return "image/x-icon";
-		else if(filename.endsWith(".xml")) return "text/xml";
-		else if(filename.endsWith(".pdf")) return "application/pdf";
+		if(filename.endsWith(asyncsrv::T__htm)) return asyncsrv::T_text_html;
+		else if(filename.endsWith(asyncsrv::T__html)) return asyncsrv::T_text_html;
+		else if(filename.endsWith(asyncsrv::T__css)) return asyncsrv::T_text_css;
+		else if(filename.endsWith(asyncsrv::T__js)) return asyncsrv::T_text_javascript;
+		else if(filename.endsWith(asyncsrv::T__png)) return asyncsrv::T_image_png;
+		else if(filename.endsWith(asyncsrv::T__gif)) return asyncsrv::T_image_gif;
+		else if(filename.endsWith(asyncsrv::T__jpg)) return asyncsrv::T_image_jpeg;
+		else if(filename.endsWith(asyncsrv::T__ico)) return asyncsrv::T_image_x_icon;
+		else if(filename.endsWith(asyncsrv::T__xml)) return asyncsrv::T_text_css;
+		else if(filename.endsWith(asyncsrv::T__pdf)) return asyncsrv::T_application_pdf;
 		else if(filename.endsWith(".zip")) return "application/zip";
-		else if(filename.endsWith(".gz")) return "application/gzip";
-		return "text/plain";
+		else if(filename.endsWith(asyncsrv::T__gz)) return "application/gzip";
+		return asyncsrv::T_text_plain;
 	  }
 
 GravityTracker gravityTracker;
@@ -196,7 +197,7 @@ class BrewPiWebHandler: public AsyncWebHandler
     static void handleFileList(AsyncWebServerRequest *request)
     {
         if (!request->hasParam("dir", true)) {
-            request->send(400, "text/plain", "BAD ARGS");
+            request->send(400, asyncsrv::T_text_plain, "BAD ARGS");
             return;
         }
 
@@ -215,28 +216,28 @@ class BrewPiWebHandler: public AsyncWebHandler
             output += "\"}";
         }
         output += "]";
-        request->send(200, "application/json", output);
+        request->send(200, asyncsrv::T_application_json, output);
     }
 
 
     static void handleFileDelete(AsyncWebServerRequest *request)
     {
         if (!request->hasParam("path", true)) {
-            request->send(400, "text/plain", "BAD ARGS");
+            request->send(400, asyncsrv::T_text_plain, "BAD ARGS");
             return;
         }
 
         EspClass::wdtDisable();
         LittleFS.remove(request->getParam("path", true)->value());
         EspClass::wdtEnable(10);
-        request->send(200, "text/plain", "DELETE: " + request->getParam("path", true)->value());
+        request->send(200, asyncsrv::T_text_plain, "DELETE: " + request->getParam("path", true)->value());
     }
 
 
     static void handleFilePuts(AsyncWebServerRequest *request)
     {
         if (!request->hasParam("path", true) && !request->hasParam("content", true)) {
-            request->send(400, "text/plain", "BAD ARGS");
+            request->send(400, asyncsrv::T_text_plain, "BAD ARGS");
             return;
         }
 
@@ -262,19 +263,19 @@ class BrewPiWebHandler: public AsyncWebHandler
 
 	    if(getEmbeddedFile(path.c_str(),dum,dum2)) return true;
 		// safari workaround.
-		if(path.endsWith(".js")){
+		if(path.endsWith(asyncsrv::T__js)){
 			String pathWithJgz = path.substring(0,path.lastIndexOf('.')) + ".jgz";
 			 //DBG_PRINTF("checking with:%s\n",pathWithJgz.c_str());
 			 if(LittleFS.exists(pathWithJgz)) return true;
 		}
-		String pathWithGz = path + ".gz";
+		String pathWithGz = path + asyncsrv::T__gz;
 		if(LittleFS.exists(pathWithGz)) return true;
 		return false;
     }
 
 	void sendProgmem(AsyncWebServerRequest *request,const char* html)
 	{
-		AsyncWebServerResponse *response = request->beginResponse(String("text/html"),
+		AsyncWebServerResponse *response = request->beginResponse(String(asyncsrv::T_text_html),
   			strlen_P(html),
   			[=](uint8_t *buffer, size_t maxLen, size_t alreadySent) -> size_t {
     			if (strlen_P(html+alreadySent)>maxLen) {
@@ -292,18 +293,18 @@ class BrewPiWebHandler: public AsyncWebHandler
 	void sendFile(AsyncWebServerRequest *request,const String& path)
 	{
 		//workaround for safari
-		if(path.endsWith(".js")){
+		if(path.endsWith(asyncsrv::T__js)){
 			String pathWithJgz = path.substring(0,path.lastIndexOf('.')) + ".jgz";
 			if(LittleFS.exists(pathWithJgz)){
-				AsyncWebServerResponse * response = request->beginResponse(LittleFS, pathWithJgz,"text/javascript");
-				response->addHeader("Content-Encoding", "gzip");
+				AsyncWebServerResponse * response = request->beginResponse(LittleFS, pathWithJgz,asyncsrv::T_text_javascript);
+				response->addHeader(asyncsrv::T_Content_Encoding, asyncsrv::T_gzip);
 				response->addHeader("Cache-Control","max-age=2592000");
 				request->send(response);
 
 				return;
 			}
 		}
-		String pathWithGz = path + ".gz";
+		String pathWithGz = path + asyncsrv::T__gz;
 		if(LittleFS.exists(pathWithGz)){
 #if 0
 			AsyncWebServerResponse * response = request->beginResponse(LittleFS, pathWithGz,getContentType(path));
@@ -316,7 +317,7 @@ class BrewPiWebHandler: public AsyncWebHandler
 			}
 			AsyncWebServerResponse * response = request->beginResponse(file, path,getContentType(path));
 #endif
-//			response->addHeader("Content-Encoding", "gzip");
+//			response->addHeader(asyncsrv::T_Content_Encoding, asyncsrv::T_gzip);
 			response->addHeader("Cache-Control","max-age=2592000");
 			request->send(response);
 			return;
@@ -344,10 +345,10 @@ class BrewPiWebHandler: public AsyncWebHandler
 		if (const uint8_t *file = getEmbeddedFile(path.c_str(), gzip, size)) {
 			assert(gzip == true && "All files must be gzipped");
 			DBG_PRINTF("using embedded file: '%s'\n",path.c_str());
-			const char *contentType = path.endsWith(".js") ? "text/javascript" : "text/html";
+			const char *contentType = path.endsWith(asyncsrv::T__js) ? asyncsrv::T_text_javascript : asyncsrv::T_text_html;
 			AsyncWebServerResponse *response = request->beginResponse_P(200, contentType, file, size);
 			response->addHeader("Cache-Control","max-age=2592000");
-			response->addHeader("Content-Encoding", "gzip");
+			response->addHeader(asyncsrv::T_Content_Encoding, asyncsrv::T_gzip);
 			request->send(response);
 		}
 	}	  
@@ -359,7 +360,7 @@ public:
 
 		#if SupportMqttRemoteControl
 		if(request->method() == HTTP_GET && request->url() == MQTT_PATH){
-			request->send(200,"application/json",theSettings.jsonMqttRemoteControlSettings());
+			request->send(200,asyncsrv::T_application_json,theSettings.jsonMqttRemoteControlSettings());
 	 	}else if(request->method() == HTTP_POST && request->url() == MQTT_PATH){
 	 	    if(!request->authenticate(syscfg->username, syscfg->password))
 	        return request->requestAuthentication();
@@ -384,9 +385,9 @@ public:
 		if(request->method() == HTTP_GET && request->url() == CONFIG_PATH){
 			if(!request->authenticate(syscfg->username, syscfg->password)) return request->requestAuthentication();
 			if(request->hasParam("cfg"))
-				request->send(200,"application/json",theSettings.jsonSystemConfiguration());
+				request->send(200,asyncsrv::T_application_json,theSettings.jsonSystemConfiguration());
 			else 
-				request->redirect(request->url() + ".htm");
+				request->redirect(request->url() + asyncsrv::T__htm);
 	 	}else if(request->method() == HTTP_POST && request->url() == CONFIG_PATH){
 	 	    if(!request->authenticate(syscfg->username, syscfg->password))
 	        return request->requestAuthentication();
@@ -413,7 +414,7 @@ public:
 				DBG_PRINTF("no data in post\n");
   			}
 	 	}else if(request->method() == HTTP_GET &&  request->url() == TIME_PATH){
-			AsyncResponseStream *response = request->beginResponseStream("application/json");
+			AsyncResponseStream *response = request->beginResponseStream(asyncsrv::T_application_json);
 			response->printf("{\"t\":\"%s\",\"e\":%lld,\"o\":%d}",TimeKeeper.getDateTimeStr(),TimeKeeper.getTimeSeconds(),TimeKeeper.getTimezoneOffset());
 			request->send(response);
 		}else if(request->method() == HTTP_POST &&  request->url() == TIME_PATH){
@@ -433,7 +434,7 @@ public:
 		}else if(request->method() == HTTP_GET &&  request->url() == RESETWIFI_PATH){
 	 	    if(!request->authenticate(syscfg->username, syscfg->password))
 	        return request->requestAuthentication();
-		 	request->send(200,"text/html","Done, restarting..");
+		 	request->send(200,asyncsrv::T_text_html,"Done, restarting..");
 			requestRestart(true);
 	 	}else if(request->method() == HTTP_POST &&  request->url() == FLIST_PATH){
 	 	    if(!request->authenticate(syscfg->username, syscfg->password))
@@ -464,7 +465,7 @@ public:
 			+ String(",\"fridgeTemp\":") + TEMPorNull(fridgeTemp)
 			+ String(",\"roomTemp\":") + TEMPorNull(roomTemp)
 			+String("}");
-			request->send(200,"application/json",json);
+			request->send(200,asyncsrv::T_application_json,json);
 		}
 	 	#ifdef ENABLE_LOGGING
 	 	else if (request->url() == LOGGING_PATH){
@@ -482,9 +483,9 @@ public:
     			}
 	 		}else{
 				if(request->hasParam("data")){
-					request->send(200,"application/json",theSettings.jsonRemoteLogging());
+					request->send(200,asyncsrv::T_application_json,theSettings.jsonRemoteLogging());
 				}else{
-					request->redirect(request->url() + ".htm");
+					request->redirect(request->url() + asyncsrv::T__htm);
 				} 
 	 		}
 		 }
@@ -502,7 +503,7 @@ public:
           			request->send(404);
 	 		}else{
 				String status=parasiteTempController.getSettings();
-				request->send(200,"application/json",status);
+				request->send(200,asyncsrv::T_application_json,status);
 	 		}
 		}
 		#endif
@@ -545,9 +546,9 @@ public:
 			if(request->method() == HTTP_GET){
 				if(request->hasParam("r")){
 					int reading=PressureMonitor.currentAdcReading();
-					request->send(200,"application/json",String("{\"a0\":")+String(reading)+String("}"));
+					request->send(200,asyncsrv::T_application_json,String("{\"a0\":")+String(reading)+String("}"));
 				}else{
-					request->send(200,"application/json",theSettings.jsonPressureMonitorSettings());
+					request->send(200,asyncsrv::T_application_json,theSettings.jsonPressureMonitorSettings());
 				}
 			}else{
 				// post
@@ -570,7 +571,7 @@ public:
 		#endif
 		else if(request->url() == BEER_PROFILE_PATH){
 			if(request->method() == HTTP_GET){
-				request->send(200,"application/json",theSettings.jsonBeerProfile());
+				request->send(200,asyncsrv::T_application_json,theSettings.jsonBeerProfile());
 			}else{ //if(request->method() == HTTP_POST){
 
 				if(!request->authenticate(syscfg->username, syscfg->password)) return request->requestAuthentication();
@@ -677,7 +678,7 @@ class AppleCNAHandler: public AsyncWebHandler
 public:
 	AppleCNAHandler(){}
 	void handleRequest(AsyncWebServerRequest *request) override{
-		request->send(200, "text/html", "<HTML><HEAD><TITLE>Success</TITLE></HEAD><BODY>Success</BODY></HTML>");
+		request->send(200, asyncsrv::T_text_html, "<HTML><HEAD><TITLE>Success</TITLE></HEAD><BODY>Success</BODY></HTML>");
 	}
 	bool canHandle(AsyncWebServerRequest *request) const override{
 		String host=request->host();
@@ -970,7 +971,7 @@ public:
 			if(request->hasParam("m")){
 				uint32_t mask= request->getParam("m")->value().toInt();
 				brewLogger.addIgnoredCalPointMask(mask);
-				request->send(200,"application/json","{}");
+				request->send(200,asyncsrv::T_application_json,"{}");
 			}else{
 				request->send(404);
 			}
@@ -981,7 +982,7 @@ public:
 				char buf[36];
 				brewLogger.getFilePath(buf,index);
 				if(LittleFS.exists(buf)){
-					request->send(LittleFS,buf,"application/octet-stream",true);
+					request->send(LittleFS,buf,asyncsrv::T_application_octet_stream,true);
 				}else{
 					request->send(404);
 				}
@@ -990,7 +991,7 @@ public:
 				DBG_PRINTF("Delete log file %d\n",index);
 				brewLogger.rmLog(index);
 
-				request->send(200,"application/json",brewLogger.fsinfo());
+				request->send(200,asyncsrv::T_application_json,brewLogger.fsinfo());
 			}else if(request->hasParam("start")){
 				String filename=request->getParam("start")->value();
 				DBG_PRINTF("start logging:%s\n",filename.c_str());
@@ -1024,7 +1025,7 @@ public:
 			}else{
 				// default. list information
 				String status=brewLogger.loggingStatus();
-				request->send(200,"application/json",status);
+				request->send(200,asyncsrv::T_application_json,status);
 			}
 			return;
 		} // end of logist path
@@ -1059,7 +1060,7 @@ public:
 			size_t logoffset=brewLogger.volatileDataOffset();
 
 			if(size >0){
-				AsyncWebServerResponse *response = request->beginResponse("application/octet-stream", size,
+				AsyncWebServerResponse *response = request->beginResponse(asyncsrv::T_application_octet_stream, size,
 						[](uint8_t *buffer, size_t maxLen, size_t index) -> size_t {
 					return brewLogger.readVolatileData(buffer, maxLen,index);
 				});
@@ -1076,7 +1077,7 @@ public:
 
 			size_t size=brewLogger.beginCopyAfter(offset);
 			if(size >0){
-				request->send("application/octet-stream", size, [](uint8_t *buffer, size_t maxLen, size_t index) -> size_t {
+				request->send(asyncsrv::T_application_octet_stream, size, [](uint8_t *buffer, size_t maxLen, size_t index) -> size_t {
 					return brewLogger.read(buffer, maxLen,index);
 				});
 			}else{
@@ -1182,11 +1183,11 @@ public:
 		}//else{
 			// get
 		if(request->hasParam("data")){
-			request->send(200,"application/json",theSettings.jsonGravityConfig());
+			request->send(200,asyncsrv::T_application_json,theSettings.jsonGravityConfig());
 		}else{
 			// get the HTML
-			request->redirect(request->url() + ".htm");
-		    //request->send_P(200, "text/html", externalData.html());
+			request->redirect(request->url() + asyncsrv::T__htm);
+		    //request->send_P(200, asyncsrv::T_text_html, externalData.html());
 		}
 	}
 

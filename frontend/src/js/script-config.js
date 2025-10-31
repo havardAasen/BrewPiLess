@@ -5,27 +5,32 @@ function formatIP(ip) {
     return ip === "0.0.0.0" ? "" : ip;
 }
 
+function updateInput(input, value) {
+    if (input.classList.contains("iptype")) {
+        input.value = formatIP(value);
+    } else if (input.type === "checkbox") {
+        input.checked = value !== 0;
+    } else {
+        input.value = value;
+    }
+}
 
 function loadSetting() {
     s_ajax({
         url: "config?cfg=1",
         m: "GET",
         success: function(data) {
-            var j = JSON.parse(data);
-            window.oridata = j;
-            Object.keys(j).map(function(key) {
-                var div = Q("input[name=" + key + "]");
-                if (div) {
-                    if (div.classList.contains("iptype")) {
-                        div.value = formatIP(j[key]);
-                    } else if (div.type == "checkbox") div.checked = (j[key] != 0);
-                    else div.value = j[key];
-                } else {
-                    // wifi mode
-                    div = Q("select[name=" + key + "]");
-                    if (div) {
-                        div.value = j[key];
-                    }
+            const json = JSON.parse(data);
+            window.oridata = json;
+
+            Object.entries(json).forEach(([key, value]) => {
+                let input = Q(`input[name=${key}]`);
+                let wifiMode = Q(`select[name=${key}]`);
+
+                if (input) {
+                    updateInput(input, value);
+                } else if (wifiMode) {
+                    wifiMode.value = value;
                 }
             });
         },

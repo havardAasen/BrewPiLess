@@ -49,7 +49,7 @@ function waitrestart() {
 }
 
 export function saveSystemSettings() {
-    const inputs = document.querySelectorAll("#sysconfig input");
+    const inputs = document.querySelectorAll("#sysconfig input, #sysconfig select");
     let json = {};
     let reboot = false;
 
@@ -64,8 +64,6 @@ export function saveSystemSettings() {
         }
     });
 
-    var div = Q("select[id=wifi]");
-    json["wifi"] = div.value;
     console.log(JSON.stringify(json));
     var url = "config" + (reboot ? "" : "?nb");
     s_ajax({

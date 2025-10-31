@@ -48,24 +48,22 @@ function waitrestart() {
     }, 15000);
 }
 
-function save() {
-    var ins = document.querySelectorAll("#sysconfig input");
-    var data = "";
-    //(new Uint32Array([-1]))[0]
-    var json = {};
-    var reboot = false;
-    Object.keys(ins).map(function(key, i) {
-        if (ins[i].type != "submit") {
-            if (ins[i].name && ins[i].name != "") {
-                var val;
-                if (ins[i].type == "checkbox") val = (ins[i].checked ? 1 : 0);
-                else val = ins[i].value.trim();
-                json[ins[i].name] = val;
-                if (window.oridata[ins[i].name] != val && !ins[i].classList.contains("nb"))
-                    reboot = true;
-            }
+function saveSystemSettings() {
+    const inputs = document.querySelectorAll("#sysconfig input");
+    let json = {};
+    let reboot = false;
+
+    inputs.forEach(input => {
+        if (!input.name) return;
+
+        const val = input.type === "checkbox" ? (input.checked ? 1 : 0) : input.value.trim();
+        json[input.name] = val;
+
+        if (window.oridata?.[input.name] !== val && !input.classList.contains("nb")) {
+            reboot = true;
         }
     });
+
     var div = Q("select[name=wifi]");
     json["wifi"] = div.value;
     console.log(JSON.stringify(json));
@@ -93,7 +91,7 @@ export function load() {
 
     Q("#submitsave").onclick = function(e) {
         e.preventDefault();
-        save();
+        saveSystemSettings();
         return false;
     };
 }

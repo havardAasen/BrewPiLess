@@ -1,4 +1,10 @@
-import { select, s_ajax, C2F, BrewMath, getActiveNavItem, JSVERSION } from "./shared";
+import {
+    select,
+    s_ajax,
+    C2F,
+    BrewMath,
+    updateNavbarVersion
+} from "./shared";
 import {mqttLoadSetting} from "./mqtt";
 
 var logurl = "log";
@@ -520,8 +526,7 @@ function serviceChange() {
 }
 
 export function init() {
-    getActiveNavItem();
-    select("#verinfo").innerHTML = "v" + JSVERSION;
+    updateNavbarVersion();
 
     function readingByTemp() {
         var temp = parseFloat(select("#watertemp").value);

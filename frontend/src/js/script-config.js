@@ -1,4 +1,4 @@
-import { byId, select, getActiveNavItem, s_ajax, JSVERSION } from './shared';
+import { byId, select, s_ajax, updateNavbarVersion } from './shared';
 import { BWF } from "./vendor/bwf";
 
 function formatIP(ip) {
@@ -81,10 +81,7 @@ export function saveSystemSettings() {
 }
 
 export function load() {
-    if (select("#verinfo")) {
-        select("#verinfo").innerHTML = "v" + JSVERSION;
-        getActiveNavItem();
-    }
+    updateNavbarVersion();
     loadSetting();
     Net.init();
 }

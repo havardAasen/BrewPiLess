@@ -1,4 +1,4 @@
-import { select, getActiveNavItem, JSVERSION, s_ajax } from './shared';
+import { select, s_ajax, updateNavbarVersion } from './shared';
 
 const gdcurl = "/gdc";
 
@@ -43,11 +43,7 @@ function save(): void {
 }
 
 export function init(): void {
-    getActiveNavItem();
-    const verinfo = select("#verinfo") as HTMLElement | null;
-    if (verinfo) {
-        verinfo.innerHTML = `v${JSVERSION}`;
-    }
+    updateNavbarVersion();
 
     s_ajax({
         url: gdcurl + "?data",

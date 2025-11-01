@@ -206,6 +206,15 @@ export function updateOriginGravity(og: number): void {
     if (typeof window.sg !== "undefined") updateGravity(window.sg);
 }
 
+export function updateNavbarVersion(): void{
+    const versionElement = select("#verinfo") as HTMLElement | null;
+
+    if (versionElement) {
+        versionElement.innerHTML = `v${JSVERSION}`;
+        getActiveNavItem();
+    }
+}
+
 export const ModeString = {
     o: "<%= mode_off %>",
     b: "<%= mode_beer_const %>",

@@ -5,12 +5,12 @@ import {
     formatDate,
     formatDateForPicker,
     openDlgLoading,
-    getActiveNavItem,
     JSVERSION,
     closeDlgLoading,
     F2C,
     C2F,
-    updateOriginGravity
+    updateOriginGravity,
+    updateNavbarVersion
 } from "./shared";
 import { Capper } from "./capper";
 import { BWF } from "./vendor/bwf";
@@ -855,7 +855,7 @@ function communicationError() {
 }
 
 export function initctrl() {
-    getActiveNavItem();
+    updateNavbarVersion();
     Capper.init();
     modekeeper.init();
     PTC.init(select("#ptc-control"));
@@ -877,7 +877,6 @@ export function initctrl() {
                 }
                 if (typeof c["ver"] != "undefined") {
                     if (JSVERSION != c["ver"]) alert("<%= script_control_version_mismatched %>");
-                    select("#verinfo").innerHTML = "v" + c["ver"];
                 }
                 if (typeof c["cap"] != "undefined")
                     Capper.status(c["cap"]);

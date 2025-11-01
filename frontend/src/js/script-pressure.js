@@ -1,4 +1,4 @@
-import { select, s_ajax } from "./shared";
+import { select, s_ajax, updateNavbarVersion } from "./shared";
 
 var PCTRL = {
     init: function() {
@@ -95,5 +95,6 @@ var PCTRL = {
 };
 
 export function loaded() {
+    updateNavbarVersion();
     PCTRL.init();
 }

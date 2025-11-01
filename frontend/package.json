@@ -13,7 +13,7 @@
   "devDependencies": {
     "@eslint/js": "^9.31.0",
     "@lodder/grunt-postcss": "^3.1.1",
-    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-terser": "^0.4.4",
     "autoprefixer": "^10.4.21",

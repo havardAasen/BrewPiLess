@@ -17,26 +17,25 @@ jobs:
           key: ${{ runner.os }}-pio
       - uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
+          python-version: '3.13'
 
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
 
       - name: Install dependencies for frontend
+        working-directory: frontend
         run: |
           sudo apt-get update && sudo apt-get install --yes --no-install-recommends \
               npm \
               xxd
 
-          npm install frontend/
+          npm ci
           command -v grunt > /dev/null || npm install --global grunt-cli
           npm install --global sass
 
       - name: Build frontend
         working-directory: frontend
-        run: |
-          grunt build -v
-          ./output.sh
+        run: npm run build
 
       - name: Build ${{ matrix.environment }}
         run: pio run -e ${{ matrix.environment }}

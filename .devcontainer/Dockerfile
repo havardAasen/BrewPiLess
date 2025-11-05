@@ -6,7 +6,6 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
     git \
     npm \
     python3-venv \
-    ruby-dev \
     xxd \
     && rm -rf /var/lib/apt/lists/*
 

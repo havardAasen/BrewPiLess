@@ -1,4 +1,4 @@
-FROM debian:bookworm
+FROM debian:trixie
 
 RUN apt-get update && apt-get install --yes --no-install-recommends \
     build-essential \
@@ -9,6 +9,6 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
     xxd \
     && rm -rf /var/lib/apt/lists/*
 
-RUN  curl -fLo /etc/udev/rules.d/99-platformio-udev.rules --create-dir https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/system/99-platformio-udev.rules
+RUN  curl -fLo /etc/udev/rules.d/99-platformio-udev.rules --create-dirs https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/system/99-platformio-udev.rules
 
 RUN python3 -c "$(curl -fsSL https://raw.githubusercontent.com/platformio/platformio/develop/scripts/get-platformio.py)"

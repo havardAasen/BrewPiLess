@@ -1,3 +1,5 @@
+@use "../import/vars";
+
 /** Buttons **/
 @use "sass:color";
 
@@ -23,7 +25,7 @@
 	margin-right: 8px;
 
 	&[disabled] {
-		color: $divider-color;
+		color: vars.$divider-color;
 		&:hover {
 			background-color: transparent;
 			cursor: not-allowed;
@@ -32,16 +34,16 @@
 }
 
 .btn--raised {
-	background-color: $primary-color;
+	background-color: vars.$primary-color;
 	color: #fff;
 	box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
 	&:hover {
-		background-color: color.adjust($primary-color, $lightness: -10%);
+		background-color: color.adjust(vars.$primary-color, $lightness: -10%);
 	}
 }
 
 .btn--primary {
-	color: $primary-color;
+	color: vars.$primary-color;
 }
 
 .btn:hover {

@@ -1,3 +1,5 @@
+@use "../import/vars";
+
 /** Switch **/
 
 .switch-input {
@@ -42,26 +44,26 @@
 	transform: translate(80%, -50%);
 }
 .switch-input:checked + label[for=beer-temp].switch-label:after {
-	background-color: $beer-temp-color;
+	background-color: vars.$beer-temp-color;
 }
 .switch-input:checked + label[for=beer-set].switch-label:after {
-	background-color: $beer-set-color;
+	background-color: vars.$beer-set-color;
 }
 .switch-input:checked + label[for=fridge-temp].switch-label:after {
-	background-color: $fridge-temp-color;
+	background-color: vars.$fridge-temp-color;
 }
 .switch-input:checked + label[for=fridge-set].switch-label:after {
-	background-color: $fridge-set-color;
+	background-color: vars.$fridge-set-color;
 }
 .switch-input:checked + label[for=room-temp].switch-label:after {
-	background-color: $room-temp-color;
+	background-color: vars.$room-temp-color;
 }
 .switch-input:checked + label[for=gravity].switch-label:after {
-	background-color: $gravity-color;
+	background-color: vars.$gravity-color;
 }
 .switch-input:checked + label[for=aux-temp].switch-label:after {
-	background-color: $aux-temp-color;
+	background-color: vars.$aux-temp-color;
 }
 .switch-input:checked + label[for=filtersg].switch-label:after {
-	background-color: $filtersg-color;
+	background-color: vars.$filtersg-color;
 }

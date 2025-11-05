@@ -1,6 +1,8 @@
+@use "../import/vars";
+
 @use "sass:math";
 
-$md-radio-checked-color: $primary-color;
+$md-radio-checked-color: vars.$primary-color;
 $md-radio-border-color: rgba(0, 0, 0, 0.54);
 $md-radio-size: 20px;
 $md-radio-checked-size: 10px; 

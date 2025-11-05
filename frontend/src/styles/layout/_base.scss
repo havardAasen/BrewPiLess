@@ -1,9 +1,12 @@
+@use "../import/mixins";
+@use "../import/vars";
+
 /** Header **/
 @use "sass:color";
 
 .header {
     height: 64px;
-    background: $primary-color;
+    background: vars.$primary-color;
     box-shadow: 0 0 4px rgba(0, 0, 0, .14), 0 4px 8px rgba(0, 0, 0, .28);
     padding: 0 16px;
     z-index: 2;
@@ -21,7 +24,7 @@
 }
 [navigation] {
     [menuToggle] {
-        @include for-tablet-portrait-down {
+        @include mixins.for-tablet-portrait-down {
             display: block;
             position: relative;
             z-index: 1;
@@ -31,7 +34,7 @@
     }
     input {
         display: none;
-        @include for-tablet-portrait-down {
+        @include mixins.for-tablet-portrait-down {
             display: block;
             width: 40px;
             height: 32px;
@@ -67,7 +70,7 @@
     }
     span {
         display: none;
-        @include for-tablet-portrait-down {
+        @include mixins.for-tablet-portrait-down {
             display: block;
             width: 33px;
             height: 4px;
@@ -106,13 +109,13 @@
             line-height: 48px;
             border-bottom: 3px solid transparent;
             &.active {
-                border-bottom: 3px solid $accent-color;
+                border-bottom: 3px solid vars.$accent-color;
             }
             &:hover {
                 border-bottom: 3px solid #FFF;
             }
         }
-        @include for-tablet-portrait-down {
+        @include mixins.for-tablet-portrait-down {
 			padding-top: 64px;
             position: fixed;
             display: block;
@@ -139,7 +142,7 @@
                 width: 100%;
                 display: block;
                 &.active {
-                    color: $accent-color;
+                    color: vars.$accent-color;
                     border: none;
                 }
                 &:hover {
@@ -167,7 +170,7 @@
 
 [viewport] {
     min-height: calc(100% - 104px);
-    @include for-tablet-landscape-down {
+    @include mixins.for-tablet-landscape-down {
         flex-direction: column !important;
         min-height: 0;
     }
@@ -175,16 +178,16 @@
 [main] {
     padding: 16px;
     overflow-y: auto;
-    @include for-tablet-landscape-down {
+    @include mixins.for-tablet-landscape-down {
         overflow: initial;
     }
     > [layout] {
         .chart-legend {
-            @include for-phone-only {
+            @include mixins.for-phone-only {
                 width: 100%;
             }
         }
-        @include for-phone-only {
+        @include mixins.for-phone-only {
             flex-direction: column !important;
         }
     }
@@ -216,19 +219,19 @@ input[type="datetime-local"] {
     display: block;
     border: none;
     padding: 18px 0 10px;
-    border-bottom: solid 1px $primary-color;
+    border-bottom: solid 1px vars.$primary-color;
     transition: all 0.3s cubic-bezier(.64, .09, .08, 1);
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 96%, $primary-color 4%);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 96%, vars.$primary-color 4%);
     background-position: -100% 0;
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    color: color.adjust($primary-color, $lightness: -20%);
+    color: color.adjust(vars.$primary-color, $lightness: -20%);
     &:focus {
         box-shadow: none;
         outline: none;
         background-position: 0 0;
         &::placeholder {
-            color: $primary-color;
+            color: vars.$primary-color;
             font-size: 11px;
             transform: translateY(-20px);
             visibility: visible !important;

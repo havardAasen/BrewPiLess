@@ -1,22 +1,22 @@
-@import 'import/vars';
-@import 'import/mixins';
-@import 'layout/reset';
-@import 'layout/typo';
-@import 'layout/layout';
-@import 'layout/base';
-@import 'ui-elements/buttons';
-@import 'ui-elements/card';
-@import 'ui-elements/modal';
-@import 'ui-elements/radio';
-@import 'ui-elements/switch';
-@import 'ui-elements/table';
-@import 'ui-elements/textarea';
+@use 'import/vars';
+@use 'import/mixins';
+@use 'layout/reset';
+@use 'layout/typo';
+@use 'layout/layout';
+@use 'layout/base';
+@use 'ui-elements/buttons';
+@use 'ui-elements/card';
+@use 'ui-elements/modal';
+@use 'ui-elements/radio';
+@use 'ui-elements/switch';
+@use 'ui-elements/table';
+@use 'ui-elements/textarea';
 .hint {
     padding-left: 140px;
     margin-top: 0;
     padding-top: 0;
     font-style: italic;
-    color: $secondary-text-color;
+    color: vars.$secondary-text-color;
     font-size: 12px;
 }
 

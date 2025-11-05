@@ -1,12 +1,12 @@
-@import 'import/vars';
-@import 'import/mixins';
-@import 'layout/reset';
-@import 'layout/typo';
-@import 'layout/layout';
-@import 'layout/base';
-@import 'ui-elements/switch';
-@import 'ui-elements/modal';
-@import 'ui-elements/buttons';
+@use 'import/vars';
+@use 'import/mixins';
+@use 'layout/reset';
+@use 'layout/typo';
+@use 'layout/layout';
+@use 'layout/base';
+@use 'ui-elements/switch';
+@use 'ui-elements/modal';
+@use 'ui-elements/buttons';
 
 /* Data panes */
 
@@ -16,7 +16,7 @@
     padding: 16px;
     overflow-y: auto;
     background: #EEE;
-    @include for-tablet-landscape-down {
+    @include mixins.for-tablet-landscape-down {
         width: 100%;
         order: 5;
     }
@@ -48,7 +48,7 @@
 .chart {
     width: calc(100% - 280px);
     height: 390px;
-    @include for-phone-only {
+    @include mixins.for-phone-only {
         width: 100%;
         margin-bottom: 16px;
     }

@@ -68,8 +68,9 @@ export function saveSystemSettings() {
     var url = "config" + (reboot ? "" : "?nb");
     s_ajax({
         url: url,
-        data: "data=" + encodeURIComponent(JSON.stringify(json)),
         m: "POST",
+        mime: "application/json",
+        data: JSON.stringify(json),
         success: function(data) {
             if (reboot) waitrestart();
         },

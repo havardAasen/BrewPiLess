@@ -17,6 +17,7 @@
             "extensions": [
                 "ms-vscode.cpptools",
                 "platformio.platformio-ide",
+                "prettier-vscode",
                 "streetsidesoftware.code-spell-checker"
             ]
         }

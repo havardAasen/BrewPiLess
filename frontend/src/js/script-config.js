@@ -64,7 +64,6 @@ export function saveSystemSettings() {
         }
     });
 
-    console.log(JSON.stringify(json));
     var url = "config" + (reboot ? "" : "?nb");
     s_ajax({
         url: url,

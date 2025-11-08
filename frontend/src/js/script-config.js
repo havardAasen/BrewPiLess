@@ -70,7 +70,7 @@ export function saveSystemSettings() {
         m: "POST",
         mime: "application/json",
         data: JSON.stringify(json),
-        success: function(data) {
+        success: function() {
             if (reboot) waitrestart();
         },
         fail: function(d) {
@@ -100,8 +100,6 @@ function validIP(ip) {
 
     return value;
 }
-
-function modechange(sel) {}
 
 export var Net = {
     select: function(l) {

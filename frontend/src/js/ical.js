@@ -1,4 +1,5 @@
 import { byId, select } from "./shared";
+import { BrewChart } from "chart-edit.js";
 import Dygraph from "dygraphs";
 import regression from 'regression';
 
@@ -160,14 +161,14 @@ import regression from 'regression';
     };
 
     function applyIgnoreMask() {
-        BChart.setIgnoredMask(PolyRegression.cal_igmask);
+        BrewChart.setIgnoredMask(PolyRegression.cal_igmask);
     }
 
     function openpolynomialpane() {
         select("#polynomialpane").style.display = "block";
-        PolyRegression.allpoints = BChart.chart.calibrationPoints;
-        PolyRegression.cal_igmask = BChart.chart.cal_igmask;
-        PolyRegression.plato = BChart.chart.plato;
+        PolyRegression.allpoints = BrewChart.chart.calibrationPoints;
+        PolyRegression.cal_igmask = BrewChart.chart.cal_igmask;
+        PolyRegression.plato = BrewChart.chart.plato;
         PolyRegression.show();
     }
 

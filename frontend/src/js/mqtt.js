@@ -39,7 +39,7 @@ function mqttSave() {
         url: "mqtt",
         data: "data=" + encodeURIComponent(JSON.stringify(json)),
         m: "POST",
-        success: function(data) {
+        success: function() {
             alert("<%= done %>!");
         },
         fail: function(d) {

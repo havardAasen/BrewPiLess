@@ -21,7 +21,7 @@ var PCTRL = {
                 select("#fpb").value = d.b;
                 select("#fpa").value = d.a;
             },
-            fail: function(b) {
+            fail: function() {
                 alert("failed to connect to BPL.");
             }
         });
@@ -42,10 +42,10 @@ var PCTRL = {
             m: "POST",
             mime: "application/x-www-form-urlencoded",
             data: "data=" + encodeURIComponent(json),
-            success: function(d) {
+            success: function() {
                 alert("<%= done %>")
             },
-            fail: function(d) {
+            fail: function() {
                 alert("<%= script_control_failed_to_save %>");
             }
         });

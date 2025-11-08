@@ -47,7 +47,7 @@ import { BWF } from "./vendor/bwf";
             s_ajax({
                 url: url,
                 m: "GET",
-                success: function(d) { window.npt = npt; },
+                success: function() { window.npt = npt; },
                 fail: function(d) {
                     alert("<%= script_fail_update_formula %>" + d);
                 }
@@ -98,7 +98,7 @@ import { BWF } from "./vendor/bwf";
             //	xhr.setRequestHeader("Content-length", PD.length);
             xhr.timeout = T_CHART_REQUEST;
             xhr.responseType = 'arraybuffer';
-            xhr.onload = function(e) {
+            xhr.onload = function() {
                 if (this.status == 404) {
                     console.log(" Error getting log data");
                     return;
@@ -165,7 +165,7 @@ import { BWF } from "./vendor/bwf";
                 }
                 if (t.timer == null) t.settimer();
             };
-            xhr.ontimeout = function(e) {
+            xhr.ontimeout = function() {
                 console.error("Timeout!" + (new Date()));
                 if (t.timer == null) setTimeout(function() {
                     t.reqdata();
@@ -547,7 +547,7 @@ import { BWF } from "./vendor/bwf";
             m: "POST",
             mime: "application/json",
             data: JSON.stringify(data),
-            success: function(d) {
+            success: function() {
                 closeDlgLoading();
                 setTimeout(function() {
                     // request to 
@@ -766,7 +766,7 @@ import { BWF } from "./vendor/bwf";
                     //BWF.send("l");
                 }, T_BWF_LCD);
             },
-            error: function(e) {
+            error: function() {
                 //console.log("error");
                 // when connection establishment fails 
                 // or connection broken

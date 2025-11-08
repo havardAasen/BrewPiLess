@@ -100,7 +100,7 @@ import { BrewChart } from "./chart-edit.js";
             //	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             //	xhr.setRequestHeader("Content-length", PD.length);
             xhr.responseType = 'arraybuffer';
-            xhr.onload = function(e) {
+            xhr.onload = function() {
                 if (this.status == 404) {
                     console.log("error getting log data.");
                     return;
@@ -126,7 +126,7 @@ import { BrewChart } from "./chart-edit.js";
                     alert("<%= script_viewer_invalid_log %>");
                 }
             };
-            xhr.ontimeout = function(e) {
+            xhr.ontimeout = function() {
                 console.error("Timeout!");
             };
             xhr.onerror = function() {

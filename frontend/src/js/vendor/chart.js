@@ -1,6 +1,7 @@
-import { byId, select } from "../shared";
+import { byId, select, C2F, BrewMath } from "../shared";
 import { BrewChart } from "../chart-edit.js";
 import Dygraph from "dygraphs";
+import regression from "regression";
 
 // gravity tracking
 export var GravityFilter = {
@@ -338,7 +339,7 @@ BrewChart.prototype.createChart = function() {
         highlightCallback: function(e, x, pts, row) {
             t.showLegend(x, row);
         },
-        unhighlightCallback: function(e) {
+        unhighlightCallback: function() {
             t.hideLegend();
         },
         underlayCallback: function(ctx, area, graph) {
@@ -480,13 +481,13 @@ BrewChart.prototype.getTiltAround = function(idx) {
 
     if (t.angles[idx] != null) return [t.angles[idx], t.data[idx][AuxTempLine]];
 
-    for (var i = idx - 1; i >= 0; i--) {
+    for (let i = idx - 1; i >= 0; i--) {
         if (t.angles[i] != null) {
             left = i;
             break;
         }
     }
-    for (var i = idx + 1; i < t.angles.length > 0; i++) {
+    for (let i = idx + 1; i < t.angles.length > 0; i++) {
         if (t.angles[i] != null) {
             right = i;
             break;
@@ -648,18 +649,18 @@ BrewChart.prototype.process = function(data) {
             }*/
 
         } else if (d0 == 0xF8) { //OG
-            var hh = data[i++];
-            var ll = data[i++];
-            var v = (hh & 0x7F) * 256 + ll;
+            const hh = data[i++];
+            const ll = data[i++];
+            const v = (hh & 0x7F) * 256 + ll;
             t.og = t.plato ? v / 100 : v / 10000;
         } else if (d0 == 0xFA) { //Ignored mask
-            var b2 = data[i++];
-            var b3 = data[i++];
+            const b2 = data[i++];
+            const b3 = data[i++];
             t.cal_igmask = (d1 << 14) + (b2 << 7) + b3;
         } else if (d0 == 0xF9) { //Tilt in water
-            var hh = data[i++];
-            var ll = data[i++];
-            var v = (hh & 0x7F) * 256 + ll;
+            const hh = data[i++];
+            const ll = data[i++];
+            const v = (hh & 0x7F) * 256 + ll;
             t.tiltInWater = v / 100;
             //
             if (t.plato) t.readingInWater = 0;

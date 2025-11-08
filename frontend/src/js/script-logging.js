@@ -233,7 +233,7 @@ function checkurl(t) {
 
 function checkformat(ta) {
     if (ta.value.length > 256) {
-        ta.value = t.value.substring(0, 256);
+        ta.value = ta.value.substring(0, 256);
     }
     select("#fmthint").innerHTML = "" + ta.value.length + "/256";
 }
@@ -362,7 +362,7 @@ function brewfather_set(r) {
     select("#brewfather-device").value = idmatch[1];
 }
 
-function brewfather_get(r) {
+function brewfather_get() {
     var uid = select("#brewfather-id").value.trim();
     var device = select("#brewfather-device").value.trim();
     if (!uid || !device) return null;
@@ -401,7 +401,7 @@ function brewersfriend_set(r) {
     }
 }
 
-function brewersfriend_get(r) {
+function brewersfriend_get() {
     let gf = "%g";
     let gu = "G";
     if (select('input[name="BF-gu"]:checked').value == "gu-plato") {

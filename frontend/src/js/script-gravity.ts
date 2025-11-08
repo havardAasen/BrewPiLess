@@ -1,10 +1,12 @@
-import { select, s_ajax, updateNavbarVersion } from './shared';
+import { select, s_ajax, updateNavbarVersion } from "./shared";
 
 const gdcurl = "/gdc";
 
 function fill(setting: Record<string, any>): void {
     for (const name in setting) {
-        const element = select(`input[name=${name}]`) as HTMLInputElement | null;
+        const element = select(
+            `input[name=${name}]`,
+        ) as HTMLInputElement | null;
         if (element) {
             if (element.type === "checkbox") {
                 element.checked = Boolean(setting[name]);
@@ -33,12 +35,12 @@ function save(): void {
         m: "POST",
         mime: "application/json",
         data: JSON.stringify(setting),
-        success: function(a: any) {
+        success: function (a: any) {
             alert("<%= done %>");
         },
-        fail: function(a: any) {
-            alert("<%= script_control_failed_updating_data %>" + a)
-        }
+        fail: function (a: any) {
+            alert("<%= script_control_failed_updating_data %>" + a);
+        },
     });
 }
 
@@ -48,12 +50,12 @@ export function init(): void {
     s_ajax({
         url: gdcurl + "?data",
         m: "GET",
-        success: function(a: string) {
+        success: function (a: string) {
             fill(JSON.parse(a));
         },
-        fail: function(a: any) {
+        fail: function (a: any) {
             //alert("failed getting data:" + a)
-        }
+        },
     });
 }
 

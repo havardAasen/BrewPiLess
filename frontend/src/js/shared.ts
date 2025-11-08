@@ -93,9 +93,9 @@ export var BrewMath = {
         return (
             sg *
             ((1.00130346 -
-                    0.000134722124 * t +
-                    0.00000204052596 * t * t -
-                    0.00000000232820948 * t * t * t) /
+                0.000134722124 * t +
+                0.00000204052596 * t * t -
+                0.00000000232820948 * t * t * t) /
                 (1.00130346 -
                     0.000134722124 * c +
                     0.00000204052596 * c * c -
@@ -103,7 +103,9 @@ export var BrewMath = {
         );
     },
     pTempCorrectionF(sg: number, t: number, c: number) {
-        return BrewMath.sg2pla(BrewMath.tempCorrectionF(BrewMath.pla2sg(sg), t, c));
+        return BrewMath.sg2pla(
+            BrewMath.tempCorrectionF(BrewMath.pla2sg(sg), t, c),
+        );
     },
     tempCorrection(celsius: boolean, sg: number, t: number, c: number) {
         return celsius
@@ -174,12 +176,12 @@ export function updateGravity(sg: number): void {
 
     const gravitySg = select("#gravity-sg");
     if (gravitySg) {
-      gravitySg.innerHTML = window.plato ? sg.toFixed(1) : sg.toFixed(3);
+        gravitySg.innerHTML = window.plato ? sg.toFixed(1) : sg.toFixed(3);
     }
 
     if (typeof window.og !== "undefined") {
-      const gravityAtt = select("#gravity-att");
-      const gravityAbv = select("#gravity-abv");
+        const gravityAtt = select("#gravity-att");
+        const gravityAbv = select("#gravity-abv");
 
         if (gravityAtt) {
             gravityAtt.innerHTML = window.plato
@@ -206,7 +208,7 @@ export function updateOriginGravity(og: number): void {
     if (typeof window.sg !== "undefined") updateGravity(window.sg);
 }
 
-export function updateNavbarVersion(): void{
+export function updateNavbarVersion(): void {
     const versionElement = select("#verinfo") as HTMLElement | null;
 
     if (versionElement) {

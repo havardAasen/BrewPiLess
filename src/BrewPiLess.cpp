@@ -156,7 +156,7 @@ const char *nocache_list[]={
 		else if(filename.endsWith(asyncsrv::T__gif)) return asyncsrv::T_image_gif;
 		else if(filename.endsWith(asyncsrv::T__jpg)) return asyncsrv::T_image_jpeg;
 		else if(filename.endsWith(asyncsrv::T__ico)) return asyncsrv::T_image_x_icon;
-		else if(filename.endsWith(asyncsrv::T__xml)) return asyncsrv::T_text_css;
+		else if(filename.endsWith(asyncsrv::T__xml)) return asyncsrv::T_text_xml;
 		else if(filename.endsWith(asyncsrv::T__pdf)) return asyncsrv::T_application_pdf;
 		else if(filename.endsWith(".zip")) return "application/zip";
 		else if(filename.endsWith(asyncsrv::T__gz)) return "application/gzip";

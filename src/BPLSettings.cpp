@@ -102,7 +102,7 @@ BPLSettings::isValidSystemConfiguration(const JsonDocument& doc)
     if (!isValidString(doc[KeyHostName], max_config_string_length)) return false;
     if (!isValidString(doc[KeyPageTitle], max_config_string_length)) return false;
 
-    if(std::strlen(doc[KeyHostName]) == 0 || doc[KeyWifi] == static_cast<std::uint8_t>(WIFI_OFF)) return false;
+    if(doc[KeyHostName][0] == '\0' || doc[KeyWifi] == static_cast<std::uint8_t>(WIFI_OFF)) return false;
 
     return true;
 }

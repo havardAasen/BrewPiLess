@@ -9,7 +9,7 @@ function updateInput(input, value) {
     if (input.classList.contains("iptype")) {
         input.value = formatIP(value);
     } else if (input.type === "checkbox") {
-        input.checked = value !== 0;
+        input.checked = value;
     } else {
         input.value = value;
     }
@@ -52,11 +52,17 @@ export function saveSystemSettings() {
     const inputs = document.querySelectorAll("#sysconfig input, #sysconfig select");
     let json = {};
     let reboot = false;
-
     inputs.forEach(input => {
         if (!input.id) return;
 
-        const val = input.type === "checkbox" ? (input.checked ? 1 : 0) : input.value.trim();
+        let val;
+        if (input.type === "checkbox") {
+            val = input.checked;
+        } else if (input.type === "number" || input.tagName === "SELECT") {
+            val = Number(input.value);
+        } else {
+            val = input.value.trim();
+        }
         json[input.id] = val;
 
         if (window.oridata?.[input.id] !== val && !input.classList.contains("nb")) {
@@ -68,8 +74,7 @@ export function saveSystemSettings() {
     s_ajax({
         url: url,
         m: "POST",
-        mime: "application/json",
-        data: JSON.stringify(json),
+        data: "data=" + encodeURIComponent(JSON.stringify(json)),
         success: function() {
             if (reboot) waitrestart();
         },

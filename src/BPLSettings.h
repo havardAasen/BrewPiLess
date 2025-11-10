@@ -21,9 +21,9 @@ struct SystemConfiguration {
     uint32_t  gw{IPAddress(0,0,0,0)};
     uint32_t  netmask{IPAddress(0,0,0,0)};
     uint16_t  port{80};
-    uint8_t passwordLcd{false};
-    uint8_t wifiMode{WIFI_AP_STA};
-    uint32_t dns{IPAddress(0,0,0,0)};
+    bool      passwordLcd{false};
+    uint8_t   wifiMode{WIFI_AP_STA};
+    uint32_t  dns{IPAddress(0,0,0,0)};
 };
 
 static_assert(sizeof(DEFAULT_USERNAME) <= sizeof(SystemConfiguration::username),

@@ -28,27 +28,27 @@
                     <h5><%= config_page_title %></h5>
                     <div layout horizontal cross-center>
                         <label for="aoff" class="inline-header h6"><%= config_lcd_auto_off %></label>
-                        <input id="aoff" type="text" size="5" maxlength="5" class="nb">
+                        <input id="aoff" type="number" min="0" class="nb">
                     </div>
                     <div layout horizontal cross-center>
                         <label for="title" class="inline-header h6"><%= config_title %></label>
-                        <input id="title" type="text" size="12" maxlength="24">
+                        <input id="title" type="text"  maxlength="31">
                     </div>
                     <div layout horizontal cross-center>
                         <label for="name" class="inline-header h6"><%= config_host_network_name %></label>
-                        <input id="name" type="text" size="12" maxlength="16">
+                        <input id="name" type="text" maxlength="31">
                     </div>
                     <div layout horizontal cross-center>
                         <label for="port" class="inline-header h6"><%= config_http_port %></label>
-                        <input id="port" type="text" size="5" maxlength="5">
+                        <input id="port" type="number" min="1" max="65535">
                     </div>
                     <div layout horizontal cross-center>
                         <label for="user" class="inline-header h6"><%= config_username %></label>
-                        <input id="user" type="text" size="12" maxlength="16">
+                        <input id="user" type="text" maxlength="31">
                     </div>
                     <div layout horizontal cross-center>
                         <label for="pass" class="inline-header h6"><%= config_password %></label>
-                        <input id="pass" type="password" size="12" maxlength="16">
+                        <input id="pass" type="password" maxlength="31">
                     </div>
                     <div layout horizontal cross-center>
                         <label class="inline-header h6"><%= config_always_password %></label>
@@ -59,9 +59,9 @@
                     <div layout horizontal cross-center>
                         <label for="wifi" class="inline-header h6"><%= config_network_mode %></label>
                         <select id="wifi">
-                            <option value="1"><%= config_station %></option>
-                            <option value="2"><%= config_ap %></option>
-                            <option value="3"><%= config_stationap %></option>
+                            <option value=1><%= config_station %></option>
+                            <option value=2><%= config_ap %></option>
+                            <option value=3><%= config_stationap %></option>
                         </select>
                     </div>
                     <div layout horizontal cross-center>

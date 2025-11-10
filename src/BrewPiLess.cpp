@@ -292,18 +292,6 @@ class BrewPiWebHandler: public AsyncWebHandler
 
 	void sendFile(AsyncWebServerRequest *request,const String& path)
 	{
-		//workaround for safari
-		if(path.endsWith(asyncsrv::T__js)){
-			String pathWithJgz = path.substring(0,path.lastIndexOf('.')) + ".jgz";
-			if(LittleFS.exists(pathWithJgz)){
-				AsyncWebServerResponse * response = request->beginResponse(LittleFS, pathWithJgz,asyncsrv::T_text_javascript);
-				response->addHeader(asyncsrv::T_Content_Encoding, asyncsrv::T_gzip);
-				response->addHeader("Cache-Control","max-age=2592000");
-				request->send(response);
-
-				return;
-			}
-		}
 		String pathWithGz = path + asyncsrv::T__gz;
 		if(LittleFS.exists(pathWithGz)){
 #if 0

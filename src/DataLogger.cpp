@@ -73,12 +73,12 @@ void DataLogger::sendData()
 		_http.begin(wifiClient,_loggingInfo->url);
 
  		if(_loggingInfo->contentType){
-  			_http.addHeader("Content-Type", _loggingInfo->contentType);
+  			_http.addHeader(asyncsrv::T_Content_Type, _loggingInfo->contentType);
  		}else{
-  			_http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+  			_http.addHeader(asyncsrv::T_Content_Type, asyncsrv::T_app_xform_urlencoded);
   		}
     // start connection and send HTTP header
-    	code = _http.sendRequest((_loggingInfo->method == mHTTP_POST)? "POST":"PUT",(uint8_t*)data,len);
+    	code = _http.sendRequest((_loggingInfo->method == mHTTP_POST)? asyncsrv::T_POST:asyncsrv::T_PUT,(uint8_t*)data,len);
     }else{
  			_http.begin(wifiClient,String(_loggingInfo->url) + String("?") + String(data));
     	code = _http.GET();

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <IPAddress.h>
 #include <FS.h>
+#include <literals.h>
 #include <LittleFS.h>
 #include <ESP8266WiFi.h>
 
@@ -556,9 +557,9 @@ bool BPLSettings::dejsonRemoteLogging(String json)
 	if(strlen(format) >= MaximumFormatLength) return false;
 	if(strlen(contentType)>=MaximumContentTypeLength) return false;
 
-	if(strcmp(method,"GET") ==0) logInfo->method = mHTTP_GET;
-	else if(strcmp(method,"POST") ==0) logInfo->method = mHTTP_POST;
-	else if(strcmp(method,"PUT") ==0)  logInfo->method = mHTTP_PUT;
+	if(strcmp(method,asyncsrv::T_GET) ==0) logInfo->method = mHTTP_GET;
+	else if(strcmp(method,asyncsrv::T_POST) ==0) logInfo->method = mHTTP_POST;
+	else if(strcmp(method,asyncsrv::T_PUT) ==0)  logInfo->method = mHTTP_PUT;
 	else return false;
 	strcpy(logInfo->url,url);
 	strcpy(logInfo->format,format);
@@ -579,9 +580,9 @@ String BPLSettings::jsonRemoteLogging()
 	doc["period"] = logInfo->period;
 	doc["service"] = logInfo->service;
 
-	if(logInfo->method ==mHTTP_GET) doc["method"]="GET";
-	else if(logInfo->method ==mHTTP_PUT) doc["method"]="PUT";
-	else if(logInfo->method ==mHTTP_POST) doc["method"]="POST";
+	if(logInfo->method ==mHTTP_GET) doc["method"]=asyncsrv::T_GET;
+	else if(logInfo->method ==mHTTP_PUT) doc["method"]=asyncsrv::T_PUT;
+	else if(logInfo->method ==mHTTP_POST) doc["method"]=asyncsrv::T_POST;
 
 	doc["url"]=(logInfo->url)? logInfo->url:"";
 	doc["format"]=(logInfo->format)? logInfo->format:"";

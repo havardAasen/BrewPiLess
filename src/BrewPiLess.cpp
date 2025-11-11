@@ -286,7 +286,7 @@ class BrewPiWebHandler: public AsyncWebHandler
     		memcpy_P((char*)buffer, html+alreadySent, strlen_P(html+alreadySent));
     		return strlen_P(html+alreadySent); // Return from here to end of indexhtml
  	 	});
- 	 	response->addHeader("Cache-Control","max-age=2592000");
+ 	 	response->addHeader(asyncsrv::T_Cache_Control,"max-age=2592000");
 		request->send(response);
 	}
 
@@ -318,7 +318,7 @@ class BrewPiWebHandler: public AsyncWebHandler
 			AsyncWebServerResponse * response = request->beginResponse(file, path,getContentType(path));
 #endif
 //			response->addHeader(asyncsrv::T_Content_Encoding, asyncsrv::T_gzip);
-			response->addHeader("Cache-Control","max-age=2592000");
+			response->addHeader(asyncsrv::T_Cache_Control,"max-age=2592000");
 			request->send(response);
 			return;
 		}
@@ -332,9 +332,9 @@ class BrewPiWebHandler: public AsyncWebHandler
 
 			AsyncWebServerResponse *response = request->beginResponse(LittleFS, path, "");
 			if(nocache)
-				response->addHeader("Cache-Control","no-cache");
+				response->addHeader(asyncsrv::T_Cache_Control, asyncsrv::T_no_cache);
 			else
-				response->addHeader("Cache-Control","max-age=2592000");
+				response->addHeader(asyncsrv::T_Cache_Control, "max-age=2592000");
 			request->send(response);
 			return;
 		}
@@ -345,9 +345,8 @@ class BrewPiWebHandler: public AsyncWebHandler
 		if (const uint8_t *file = getEmbeddedFile(path.c_str(), gzip, size)) {
 			assert(gzip == true && "All files must be gzipped");
 			DBG_PRINTF("using embedded file: '%s'\n",path.c_str());
-			const char *contentType = path.endsWith(asyncsrv::T__js) ? asyncsrv::T_text_javascript : asyncsrv::T_text_html;
-			AsyncWebServerResponse *response = request->beginResponse_P(200, contentType, file, size);
-			response->addHeader("Cache-Control","max-age=2592000");
+			AsyncWebServerResponse *response = request->beginResponse_P(200, getContentType(path), file, size);
+			response->addHeader(asyncsrv::T_Cache_Control,"max-age=2592000");
 			response->addHeader(asyncsrv::T_Content_Encoding, asyncsrv::T_gzip);
 			request->send(response);
 		}

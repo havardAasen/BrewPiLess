@@ -9,7 +9,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-multi-lang-site-generator');
-  grunt.loadNpmTasks('@lodder/grunt-postcss');
   grunt.loadNpmTasks('grunt-processhtml');
 
   const languages =  ['english', 'chinese', 'spanish', 'portuguese-br', 'slovak']
@@ -105,21 +104,12 @@ module.exports = function(grunt) {
     sass: {
       dev: {
         options: {
-          style: 'expanded'
+          style: 'expanded',
+          noSourceMap: true
         },
         files: [
           { expand: true, cwd: 'src/styles/', src: ['*.scss'], dest: './build/', ext: '.css' }
         ]
-      }
-    },
-
-    postcss: {
-      options: {
-        map: true,
-        processors: [ require('autoprefixer')() ]
-      },
-      dist: {
-        src: 'build/*.css'
       }
     },
 
@@ -205,8 +195,7 @@ module.exports = function(grunt) {
   grunt.registerTask('debug', [
     'shell:debug',
     'processhtml',
-    'sass:dev',
-    'postcss',
+    'sass',
     'comboall',
     'multi_lang_site_generator',
       ...multi_lang_js_gen,
@@ -216,8 +205,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', [
     'shell:debug',
     'processhtml',
-    'sass:dev',
-    'postcss',
+    'sass',
     'comboall',
     'multi_lang_site_generator',
       ...multi_lang_js_gen,
@@ -227,8 +215,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build', [
     'shell:prod',
     'processhtml',
-    'sass:dev',
-    'postcss',
+    'sass',
     'comboall',
     'htmlmin',
     'multi_lang_site_generator',

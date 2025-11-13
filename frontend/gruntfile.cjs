@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = function(grunt) {
-  grunt.loadNpmTasks('grunt-combo-html-css-js');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
@@ -82,25 +81,6 @@ module.exports = function(grunt) {
       }
     },
 
-    comboall: {
-      main: {
-        files: [
-          { 'dist/index.tmpl.htm': ['build/index.tmpl.html'] },
-          { 'dist/control.tmpl.htm': ['build/control.tmpl.html'] },
-          { 'dist/setup.tmpl.htm': ['build/setup.tmpl.html'] },
-          { 'dist/gravity.tmpl.htm': ['build/gravity.tmpl.html'] },
-          { 'dist/logging.tmpl.htm': ['build/logging.tmpl.html'] },
-          { 'dist/config.tmpl.htm': ['build/config.tmpl.html'] },
-          { 'dist/pressure.tmpl.htm': ['build/pressure.tmpl.html'] },
-          { 'dist/BPLLogViewer.tmpl.htm': ['build/BPLLogViewer.tmpl.html'] },
-          { 'dist/BPLog.tmpl.htm': ['build/BPLog.tmpl.html'] },
-          { 'dist/lcd.htm': ['build/lcd.html']},
-          { 'dist/testcmd.htm': ['src/testcmd.html']},
-          { 'dist/edit.htm': ['src/edit.html']}
-        ]
-      }
-    },
-
     sass: {
       dev: {
         options: {
@@ -144,18 +124,18 @@ module.exports = function(grunt) {
     processhtml: {
       dist: {
         files: {
-          'build/index.tmpl.html': ['src/index.tmpl.html'],
-          'build/control.tmpl.html': ['src/control.tmpl.html'],
-          'build/setup.tmpl.html': ['src/setup.tmpl.html'],
-          'build/gravity.tmpl.html': ['src/gravity.tmpl.html'],
-          'build/logging.tmpl.html': ['src/logging.tmpl.html'],
-          'build/config.tmpl.html': ['src/config.tmpl.html'],
-          'build/pressure.tmpl.html': ['src/pressure.tmpl.html'],
-          'build/BPLLogViewer.tmpl.html': ['src/BPLLogViewer.tmpl.html'],
-          'build/BPLog.tmpl.html': ['src/BPLog.tmpl.html'],
-          'build/lcd.html': ['src/lcd.html'],
-          'build/testcmd.html': ['src/testcmd.html'],
-          'build/edit.html': ['src/edit.html']
+          'dist/index.tmpl.htm': ['src/index.tmpl.html'],
+          'dist/control.tmpl.htm': ['src/control.tmpl.html'],
+          'dist/setup.tmpl.htm': ['src/setup.tmpl.html'],
+          'dist/gravity.tmpl.htm': ['src/gravity.tmpl.html'],
+          'dist/logging.tmpl.htm': ['src/logging.tmpl.html'],
+          'dist/config.tmpl.htm': ['src/config.tmpl.html'],
+          'dist/pressure.tmpl.htm': ['src/pressure.tmpl.html'],
+          'dist/BPLLogViewer.tmpl.htm': ['src/BPLLogViewer.tmpl.html'],
+          'dist/BPLog.tmpl.htm': ['src/BPLog.tmpl.html'],
+          'dist/lcd.htm': ['src/lcd.html'],
+          'dist/testcmd.htm': ['src/testcmd.html'],
+          'dist/edit.htm': ['src/edit.html']
         }
       }
     },
@@ -196,7 +176,6 @@ module.exports = function(grunt) {
     'shell:debug',
     'processhtml',
     'sass',
-    'comboall',
     'multi_lang_site_generator',
       ...multi_lang_js_gen,
     'compress'
@@ -206,7 +185,6 @@ module.exports = function(grunt) {
     'shell:debug',
     'processhtml',
     'sass',
-    'comboall',
     'multi_lang_site_generator',
       ...multi_lang_js_gen,
     'watch'
@@ -216,7 +194,6 @@ module.exports = function(grunt) {
     'shell:prod',
     'processhtml',
     'sass',
-    'comboall',
     'htmlmin',
     'multi_lang_site_generator',
     ...multi_lang_js_gen,

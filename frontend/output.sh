@@ -13,9 +13,9 @@ variables=(data_index_htm_gz control_htm_gz config_htm_gz setup_htm_gz logging_h
 outfiles=(index_htm control_htm config_htm setup_htm log_htm gdc_htm pressure_htm bundle_js)
 languages=(english spanish portuguese-br slovak chinese)
 
-non_translated_files=(lcd.htm.gz edit.htm.gz testcmd.htm.gz)
-non_translated_variables=(lcd_htm_gz edit_htm_gz testcmd_htm_gz)
-non_translated_out=(lcd_htm edit_html_gz testcmd_htm)
+non_translated_files=(lcd.htm.gz edit.htm.gz testcmd.htm.gz styles.min.css)
+non_translated_variables=(lcd_htm_gz edit_htm_gz testcmd_htm_gz data_styles_min_css)
+non_translated_out=(lcd_htm edit_html_gz testcmd_htm styles_min_css)
 
 gen_C_file()
 {

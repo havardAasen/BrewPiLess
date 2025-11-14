@@ -46,8 +46,10 @@ constexpr char file_testcmd_htm [] PROGMEM="/testcmd.htm";
 
 
 constexpr char file_lcd_htm [] PROGMEM="/lcd";
+constexpr char file_styles_min_css [] PROGMEM="/styles.min.css";
 
 #include "lcd_htm.h"
+#include "styles_min_css.h"
 
 #include IndexHtmFile
 #include ControlHtmFile
@@ -70,6 +72,7 @@ constexpr char file_pressure [] PROGMEM="/pressure.htm";
 EmbeddedFileMapEntry fileMaps[]={
 {file_index_htm,data_index_htm_gz,sizeof(data_index_htm_gz),true},
 {file_bundle_js,data_bundle_js,sizeof(data_bundle_js),true},
+{file_styles_min_css, data_styles_min_css, sizeof(data_styles_min_css), true},
 {file_control_htm,control_htm_gz,sizeof(control_htm_gz),true},
 {file_setup_htm,setup_htm_gz,sizeof(setup_htm_gz),true},
 {file_logconfig,logging_htm_gz,sizeof(logging_htm_gz),true},

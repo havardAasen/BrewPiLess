@@ -31,7 +31,6 @@ jobs:
 
           npm ci
           command -v grunt > /dev/null || npm install --global grunt-cli
-          npm install --global sass
 
       - name: Build frontend
         working-directory: frontend

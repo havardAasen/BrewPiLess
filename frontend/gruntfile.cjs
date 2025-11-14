@@ -4,7 +4,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
-  grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-multi-lang-site-generator');
@@ -12,6 +12,10 @@ module.exports = function(grunt) {
 
   const languages =  ['english', 'chinese', 'spanish', 'portuguese-br', 'slovak']
   const translations = {}
+
+  const copyCssCommand = languages
+    .map(lang => `cp dist/styles.min.css dist/${lang}/`)
+    .join(' && ');
 
   languages.forEach(language => {
     translations[language] = grunt.file.readJSON(`src/locales/${language}.json`)
@@ -49,6 +53,9 @@ module.exports = function(grunt) {
       },
       prod: {
         command: 'NODE_ENV=production rollup -c'
+      },
+      copyCSS: {
+        command: copyCssCommand
       }
     },
 
@@ -82,14 +89,25 @@ module.exports = function(grunt) {
     },
 
     sass: {
-      dev: {
+      options: {
+        implementation: require('sass'),
+        sourceMap: false
+      },
+      debug: {
         options: {
           style: 'expanded',
-          noSourceMap: true
         },
-        files: [
-          { expand: true, cwd: 'src/styles/', src: ['*.scss'], dest: './build/', ext: '.css' }
-        ]
+        files: {
+          'dist/styles.min.css': 'src/styles/main.scss'
+        }
+      },
+      prod: {
+        options: {
+          style: 'compressed',
+        },
+        files: {
+          'dist/styles.min.css': 'src/styles/main.scss'
+        }
       }
     },
 
@@ -116,6 +134,11 @@ module.exports = function(grunt) {
             src: ['dist/**/*.js'],
             dest: '.',
             ext: '.js'  // keep the same name for consistent HTML reference
+          },
+          {
+            expand: true,
+            src: ['dist/styles.min.css'],
+            dest: '.',
           }
         ]
       }
@@ -175,28 +198,31 @@ module.exports = function(grunt) {
   grunt.registerTask('debug', [
     'shell:debug',
     'processhtml',
-    'sass',
+    'sass:debug',
     'multi_lang_site_generator',
       ...multi_lang_js_gen,
-    'compress'
+    'compress',
+    'shell:copyCSS'
   ]);
 
   grunt.registerTask('default', [
     'shell:debug',
     'processhtml',
-    'sass',
+    'sass:debug',
     'multi_lang_site_generator',
       ...multi_lang_js_gen,
+    'shell:copyCSS',
     'watch'
   ]);
 
   grunt.registerTask('build', [
     'shell:prod',
     'processhtml',
-    'sass',
+    'sass:prod',
     'htmlmin',
     'multi_lang_site_generator',
     ...multi_lang_js_gen,
-    'compress'
+    'compress',
+    'shell:copyCSS'
   ]);
 };

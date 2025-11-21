@@ -1,14 +1,21 @@
 export const JSVERSION = "3.6";
 
-export const select = document.querySelector.bind(document);
-export const byId = document.getElementById.bind(document);
+export function select<T extends Element = HTMLElement>(
+    selector: string,
+): T | null {
+    return document.querySelector(selector) as T | null;
+}
+
+export function byId<T extends Element = HTMLElement>(id: string): T | null {
+    return document.getElementById(id) as T | null;
+}
 
 interface AjaxOptions {
     url: string;
     m: string; // HTTP method: "GET", "POST", etc.
     data?: Document | XMLHttpRequestBodyInit | null | undefined;
     mime?: string;
-    success: (response: string) => void;
+    success?: (response: string) => void;
     error?: (status: number, statusText: string, response: string) => void;
     timeout?: () => void;
     fail?: (event: ProgressEvent | number) => void;
@@ -20,7 +27,7 @@ export function s_ajax(b: AjaxOptions) {
     c.onreadystatechange = () => {
         if (c.readyState == 4) {
             if (c.status >= 200 && c.status < 300) {
-                b.success(c.responseText);
+                b.success?.(c.responseText);
             } else if (typeof b.error === "function") {
                 b.error(c.status, c.statusText, c.responseText);
             }

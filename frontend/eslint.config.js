@@ -6,33 +6,34 @@ import eslintConfigPrettier from "eslint-config-prettier/flat";
 
 
 export default defineConfig([
-  globalIgnores(["dist/"]),
+  globalIgnores(["dist/", "node_modules/"]),
   {
-    files: ["src/js/**/*.{js,mjs,cjs}"],
-    plugins: { js }, extends: ["js/recommended"]
-  },
-  {
-    files: ["src/js/**/*.{js,mjs,cjs}"],
     languageOptions: {
-      globals: globals.browser
-    }
+      globals: {
+        ...globals.browser
+      },
+    },
   },
-
+  {
+    files: ["src/js/**/*.{js,mjs,cjs}"],
+    plugins: {
+      js
+    },
+    extends: ["js/recommended"]
+  },
   {
     files: ["src/js/**/*.{ts,tsx}"],
+    extends: [tseslint.configs.recommended, tseslint.configs.stylistic],
     plugins: {
       "@typescript-eslint": tseslint.plugin,
     },
     languageOptions: {
       parser: tseslint.parser,
-      parserOptions: {
-        project: "./tsconfig.json",
-      },
-      globals: globals.browser,
+      parserOptions: {},
     },
     rules: {
-      ...tseslint.configs.recommended.rules,
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
-    eslintConfigPrettier,
+  eslintConfigPrettier,
 ]);

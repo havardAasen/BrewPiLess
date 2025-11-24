@@ -5,3 +5,6 @@
 .gcc-flags.json
 .vscode/
 .DS_Store
+cheader/
+dist/
+node_modules/

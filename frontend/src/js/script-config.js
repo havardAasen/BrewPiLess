@@ -172,17 +172,17 @@ export var Net = {
         return false;
     },
     save: function() {
-        var data = "nw=" + encodeURIComponent(select("#ssid").value);
-        if (select("#nwpass").value != "") data = data + "&pass=" + encodeURIComponent(select("#nwpass").value);
-        var ip = validIP(select("#staticip").value);
-        var gw = validIP(select("#gateway").value);
-        var nm = validIP(select("#netmask").value);
-        var dns = validIP(select("#dns").value);
+        var data = "nw=" + encodeURIComponent(byId("ssid").value);
+        if (byId("nwpass").value != "") data = data + "&pass=" + encodeURIComponent(byId("nwpass").value);
+        var ip = validIP(byId("ip").value);
+        var gw = validIP(byId("gw").value);
+        var nm = validIP(byId("mask").value);
+        var dns = validIP(byId("dns").value);
         if (ip && gw && nm) {
-            data = data + "&ip=" + select("#staticip").value.trim() +
-                "&gw=" + select("#gateway").value.trim() +
-                "&nm=" + select("#netmask").value.trim() +
-                "&dns=" + select("#dns").value.trim();
+            data = data + "&ip=" + byId("ip").value.trim() +
+                "&gw=" + byId("gw").value.trim() +
+                "&nm=" + byId("mask").value.trim() +
+                "&dns=" + byId("dns").value.trim();
         }
         s_ajax({
             m: "POST",

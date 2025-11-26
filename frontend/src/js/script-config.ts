@@ -1,4 +1,4 @@
-import { byId, select, s_ajax, updateNavbarVersion } from './shared';
+import { byId, select, s_ajax, updateNavbarVersion } from "./shared";
 import { BWF } from "./vendor/bwf";
 
 function formatIP(ip: string): string {
@@ -50,14 +50,14 @@ function waitrestart() {
 }
 
 export function saveSystemSettings(): void {
-    const inputs = document.querySelectorAll<HTMLInputElement | HTMLSelectElement>(
-        "#sysconfig input, #sysconfig select"
-    );
+    const inputs = document.querySelectorAll<
+        HTMLInputElement | HTMLSelectElement
+    >("#sysconfig input, #sysconfig select");
 
     const json: Record<string, string | number | boolean> = {};
     let reboot = false;
 
-    inputs.forEach(input => {
+    inputs.forEach((input) => {
         if (!input.id) return;
 
         let val: string | number | boolean;
@@ -73,7 +73,10 @@ export function saveSystemSettings(): void {
         }
         json[input.id] = val;
 
-        if (window.oridata?.[input.id] !== val && !input.classList.contains("nb")) {
+        if (
+            window.oridata?.[input.id] !== val &&
+            !input.classList.contains("nb")
+        ) {
             reboot = true;
         }
     });
@@ -83,7 +86,7 @@ export function saveSystemSettings(): void {
         url: url,
         m: "POST",
         data: "data=" + encodeURIComponent(JSON.stringify(json)),
-        success: function() {
+        success: function () {
             if (reboot) waitrestart();
         },
         fail(err): void {
@@ -97,7 +100,6 @@ export function load(): void {
     loadSetting();
     Net.init();
 }
-
 
 function validIP(ip: string): false | string {
     const parts = ip.split(".");
@@ -124,7 +126,8 @@ export const Net = {
     litem: null as HTMLElement | null,
 
     select(l: HTMLElement): boolean {
-        byId<HTMLInputElement>('ssid')!.value = l.innerText || l.textContent || "";
+        byId<HTMLInputElement>("ssid")!.value =
+            l.innerText || l.textContent || "";
         return false;
     },
 
@@ -190,7 +193,8 @@ export const Net = {
     },
 
     save(): boolean {
-        let data = "nw=" + encodeURIComponent(byId<HTMLInputElement>("ssid")!.value);
+        let data =
+            "nw=" + encodeURIComponent(byId<HTMLInputElement>("ssid")!.value);
         const pass = byId<HTMLInputElement>("nwpass")!.value;
         if (pass !== "") data += "&pass=" + encodeURIComponent(pass);
 

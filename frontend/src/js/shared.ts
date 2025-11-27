@@ -133,9 +133,9 @@ declare global {
 }
 
 Date.prototype.shortLocalizedString = function (): string {
-    var y = this.getFullYear();
-    var re = new RegExp("[^d]?" + y + "[^d]?");
-    var n = this.toLocaleDateString();
+    const y = this.getFullYear();
+    const re = new RegExp("[^d]?" + y + "[^d]?");
+    const n = this.toLocaleDateString();
     const dateString = n.replace(re, "");
     const hours = this.getHours().toString().padStart(2, "0");
     const minutes = this.getMinutes().toString().padStart(2, "0");
@@ -144,9 +144,9 @@ Date.prototype.shortLocalizedString = function (): string {
 };
 
 export function getActiveNavItem() {
-    var path = window.location.pathname.split("/").pop();
+    let path = window.location.pathname.split("/").pop();
     if (path == "") path = "index.htm";
-    var element = select('.options>li>a[href="/' + path + '"]');
+    const element = select('.options>li>a[href="/' + path + '"]');
     if (element) element.className += "active";
 }
 
@@ -162,8 +162,8 @@ export function formatDate(date: Date) {
 }
 
 export function formatDateForPicker(date: Date) {
-    var h = date.getHours();
-    var m = date.getMinutes();
+    const h = date.getHours();
+    const m = date.getMinutes();
 
     return (
         date.getFullYear() +

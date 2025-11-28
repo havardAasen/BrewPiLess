@@ -41,8 +41,8 @@ function loadSetting() {
 }
 
 function waitrestart() {
-    select<HTMLDivElement>("#waitprompt")!.style.display = "block";
-    select<HTMLDivElement>("#inputform")!.style.display = "none";
+    byId<HTMLDivElement>("waitprompt")!.style.display = "block";
+    byId<HTMLDivElement>("inputform")!.style.display = "none";
 
     setTimeout(() => {
         window.location.reload();
@@ -143,10 +143,10 @@ export const Net = {
             this.list(data.list);
         } else if (typeof data["ssid"] != "undefined") {
             if (data.ssid != "") {
-                select<HTMLElement>("#connected-ssid")!.innerHTML = data.ssid;
+                byId<HTMLElement>("connected-ssid")!.innerHTML = data.ssid;
             }
             if (typeof data["ip"] !== "undefined" && data.ip !== "") {
-                select("#sta-ip")!.innerHTML = data.ip;
+                byId("sta-ip")!.innerHTML = data.ip;
             }
         }
     },
@@ -156,7 +156,7 @@ export const Net = {
     },
 
     list(nwlist: NetworkEntry[]): void {
-        const nws = select("#networks");
+        const nws = byId("networks");
         if (!nws || !this.litem) return;
 
         nws.innerHTML = "";
@@ -183,7 +183,7 @@ export const Net = {
     },
 
     scan(): boolean {
-        select<HTMLElement>("#networks")!.innerHTML = "Scanning...";
+        byId<HTMLElement>("networks")!.innerHTML = "Scanning...";
 
         s_ajax({
             m: "GET",
@@ -217,10 +217,10 @@ export const Net = {
         return false;
     },
     show(): void {
-        select<HTMLElement>("#networkselection")!.style.display = "block";
+        byId<HTMLElement>("networkselection")!.style.display = "block";
     },
     hide(): void {
-        select<HTMLElement>("#networkselection")!.style.display = "none";
+        byId<HTMLElement>("networkselection")!.style.display = "none";
     },
 };
 

@@ -77,7 +77,7 @@ export function closeDlgLoading(): void {
     if (dlg) dlg.style.display = "none";
 }
 
-export var BrewMath = {
+export const BrewMath = {
     abv: function (og: number, fg: number) {
         return (((76.08 * (og - fg)) / (1.775 - og)) * (fg / 0.794)).toFixed(1);
     },

@@ -35,7 +35,7 @@ function save(): void {
         m: "POST",
         mime: "application/json",
         data: JSON.stringify(setting),
-        success: function (a: any) {
+        success: function () {
             alert("<%= done %>");
         },
         fail: function (a: any) {
@@ -53,7 +53,7 @@ export function init(): void {
         success: function (a: string) {
             fill(JSON.parse(a));
         },
-        fail: function (a: any) {
+        fail: function () {
             //alert("failed getting data:" + a)
         },
     });

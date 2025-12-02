@@ -1,6 +1,5 @@
 import { select, s_ajax } from "./shared";
 
-var valueurl = "/ptc";
 var saveurl = "/ptc"
 
 export var PTC = {
@@ -28,7 +27,7 @@ export var PTC = {
             m: "POST",
             mime: "application/x-www-form-urlencoded",
             data: "c=" + encodeURI(JSON.stringify(setting)),
-            success: function(a) {
+            success: function() {
                 alert("done.");
             },
             fail: function(a) {

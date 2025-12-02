@@ -96,7 +96,7 @@ function device_apply(a) {
         unblockscreen();
     }, 5000);
 
-    BWF.on("U", function(d) {
+    BWF.on("U", function() {
         if (tout) clearTimeout(tout);
         unblockscreen();
     });
@@ -140,7 +140,7 @@ export function restore() {
     BWF.load(BackupFile, function(c) {
         var b = JSON.parse(c);
         var a = 0;
-        BWF.on("U", function(d) {
+        BWF.on("U", function() {
             if (++a >= b.length) {
                 BWF.on("U", null);
                 unblockscreen();
@@ -197,7 +197,7 @@ export function init() {
     window.owContainer = detachNode(".device-container.ow-device");
 
     BWF.init({
-        error: function(a) {
+        error: function() {
             //                alert("error communication between server")
         },
         handlers: {

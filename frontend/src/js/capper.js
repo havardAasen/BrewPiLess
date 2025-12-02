@@ -124,10 +124,10 @@ export var Capper = {
         s_ajax({
             url: "cap?" + arg,
             m: "GET",
-            success: function(b) {
+            success: function() {
                 alert("<%= done %>!");
             },
-            fail: function(a) {
+            fail: function() {
                 alert("<%= capper_failed_set_capper %>");
             }
         })

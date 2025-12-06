@@ -23,11 +23,10 @@ function TabPane(modes) {
         t.cmode = m;
     }
 
-    for (var i = 0; i < modes.length; i++) {
-        var m = modes[i];
-        byId(m + "-s").style.display = "none";
-        byId(m + "-m").onclick = function () {
-            var tm = this.id.replace(/-m$/, "");
+    for (const mode of modes) {
+        byId(mode + "-s").style.display = "none";
+        byId(mode + "-m").onclick = function () {
+            const tm = this.id.replace(/-m$/, "");
             //deselect current selected
             dselect(t.cmode);
             // select current
@@ -46,15 +45,15 @@ export var Capper = {
     hidepset: function (hide) {
         this.psi_valid = !hide;
         var psets = document.querySelectorAll(".psi-set-group");
-        for (var i = 0; i < psets.length; i++) {
-            psets[i].style.display = hide ? "none" : "block";
+        for (const ps of psets) {
+            ps.style.display = hide ? "none" : "block";
         }
     },
     setpsi: function (psi) {
         this.target_psi = psi;
         var psets = document.querySelectorAll(".cappressure");
-        for (var i = 0; i < psets.length; i++) {
-            psets[i].value = psi;
+        for (const ps of psets) {
+            ps.value = psi;
         }
     },
     init: function () {
@@ -113,9 +112,9 @@ export var Capper = {
             }
         };
         t.hidepset(true);
-        var psets = document.querySelectorAll(".cappressure");
-        for (var i = 0; i < psets.length; i++) {
-            psets[i].onchange = function () {
+        const psets = document.querySelectorAll(".cappressure");
+        for (const ps of psets) {
+            ps.onchange = function () {
                 t.setpsi(this.value);
             };
         }
@@ -164,12 +163,19 @@ export var Capper = {
 
             this.setcap(capst["c"]);
             // info: cap condition
-            var IDs = ["", "cs-manopen", "cs-mancap", "cs-timecon", "cs-sgcon"];
-            for (var i = 1; i < IDs.length; i++) {
-                if (i == capst.m)
-                    select("#" + IDs[i]).style.display = "inline-block";
-                else select("#" + IDs[i]).style.display = "none";
-            }
+            const IDs = [
+                "",
+                "cs-manopen",
+                "cs-mancap",
+                "cs-timecon",
+                "cs-sgcon",
+            ];
+            IDs.forEach((id, index) => {
+                if (!id) return;
+
+                select(`#${id}`).style.display =
+                    index === capst.m ? "inline-block" : "none";
+            });
 
             if (typeof capst["g"] != "undefined")
                 select("#capgravityset").innerHTML = capst["g"];

@@ -5,6 +5,7 @@
 #include "BrewKeeper.h"
 #include "BrewLogger.h"
 #include "BPLSettings.h"
+#include "TemperatureFormats.h"
 
 #if BREWPI_EXTERNAL_SENSOR
 #include "TempSensorWireless.h"
@@ -12,10 +13,6 @@
 
 #define INVALID_VOLTAGE -1
 #define INVALID_GRAVITY -1
-#ifdef INVALID_TEMP
-#undef INVALID_TEMP
-#endif
-#define INVALID_TEMP  -250
 
 inline bool isTiltAngleValid(const float angle) { return angle > 0; }
 #define IsVoltageValid(v) ((v) > 0)

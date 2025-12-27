@@ -25,15 +25,12 @@ inline bool isTiltAngleValid(const float angle) { return angle > 0; }
 #define GavityDeviceConfigFilename "/gdconfig"
 #define MAX_CONFIGDATA_SIZE 256
 
-#define MimimumDifference 0.0000001
-
 #define ErrorNone 0
 #define ErrorAuthenticateNeeded 1
 #define ErrorJSONFormat 2
 #define ErrorMissingField 3
 #define ErrorUnknownSource 4
 
-#define C2F(t) ((t)*1.8+32)
 
 class SimpleFilter
 {

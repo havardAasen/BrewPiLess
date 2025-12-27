@@ -41,7 +41,6 @@
 using fixed7_9 = int16_t ; // fixed7_9 uses 7 signed int bits and 9 fraction bits
 using fixed23_9 = int32_t ; // fixed23_9 uses 23 signed int bits and 9 fraction bits. Used when results can overflow
 using fixed7_25 = int32_t ; // fixed7_25 uses 7 signed int bits and 25 fraction bits. Used when extra precision is needed
-using fixed12_4 = int16_t ; // 1 sign bit, 11 integer bits, and 4 fraction bits - encoding returned by DS18B20 sensors.
 using fixed4_4 = int8_t ; // fixed4_4 uses 1-sign bit, 3 int bits and 4 fraction bits. Corresponds with precision of DS18B20 sensors
 
 #define INVALID_TEMP -32768
@@ -54,7 +53,6 @@ using fixed4_4 = int8_t ; // fixed4_4 uses 1-sign bit, 3 int bits and 4 fraction
 
 
 /* Temperature expressed as an integer. */
-using temp_int = int8_t;
 using temperature = fixed7_9;
 using long_temperature = fixed23_9;
 using temperature_precise = fixed7_25;
@@ -65,18 +63,6 @@ using temperature_precise = fixed7_25;
 #define TEMP_PRECISE_EXTRA_FRACTION_BITS 16
 
 #if 0
-
-inline int8_t tempToInt(temperature val) {
-    return int8_t((val - C_OFFSET) >> TEMP_FIXED_POINT_BITS);
-}
-
-inline int16_t longTempToInt(long_temperature val) {
-    return int16_t((val - C_OFFSET) >> TEMP_FIXED_POINT_BITS);
-}
-
-inline int8_t tempDiffToInt(temperature val) {
-    return int8_t((val) >> TEMP_FIXED_POINT_BITS);
-}
 
 inline int16_t longTempDiffToInt(long_temperature val) {
     return int16_t((val) >> TEMP_FIXED_POINT_BITS);
@@ -94,10 +80,6 @@ inline temperature doubleToTemp(double temp) {
     return (temp * TEMP_FIXED_POINT_SCALE + C_OFFSET) >= MAX_TEMP ? MAX_TEMP : (temp * TEMP_FIXED_POINT_SCALE + C_OFFSET) <= MIN_TEMP ? MIN_TEMP : temperature(temp * TEMP_FIXED_POINT_SCALE + C_OFFSET);
 }
 
-inline long_temperature intToLongTemp(int16_t val) {
-    return (long_temperature(val) << TEMP_FIXED_POINT_BITS) +C_OFFSET;
-}
-
 inline temperature tempPreciseToRegular(temperature_precise val) {
     return val >> TEMP_PRECISE_EXTRA_FRACTION_BITS;
 }
@@ -106,16 +88,12 @@ inline temperature_precise tempRegularToPrecise(temperature val) {
     return temperature_precise(val) << TEMP_PRECISE_EXTRA_FRACTION_BITS;
 }
 #else
-#define tempToInt(val) ((val - C_OFFSET)>>TEMP_FIXED_POINT_BITS)
-#define longTempToInt(val) ((val - C_OFFSET)>>TEMP_FIXED_POINT_BITS)
-#define tempDiffToInt(val) ((val)>>TEMP_FIXED_POINT_BITS)
 #define longTempDiffToInt(val) ((val)>>TEMP_FIXED_POINT_BITS)
 
 
 #define intToTemp(val) ((temperature(val)<<TEMP_FIXED_POINT_BITS) + C_OFFSET)
 #define intToTempDiff(val) ((temperature(val)<<TEMP_FIXED_POINT_BITS))
 #define doubleToTemp(temp) ((temp*TEMP_FIXED_POINT_SCALE + C_OFFSET)>=MAX_TEMP ? MAX_TEMP : (temp*TEMP_FIXED_POINT_SCALE + C_OFFSET)<=MIN_TEMP ? MIN_TEMP : temperature(temp*TEMP_FIXED_POINT_SCALE + C_OFFSET))
-#define intToLongTemp(val) ((long_temperature(val)<<TEMP_FIXED_POINT_BITS) + C_OFFSET)
 #define tempPreciseToRegular(val) (val>>TEMP_PRECISE_EXTRA_FRACTION_BITS)
 #define tempRegularToPrecise(val) (temperature_precise(val)<<TEMP_PRECISE_EXTRA_FRACTION_BITS)
 

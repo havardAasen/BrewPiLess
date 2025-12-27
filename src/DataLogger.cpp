@@ -40,15 +40,15 @@ void DataLogger::sendData()
 	char data[BUFFERSIZE];
 	int len=0;
 
-	if(_loggingInfo->service == ServiceNonNullJson){
-		len = nonNullJson(data,BUFFERSIZE);
-	}else{
-
-		if(_loggingInfo->service == ServiceHTTPNullString){
+	switch (_loggingInfo->service) {
+		case ServiceNonNullJson:
+			len = nonNullJson(data,BUFFERSIZE);
+			break;
+		case ServiceHTTPNullString:
 			len =dataSprintf(data,_loggingInfo->format,"\"\"");
-		}else{
+			break;
+		default:
 			len =dataSprintf(data,_loggingInfo->format,"null");
-		}
 	}
 
 	if(len==0){

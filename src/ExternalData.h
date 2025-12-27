@@ -25,10 +25,6 @@ inline bool isTiltAngleValid(const float angle) { return angle > 0; }
 #define GavityDeviceConfigFilename "/gdconfig"
 #define MAX_CONFIGDATA_SIZE 256
 
-extern BrewKeeper brewKeeper;
-extern BrewLogger brewLogger;
-extern BrewPiProxy brewPi;
-
 #define MimimumDifference 0.0000001
 
 #define ErrorNone 0

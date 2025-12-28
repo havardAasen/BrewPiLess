@@ -158,10 +158,9 @@
 
 .rssi-bar {
     position: absolute;
+    padding: 0;
     bottom: 0;
-    float: left;
     width: 4px;
-    border-radius: 1px;
     background-color: #444;
 }
 

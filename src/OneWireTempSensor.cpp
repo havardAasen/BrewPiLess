@@ -42,8 +42,6 @@ OneWireTempSensor::~OneWireTempSensor(){
 
 bool OneWireTempSensor::init()
 {
-	DEBUG_ONLY(uint8_t pinNr = oneWirePin);
-
 	if (sensor==nullptr) {
 		sensor = new(std::nothrow) DallasTemperature(oneWire);
 		if (sensor==nullptr) {
@@ -64,7 +62,7 @@ bool OneWireTempSensor::init()
 		logDebug("init onewire sensor - wait for conversion");
 		waitForConversion();
 		const temperature temp = readAndConstrainTemp();
-		DEBUG_ONLY(logInfoIntStringTemp(INFO_TEMP_SENSOR_INITIALIZED, pinNr, addressString, temp));
+		DEBUG_ONLY(logInfoIntStringTemp(INFO_TEMP_SENSOR_INITIALIZED, oneWirePin, addressString, temp));
 		success = temp!=TEMP_SENSOR_DISCONNECTED && requestConversion();
 	}
 	setConnected(success);

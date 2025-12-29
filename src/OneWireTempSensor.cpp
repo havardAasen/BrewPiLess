@@ -80,12 +80,12 @@ bool OneWireTempSensor::requestConversion()
 }
 
 void OneWireTempSensor::setConnected(bool connected) {
-	if (this->connected==connected)
+	if (connected_==connected)
 		return; // state is stays the same
 
 	char addressString[17];
 	printBytes(sensorAddress, 8, addressString);
-	this->connected = connected;
+	connected_ = connected;
 	if(connected){
 		//logInfoIntString(INFO_TEMP_SENSOR_CONNECTED, 0, addressString);
 		logInfoIntString(INFO_TEMP_SENSOR_CONNECTED, oneWirePin, addressString);
@@ -98,7 +98,7 @@ void OneWireTempSensor::setConnected(bool connected) {
 
 temperature OneWireTempSensor::read(){
 
-	if (!connected)
+	if (!connected_)
 		return TEMP_SENSOR_DISCONNECTED;
 
 	temperature temp = readAndConstrainTemp();

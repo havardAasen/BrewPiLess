@@ -47,7 +47,7 @@ public:
 	~OneWireTempSensor() override;
 
 	[[nodiscard]] bool isConnected() const override{
-		return connected;
+		return connected_;
 	}
 
 	/**
@@ -82,7 +82,7 @@ public:
 	DeviceAddress sensorAddress{};
 
 	fixed4_4 calibrationOffset;
-	bool connected{};
+	bool connected_{};
 
 };
 

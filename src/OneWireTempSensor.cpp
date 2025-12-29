@@ -74,9 +74,9 @@ bool OneWireTempSensor::init()
 
 bool OneWireTempSensor::requestConversion()
 {
-	bool ok = sensor->requestTemperaturesByAddress(sensorAddress);
-	setConnected(ok);
-	return ok;
+	const bool connected = sensor->requestTemperaturesByAddress(sensorAddress);
+	setConnected(connected);
+	return connected;
 }
 
 void OneWireTempSensor::setConnected(bool connected) {

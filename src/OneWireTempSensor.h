@@ -65,10 +65,6 @@ public:
 
 	void setConnected(bool connected);
 	bool requestConversion();
-	void waitForConversion()
-	{
-		wait.millis(750);
-	}
 
 	/**
 	* @brief Read the temperature and constrain it to a specific range.

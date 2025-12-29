@@ -53,19 +53,14 @@ bool OneWireTempSensor::init()
 		}
 	}
 
-	logDebug("init onewire sensor");
-	bool success = false;
 	// This quickly tests if the sensor is connected and initializes the reset detection.
 	// During the main TempControl loop, we don't want to spend many seconds
 	// scanning each sensor since this brings things to a halt.
-	if (sensor && requestConversion()) {
-		logDebug("init onewire sensor - wait for conversion");
-		waitForConversion();
-		const temperature temp = readAndConstrainTemp();
-		DEBUG_ONLY(logInfoIntStringTemp(INFO_TEMP_SENSOR_INITIALIZED, oneWirePin, addressString, temp));
-		success = temp!=TEMP_SENSOR_DISCONNECTED && requestConversion();
-	}
-	setConnected(success);
+	logDebug("init onewire sensor");
+	const temperature temp = read();
+	DEBUG_ONLY(logInfoIntStringTemp(INFO_TEMP_SENSOR_INITIALIZED, oneWirePin, addressString, temp));
+	const bool success = temp!=TEMP_SENSOR_DISCONNECTED;
+
 	logDebug("init onewire sensor complete %d", success);
 	return success;
 }

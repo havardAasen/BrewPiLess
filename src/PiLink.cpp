@@ -491,7 +491,7 @@ void PiLink::printTemperaturesJSON(const char * beerAnnotation, const char * fri
 		sendJsonTemp(PSTR(JSON_ROOM_TEMP), tempControl.getRoomTemp());
 
 	if (changed(state, tempControl.getState()))
-		sendJsonPair(PSTR(JSON_STATE), tempControl.getState());
+		sendJsonPair(PSTR(JSON_STATE), static_cast<uint8_t>(tempControl.getState()));
 
 #if BREWPI_SIMULATE
 	printJsonName(PSTR(JSON_TIME));
@@ -587,7 +587,7 @@ void PiLink::sendControlSettings(){
 	char tempString[12];
 	printResponse('S');
 	ControlSettings& cs = tempControl.cs;
-	sendJsonPair(JSONKEY_mode, cs.mode);
+	sendJsonPair(JSONKEY_mode, static_cast<char>(cs.mode));
 	sendJsonPair(JSONKEY_beerSetting, tempToString(tempString, cs.beerSetting, 2, 12));
 	sendJsonPair(JSONKEY_fridgeSetting, tempToString(tempString, cs.fridgeSetting, 2, 12));
 	sendJsonPair(JSONKEY_heatEstimator, fixedPointToString(tempString, cs.heatEstimator, 3, 12));

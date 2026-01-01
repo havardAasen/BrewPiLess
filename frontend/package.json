@@ -28,7 +28,7 @@
     "grunt-replace": "^2.0.2",
     "grunt-sass": "^4.0.1",
     "grunt-shell": "^4.0.0",
-    "prettier": "3.7.3",
+    "prettier": "3.7.4",
     "rollup": "^4.53.3",
     "rollup-plugin-typescript2": "^0.36.0",
     "sass": "^1.94.0",

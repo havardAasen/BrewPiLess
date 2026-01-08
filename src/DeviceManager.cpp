@@ -464,7 +464,6 @@ void DeviceManager::parseDeviceDefinition()
 
 bool DeviceManager::isDeviceValid(DeviceConfig& config, DeviceConfig& original, uint8_t deviceIndex)
 {
-#if 1
 	/* Implemented checks to ensure the system will not crash when supplied with invalid data.
 	   More refined checks that may cause confusing results are not yet implemented. See todo below. */
 
@@ -518,7 +517,6 @@ bool DeviceManager::isDeviceValid(DeviceConfig& config, DeviceConfig& original, 
 		// todo - could verify that the pin nr corresponds to enumActuatorPins/enumSensorPins
 	}
 
-#endif
 	// todo - for onewire temp, ensure address is unique
 	// todo - for onewire 2413 check address+pio nr is unique
 	return true;

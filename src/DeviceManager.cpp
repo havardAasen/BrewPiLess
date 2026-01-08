@@ -442,9 +442,8 @@ void DeviceManager::parseDeviceDefinition()
 		clear((uint8_t*)&target, sizeof(target));
 	}
 
-	bool valid = isDeviceValid(target, original, dev.id);
 	DeviceConfig* print = &original;
-	if (valid) {
+	if (isDeviceValid(target, original, dev.id)) {
 		print = &target;
 		// remove the device associated with the previous function
 		uninstallDevice(original);

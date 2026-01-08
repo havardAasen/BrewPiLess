@@ -430,7 +430,7 @@ void DeviceManager::parseDeviceDefinition()
 #ifndef ESP8266_ONE
 		piLink.print("Dev Address: %s, Target Address: %s\r\n", dev.address, target.hw.address);
 #endif
-		memcpy(target.hw.address, dev.address, 8);
+		memcpy(target.hw.address, dev.address, sizeof(DeviceDefinition::address));
 	}
 	assignIfSet(dev.deactivate, (uint8_t*)&target.hw.deactivate);
 

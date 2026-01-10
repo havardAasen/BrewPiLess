@@ -1,0 +1,20 @@
+name: Run PlatformIO Tests
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install PlatformIO
+        run: |
+          pip install platformio
+
+      - name: Run tests (native environment)
+        run: |
+          pio test -e native

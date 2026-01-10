@@ -1,5 +1,5 @@
-#ifndef VIRTUAL_SERIAL_H
-#define VIRTUAL_SERIAL_H
+#ifndef QUEUE_BUFFER_H
+#define QUEUE_BUFFER_H
 
 
 /**

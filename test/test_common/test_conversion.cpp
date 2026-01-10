@@ -3,8 +3,7 @@
  * Copyright (C) 2024 Håvard F. Aasen
  */
 
-#include "../../src/common/conversion.h"
-
+#include <conversion.h>
 #include <gtest/gtest.h>
 
 

@@ -6,7 +6,7 @@
 #include "BrewPiProxy.h"
 #include "TempControl.h"
 #include "TimeKeeper.h"
-#include "common/conversion.h"
+#include <conversion.h>
 
 #define BrewStatusFile "/brewing.s"
 #define CurrentProfileVersion 2

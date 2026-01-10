@@ -3,8 +3,7 @@
  * Copyright (C) 2026 Håvard F. Aasen
  */
 
-#include "../src/VirtualSerial.cpp"
-
+#include <QueueBuffer.h>
 #include <gtest/gtest.h>
 
 static constexpr int TEST_BUF_SIZE = 8;

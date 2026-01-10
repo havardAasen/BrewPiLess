@@ -37,7 +37,7 @@
 #include "Display.h"
 
 #ifdef ESP8266_ONE
-#include "VirtualSerial.h"
+#include <QueueBuffer.h>
 #endif
 
 #ifdef ESP8266_WiFi_Control

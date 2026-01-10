@@ -1,5 +1,4 @@
 #include "BrewPiProxy.h"
-#include "VirtualSerial.h"
 
 #include "Brewpi.h"
 #include <stdarg.h>
@@ -19,6 +18,8 @@
 #include "SettingsManager.h"
 #include "Buzzer.h"
 #include "Display.h"
+
+#include <QueueBuffer.h>
 
 QueueBuffer brewPiRxBuffer(2048);
 QueueBuffer brewPiTxBuffer(2048);

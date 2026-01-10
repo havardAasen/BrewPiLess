@@ -1,4 +1,4 @@
-#include "VirtualSerial.h"
+#include <QueueBuffer.h>
 
 QueueBuffer::QueueBuffer(const int size)
     : _buffer(new char[size])

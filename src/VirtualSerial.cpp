@@ -1,14 +1,44 @@
 #include "VirtualSerial.h"
 
 QueueBuffer::QueueBuffer(const int size)
+    : _buffer(new char[size])
+    , _bufferSize(size)
 {
-    _bufferSize = size;
-    _buffer = new char[size];
 }
 
 QueueBuffer::~QueueBuffer()
 {
     delete[] _buffer;
+}
+
+void QueueBuffer::print(const char c)
+{
+    _buffer[_writePtr] = c;
+
+    int next = _writePtr + 1;
+    if (next == _bufferSize) {
+        next = 0;
+    }
+    _writePtr = next;
+
+    // If buffer is full, advance read pointer (drop oldest)
+    if (next == _readPtr) {
+        _readPtr++;
+        if (_readPtr == _bufferSize)
+            _readPtr = 0;
+    }
+}
+
+void QueueBuffer::print(const char *c)
+{
+    for (const char *cp = c; *cp != '\0'; cp++) {
+        print(*cp);
+    }
+}
+
+void QueueBuffer::println()
+{
+    print('\n');
 }
 
 int QueueBuffer::read()
@@ -17,7 +47,7 @@ int QueueBuffer::read()
         return -1;
     }
 
-    int r = (int) _buffer[_readPtr];
+    const auto r = _buffer[_readPtr];
 
     _readPtr++;
     if (_readPtr == _bufferSize) {
@@ -27,25 +57,8 @@ int QueueBuffer::read()
     return r;
 }
 
-int QueueBuffer::available()
+int QueueBuffer::available() const
 {
     // avoid using %(mod) which takes time;
     return (_writePtr >= _readPtr) ? (_writePtr - _readPtr) : (_bufferSize + _writePtr - _readPtr);
-}
-
-void QueueBuffer::print(char c)
-{
-    _buffer[_writePtr] = c;
-    _writePtr++;
-    if (_writePtr == _bufferSize) _writePtr = 0;
-    //	if(_writePtr == _readPtr){
-    //		DBGPRINT("Fatal Error: queue buffer overlap");
-    //	}
-}
-
-void QueueBuffer::print(const char *c)
-{
-    for (char *cp = (char *) c; *cp != '\0'; cp++) {
-        print(*cp);
-    }
 }

@@ -21,12 +21,12 @@
 #ifndef TICKS_H
 #define TICKS_H
 
-#include "Brewpi.h"
+#include <cstdint>
 
-typedef uint32_t ticks_millis_t;
-typedef uint32_t ticks_micros_t;
-typedef uint16_t ticks_seconds_t;
-typedef uint8_t ticks_seconds_tiny_t;
+using ticks_millis_t = std::uint32_t;
+using ticks_micros_t = std::uint32_t;
+using ticks_seconds_t = std::uint16_t;
+using ticks_seconds_tiny_t = std::uint8_t;
 
 /**
  * Ticks - interface to a millisecond timer

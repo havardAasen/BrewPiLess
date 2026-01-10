@@ -2,6 +2,25 @@
 #define VIRTUAL_SERIAL_H
 
 
+/**
+ * @class QueueBuffer
+ * @brief A fixed-size circular buffer for storing bytes.
+ *
+ * QueueBuffer implements a ring buffer with separate read and write pointers.
+ * Although the constructor takes a `size` parameter and allocates `size` bytes
+ * of storage, the effective usable capacity is `size - 1`. One slot is always
+ * kept empty to distinguish between the "buffer full" and "buffer empty"
+ * states, which both otherwise produce identical pointer positions.
+ *
+ * Overwrite behavior:
+ * - Writing always succeeds.
+ * - When the buffer becomes full (i.e., only one free slot remains), the next
+ *   write overwrites the oldest unread byte.
+ * - On overwrite, the read pointer is advanced to maintain consistency.
+ *
+ * This design ensures that the buffer always contains the most recent
+ * `size - 1` bytes written.
+ */
 class QueueBuffer {
 public:
     explicit QueueBuffer(int size);

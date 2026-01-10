@@ -3,23 +3,24 @@
 
 #include <Arduino.h>
 
-class QueueBuffer
-{
+class QueueBuffer {
 protected:
-	char* _buffer;
-	int _writePtr{};
-	int _readPtr{};
-	int  _bufferSize;
+    char *_buffer;
+    int _writePtr{};
+    int _readPtr{};
+    int _bufferSize;
+
 public:
-	explicit QueueBuffer(int size);
-	~QueueBuffer();
+    explicit QueueBuffer(int size);
 
-	void print(char c);
-	void print(const char* c);
-    void println(){ print('\n');}
+    ~QueueBuffer();
 
-	int read();
-	int available();
+    void print(char c);
+    void print(const char *c);
+    void println() { print('\n'); }
+
+    int read();
+    int available();
 };
 
 #endif

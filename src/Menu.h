@@ -26,7 +26,7 @@
 #if BREWPI_MENU
 
 #include <inttypes.h>
-#include "TemperatureFormats.h"
+#include <TemperatureFormats.h>
 
 enum menuPages{
 	MENU_TOP,

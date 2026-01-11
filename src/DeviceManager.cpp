@@ -27,6 +27,7 @@
 #include "Sensor.h"
 #include "TempSensorDisconnected.h"
 #include "TempSensorExternal.h"
+#include "TemperatureConversion.h"
 #include "PiLink.h"
 #include "EepromFormat.h"
 
@@ -56,6 +57,7 @@ WirelessTempSensor* WirelessTempSensor::theWirelessTempSensor=nullptr;
 #endif
 
 #include <algorithm>
+#include <TemperatureFormats.h>
 
 /*
  * Defaults for sensors, actuators and temperature sensors when not defined in the eeprom.

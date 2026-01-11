@@ -21,8 +21,10 @@
 #include "BrewpiStrings.h"
 #include "Logger.h"
 #include "PiLink.h"
-#include "TemperatureFormats.h"
+#include "TemperatureConversion.h"
 #include "JsonKeys.h"
+
+#include <TemperatureFormats.h>
 
 constexpr char PROGMEM LOG_STRING_FORMAT[] = "\"%s\"";
 

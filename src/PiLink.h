@@ -22,10 +22,10 @@
 #define PILINK_H
 
 #include "Brewpi.h"
-#include "TemperatureFormats.h"
 #include "DeviceManager.h"
 #include "Logger.h"
 
+#include <TemperatureFormats.h>
 
 #define PRINTF_BUFFER_SIZE 128
 

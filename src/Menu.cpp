@@ -29,7 +29,8 @@
 #include "Pins.h"
 #include "Display.h"
 #include "TempControl.h"
-#include "TemperatureFormats.h"
+#include "TemperatureConversion.h"
+#include <TemperatureFormats.h>
 #include "RotaryEncoder.h"
 #include "PiLink.h"
 #include "Ticks.h"

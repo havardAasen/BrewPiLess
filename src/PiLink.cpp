@@ -26,6 +26,7 @@
 
 #include "Version.h"
 #include "TempControl.h"
+#include "TemperatureConversion.h"
 #include "Display.h"
 #include "JsonKeys.h"
 #include "Ticks.h"
@@ -35,6 +36,8 @@
 #include "SettingsManager.h"
 #include "Buzzer.h"
 #include "Display.h"
+
+#include <TemperatureFormats.h>
 
 #ifdef ESP8266_ONE
 #include <QueueBuffer.h>

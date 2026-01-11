@@ -24,10 +24,10 @@
 #include "OneWireDevices.h"
 #include "PiLink.h"
 #include "Ticks.h"
-#include "TemperatureFormats.h"
 
 #include <algorithm>
 #include <DallasTemperature.h>
+#include <TemperatureFormats.h>
 
 OneWireTempSensor::OneWireTempSensor(OneWire* bus, DeviceAddress address, const fixed4_4 calibrationOffset)
 : oneWire(bus)

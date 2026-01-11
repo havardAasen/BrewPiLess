@@ -99,18 +99,9 @@ inline temperature_precise tempRegularToPrecise(temperature val) {
 
 #endif
 
-char * tempToString(char * s, long_temperature rawValue, uint8_t numDecimals, uint8_t maxLength);
-temperature stringToTemp(const char * string);
-
-char * tempDiffToString(char * s, long_temperature rawValue, uint8_t numDecimals, uint8_t maxLength);
-temperature stringToTempDiff(const char * string);
-
 char * fixedPointToString(char * s, long_temperature rawValue, uint8_t numDecimals, uint8_t maxLength);
 char * fixedPointToString(char * s, temperature rawValue, uint8_t numDecimals, uint8_t maxLength);
 long_temperature stringToFixedPoint(const char * numberString);
-
-int fixedToTenths(long_temperature temperature);
-temperature tenthsToFixed(int temperature);
 
 temperature constrainTemp16(long_temperature val);
 
@@ -121,24 +112,6 @@ temperature multiplyFactorTemperature(temperature factor, temperature b);
 temperature multiplyFactorTemperatureDiff(temperature factor, temperature b);
 
 
-long_temperature convertToInternalTempImpl(long_temperature rawTemp, bool addOffset);
-long_temperature convertFromInternalTempImpl(long_temperature rawTemp, bool addOffset);
-
-inline long_temperature convertToInternalTempDiff(long_temperature rawTempDiff) {
-    return convertToInternalTempImpl(rawTempDiff, false);
-}
-
-inline long_temperature convertFromInternalTempDiff(long_temperature rawTempDiff) {
-    return convertFromInternalTempImpl(rawTempDiff, false);
-}
-
-inline long_temperature convertToInternalTemp(long_temperature rawTemp) {
-    return convertToInternalTempImpl(rawTemp, true);
-}
-
-inline long_temperature convertFromInternalTemp(long_temperature rawTemp) {
-    return convertFromInternalTempImpl(rawTemp, true);
-}
 //new ESP8266_ONE
 float temperatureFloatValue(temperature t);
 //new

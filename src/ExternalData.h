@@ -5,11 +5,12 @@
 #include "BrewKeeper.h"
 #include "BrewLogger.h"
 #include "BPLSettings.h"
-#include "TemperatureFormats.h"
 
 #if BREWPI_EXTERNAL_SENSOR
 #include "TempSensorWireless.h"
 #endif
+
+#include <TemperatureFormats.h>
 
 #define INVALID_VOLTAGE -1
 #define INVALID_GRAVITY -1

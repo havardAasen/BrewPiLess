@@ -22,8 +22,8 @@
 #include "Pins.h"
 #include <algorithm>
 #include <climits>
+#include <TemperatureFormats.h>
 
-#include "TemperatureFormats.h"
 #include "TempControl.h"
 #include "PiLink.h"
 #include "TempSensor.h"

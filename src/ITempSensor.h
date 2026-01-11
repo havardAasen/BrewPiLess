@@ -21,7 +21,7 @@
 #ifndef ITEMPSENSOR_H
 #define ITEMPSENSOR_H
 
-#include "TemperatureFormats.h"
+#include <TemperatureFormats.h>
 
 
 #define TEMP_SENSOR_DISCONNECTED INVALID_TEMP

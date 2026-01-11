@@ -1,10 +1,10 @@
 #include <ArduinoJson.h>
 #include <cstdio>
+#include <TemperatureFormats.h>
 
 #include "LogFormatter.h"
 #include "DataLogger.h"
 #include "Config.h"
-#include "TemperatureFormats.h"
 #include "BrewPiProxy.h"
 #include "ExternalData.h"
 #if SupportPressureTransducer

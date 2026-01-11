@@ -17,7 +17,7 @@
 #include "FilterFixed.h"
 #include <stdlib.h>
 #include <limits.h>
-#include "TemperatureFormats.h"
+#include <TemperatureFormats.h>
 
 temperature FixedFilter::add(temperature val){
 	temperature_precise returnVal = addDoublePrecision(tempRegularToPrecise(val));

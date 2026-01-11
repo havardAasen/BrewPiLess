@@ -3,9 +3,9 @@
 #include "BPLSettings.h"
 #include "DataLogger.h"
 #include "LogFormatter.h"
-#include "TemperatureFormats.h"
 #include "BrewPiProxy.h"
 #include "ExternalData.h"
+
 #if SupportPressureTransducer
 #include "PressureMonitor.h"
 #endif
@@ -23,6 +23,7 @@ extern BrewPiProxy brewpi;
 #include "AutoCapContro.h"
 #endif
 
+#include <TemperatureFormats.h>
 
 MqttRemoteControl mqttRemoteControl;
 

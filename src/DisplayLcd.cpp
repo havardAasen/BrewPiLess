@@ -26,9 +26,10 @@
 #include "DisplayLcd.h"
 #include "Menu.h"
 #include "TempControl.h"
-#include "TemperatureFormats.h"
+#include "TemperatureConversion.h"
 #include "Pins.h"
 
+#include <TemperatureFormats.h>
 
 
 uint8_t LcdDisplay::stateOnDisplay;

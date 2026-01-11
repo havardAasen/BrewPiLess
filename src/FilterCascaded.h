@@ -22,8 +22,9 @@
 
 #include "Brewpi.h"
 
-#include "TemperatureFormats.h"
 #include "FilterFixed.h"
+
+#include <TemperatureFormats.h>
 
 // Use 3 filter sections. This gives excellent filtering, without adding too much delay.
 // For 3 sections the stop band attenuation is 3x the single section attenuation in dB.

@@ -20,9 +20,10 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#include <stdarg.h>
-#include "TemperatureFormats.h"
 #include "LogMessages.h"
+
+#include <TemperatureFormats.h>
+#include <stdarg.h>
 
 // define error id variable type to make it easy to bump to uint16 when needed
 #define LOG_ID_TYPE uint8_t

@@ -1,7 +1,7 @@
 #ifndef EEPROM_STRUCTS_H
 #define EEPROM_STRUCTS_H
 
-#include "TemperatureFormats.h"
+#include <TemperatureFormats.h>
 
 enum Mode : uint8_t;
 

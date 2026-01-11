@@ -24,13 +24,13 @@
 #include "ITempSensor.h"
 #include "TempSensor.h"
 #include "Pins.h"
-#include "TemperatureFormats.h"
 #include "Actuator.h"
 #include "Sensor.h"
 #include "EepromManager.h"
 #include "ActuatorAutoOff.h"
 #include "EepromStructs.h"
 
+#include <TemperatureFormats.h>
 
 
 #if !SettableMinimumCoolTime

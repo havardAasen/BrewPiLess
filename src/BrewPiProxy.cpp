@@ -7,7 +7,6 @@
 #include "PiLink.h"
 
 #include "Version.h"
-#include "TemperatureFormats.h"
 #include "TempControl.h"
 #include "Display.h"
 #include "JsonKeys.h"
@@ -19,6 +18,7 @@
 #include "Buzzer.h"
 #include "Display.h"
 
+#include <TemperatureFormats.h>
 #include <QueueBuffer.h>
 
 QueueBuffer brewPiRxBuffer(2048);

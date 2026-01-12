@@ -20,8 +20,6 @@
 #ifndef FILTER_FIXED_H
 #define FILTER_FIXED_H
 
-#include "Brewpi.h"
-
 /* This class implements an IIR low pass filter, with the following frequency response
 
 				1  +		  2 z^-1  +					1 z^-2

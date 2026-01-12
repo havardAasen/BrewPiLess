@@ -20,7 +20,6 @@
 #ifndef FILTER_CASCADED_H
 #define FILTER_CASCADED_H
 
-#include "Brewpi.h"
 
 #include "FilterFixed.h"
 

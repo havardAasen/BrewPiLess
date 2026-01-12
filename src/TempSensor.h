@@ -22,8 +22,8 @@
 #define TEMP_SENSOR_H
 
 #include "Brewpi.h"
-#include "FilterCascaded.h"
 #include "ITempSensor.h"
+
 #include <stdlib.h>
 
 #define TEMP_SENSOR_DISCONNECTED INVALID_TEMP
@@ -33,8 +33,10 @@
 #endif
 
 #if TEMP_SENSOR_CASCADED_FILTER
+#include <FilterCascaded.h>
 typedef CascadedFilter TempSensorFilter;
 #else
+#include <FixedFilter.h>
 typedef FixedFilter TempSensorFilter;
 #endif
 

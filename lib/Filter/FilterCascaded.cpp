@@ -17,7 +17,6 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Brewpi.h"
 #include "FilterFixed.h"
 #include "FilterCascaded.h"
 #include <stdlib.h>

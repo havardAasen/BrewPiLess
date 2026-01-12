@@ -41,6 +41,7 @@ class AutoCapControl {
 
         void setCapOn(bool on);
         static void saveConfig();
+        [[nodiscard]] static bool isPhysicalCapOn() ;
 };
 
 

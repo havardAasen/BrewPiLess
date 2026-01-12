@@ -14,8 +14,8 @@ AutoCapControl autoCapControl;
 AutoCapMode AutoCapControl::mode() const
 {
     if (capper != &defaultActuator)
-        return _settings->autoCapMode;
-    return AutoCapMode::none;
+        return static_cast<AutoCapMode>(_settings->autoCapMode);
+    return AutoCapModeNone;
 }
 
 
@@ -24,11 +24,11 @@ void AutoCapControl::begin()
     _settings = theSettings.autoCapSettings();
 
     // check config
-    if (_settings->autoCapMode == AutoCapMode::manualClose) {
+    if (_settings->autoCapMode == AutoCapModeManualClose) {
         if (capper != &defaultActuator)
             capper->setActive(true);
 
-    } else if (_settings->autoCapMode == AutoCapMode::manualOpen) {
+    } else if (_settings->autoCapMode == AutoCapModeManualOpen) {
         if (capper != &defaultActuator)
             capper->setActive(false);
     }
@@ -37,7 +37,7 @@ void AutoCapControl::begin()
 
 void AutoCapControl::capAtTime(const std::uint32_t now) const
 {
-    _settings->autoCapMode = AutoCapMode::time;
+    _settings->autoCapMode = AutoCapModeTime;
     _settings->condition.targetTime = now;
     saveConfig();
 }
@@ -45,7 +45,7 @@ void AutoCapControl::capAtTime(const std::uint32_t now) const
 
 void AutoCapControl::catOnGravity(const float sg) const
 {
-    _settings->autoCapMode = AutoCapMode::gravity;
+    _settings->autoCapMode = AutoCapModeGravity;
     _settings->condition.targetGravity = sg;
     saveConfig();
 }
@@ -53,7 +53,7 @@ void AutoCapControl::catOnGravity(const float sg) const
 
 void AutoCapControl::capManualSet(const bool capped) const
 {
-    _settings->autoCapMode = capped ? AutoCapMode::manualClose : AutoCapMode::manualOpen;
+    _settings->autoCapMode = capped ? AutoCapModeManualClose : AutoCapModeManualOpen;
 
     if (capper != &defaultActuator)
         capper->setActive(capped);
@@ -95,21 +95,21 @@ bool AutoCapControl::autoCapOn(const std::uint32_t current, const float gravity)
         return false;
 
     switch (_settings->autoCapMode) {
-        case AutoCapMode::none:
+        case AutoCapModeNone:
             // asigned. auto change to open
             // not necessary for it is check at first statement
             //    if( AutoCapControl::capper != &defaultActuator )
-            _settings->autoCapMode = AutoCapMode::manualOpen;
+            _settings->autoCapMode = AutoCapModeManualOpen;
             return true;
-        case AutoCapMode::manualClose:
+        case AutoCapModeManualClose:
             if (_capStatus != CapStatusActive)
                 setCapOn(true);
             break;
-        case AutoCapMode::manualOpen:
+        case AutoCapModeManualOpen:
             if (_capStatus != CapStatusInactive)
                 setCapOn(false);
             break;
-        case AutoCapMode::time:
+        case AutoCapModeTime:
             if (current > _settings->condition.targetTime) {
                 if (_capStatus != CapStatusActive) {
                     DBG_PRINTF("times up, capped. act:%d\n", _capStatus);
@@ -119,7 +119,7 @@ bool AutoCapControl::autoCapOn(const std::uint32_t current, const float gravity)
             } else if (_capStatus != CapStatusInactive)
                 setCapOn(false);
             break;
-        case AutoCapMode::gravity:
+        case AutoCapModeGravity:
             if (gravity <= _settings->condition.targetGravity) {
                 if (_capStatus != CapStatusActive) {
                     DBG_PRINTF("gravity meet, capped.\n");

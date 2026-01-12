@@ -6,12 +6,12 @@
 
 #include <cstdint>
 
-enum class AutoCapMode: std::uint8_t {
-    none,
-    manualOpen,
-    manualClose,
-    time,
-    gravity
+enum AutoCapMode {
+    AutoCapModeNone,
+    AutoCapModeManualOpen,
+    AutoCapModeManualClose,
+    AutoCapModeTime,
+    AutoCapModeGravity
 };
 
 enum CapStatus { CapStatusInactive, CapStatusActive, CapStatusUnknown };

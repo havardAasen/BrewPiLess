@@ -8,7 +8,6 @@
 #include <ESP8266WiFi.h>
 #include <IPAddress.h>
 #include "Config.h"
-
 //*****************************************************
 // 156 bytes
 struct SystemConfiguration {
@@ -159,14 +158,12 @@ struct RemoteLoggingInformation{
 //*****************************************************
 // Auto Cap
 
-enum class AutoCapMode: std::uint8_t;
-
 struct AutoCapSettings{
     union _condition{
         uint32_t targetTime;
         float    targetGravity;
     }condition;
-    AutoCapMode autoCapMode;
+    uint8_t autoCapMode;
 };
 
 //*****************************************************

@@ -693,13 +693,13 @@ AppleCNAHandler appleCNAHandler;
 #if AUTO_CAP
 String capControlStatus()
 {
-	const auto mode=autoCapControl.mode();
+	uint8_t mode=autoCapControl.mode();
 	bool capped = autoCapControl.isCapOn();
 	String 	capstate=String("\"m\":") + String((int)mode) + String(",\"c\":") + String(capped);
 
-	if(mode == AutoCapMode::gravity){
+	if(mode == AutoCapModeGravity){
 		capstate += String(",\"g\":") + String(autoCapControl.targetGravity(),3);
-	}else if (mode == AutoCapMode::time){
+	}else if (mode ==AutoCapModeTime){
 		capstate += String(",\"t\":") + String(autoCapControl.targetTime());
 	}
 

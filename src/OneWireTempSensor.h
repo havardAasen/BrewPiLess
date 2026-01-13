@@ -82,7 +82,7 @@ public:
 	DeviceAddress sensorAddress{};
 
 	fixed4_4 calibrationOffset;
-	bool connected_{};
+	bool connected_{true};
 
 };
 

@@ -33,7 +33,7 @@
     "rollup-plugin-typescript2": "^0.36.0",
     "sass": "^1.97.3",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.51.0"
+    "typescript-eslint": "^8.56.1"
   },
   "dependencies": {
     "dygraphs": "^1.1.1",

@@ -1,5 +1,5 @@
 import { byId, select, C2F, BrewMath } from "../shared";
-import { BrewChart } from "../chart-edit.js";
+import { LineIndex } from "../chart/constants";
 import Dygraph from "dygraphs";
 import regression from "regression";
 
@@ -148,23 +148,6 @@ export var STATES = [{
     color: colorHeatingMinTime,
     text: "<%= chart_state_invalid %>"
 }];
-BrewChart.Mode = {
-    b: "Beer Constant",
-    f: "Fridge Constant",
-    o: "Off",
-    p: "Profile"
-};
-BrewChart.Colors = ["rgb(240, 100, 100)", "rgb(41,170,41)", "rgb(89, 184, 255)", "rgb(255, 161, 76)", "#AAAAAA", "#f5e127", "rgb(153,0,153)", "#000abb"];
-BrewChart.Labels = ['Time', 'beerSet', 'beerTemp', 'fridgeTemp', 'fridgeSet', 'roomTemp', 'auxTemp', 'gravity', 'filtersg'];
-BrewChart.ClassLabels = ['', 'beer-set', 'beer-temp', 'fridge-temp', 'fridge-set', 'room-temp', 'aux-temp', 'gravity', 'filtersg'];
-export const BeerTempLine = 2;
-export const BeerSetLine = 1;
-export const FridgeTempLine = 3;
-export const FridgeSetLine = 4;
-export const RoomTempLine = 5;
-export const AuxTempLine = 6;
-const GravityLine = 7;
-const FilteredSgLine = 8;
 
 BrewChart.prototype.clearData = function() {
     this.laststat = [NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN];
@@ -211,17 +194,17 @@ BrewChart.prototype.showLegend = function(date, row) {
     select(".beer-chart-legend-time").innerHTML = this.formatDate(d);
     if (select(".beer-chart-legend-elapse")) select(".beer-chart-legend-elapse").innerHTML = this.formatDuration(d.getTime() / 1000 - this.starttime);
 
-    select(".chart-legend-row.beer-temp .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, BeerTempLine));
-    select(".chart-legend-row.beer-set .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, BeerSetLine));
-    select(".chart-legend-row.fridge-temp .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, FridgeTempLine));
-    select(".chart-legend-row.fridge-set .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, FridgeSetLine));
-    select(".chart-legend-row.room-temp .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, RoomTempLine));
+    select(".chart-legend-row.beer-temp .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, LineIndex.BeerTemp));
+    select(".chart-legend-row.beer-set .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, LineIndex.BeerSet));
+    select(".chart-legend-row.fridge-temp .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, LineIndex.FridgeTemp));
+    select(".chart-legend-row.fridge-set .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, LineIndex.FridgeSet));
+    select(".chart-legend-row.room-temp .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, LineIndex.RoomTemp));
 
-    select(".chart-legend-row.aux-temp .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, AuxTempLine));
+    select(".chart-legend-row.aux-temp .legend-value").innerHTML = this.tempFormat(this.chart.getValue(row, LineIndex.AuxTemp));
 
-    var g = this.chart.getValue(row, GravityLine);
+    var g = this.chart.getValue(row, LineIndex.Gravity);
     select(".chart-legend-row.gravity .legend-value").innerHTML = (!g || isNaN(g)) ? "--" : (this.plato ? g.toFixed(2) + "&deg;P" : g.toFixed(4));
-    var filteredG = this.chart.getValue(row, FilteredSgLine);
+    var filteredG = this.chart.getValue(row, LineIndex.FilteredSg);
     select(".chart-legend-row.filtersg .legend-value").innerHTML = (!filteredG || isNaN(filteredG)) ? "--" : (this.plato ? filteredG.toFixed(2) + "&deg;P" : filteredG.toFixed(4));
 
     var state = parseInt(this.state[row]);
@@ -248,17 +231,17 @@ BrewChart.prototype.tempFormat = function(y) {
 BrewChart.prototype.initLegend = function() {
     // init color
     if (select(".beer-temp .toggle")) {
-        for (var i = 1; i < BrewChart.ClassLabels.length; i++) {
-            var label = BrewChart.ClassLabels[i];
-            select(".chart-legend-row." + label).style.color = BrewChart.Colors[i - 1];
-            select("." + label + ".toggle").style.backgroundColor = BrewChart.Colors[i - 1];
+        for (var i = 1; i < ClassLabels.length; i++) {
+            var label = ClassLabels[i];
+            select(".chart-legend-row." + label).style.color = Colors[i - 1];
+            select("." + label + ".toggle").style.backgroundColor = Colors[i - 1];
         }
     }
     this.dateLabel = select(".beer-chart-legend-time").innerHTML;
 };
 BrewChart.prototype.toggleLine = function(line) {
     this.shownlist[line] = !this.shownlist[line];
-    var divclass = BrewChart.ClassLabels[line];
+    var divclass = ClassLabels[line];
     if (this.shownlist[line]) {
         if (select("." + divclass + " .toggle")) select("." + divclass + " .toggle").style.backgroundColor = select(".chart-legend-row." + divclass).style.color;
         this.chart.setVisibility(line - 1, true);
@@ -282,8 +265,8 @@ BrewChart.prototype.createChart = function() {
     var y2label = t.y2label ? t.y2label : 'Gravity';
     document.body.appendChild(ldiv);
     var opt = {
-        labels: BrewChart.Labels,
-        colors: BrewChart.Colors,
+        labels: Labels,
+        colors: Colors,
         connectSeparatedPoints: true,
         ylabel: ylabel,
         y2label: y2label,
@@ -448,7 +431,7 @@ BrewChart.prototype.addMode = function(m, x) {
         series: "beerTemp",
         x: x,
         shortText: s.toUpperCase(),
-        text: BrewChart.Mode[s],
+        text: ModeMap[s],
         attachAtBottom: true
     });
 };

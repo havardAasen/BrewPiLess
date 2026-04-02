@@ -1,4 +1,5 @@
-import { select } from "./shared";
+import { byId, select } from "./shared";
+import { LineIndex, Labels } from "./chart/constants";
 import { BrewChart } from "./chart-edit.js";
 import { STATES } from "./vendor/chart";
 
@@ -112,13 +113,13 @@ import { STATES } from "./vendor/chart";
             if (typeof window.file == "undefined") return;
             // generate data
             var csv = "Time, Unix Time";
-            for (let i = 1; i < BrewChart.Labels.length; i++) {
-                csv = csv + ((i == 0) ? "" : ",") + BrewChart.Labels[i];
+            for (let i = 1; i < Labels.length; i++) {
+                csv = csv + ((i == 0) ? "" : ",") + Labels[i];
             }
             csv = csv + ",Tilt,state\n";
 
             for (var row = 0; row < BChart.chart.data.length; row++) {
-                for (let i = 0; i < BrewChart.Labels.length; i++) {
+                for (let i = 0; i < Labels.length; i++) {
                     var v = BChart.chart.chart.getValue(row, i);
                     if (v === null) v = "";
                     else if (isNaN(v)) v = "";

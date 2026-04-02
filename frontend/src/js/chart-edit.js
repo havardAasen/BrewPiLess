@@ -1,4 +1,4 @@
-import { BeerSetLine, BeerTempLine, FridgeSetLine, FridgeTempLine, RoomTempLine, AuxTempLine } from "./vendor/chart";
+import { LineIndex, ModeMap, Colors, Labels, ClassLabels } from "./chart/constants";
 import { BrewMath } from "./shared";
 
 export var BrewChart = function(div) {
@@ -73,12 +73,12 @@ BrewChart.prototype.partial = function(start, end) {
     function periodRecord(row) {
         var rec = [0xF0, 0x00];
         var currentValues = [
-            me.chart.getValue(row, BeerSetLine),
-            me.chart.getValue(row, BeerTempLine),
-            me.chart.getValue(row, FridgeTempLine),
-            me.chart.getValue(row, FridgeSetLine),
-            me.chart.getValue(row, RoomTempLine),
-            me.chart.getValue(row, AuxTempLine),
+            me.chart.getValue(row, LineIndex.BeerSet),
+            me.chart.getValue(row, LineIndex.BeerTemp),
+            me.chart.getValue(row, LineIndex.FridgeTemp),
+            me.chart.getValue(row, LineIndex.FridgeSet),
+            me.chart.getValue(row, LineIndex.RoomTemp),
+            me.chart.getValue(row, LineIndex.AuxTemp),
             me.rawSG[row],
             me.angles[row]
         ];
@@ -235,12 +235,12 @@ BrewChart.prototype.partial2Plato = function(start, end) {
     function periodRecord(row) {
         var rec = [0xF0, 0x00];
         var currentValues = [
-            me.chart.getValue(row, BeerSetLine),
-            me.chart.getValue(row, BeerTempLine),
-            me.chart.getValue(row, FridgeTempLine),
-            me.chart.getValue(row, FridgeSetLine),
-            me.chart.getValue(row, RoomTempLine),
-            me.chart.getValue(row, AuxTempLine),
+            me.chart.getValue(row, LineIndex.BeerSet),
+            me.chart.getValue(row, LineIndex.BeerTemp),
+            me.chart.getValue(row, LineIndex.FridgeTemp),
+            me.chart.getValue(row, LineIndex.FridgeSet),
+            me.chart.getValue(row, LineIndex.RoomTemp),
+            me.chart.getValue(row, LineIndex.AuxTemp),
             me.rawSG[row],
             me.angles[row]
         ];

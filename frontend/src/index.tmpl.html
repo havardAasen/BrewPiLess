@@ -126,42 +126,42 @@
                     </li>
                     <li layout horizontal main-justified class="chart-legend-row beer-temp">
                         <input type="checkbox" id="beer-temp" name="set-name" class="switch-input" checked>
-                        <label onclick="BChart.toggle(BeerTempLine)" for="beer-temp" class="switch-label"><%= legend_beertemp %></label>
+                        <label onclick="BChart.toggle(LineIndex.BeerTemp)" for="beer-temp" class="switch-label"><%= legend_beertemp %></label>
                         <div class="legend-value">--</div>
                     </li>
                     <li layout horizontal main-justified class="chart-legend-row beer-set">
                         <input type="checkbox" id="beer-set" name="set-name" class="switch-input" checked>
-                        <label onclick="BChart.toggle(BeerSetLine)" for="beer-set" class="switch-label"><%= legend_beerset %></label>
+                        <label onclick="BChart.toggle(LineIndex.BeerSet)" for="beer-set" class="switch-label"><%= legend_beerset %></label>
                         <div class="legend-value">--</div>
                     </li>
                     <li layout horizontal main-justified class="chart-legend-row fridge-temp">
                         <input type="checkbox" id="fridge-temp" name="set-name" class="switch-input" checked>
-                        <label onclick="BChart.toggle(FridgeTempLine)" for="fridge-temp" class="switch-label"><%= legend_fridgetemp %></label>
+                        <label onclick="BChart.toggle(LineIndex.FridgeTemp)" for="fridge-temp" class="switch-label"><%= legend_fridgetemp %></label>
                         <div class="legend-value">--</div>
                     </li>
                     <li layout horizontal main-justified class="chart-legend-row fridge-set">
                         <input type="checkbox" id="fridge-set" name="set-name" class="switch-input" checked>
-                        <label onclick="BChart.toggle(FridgeSetLine)" for="fridge-set" class="switch-label"><%= legend_fridgeset %></label>
+                        <label onclick="BChart.toggle(LineIndex.FridgeSet)" for="fridge-set" class="switch-label"><%= legend_fridgeset %></label>
                         <div class="legend-value">--</div>
                     </li>
                     <li layout horizontal main-justified class="chart-legend-row room-temp">
                         <input type="checkbox" id="room-temp" name="set-name" class="switch-input" checked>
-                        <label onclick="BChart.toggle(RoomTempLine)" for="room-temp" class="switch-label"><%= legend_roomtemp %></label>
+                        <label onclick="BChart.toggle(LineIndex.RoomTemp)" for="room-temp" class="switch-label"><%= legend_roomtemp %></label>
                         <div class="legend-value">--</div>
                     </li>
                     <li layout horizontal main-justified class="chart-legend-row aux-temp">
                         <input type="checkbox" id="aux-temp" name="set-name" class="switch-input" checked>
-                        <label onclick="BChart.toggle(AuxTempLine)" for="aux-temp" class="switch-label"><%= legend_auxtemp %></label>
+                        <label onclick="BChart.toggle(LineIndex.AuxTemp)" for="aux-temp" class="switch-label"><%= legend_auxtemp %></label>
                         <div class="legend-value">--</div>
                     </li>
                     <li layout horizontal main-justified class="chart-legend-row gravity">
                         <input type="checkbox" id="gravity" name="set-name" class="switch-input" checked>
-                        <label onclick="BChart.toggle(GravityLine)" for="gravity" class="switch-label"><%= legend_gravity %><span class=platounit>&deg;P</span></label>
+                        <label onclick="BChart.toggle(LineIndex.Gravity)" for="gravity" class="switch-label"><%= legend_gravity %><span class=platounit>&deg;P</span></label>
                         <div class="legend-value">--</div>
                     </li>
                     <li layout horizontal main-justified class="chart-legend-row filtersg">
                         <input type="checkbox" id="filtersg" name="set-name" class="switch-input" checked>
-                        <label onclick="BChart.toggle(FilteredSgLine)" for="filtersg" class="switch-label"><%= legend_filteredsg %><span class=platounit>&deg;P</span></label>
+                        <label onclick="BChart.toggle(LineIndex.FilteredSg)" for="filtersg" class="switch-label"><%= legend_filteredsg %><span class=platounit>&deg;P</span></label>
                         <div class="legend-value">--</div>
                     </li>
                     <li layout horizontal main-justified class="chart-legend-row" id="formula-btn" onclick="openpolynomialpane()">f</li>

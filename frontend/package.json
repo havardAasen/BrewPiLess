@@ -26,7 +26,7 @@
     "grunt-multi-lang-site-generator": "^0.6.0",
     "grunt-processhtml": "^0.4.4",
     "grunt-replace": "^2.0.2",
-    "grunt-sass": "^4.0.1",
+    "grunt-sass": "^4.1.0",
     "grunt-shell": "^4.0.0",
     "prettier": "3.8.1",
     "rollup": "^4.60.1",

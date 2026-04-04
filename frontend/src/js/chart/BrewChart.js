@@ -3,7 +3,7 @@ import { BrewMath, byId, C2F, select } from "../shared";
 import { ClassLabels, Colors, Labels, LineIndex } from "./constants";
 import { gravityFilter } from "./GravityFilter";
 import { gravityTracker } from "./GravityTracker";
-import { STATES, STATE_LINE_WIDTH } from "./../vendor/chart";
+import { STATES, STATE_LINE_WIDTH } from "./common";
 import Dygraph from "dygraphs";
 
 export class BrewChart {

@@ -1,8 +1,7 @@
 import { byId, select } from "./shared";
 import { LineIndex, Labels } from "./chart/constants";
-import { testData } from "./vendor/chart"
+import { testData, STATES } from "./chart/common"
 import { BrewChart } from "./chart/BrewChart";
-import { STATES } from "./vendor/chart";
 
         var BChart = {
             toggle: function(type) {

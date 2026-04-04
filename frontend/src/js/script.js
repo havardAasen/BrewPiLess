@@ -15,7 +15,7 @@ import {
 } from './shared';
 import { gravityFilter } from "./chart/GravityFilter";
 import { gravityTracker } from './chart/GravityTracker';
-import { checkfgstate } from "./vendor/chart";
+import { checkfgstate } from "./chart/common";
 import { BrewChart } from "./chart/BrewChart";
 import { Capper } from "./capper";
 import { BWF } from "./vendor/bwf";

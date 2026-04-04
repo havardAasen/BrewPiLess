@@ -1,5 +1,5 @@
 import { select } from "./shared";
-import { testData } from "./vendor/chart"
+import { testData } from "./chart/common"
 import { BrewChart } from "./chart/BrewChart";
 
         var BChart = {

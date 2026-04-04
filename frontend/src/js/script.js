@@ -13,7 +13,8 @@ import {
     updateGravity,
     updateNavbarVersion
 } from './shared';
-import { checkfgstate, GravityFilter, GravityTracker } from "./vendor/chart";
+import { gravityFilter } from "./chart/GravityFilter";
+import { checkfgstate, GravityTracker } from "./vendor/chart";
 import { BrewChart } from "./chart/BrewChart";
 import { Capper } from "./capper";
 import { BWF } from "./vendor/bwf";
@@ -460,7 +461,7 @@ import { BWF } from "./vendor/bwf";
         }
         //}
         if (typeof msg["lpf"] != "undefined")
-            GravityFilter.setBeta(msg["lpf"]);
+            gravityFilter.setBeta(msg["lpf"]);
 
         if (typeof msg["stpt"] != "undefined")
             GravityTracker.setThreshold(msg["stpt"]);

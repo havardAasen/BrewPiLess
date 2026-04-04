@@ -1,21 +1,5 @@
 import { select } from "../shared";
 
-// gravity tracking
-export var GravityFilter = {
-    b: 0.1,
-    y: 0,
-    reset: function() {
-        this.y = 0;
-    },
-    add: function(gravity) {
-        if (this.y == 0) this.y = gravity;
-        else this.y = this.y + this.b * (gravity - this.y);
-        return Math.round(this.y * 10000) / 10000;
-    },
-    setBeta: function(beta) {
-        this.b = beta;
-    }
-};
 export var GravityTracker = {
     NumberOfSlots: 48,
     InvalidValue: 0xFF,

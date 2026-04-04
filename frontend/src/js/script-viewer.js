@@ -1,6 +1,7 @@
 import { byId, select } from "./shared";
 import { LineIndex, Labels } from "./chart/constants";
-import { BrewChart } from "./chart-edit.js";
+import { testData } from "./vendor/chart"
+import { BrewChart } from "./chart/BrewChart";
 import { STATES } from "./vendor/chart";
 
         var BChart = {
@@ -43,7 +44,7 @@ import { STATES } from "./vendor/chart";
                         window.file = f;
                         //chart.clear();
                         var data = new Uint8Array(e.target.result);
-                        if (BrewChart.testData(data) !== false) {
+                        if (testData(data) !== false) {
                             BChart.raw = data;
                             BChart.chart.process(data);
                             if (BChart.chart.calibrating) {

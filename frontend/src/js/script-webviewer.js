@@ -1,5 +1,6 @@
 import { select } from "./shared";
-import { BrewChart } from "./chart-edit.js";
+import { testData } from "./vendor/chart"
+import { BrewChart } from "./chart/BrewChart";
 
         var BChart = {
             toggle: function(type) {
@@ -108,7 +109,7 @@ import { BrewChart } from "./chart-edit.js";
                 // response is unsigned 8 bit integer
                 var data = new Uint8Array(this.response);
 
-                if (BrewChart.testData(data) !== false) {
+                if (testData(data) !== false) {
                     BChart.raw = data;
                     BChart.chart.process(data);
                     if (BChart.chart.calibrating) {

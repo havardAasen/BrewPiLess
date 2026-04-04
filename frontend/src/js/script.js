@@ -14,7 +14,7 @@ import {
     updateNavbarVersion
 } from './shared';
 import { checkfgstate, GravityFilter, GravityTracker } from "./vendor/chart";
-import { BrewChart } from "./chart-edit.js";
+import { BrewChart } from "./chart/BrewChart";
 import { Capper } from "./capper";
 import { BWF } from "./vendor/bwf";
 

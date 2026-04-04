@@ -14,7 +14,8 @@ import {
     updateNavbarVersion
 } from './shared';
 import { gravityFilter } from "./chart/GravityFilter";
-import { checkfgstate, GravityTracker } from "./vendor/chart";
+import { gravityTracker } from './chart/GravityTracker';
+import { checkfgstate } from "./vendor/chart";
 import { BrewChart } from "./chart/BrewChart";
 import { Capper } from "./capper";
 import { BWF } from "./vendor/bwf";
@@ -464,7 +465,7 @@ import { BWF } from "./vendor/bwf";
             gravityFilter.setBeta(msg["lpf"]);
 
         if (typeof msg["stpt"] != "undefined")
-            GravityTracker.setThreshold(msg["stpt"]);
+            gravityTracker.setThreshold(msg["stpt"]);
 
         if (typeof msg["ctemp"] != "undefined")
             window.caltemp = msg["ctemp"];

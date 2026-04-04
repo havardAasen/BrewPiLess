@@ -2,7 +2,8 @@ import regression from "regression";
 import { BrewMath, byId, C2F, select } from "../shared";
 import { ClassLabels, Colors, Labels, LineIndex } from "./constants";
 import { gravityFilter } from "./GravityFilter";
-import { GravityTracker, STATES, STATE_LINE_WIDTH } from "./../vendor/chart";
+import { gravityTracker } from "./GravityTracker";
+import { STATES, STATE_LINE_WIDTH } from "./../vendor/chart";
 import Dygraph from "dygraphs";
 
 export class BrewChart {
@@ -52,7 +53,7 @@ export class BrewChart {
         this.cid = cid;
         this.clearData();
         gravityFilter.reset();
-        GravityTracker.init();
+        gravityTracker.init();
     }
 
     clearData() {
@@ -232,7 +233,7 @@ export class BrewChart {
                 this.clearData();
                 newchart = true;
                 gravityFilter.reset();
-                GravityTracker.init();
+                gravityTracker.init();
             } else if (d0 === 0xf3) {
                 this.coTemp = d1;
             } else if (d0 === 0xf4) {
@@ -372,12 +373,12 @@ export class BrewChart {
                 this.sg = sg;
                 this.filterSg = gravityFilter.add(sg);
                 if (this.plato)
-                    GravityTracker.add(
+                    gravityTracker.add(
                         Math.round(this.filterSg * 10),
                         this.ctime,
                     );
                 else
-                    GravityTracker.add(
+                    gravityTracker.add(
                         Math.round(this.filterSg * 1000),
                         this.ctime,
                     );

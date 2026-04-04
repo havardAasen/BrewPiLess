@@ -1,49 +1,5 @@
 import { select } from "../shared";
-
-export var GravityTracker = {
-    NumberOfSlots: 48,
-    InvalidValue: 0xFF,
-    ridx: 0,
-    record: [],
-    threshold: 1,
-    setThreshold: function(t) {
-        this.threshold = t;
-    },
-    addRecord: function(v) {
-        this.record[this.ridx++] = v;
-        if (this.ridx >= this.NumberOfSlots) this.ridx = 0;
-    },
-    stable: function(duration, to) {
-        to = (typeof to == "undefined") ? this.threshold : to;
-        var current = this.ridx - 1;
-        if (current < 0) current = this.NumberOfSlots - 1;
-        var previous = this.NumberOfSlots + this.ridx - duration;
-        while (previous >= this.NumberOfSlots) previous -= this.NumberOfSlots;
-        return (this.record[previous] - this.record[current]) <= to;
-    },
-    Period: 60 * 60,
-    init: function() {
-        this.curerntStart = 0;
-        this.lastValue = 0;
-    },
-    add: function(gravity, time) {
-        //gravity = Math.round(fgravity * 1000, 1);
-        var timediff = time - this.curerntStart;
-
-        if (timediff > this.Period) {
-            this.addRecord(gravity);
-            if (this.lastValue != 0) {
-                timediff -= this.Period;
-                while (timediff > this.Period) {
-                    timediff -= this.Period;
-                    this.addRecord(this.lastValue);
-                }
-            }
-            this.curerntStart = time;
-            this.lastValue = gravity;
-        }
-    }
-};
+import { gravityTracker } from "../chart/GravityTracker";
 
 export function testData(data) {
     if (data[0] != 0xFF) return false;
@@ -67,18 +23,14 @@ function fgstate(duration) {
 }
 
 export function checkfgstate() {
-    if (GravityTracker.stable(12)) {
-        if (GravityTracker.stable(24)) {
-            if (GravityTracker.stable(48)) fgstate(48);
+    gravityTracker = new GravityTracker();
+    if (gravityTracker.stable(12)) {
+        if (gravityTracker.stable(24)) {
+            if (gravityTracker.stable(48)) fgstate(48);
             else fgstate(24); // 24
         } else fgstate(12); //
     } else fgstate(0);
 }
-// gravity tracking
-var GravityIndex = 6;
-var TiltAngleIndex = 7;
-var RoomTemperatureIndex = 4;
-
 var colorIdle = "white";
 var colorCool = "rgba(0, 0, 255, 0.4)";
 var colorHeat = "rgba(255, 0, 0, 0.4)";

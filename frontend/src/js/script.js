@@ -287,14 +287,19 @@ import { BWF } from "./vendor/bwf";
             return StateText[state].replace("{time}", timestr);
         }
 
-        Object.keys(status).map(function(key, i) {
-            var div = select("#lcd" + key);
-            if (div) {
-                if (key == "ControlMode") div.innerHTML = ModeString[status[key]];
-                else if (key == "ControlState") div.innerHTML = genStateText(status[key], status.ControlStateSince);
-                else div.innerHTML = status[key];
+        Object.keys(status).forEach(key => {
+            const div = select("#lcd" + key);
+            if (!div) return;
+
+            if (key === "ControlMode") {
+                div.innerHTML = ModeString[status[key]];
+            } else if (key === "ControlState") {
+                div.innerHTML = genStateText(status[key], status.ControlStateSince);
+            } else {
+                div.innerHTML = status[key];
             }
         });
+
         // keep the info for other usage
         if (typeof status["unit"] != "undefined") window.tempUnit = status.unit;
         if (typeof status["BeerTemp"] != "undefined") {

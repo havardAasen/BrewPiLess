@@ -1,5 +1,5 @@
-import { byId, select } from "./shared";
-import { LineIndex, Labels } from "./chart/constants";
+import { select } from "./shared";
+import { Labels } from "./chart/constants";
 import { testData, STATES } from "./chart/common"
 import { BrewChart } from "./chart/BrewChart";
 

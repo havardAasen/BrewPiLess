@@ -839,13 +839,6 @@ function rcvBeerProfile(p) {
     ControlChart.init("tc_chart", profileEditor.chartdata(), p.u);
 }
 
-function initctrl_C(next) {
-    modekeeper.init();
-    Capper.init();
-    modekeeper.init();
-    openDlgLoading();
-}
-
 function communicationError() {
     var div = select('.error');
     if (div) {

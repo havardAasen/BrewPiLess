@@ -1,4 +1,4 @@
-import { byId, ModeString, StateText } from "./shared";
+import { byId, ModeString } from "./shared";
 import { BWF } from "./vendor/bwf";
 
 var roomOfridge = false;
@@ -33,17 +33,8 @@ function displayLcdText(lines) {
     }
 }
 
-function setLcdText(id, html) {
-    var d = byId(id);
-    d.innerHTML = html;
-}
-
 function communicationError() {
     displayLcdText(["Failed to", "connect to", "Server", ""]);
-}
-
-function controllerError() {
-    displayLcdText(["Controller not", "updating data", "...", ""]);
 }
 
 function resize() {
@@ -66,10 +57,9 @@ export function init() {
         event.stopPropagation();
     };
 
-    var gotMsg = true;
     BWF.init({
         onconnect: function() {},
-        error: function(e) {
+        error: function() {
             console.log("error");
             communicationError();
         },
@@ -83,7 +73,7 @@ export function init() {
     });
 }
 
-window.onclick = function(event) {
+window.onclick = function() {
     const dropdowns = document.getElementsByClassName("dropdown-content");
     for (let i = 0; i < dropdowns.length; i++) {
         var openDropdown = dropdowns[i];

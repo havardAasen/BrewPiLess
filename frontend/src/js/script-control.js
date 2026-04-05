@@ -364,7 +364,6 @@ var profileEditor = {
     },
     getProfile: function() {
         var rl = this.rowList();
-        var lastdate = 0;
         var temps = [];
         for (let i = 0; i < rl.length; i++) {
             var tr = rl[i];

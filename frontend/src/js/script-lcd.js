@@ -1,27 +1,6 @@
 import { byId, ModeString, StateText } from "./shared";
 import { BWF } from "./vendor/bwf";
 
-function genStateText(state, duration) {
-    if (state == 1 || state == 2 || state == 10 || state == 7) return StateText[state];
-
-    var timestr = "";
-    var mm = Math.floor(duration / 60);
-    var hh = Math.floor(mm / 60);
-    var ss = duration % 60;
-    mm = mm - hh * 60;
-
-    function zeropad(n){
-        return n>9? ""+n:"0"+n;
-    }
-
-    if (hh > 0) {
-        timestr = "{HH}h{MM}m{SS}".replace("{SS}", zeropad(ss)).replace("{MM}", zeropad(mm)).replace("{HH}", zeropad(hh));
-    } else{
-        // short
-        timestr = "{MM}m{SS}".replace("{SS}", zeropad(ss)).replace("{MM}", zeropad(mm));
-    }
-    return StateText[state].replace("{time}", timestr);
-}
 var roomOfridge = false;
 
 function simLcd(info) {

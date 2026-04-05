@@ -752,7 +752,7 @@ import { BWF } from "./vendor/bwf";
                             // let the reconnecting timer has more chances to do its job                         
                             if (BWF.rcCount < 3) return;
                             // restart reconect timer
-                            clearTimer(window.rcTimeout);
+                            clearTimeout(window.rcTimeout);
                         }
                         // once connected.
                         //  no data for 5 seconds

@@ -549,3 +549,10 @@ export function init() {
 
     mqttLoadSetting();
 }
+
+window.checkurl = checkurl
+window.cmethod = cmethod
+window.hideformat = hideformat
+window.serviceChange = serviceChange
+window.showformat = showformat
+window.update = update

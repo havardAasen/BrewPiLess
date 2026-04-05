@@ -811,3 +811,8 @@ import { BWF } from "./vendor/bwf";
         setTimeout(function() { BChart.start(); }, T_LOAD_CHART);
         updateNavbarVersion();
     }
+
+window.inputOG = inputOG
+window.inputSG = inputSG
+window.inputgravity = inputgravity
+window.inputsg_change = inputsg_change

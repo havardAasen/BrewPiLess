@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "lint": "eslint src/js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --require tsx --test tests/*.test.ts",
     "build": "grunt build && ./output.sh"
   },
   "author": "",
@@ -32,6 +32,7 @@
     "rollup": "^4.60.1",
     "rollup-plugin-typescript2": "^0.36.0",
     "sass": "^1.98.0",
+    "tsx": "^4.21.0",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.58.0"
   },

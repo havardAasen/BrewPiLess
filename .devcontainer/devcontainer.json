@@ -22,6 +22,7 @@
 
             },
             "extensions": [
+                "dbaeumer.vscode-eslint",
                 "ms-vscode.cpptools",
                 "platformio.platformio-ide",
                 "esbenp.prettier-vscode",

@@ -12,12 +12,19 @@
                 "extensions.ignoreRecommendations": true,
                 "telemetry.telemetryLevel": "off",
                 "platformio-ide.disablePIOHomeStartup": true,
-                "platformio-ide.pioHomeServerHttpPort": 8008
+                "platformio-ide.pioHomeServerHttpPort": 8008,
+                "[javascript]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                },
+                "[typescript]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode"
+                }
+
             },
             "extensions": [
                 "ms-vscode.cpptools",
                 "platformio.platformio-ide",
-                "prettier-vscode",
+                "esbenp.prettier-vscode",
                 "streetsidesoftware.code-spell-checker"
             ]
         }

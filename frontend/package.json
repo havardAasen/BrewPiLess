@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "lint": "eslint src/js",
+    "pretty": "prettier --check  src/js",
     "test": "node --require tsx --test tests/*.test.ts",
     "build": "grunt build && ./output.sh"
   },

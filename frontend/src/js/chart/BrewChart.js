@@ -1,6 +1,6 @@
 import regression from "regression";
 import { BrewMath, byId, C2F, select } from "../shared";
-import { ClassLabels, Colors, Labels, LineIndex } from "./constants";
+import { ClassLabels, Colors, Labels, LineIndex, ModeMap } from "./constants";
 import { gravityFilter } from "./GravityFilter";
 import { gravityTracker } from "./GravityTracker";
 import { STATES, STATE_LINE_WIDTH } from "./common";
@@ -205,13 +205,14 @@ export class BrewChart {
         const data = Array.from(bytes);
 
         while (i < data.length) {
-            const d0 = data[i++],
-                d1 = data[i++];
+            const d0 = data[i++];
+            const d1 = data[i++];
             if (d0 === 0xff) {
                 if ((d1 & 0xf) !== 5) throw new Error("version mismatched");
                 this.celsius = d1 & 0x10 ? false : true;
                 this.calibrating = d1 & 0x20 ? false : true;
                 this.plato = d1 & 0x40 ? false : true;
+
                 let p = data[i++];
                 p = p * 256 + data[i++];
                 this.interval = p;
@@ -237,12 +238,7 @@ export class BrewChart {
             } else if (d0 === 0xf3) {
                 this.coTemp = d1;
             } else if (d0 === 0xf4) {
-                this.anno.push({
-                    series: "beerTemp",
-                    x: this.ctime * 1000,
-                    shortText: String.fromCharCode(d1).toUpperCase(),
-                    attachAtBottom: true,
-                });
+                this.addMode(d1, this.ctime * 1000);
             } else if (d0 === 0xf1) {
                 this.cstate = d1;
             } else if (d0 === 0xfe) {
@@ -895,5 +891,16 @@ export class BrewChart {
             }
         }
         return data;
+    }
+
+    addMode(m, x) {
+        const s = String.fromCharCode(m);
+        this.anno.push({
+            series: "beerTemp",
+            x: x,
+            shortText: s.toUpperCase,
+            text: ModeMap[s],
+            attachAtBottom: true,
+        });
     }
 }

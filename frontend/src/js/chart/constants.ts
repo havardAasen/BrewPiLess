@@ -1,12 +1,12 @@
 export enum LineIndex {
-    BeerSet = 0,
-    BeerTemp = 1,
-    FridgeTemp = 2,
-    FridgeSet = 3,
-    RoomTemp = 4,
-    AuxTemp = 5,
-    Gravity = 6,
-    FilteredSg = 7,
+    BeerSet = 1,
+    BeerTemp = 2,
+    FridgeTemp = 3,
+    FridgeSet = 4,
+    RoomTemp = 5,
+    AuxTemp = 6,
+    Gravity = 7,
+    FilteredSg = 8,
 }
 
 export const ModeMap = {

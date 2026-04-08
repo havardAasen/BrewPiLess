@@ -2,7 +2,7 @@ import { select, s_ajax, updateNavbarVersion } from "./shared";
 
 const gdcurl = "/gdc";
 
-function fill(setting: Record<string, any>): void {
+function fill(setting: Record<string, boolean | string>): void {
     for (const name in setting) {
         const element = select(
             `input[name=${name}]`,
@@ -19,7 +19,7 @@ function fill(setting: Record<string, any>): void {
 
 function save(): void {
     const inputs = document.getElementsByTagName("input");
-    const setting: Record<string, any> = {};
+    const setting: Record<string, boolean | string> = {};
     Array.from(inputs).forEach((ele) => {
         if (!ele.name) return;
         if (ele.type === "checkbox") {
@@ -38,7 +38,7 @@ function save(): void {
         success: function () {
             alert("<%= done %>");
         },
-        fail: function (a: any) {
+        fail: function (a: ProgressEvent | number) {
             alert("<%= script_control_failed_updating_data %>" + a);
         },
     });
@@ -59,4 +59,4 @@ export function init(): void {
     });
 }
 
-(window as any).save = save;
+window.Save = save;

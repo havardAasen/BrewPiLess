@@ -116,11 +116,13 @@ function validIP(ip: string): false | string {
     return address.join(".");
 }
 
-interface NetworkEntry {
+interface NetworkItem {
     ssid: string;
     rssi: number;
     enc?: boolean;
 }
+
+type NetworkEntry = { list: NetworkItem[] } | { ssid?: string; ip?: string };
 
 export const Net = {
     litem: null as HTMLElement | null,
@@ -138,8 +140,8 @@ export const Net = {
         this.hide();
     },
 
-    nwevent(data: Record<string, any>) {
-        if (typeof data["list"] != "undefined") {
+    nwevent(data: NetworkEntry) {
+        if ("list" in data) {
             this.list(data.list);
         } else if (typeof data["ssid"] != "undefined") {
             if (data.ssid != "") {
@@ -155,7 +157,7 @@ export const Net = {
         return x > 0 ? "?" : Math.min(Math.max(2 * (x + 100), 0), 100);
     },
 
-    list(nwlist: NetworkEntry[]): void {
+    list(nwlist: NetworkItem[]): void {
         const nws = byId("networks");
         if (!nws || !this.litem) return;
 

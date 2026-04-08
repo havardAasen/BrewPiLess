@@ -5,6 +5,7 @@ declare global {
         plato?: boolean;
         updateGravity?: (sg: number) => void;
         oridata: Record<string, string | number | boolean>;
+        Save: typeof Save;
         Net: typeof Net;
         saveSystemSettings: () => void;
     }

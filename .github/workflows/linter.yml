@@ -23,6 +23,26 @@ jobs:
         run: npm run pretty
 
 
+  ts-eslint:
+    name: ESLint TypeScript files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Run ESLint
+        working-directory: frontend
+        run: npx eslint src/js/*ts src/js/**/*ts
+
+
   cppcheck:
     runs-on: ubuntu-latest
     steps:

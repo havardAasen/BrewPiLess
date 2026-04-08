@@ -21,19 +21,6 @@ export default defineConfig([
     },
     extends: ["js/recommended"]
   },
-  {
-    files: ["src/js/**/*.{ts,tsx}"],
-    extends: [tseslint.configs.recommended, tseslint.configs.stylistic],
-    plugins: {
-      "@typescript-eslint": tseslint.plugin,
-    },
-    languageOptions: {
-      parser: tseslint.parser,
-      parserOptions: {},
-    },
-    rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-    },
-  },
+  tseslint.configs.recommended,
   eslintConfigPrettier,
 ]);

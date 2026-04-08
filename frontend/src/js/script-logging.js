@@ -1,31 +1,27 @@
-import {
-    select,
-    s_ajax,
-    C2F,
-    BrewMath,
-    updateNavbarVersion
-} from "./shared";
-import {mqttLoadSetting} from "./mqtt";
+import { select, s_ajax, C2F, BrewMath, updateNavbarVersion } from "./shared";
+import { mqttLoadSetting } from "./mqtt";
 
 var logurl = "log";
 
-Number.prototype.format = function(n, x, s, c) {
-    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+Number.prototype.format = function (n, x, s, c) {
+    var re = "\\d(?=(\\d{" + (x || 3) + "})+" + (n > 0 ? "\\D" : "$") + ")",
         num = this.toFixed(Math.max(0, ~~n));
 
-    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+    return (c ? num.replace(".", c) : num).replace(
+        new RegExp(re, "g"),
+        "$&" + (s || ","),
+    );
 };
-String.prototype.escapeJSON = function() {
-    return this.replace(/[\\]/g, '\\\\')
+String.prototype.escapeJSON = function () {
+    return this.replace(/[\\]/g, "\\\\")
         .replace(/[\"]/g, '\\\"')
-        .replace(/[\/]/g, '\\/')
-        .replace(/[\b]/g, '\\b')
-        .replace(/[\f]/g, '\\f')
-        .replace(/[\n]/g, '\\n')
-        .replace(/[\r]/g, '\\r')
-        .replace(/[\t]/g, '\\t');
+        .replace(/[\/]/g, "\\/")
+        .replace(/[\b]/g, "\\b")
+        .replace(/[\f]/g, "\\f")
+        .replace(/[\n]/g, "\\n")
+        .replace(/[\r]/g, "\\r")
+        .replace(/[\t]/g, "\\t");
 };
-
 
 var logs = {
     url: "loglist.php",
@@ -36,24 +32,24 @@ var logs = {
     ll: [],
     fs: {},
     logging: false,
-    vname: function(name) {
+    vname: function (name) {
         if (name == "") return false;
         if (name.match(/[\W]/g)) return false;
         return true;
     },
-    dupname: function(name) {
+    dupname: function (name) {
         var ret = false;
-        this.ll.forEach(function(log) {
+        this.ll.forEach(function (log) {
             if (name == log.name) ret = true;
         });
         return ret;
     },
-    fsinfo: function(s, u) {
-        select("#fssize").innerHTML = s.format(0, 3, ',');
-        select("#fsused").innerHTML = u.format(0, 3, ',');
-        select("#fsfree").innerHTML = (s - u).format(0, 3, ',');
+    fsinfo: function (s, u) {
+        select("#fssize").innerHTML = s.format(0, 3, ",");
+        select("#fsused").innerHTML = u.format(0, 3, ",");
+        select("#fsfree").innerHTML = (s - u).format(0, 3, ",");
     },
-    stoplog: function() {
+    stoplog: function () {
         var t = this;
         if (t.logging) {
             // stop
@@ -63,24 +59,24 @@ var logs = {
                 s_ajax({
                     url: t.stopurl + n,
                     m: "GET",
-                    success: function(d) {
+                    success: function (d) {
                         location.reload();
                     },
-                    fail: function(d) {
+                    fail: function (d) {
                         alert("<%= script_logging_failed_stop_for %>" + d);
-                    }
+                    },
                 });
             }
         }
     },
-    startlog: function() {
+    startlog: function () {
         var t = this;
         if (!t.logging) {
             if (t.ll.length >= 10) {
                 alert("<%= script_logging_too_many_logs %>");
                 return;
             }
-            if ((t.fs.size - t.fs.used) <= t.fs.block * 2) {
+            if (t.fs.size - t.fs.used <= t.fs.block * 2) {
                 alert("<%= script_logging_not_free_space %>");
                 return;
             }
@@ -102,7 +98,9 @@ var logs = {
                 if (isNaN(tilt)) {
                     alert("<%= script_logging_tilt_value_necessary %>");
                 } else if (!window.plato && (isNaN(tilt) || isNaN(reading))) {
-                    alert("<%= script_logging_tilt_value_and_hydrometer_necessary %>");
+                    alert(
+                        "<%= script_logging_tilt_value_and_hydrometer_necessary %>",
+                    );
                     return;
                 }
                 arg = "&tw=" + tilt + "&hr=" + reading;
@@ -113,17 +111,17 @@ var logs = {
                 s_ajax({
                     url: t.starturl + name + arg,
                     m: "GET",
-                    success: function(d) {
+                    success: function (d) {
                         location.reload();
                     },
-                    fail: function(d) {
+                    fail: function (d) {
                         alert("<%= script_logging_failed_start_for %>" + d);
-                    }
+                    },
                 });
             }
         }
     },
-    recording: function(n, t) {
+    recording: function (n, t) {
         this.logging = true;
         var d = new Date(t * 1000);
         select("#start-log-date").innerHTML = d.toLocaleString();
@@ -131,7 +129,7 @@ var logs = {
         select("#logstartinput").style.display = "none";
         select("#logstopinput").style.display = "block";
     },
-    stop: function() {
+    stop: function () {
         this.logging = false;
         select("#logstartinput").style.display = "block";
         select("#logstopinput").style.display = "none";
@@ -140,61 +138,59 @@ var logs = {
     //	alert("View " + this.ll[n].name);
     //	window.open(this.vurl+ n);
     //},
-    rm: function(n) {
+    rm: function (n) {
         var t = this;
         if (confirm("<%= script_logging_delete_the_log %> " + t.ll[n].name)) {
             console.log("rm " + t.ll[n].name);
             s_ajax({
                 url: t.rmurl + n,
                 m: "GET",
-                success: function(d) {
+                success: function (d) {
                     var r = JSON.parse(d);
                     t.fs = r;
                     t.fsinfo(r.size, r.used);
                     t.ll.splice(n, 1);
                     t.list(t.ll);
                 },
-                fail: function(d) {
+                fail: function (d) {
                     alert("<%= script_logging_failed_delete_for %>" + d);
-                }
+                },
             });
         }
     },
-    dl: function(n) {
+    dl: function (n) {
         //console.log("DL " +this.ll[n].name);
         window.open(this.dlurl + n);
     },
-    list: function(l) {
+    list: function (l) {
         var tb = select("#loglist").querySelector("tbody");
         var tr;
-        while (tr = tb.querySelector("tr:nth-of-type(2)"))
-            tb.removeChild(tr);
+        while ((tr = tb.querySelector("tr:nth-of-type(2)"))) tb.removeChild(tr);
 
         var t = this;
         var row = t.row;
-        l.forEach(function(i, idx) {
+        l.forEach(function (i, idx) {
             var name = i.name;
             var date = new Date(i.time * 1000);
             var nr = row.cloneNode(true);
             nr.querySelector(".logid").innerHTML = name;
             nr.querySelector(".logdate").innerHTML = date.toLocaleString();
-            nr.querySelector(".dlbutton").onclick = function() {
+            nr.querySelector(".dlbutton").onclick = function () {
                 t.dl(idx);
             };
             //		nr.querySelector(".viewbutton").onclick=function(){t.view(idx);};
-            nr.querySelector(".rmbutton").onclick = function() {
+            nr.querySelector(".rmbutton").onclick = function () {
                 t.rm(idx);
             };
             tb.appendChild(nr);
         });
-
     },
-    init: function() {
+    init: function () {
         var t = this;
-        select("#startlogbutton").onclick = function() {
+        select("#startlogbutton").onclick = function () {
             t.startlog();
         };
-        select("#stoplogbutton").onclick = function() {
+        select("#stoplogbutton").onclick = function () {
             t.stoplog();
         };
 
@@ -203,11 +199,10 @@ var logs = {
         s_ajax({
             url: t.url,
             m: "GET",
-            success: function(d) {
+            success: function (d) {
                 var r = JSON.parse(d);
                 t.fs = r.fs;
-                if (r.rec)
-                    t.recording(r.log, r.start);
+                if (r.rec) t.recording(r.log, r.start);
                 t.ll = r.list;
                 t.list(r.list);
                 t.fsinfo(r.fs.size, r.fs.used);
@@ -218,9 +213,9 @@ var logs = {
                         th[i].style.display = "none";
                 } else window.plato = false;
             },
-            fail: function(e) {
+            fail: function (e) {
                 alert("<%= failed %>:" + e);
-            }
+            },
         });
     },
 };
@@ -241,8 +236,7 @@ function checkformat(ta) {
 function cmethod(c) {
     var inputs = document.querySelectorAll('input[name$="method"]');
     for (var i = 0; i < inputs.length; i++) {
-        if (inputs[i].id != c.id)
-            inputs[i].checked = false;
+        if (inputs[i].id != c.id) inputs[i].checked = false;
     }
     window.selectedMethod = c.value;
 }
@@ -267,7 +261,7 @@ function generichttp_get() {
     var r = {};
     r.url = select("#url").value.trim();
     r.format = encodeURIComponent(format.escapeJSON());
-    r.method = (select("#m_post").checked) ? "POST" : "GET";
+    r.method = select("#m_post").checked ? "POST" : "GET";
     r.type = select("#data-type").value.trim();
     r.service = 0;
     return r;
@@ -278,9 +272,9 @@ function generichttp_set(r) {
     serviceOption("generichttp");
     window.selectedMethod = r.method;
     select("#m_" + r.method.toLowerCase()).checked = true;
-    select("#url").value = (r.url === undefined) ? "" : r.url;
-    select("#data-type").value = (r.type === undefined) ? "" : r.type;
-    select("#format").value = (r.format === undefined) ? "" : r.format;
+    select("#url").value = r.url === undefined ? "" : r.url;
+    select("#data-type").value = r.type === undefined ? "" : r.type;
+    select("#format").value = r.format === undefined ? "" : r.format;
     checkformat(select("#format"));
 }
 // ubidots.com
@@ -288,13 +282,15 @@ function ubidots_set(r) {
     select("#service-type").value = "ubidots";
     serviceOption("ubidots");
 
-    // different api    
-    var match = /http:\/\/([\w\.]+)\.ubidots\.com\/api\/v1\.6\/devices\/(\w+)\/\?token=(\w+)$/.exec(r.url);
+    // different api
+    var match =
+        /http:\/\/([\w\.]+)\.ubidots\.com\/api\/v1\.6\/devices\/(\w+)\/\?token=(\w+)$/.exec(
+            r.url,
+        );
 
-    select("select[name=ubidots-account]").value = (match[1] == "things") ? 1 : 2;
+    select("select[name=ubidots-account]").value = match[1] == "things" ? 1 : 2;
     select("#ubidots-device").value = match[2];
     select("#ubidots-token").value = match[3];
-
 }
 
 function ubidots_get() {
@@ -303,9 +299,16 @@ function ubidots_get() {
     var token = select("#ubidots-token").value.trim();
     if (!token) return null;
     var info = {};
-    info.url = (select("select[name=ubidots-account]").value == 1) ?
-        "http://things.ubidots.com/api/v1.6/devices/" + device + "/?token=" + token :
-        "http://industrial.api.ubidots.com/v1.6/devices/" + device + "/?token=" + token;
+    info.url =
+        select("select[name=ubidots-account]").value == 1
+            ? "http://things.ubidots.com/api/v1.6/devices/" +
+              device +
+              "/?token=" +
+              token
+            : "http://industrial.api.ubidots.com/v1.6/devices/" +
+              device +
+              "/?token=" +
+              token;
 
     info.format = encodeURIComponent("{}".escapeJSON());
     info.method = "POST";
@@ -319,7 +322,7 @@ function thingspeak_set(r) {
     serviceOption("thingspeak");
 
     var values = {};
-    var fields = r.format.split('&');
+    var fields = r.format.split("&");
     for (let i = 0; i < fields.length; i++) {
         var pair = fields[i].split("=");
         values[pair[0]] = pair[1];
@@ -328,8 +331,10 @@ function thingspeak_set(r) {
     select("#thingspeak-apikey").value = values["api_key"];
 
     for (let i = 1; i < 9; i++)
-        select("select[name=thingspeak-f" + i + "]").value = (typeof values["field" + i] == "undefined") ?
-        "unused" : values["field" + i].substring(1);
+        select("select[name=thingspeak-f" + i + "]").value =
+            typeof values["field" + i] == "undefined"
+                ? "unused"
+                : values["field" + i].substring(1);
 }
 
 function thingspeak_get() {
@@ -356,7 +361,9 @@ function brewfather_set(r) {
     select("#service-type").value = "brewfather";
     serviceOption("brewfather");
 
-    var match = /http:\/\/log\.brewfather\.net\/brewpiless\?id=(\w+)$/.exec(r.url);
+    var match = /http:\/\/log\.brewfather\.net\/brewpiless\?id=(\w+)$/.exec(
+        r.url,
+    );
     select("#brewfather-id").value = match[1];
     var idmatch = /"id":"([^"]+)"/.exec(r.format);
     select("#brewfather-device").value = idmatch[1];
@@ -370,10 +377,12 @@ function brewfather_get() {
     var info = {};
     info.url = "http://log.brewfather.net/brewpiless?id=" + uid;
 
-    var format = "{\"id\":\"" + device +
-        "\",\"beerTemp\":%b,\"beerSet\":%B,\"fridgeTemp\":%f,\"fridgeSet\":%F,\"roomTemp\":%r,\"gravity\":%g,\"tiltValue\":%t,\"auxTemp\":%a,\"extVolt\":%v,\"timestamp\":%u,\"tempUnit\":\"%U\",\"pressure\":%P,\"mode\":\"%M\"}";
+    var format =
+        '{"id":"' +
+        device +
+        '","beerTemp":%b,"beerSet":%B,"fridgeTemp":%f,"fridgeSet":%F,"roomTemp":%r,"gravity":%g,"tiltValue":%t,"auxTemp":%a,"extVolt":%v,"timestamp":%u,"tempUnit":"%U","pressure":%P,"mode":"%M"}';
 
-    info.format = encodeURIComponent(format.escapeJSON());;
+    info.format = encodeURIComponent(format.escapeJSON());
 
     info.method = "POST";
     info.type = "application/json";
@@ -412,13 +421,19 @@ function brewersfriend_get() {
     var url = select("#brewersfriend-url").value.trim();
     var beer = select("#brewersfriend-beer").value.trim();
 
-    var format = "{\"name\":\"BrewPiLess\",\"temp\": %b,\"temp_unit\": \"%U\",\"gravity\":" + gf +
-        ",\"gravity_unit\":\"" + gu + "\",\"ph\": \"\",\"comment\": \"\",\"beer\":\"" + beer + "\",\"battery\":%v,\"RSSI\": \"\",\"angle\": %t}";
+    var format =
+        '{"name":"BrewPiLess","temp": %b,"temp_unit": "%U","gravity":' +
+        gf +
+        ',"gravity_unit":"' +
+        gu +
+        '","ph": "","comment": "","beer":"' +
+        beer +
+        '","battery":%v,"RSSI": "","angle": %t}';
 
     var info = {};
     info.url = url;
 
-    info.format = encodeURIComponent(format.escapeJSON());;
+    info.format = encodeURIComponent(format.escapeJSON());
 
     info.method = "POST";
     info.type = "application/json";
@@ -427,17 +442,16 @@ function brewersfriend_get() {
 }
 //
 function service_set(r) {
-    if (r.service == 1) { // ubidots.com 
+    if (r.service == 1) {
+        // ubidots.com
         ubidots_set(r);
     } else {
-        if (/http:\/\/api\.thingspeak\.com\//.exec(r.url))
-            thingspeak_set(r);
+        if (/http:\/\/api\.thingspeak\.com\//.exec(r.url)) thingspeak_set(r);
         else if (/http:\/\/log\.brewfather\.net\//.exec(r.url))
             brewfather_set(r);
         else if (/http:\/\/log\.brewersfriend\.com\//.exec(r.url))
             brewersfriend_set(r);
-        else
-            generichttp_set(r);
+        else generichttp_set(r);
     }
 }
 
@@ -463,19 +477,23 @@ function update() {
         url: logurl,
         m: "POST",
         data: "data=" + JSON.stringify(r),
-        success: function(d) {
+        success: function (d) {
             alert("<%= done %>");
         },
-        fail: function(e) {
+        fail: function (e) {
             alert("<%= failed %>:" + e);
-        }
+        },
     });
-
 }
 
 function remote_init() {
-    var MinPeriod = { generichttp: 1, thingspeak: 15, brewfather: 900, ubidots: 1 };
-    select("#period").onchange = function() {
+    var MinPeriod = {
+        generichttp: 1,
+        thingspeak: 15,
+        brewfather: 900,
+        ubidots: 1,
+    };
+    select("#period").onchange = function () {
         var min = MinPeriod[select("#service-type").value];
         if (select("#period").value < min) select("#period").value = min;
     };
@@ -485,14 +503,14 @@ function remote_init() {
     s_ajax({
         url: logurl + "?data=1",
         m: "GET",
-        success: function(d) {
-                var r = JSON.parse(d);
-                if (typeof r.enabled == "undefined") return;
-                select("#enabled").checked = r.enabled;
-                select("#period").value = (r.period === undefined) ? 300 : r.period;
-                service_set(r);
-            }
-            /*,
+        success: function (d) {
+            var r = JSON.parse(d);
+            if (typeof r.enabled == "undefined") return;
+            select("#enabled").checked = r.enabled;
+            select("#period").value = r.period === undefined ? 300 : r.period;
+            service_set(r);
+        },
+        /*,
                 fail:function(d){
                         alert("error :"+d);
                   }*/
@@ -503,8 +521,8 @@ function showformat(lab) {
     var f = select("#formatlist");
     var rec = lab.getBoundingClientRect();
     f.style.display = "block";
-    f.style.left = (rec.right + 5) + "px";
-    f.style.top = (rec.bottom + 5) + "px";
+    f.style.left = rec.right + 5 + "px";
+    f.style.top = rec.bottom + 5 + "px";
 }
 
 function hideformat() {
@@ -533,7 +551,7 @@ export function init() {
         var ctemp = parseFloat(select("#caltemp").value);
         var unit = select("#tempunit").value;
         if (isNaN(temp) || isNaN(ctemp)) return;
-        if (unit == 'C') {
+        if (unit == "C") {
             ctemp = C2F(ctemp);
             temp = C2F(temp);
         }
@@ -550,9 +568,9 @@ export function init() {
     mqttLoadSetting();
 }
 
-window.checkurl = checkurl
-window.cmethod = cmethod
-window.hideformat = hideformat
-window.serviceChange = serviceChange
-window.showformat = showformat
-window.update = update
+window.checkurl = checkurl;
+window.cmethod = cmethod;
+window.hideformat = hideformat;
+window.serviceChange = serviceChange;
+window.showformat = showformat;
+window.update = update;

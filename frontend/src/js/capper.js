@@ -1,4 +1,10 @@
-import { byId, select, s_ajax, formatDate, formatDateForPicker} from './shared';
+import {
+    byId,
+    select,
+    s_ajax,
+    formatDate,
+    formatDateForPicker,
+} from "./shared";
 
 function TabPane(modes) {
     var t = this;
@@ -7,7 +13,7 @@ function TabPane(modes) {
     function dselect(m) {
         var d = byId(m + "-m");
         //        var nc = byId(m + "-m").className.replace(/\snav-selected/, '');
-        var nc = d.className.replace(/\snav-selected/, '');
+        var nc = d.className.replace(/\snav-selected/, "");
         d.className = nc;
 
         byId(m + "-s").style.display = "none";
@@ -16,7 +22,7 @@ function TabPane(modes) {
     function select(m) {
         var d = byId(m + "-m");
         if (d.className.indexOf("nav-selected") < 0)
-            d.className += ' nav-selected';
+            d.className += " nav-selected";
 
         byId(m + "-s").style.display = "block";
         t.cmode = m;
@@ -25,9 +31,9 @@ function TabPane(modes) {
     for (var i = 0; i < modes.length; i++) {
         var m = modes[i];
         byId(m + "-s").style.display = "none";
-        byId(m + "-m").onclick = function() {
-            var tm = this.id.replace(/-m$/, '');
-            //deselect current selected 
+        byId(m + "-m").onclick = function () {
+            var tm = this.id.replace(/-m$/, "");
+            //deselect current selected
             dselect(t.cmode);
             // select current
             select(tm);
@@ -42,21 +48,21 @@ function TabPane(modes) {
 export var Capper = {
     target_psi: 0,
     psi_valid: false,
-    hidepset: function(hide) {
+    hidepset: function (hide) {
         this.psi_valid = !hide;
         var psets = document.querySelectorAll(".psi-set-group");
         for (var i = 0; i < psets.length; i++) {
             psets[i].style.display = hide ? "none" : "block";
         }
     },
-    setpsi: function(psi) {
+    setpsi: function (psi) {
         this.target_psi = psi;
         var psets = document.querySelectorAll(".cappressure");
         for (var i = 0; i < psets.length; i++) {
             psets[i].value = psi;
         }
     },
-    init: function() {
+    init: function () {
         var t = this;
         // three conditions:
         //  classic, info-pane within capper-frame
@@ -76,12 +82,12 @@ export var Capper = {
             t.initCtrl();
         }
     },
-    initCtrl: function() {
+    initCtrl: function () {
         var t = this;
         t.tabs = new TabPane(["tab-gravity", "tab-time", "tab-manual"]);
         var date_in = select("#captimeinput");
         t.time = new Date();
-        date_in.onchange = function() {
+        date_in.onchange = function () {
             var nd = new Date(date_in.value);
             if (isNaN(nd.getTime())) {
                 // console.log("invalid date");
@@ -90,7 +96,7 @@ export var Capper = {
                 t.setInputTime(nd);
             }
         };
-        select("#cap-apply").onclick = function() {
+        select("#cap-apply").onclick = function () {
             // get psi when needed
             var psiarg = t.psi_valid ? "psi=" + t.target_psi + "&" : "";
 
@@ -105,7 +111,7 @@ export var Capper = {
                 if (isNaN(time.getTime())) {
                     alert("<%= capper_invalid_time %>");
                     return;
-                } else t.send(psiarg + "at=" + (time.getTime() / 1000));
+                } else t.send(psiarg + "at=" + time.getTime() / 1000);
             } else {
                 if (select("#capswitch").checked) t.send(psiarg + "cap=1");
                 else t.send(psiarg + "cap=0");
@@ -114,26 +120,25 @@ export var Capper = {
         t.hidepset(true);
         var psets = document.querySelectorAll(".cappressure");
         for (var i = 0; i < psets.length; i++) {
-            psets[i].onchange = function() {
+            psets[i].onchange = function () {
                 t.setpsi(this.value);
             };
         }
     },
-    send: function(arg) {
+    send: function (arg) {
         console.log("send " + arg);
         s_ajax({
             url: "cap?" + arg,
             m: "GET",
-            success: function() {
+            success: function () {
                 alert("<%= done %>!");
             },
-            fail: function() {
+            fail: function () {
                 alert("<%= capper_failed_set_capper %>");
-            }
-        })
-
+            },
+        });
     },
-    setcap: function(capped) {
+    setcap: function (capped) {
         if (!select("#capstate-open")) return;
         if (capped) {
             select("#capstate-open").style.display = "none";
@@ -143,12 +148,15 @@ export var Capper = {
             select("#capstate-close").style.display = "none";
         }
     },
-    setInputTime: function(d) {
+    setInputTime: function (d) {
         this.time = d;
         var date_in = select("#captimeinput");
-        date_in.value = (date_in.type == "datetime-local") ? formatDateForPicker(d) : formatDate(d);
+        date_in.value =
+            date_in.type == "datetime-local"
+                ? formatDateForPicker(d)
+                : formatDate(d);
     },
-    status: function(capst) {
+    status: function (capst) {
         // first set cap
         //0: none, 1: open, 2: close, 3:time, 4: gravity
         //  might need to hide the DOM, but a reload will solve this. just save some code
@@ -157,7 +165,7 @@ export var Capper = {
         this.statusInfo(capst);
         this.updateCtrl(capst);
     },
-    statusInfo: function(capst) {
+    statusInfo: function (capst) {
         // cap status
         var cp = select(".capping-info-pane");
         if (cp) {
@@ -167,7 +175,8 @@ export var Capper = {
             // info: cap condition
             var IDs = ["", "cs-manopen", "cs-mancap", "cs-timecon", "cs-sgcon"];
             for (var i = 1; i < IDs.length; i++) {
-                if (i == capst.m) select("#" + IDs[i]).style.display = "inline-block";
+                if (i == capst.m)
+                    select("#" + IDs[i]).style.display = "inline-block";
                 else select("#" + IDs[i]).style.display = "none";
             }
 
@@ -175,10 +184,12 @@ export var Capper = {
                 select("#capgravityset").innerHTML = capst["g"];
 
             if (typeof capst["t"] != "undefined")
-                select("#captimeset").innerHTML = formatDate(new Date(capst["t"] * 1000));
+                select("#captimeset").innerHTML = formatDate(
+                    new Date(capst["t"] * 1000),
+                );
         }
     },
-    updateCtrl: function(capst) {
+    updateCtrl: function (capst) {
         // cap control
         var cf = select("#capper-frame");
         if (cf) {
@@ -189,8 +200,7 @@ export var Capper = {
 
             if (typeof capst["t"] != "undefined")
                 this.setInputTime(new Date(capst["t"] * 1000));
-            else
-                this.setInputTime(new Date());
+            else this.setInputTime(new Date());
 
             // check mode
             if (capst.m == 1) select("#capswitch").checked = false;
@@ -201,5 +211,5 @@ export var Capper = {
                 this.setpsi(capst.psi);
             }
         }
-    }
+    },
 };

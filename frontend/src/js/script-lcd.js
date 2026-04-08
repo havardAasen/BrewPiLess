@@ -16,11 +16,29 @@ function simLcd(info) {
 
     var lines = [];
     lines[0] = "Mode   " + ModeString[info.md];
-    lines[1] = "Beer  " + showTemp(info.bt) + " " + showTemp(info.bs) + " &deg;" + info.tu;
+    lines[1] =
+        "Beer  " +
+        showTemp(info.bt) +
+        " " +
+        showTemp(info.bs) +
+        " &deg;" +
+        info.tu;
     if (info.rt > -10001 && roomOfridge)
-        lines[2] = "Room  " + showTemp(info.rt) + " " + showTemp(-20000) + " &deg;" + info.tu;
+        lines[2] =
+            "Room  " +
+            showTemp(info.rt) +
+            " " +
+            showTemp(-20000) +
+            " &deg;" +
+            info.tu;
     else
-        lines[2] = "Fridge" + showTemp(info.ft) + " " + showTemp(info.fs) + " &deg;" + info.tu;
+        lines[2] =
+            "Fridge" +
+            showTemp(info.ft) +
+            " " +
+            showTemp(info.fs) +
+            " &deg;" +
+            info.tu;
     roomOfridge = !roomOfridge;
     lines[3] = info.sl;
     return lines;
@@ -44,41 +62,46 @@ function resize() {
     var frame = document.getElementsByClassName("lcddisplay")[0];
     frame.style.width = width + "px";
     frame.style.height = height + "px";
-    document.getElementsByClassName("lcd-text")[0].style.fontSize = parseInt(fontsize) + "px";
+    document.getElementsByClassName("lcd-text")[0].style.fontSize =
+        parseInt(fontsize) + "px";
 }
 
 export function init() {
     resize();
-    window.addEventListener("resize", function() {
-        resize();
-    }, false);
-    byId("lcd").onclick = function() {
+    window.addEventListener(
+        "resize",
+        function () {
+            resize();
+        },
+        false,
+    );
+    byId("lcd").onclick = function () {
         byId("myDropdown").classList.toggle("show");
         event.stopPropagation();
     };
 
     BWF.init({
-        onconnect: function() {},
-        error: function() {
+        onconnect: function () {},
+        error: function () {
             console.log("error");
             communicationError();
         },
         handlers: {
-            A: function(info) {
+            A: function (info) {
                 if (typeof info["sl"] != "undefined") {
                     displayLcdText(simLcd(info));
                 }
-            }
-        }
+            },
+        },
     });
 }
 
-window.onclick = function() {
+window.onclick = function () {
     const dropdowns = document.getElementsByClassName("dropdown-content");
     for (let i = 0; i < dropdowns.length; i++) {
         var openDropdown = dropdowns[i];
-        if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
+        if (openDropdown.classList.contains("show")) {
+            openDropdown.classList.remove("show");
         }
     }
-}
+};

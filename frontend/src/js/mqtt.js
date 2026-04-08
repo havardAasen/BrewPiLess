@@ -4,27 +4,27 @@ export function mqttLoadSetting() {
     s_ajax({
         url: "mqtt",
         m: "GET",
-        success: function(data) {
+        success: function (data) {
             var j = JSON.parse(data);
-            Object.keys(j).map(function(key) {
+            Object.keys(j).map(function (key) {
                 var name = "mqtt_" + key;
                 var div = select(".mqtt-input[name=" + name + "]");
                 if (div) {
-                    if (div.type == "checkbox") div.checked = (j[key] != 0);
+                    if (div.type == "checkbox") div.checked = j[key] != 0;
                     else div.value = j[key];
                 }
             });
         },
-        fail: function(d) {
+        fail: function (d) {
             alert("<%= script_config_error_getting_data %>:" + d);
-        }
+        },
     });
 }
 
 function mqttSave() {
     var ins = document.querySelectorAll(".mqtt-input");
     var json = {};
-    Object.keys(ins).map(function(key, i) {
+    Object.keys(ins).map(function (key, i) {
         if (ins[i].name && ins[i].name != "") {
             var val;
             if (ins[i].type === "checkbox") val = ins[i].checked;
@@ -39,12 +39,12 @@ function mqttSave() {
         url: "mqtt",
         data: "data=" + encodeURIComponent(JSON.stringify(json)),
         m: "POST",
-        success: function() {
+        success: function () {
             alert("<%= done %>!");
         },
-        fail: function(d) {
+        fail: function (d) {
             alert("<%= script_config_error_saving_data %>:" + d);
-        }
+        },
     });
 }
 

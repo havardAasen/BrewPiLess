@@ -10,7 +10,7 @@ import {
     F2C,
     C2F,
     updateOriginGravity,
-    updateNavbarVersion
+    updateNavbarVersion,
 } from "./shared";
 import { Capper } from "./capper";
 import { BWF } from "./vendor/bwf";
@@ -20,26 +20,28 @@ import Dygraph from "dygraphs";
 var BPURL = "/tschedule";
 var MAX_STEP = 7;
 
-
 /* profile.js */
 var profileEditor = {
     dirty: false,
-    tempUnit: 'C',
+    tempUnit: "C",
     C_startday_Id: "#startdate",
     C_savebtn_Id: "savebtn",
-    markdirty: function(d) {
+    markdirty: function (d) {
         this.dirty = d;
-        byId(this.C_savebtn_Id).innerHTML = (d) ? "Save*" : "Save";
+        byId(this.C_savebtn_Id).innerHTML = d ? "Save*" : "Save";
     },
-    getStartDate: function() {
+    getStartDate: function () {
         return this.sd;
     },
-    setStartDate: function(d) {
+    setStartDate: function (d) {
         this.sd = d;
         var date_in = select(this.C_startday_Id);
-        date_in.value = (date_in.type == "datetime-local") ? formatDateForPicker(d) : formatDate(d);
+        date_in.value =
+            date_in.type == "datetime-local"
+                ? formatDateForPicker(d)
+                : formatDate(d);
     },
-    startDayChange: function() {
+    startDayChange: function () {
         var nd = new Date(select(this.C_startday_Id).value);
         if (isNaN(nd.getTime())) {
             // console.log("invalid date");
@@ -51,43 +53,45 @@ var profileEditor = {
             this.markdirty(true);
         }
     },
-    startnow: function() {
+    startnow: function () {
         var d = new Date();
         this.setStartDate(d);
         this.reorg();
         this.markdirty(true);
         ControlChart.update(this.chartdata(), this.tempUnit);
     },
-    rowList: function() {
+    rowList: function () {
         var tb = byId("profile_t").getElementsByTagName("tbody")[0];
         return tb.getElementsByTagName("tr");
     },
-    sgChange: function(td) {
-        if (!isNaN(td.innerHTML) || td.innerHTML.match(/^[\d]+%$/) || td.innerHTML == "") {
+    sgChange: function (td) {
+        if (
+            !isNaN(td.innerHTML) ||
+            td.innerHTML.match(/^[\d]+%$/) ||
+            td.innerHTML == ""
+        ) {
             td.saved = td.innerHTML;
             this.markdirty(true);
         } else {
             td.innerHTML = td.saved;
         }
     },
-    dayChange: function(td) {
-        if (td.innerHTML == "" || isNaN(td.innerHTML))
-            td.innerHTML = td.saved;
+    dayChange: function (td) {
+        if (td.innerHTML == "" || isNaN(td.innerHTML)) td.innerHTML = td.saved;
         else {
             this.markdirty(true);
             this.reorg();
             ControlChart.update(this.chartdata(), this.tempUnit);
         }
     },
-    tempChange: function(td) {
-        if (td.innerHTML == "" || isNaN(td.innerHTML))
-            td.innerHTML = td.saved;
+    tempChange: function (td) {
+        if (td.innerHTML == "" || isNaN(td.innerHTML)) td.innerHTML = td.saved;
         else {
             this.markdirty(true);
             ControlChart.update(this.chartdata(), this.tempUnit);
         }
     },
-    stableChange: function(td) {
+    stableChange: function (td) {
         if (td.innerHTML.match(/^\s*(\d+)@(\d+)\s*$/)) {
             td.saved = td.innerHTML;
             this.markdirty(true);
@@ -98,7 +102,7 @@ var profileEditor = {
             td.innerHTML = td.saved;
         }
     },
-    initrow: function(tr, stage) {
+    initrow: function (tr, stage) {
         var b = this;
         // temp setting
         var type = stage.c;
@@ -110,10 +114,10 @@ var profileEditor = {
         } else {
             tdTemp.innerHTML = stage.t;
             tdTemp.contentEditable = true;
-            tdTemp.onblur = function() {
+            tdTemp.onblur = function () {
                 b.tempChange(this);
             };
-            tdTemp.onfocus = function() {
+            tdTemp.onfocus = function () {
                 this.saved = this.innerHTML;
             };
         }
@@ -121,10 +125,10 @@ var profileEditor = {
         var tdDay = tr.getElementsByClassName("stage-time")[0];
         tdDay.innerHTML = stage.d;
         tdDay.contentEditable = true;
-        tdDay.onblur = function() {
+        tdDay.onblur = function () {
             b.dayChange(this);
         };
-        tdDay.onfocus = function() {
+        tdDay.onfocus = function () {
             this.saved = this.innerHTML;
         };
 
@@ -138,25 +142,28 @@ var profileEditor = {
             tdStable.innerHTML = "";
         } else {
             tdSG.saved = stage.g;
-            tdSG.innerHTML = (typeof stage.g == "undefined") ? "" : stage.g;
+            tdSG.innerHTML = typeof stage.g == "undefined" ? "" : stage.g;
             tdSG.contentEditable = true;
-            tdSG.onblur = function() {
+            tdSG.onblur = function () {
                 b.sgChange(this);
             };
-            tdSG.onfocus = function() {
+            tdSG.onfocus = function () {
                 this.saved = this.innerHTML;
             };
             if (typeof stage.s == "undefined") tdStable.innerHTML = "";
-            else tdStable.innerHTML = (typeof stage.x == "undefined") ? stage.s : stage.x + "@" + stage.s;
+            else
+                tdStable.innerHTML =
+                    typeof stage.x == "undefined"
+                        ? stage.s
+                        : stage.x + "@" + stage.s;
             tdStable.contentEditable = true;
-            tdStable.onblur = function() {
+            tdStable.onblur = function () {
                 b.stableChange(this);
             };
-            tdStable.onfocus = function() {
+            tdStable.onfocus = function () {
                 this.saved = this.innerHTML;
             };
         }
-
 
         var forTime = tr.getElementsByClassName("for-time")[0];
         // condition, only valid for hold
@@ -185,12 +192,11 @@ var profileEditor = {
             b: 7,
             x: 8,
             w: 9,
-            e: 10
+            e: 10,
         };
         if (type == "r") {
             forTime.style.display = "block";
             conSel.style.display = "none";
-
         } else {
             conSel.value = stage.c;
             conSel.selectedIndex = condtionIndex[stage.c];
@@ -200,22 +206,23 @@ var profileEditor = {
         }
     },
 
-    datestr: function(diff) {
+    datestr: function (diff) {
         var dt = new Date(this.sd.getTime() + Math.round(diff * 86400) * 1000);
         return formatDate(dt);
     },
-    reorg: function() {
+    reorg: function () {
         var rowlist = this.rowList();
         var utime = this.sd.getTime();
         for (var i = 0; i < rowlist.length; i++) {
             var row = rowlist[i];
-            row.className = (i % 2) ? "odd" : "even";
-            row.getElementsByClassName("diaplay-time")[0].innerHTML = formatDate(new Date(utime));
+            row.className = i % 2 ? "odd" : "even";
+            row.getElementsByClassName("diaplay-time")[0].innerHTML =
+                formatDate(new Date(utime));
             var time = this.rowTime(row);
             utime += Math.round(time * 86400) * 1000;
         }
     },
-    chartdata: function() {
+    chartdata: function () {
         var rowlist = this.rowList();
         if (rowlist.length == 0) return [];
 
@@ -239,7 +246,7 @@ var profileEditor = {
         }
         return list;
     },
-    addRow: function() {
+    addRow: function () {
         var tb = byId("profile_t").getElementsByTagName("tbody")[0];
         var rowlist = tb.getElementsByTagName("tr");
 
@@ -250,12 +257,12 @@ var profileEditor = {
         var stage;
 
         if (rowlist.length == 0) {
-            var init = (this.tempUnit == 'C') ? 20 : 68;
+            var init = this.tempUnit == "C" ? 20 : 68;
             stage = {
-                c: 't',
+                c: "t",
                 t: init,
                 d: 1,
-                g: 1.01
+                g: 1.01,
             };
         } else {
             var lastRow = rowlist[rowlist.length - 1];
@@ -263,14 +270,14 @@ var profileEditor = {
             let tr = this.row.cloneNode(true);
             this.initrow(tr, {
                 c: "r",
-                d: 1
+                d: 1,
             });
             tb.appendChild(tr);
             stage = {
-                c: 't',
+                c: "t",
                 t: this.rowTemp(lastRow),
                 d: 1,
-                g: ""
+                g: "",
             };
         }
 
@@ -282,7 +289,7 @@ var profileEditor = {
         this.markdirty(true);
         ControlChart.update(this.chartdata(), this.tempUnit);
     },
-    delRow: function() {
+    delRow: function () {
         // delete last row
         var list = this.rowList();
         if (list.length == 0) return;
@@ -298,19 +305,23 @@ var profileEditor = {
         this.markdirty(true);
         ControlChart.update(this.chartdata(), this.tempUnit);
     },
-    rowTemp: function(row) {
-        return parseFloat(row.getElementsByClassName("stage-temp")[0].innerHTML);
+    rowTemp: function (row) {
+        return parseFloat(
+            row.getElementsByClassName("stage-temp")[0].innerHTML,
+        );
     },
-    rowCondition: function(row) {
+    rowCondition: function (row) {
         return row.getElementsByClassName("condition")[0].value;
     },
-    rowTime: function(row) {
-        return parseFloat(row.getElementsByClassName("stage-time")[0].innerHTML);
+    rowTime: function (row) {
+        return parseFloat(
+            row.getElementsByClassName("stage-time")[0].innerHTML,
+        );
     },
-    rowSg: function(row) {
+    rowSg: function (row) {
         return row.getElementsByClassName("stage-sg")[0].saved;
     },
-    rowSt: function(row) {
+    rowSt: function (row) {
         var data = row.getElementsByClassName("stage-stabletime")[0].innerHTML;
         if (typeof data != "string") return data;
         var matches = data.match(/^\s*(\d+)@(\d+)\s*$/);
@@ -320,7 +331,7 @@ var profileEditor = {
             return parseInt(data);
         }
     },
-    rowStsg: function(row) {
+    rowStsg: function (row) {
         var data = row.getElementsByClassName("stage-stabletime")[0].innerHTML;
         if (typeof data != "string") return false;
         var matches = data.match(/^\s*(\d+)@(\d+)\s*$/);
@@ -330,19 +341,18 @@ var profileEditor = {
             return false;
         }
     },
-    renderRows: function(g) {
-        if (typeof g.length == "undefined")
-            console.log("error!");
+    renderRows: function (g) {
+        if (typeof g.length == "undefined") console.log("error!");
         var e = byId("profile_t").getElementsByTagName("tbody")[0];
         for (var f = 0; f < g.length; f++) {
             var c = this.row.cloneNode(true);
             this.initrow(c, g[f]);
-            e.appendChild(c)
+            e.appendChild(c);
         }
-        this.reorg()
+        this.reorg();
     },
 
-    initable: function(c, e) {
+    initable: function (c, e) {
         this.setStartDate(e);
         if (!this.row) {
             var b = byId("profile_t").getElementsByTagName("tbody")[0];
@@ -351,9 +361,9 @@ var profileEditor = {
         } else {
             this.clear();
         }
-        this.renderRows(c)
+        this.renderRows(c);
     },
-    clear: function() {
+    clear: function () {
         var rl = this.rowList();
 
         for (var i = rl.length - 1; i >= 0; i--) {
@@ -362,7 +372,7 @@ var profileEditor = {
         }
         this.markdirty(true);
     },
-    getProfile: function() {
+    getProfile: function () {
         var rl = this.rowList();
         var temps = [];
         for (let i = 0; i < rl.length; i++) {
@@ -373,12 +383,16 @@ var profileEditor = {
             if (tr.type == "r") {
                 temps.push({
                     c: "r",
-                    d: day
+                    d: day,
                 });
             } else {
                 var temp = this.rowTemp(tr);
                 if (isNaN(temp)) return false;
-                if (temp > BrewPiSetting.maxDegree || temp < BrewPiSetting.minDegree) return false;
+                if (
+                    temp > BrewPiSetting.maxDegree ||
+                    temp < BrewPiSetting.minDegree
+                )
+                    return false;
 
                 /*
                    <option value="t">Time</option>
@@ -397,7 +411,7 @@ var profileEditor = {
                 var stage = {
                     c: condition,
                     d: day,
-                    t: temp
+                    t: temp,
                 };
 
                 var useSg = "gaobxwe";
@@ -417,7 +431,6 @@ var profileEditor = {
                 }
 
                 temps.push(stage);
-
             }
         }
         var s = this.sd.toISOString();
@@ -425,19 +438,19 @@ var profileEditor = {
             s: s,
             v: 2,
             u: this.tempUnit,
-            t: temps
+            t: temps,
         };
         //console.log(ret);
         return ret;
     },
-    loadProfile: function(a) {
+    loadProfile: function (a) {
         this.sd = new Date(a.s);
         this.tempUnit = a.u;
         this.clear();
         this.renderRows(a.t);
         ControlChart.update(this.chartdata(), this.tempUnit);
     },
-    initProfile: function(p) {
+    initProfile: function (p) {
         if (typeof p != "undefined") {
             // start date
             var sd = new Date(p.s);
@@ -447,17 +460,18 @@ var profileEditor = {
             profileEditor.initable([], new Date());
         }
     },
-    setTempUnit: function(u) {
+    setTempUnit: function (u) {
         if (u == this.tempUnit) return;
         this.tempUnit = u;
         var rl = this.rowList();
         for (let i = 0; i < rl.length; i++) {
-            var tcell = rl[i].querySelector('td.stage-temp');
+            var tcell = rl[i].querySelector("td.stage-temp");
             var temp = parseFloat(tcell.innerHTML);
-            if (!isNaN(temp)) tcell.innerHTML = (u == 'C') ? F2C(temp) : C2F(temp);
+            if (!isNaN(temp))
+                tcell.innerHTML = u == "C" ? F2C(temp) : C2F(temp);
         }
         ControlChart.update(this.chartdata(), this.tempUnit);
-    }
+    },
 };
 
 /* end of profile.js */
@@ -472,41 +486,41 @@ export var PL = {
     shown: false,
     initialized: false,
     plist: [],
-    path: function(a) {
-        return "/" + this.pl_path + "/" + a
+    path: function (a) {
+        return "/" + this.pl_path + "/" + a;
     },
-    rm: function(e) {
+    rm: function (e) {
         var f = this;
         var c = "path=" + f.path(f.plist[e]);
         s_ajax({
             url: f.url_del,
             m: "DELETE",
             data: c,
-            success: function(a) {
+            success: function (a) {
                 f.plist.splice(e, 1);
-                f.list(f.plist)
+                f.list(f.plist);
             },
-            fail: function(a) {
+            fail: function (a) {
                 alert("<%= failed %>:" + a);
-            }
-        })
+            },
+        });
     },
-    load: function(e) {
+    load: function (e) {
         var f = this;
         var c = f.path(f.plist[e]);
         s_ajax({
             url: c,
             m: "GET",
-            success: function(b) {
+            success: function (b) {
                 var a = JSON.parse(b);
                 profileEditor.loadProfile(a);
             },
-            fail: function(a) {
+            fail: function (a) {
                 //alert("failed:" + a);
-            }
-        })
+            },
+        });
     },
-    list: function(i) {
+    list: function (i) {
         var a = this;
         var h = select(a.div).querySelector(".profile-list");
         var lis = h.querySelectorAll("li");
@@ -514,28 +528,28 @@ export var PL = {
             h.removeChild(lis[i]);
         }
         var b = a.row;
-        a.plist.forEach(function(f, g) {
+        a.plist.forEach(function (f, g) {
             var c = b.cloneNode(true);
             c.querySelector(".profile-name").innerHTML = f;
-            c.querySelector(".profile-name").onclick = function(j) {
+            c.querySelector(".profile-name").onclick = function (j) {
                 j.preventDefault();
                 a.load(g);
-                return false
+                return false;
             };
-            c.querySelector(".rmbutton").onclick = function() {
-                a.rm(g)
+            c.querySelector(".rmbutton").onclick = function () {
+                a.rm(g);
             };
-            h.appendChild(c)
-        })
+            h.appendChild(c);
+        });
     },
-    append: function(b) {
+    append: function (b) {
         if (!this.initialized) {
-            return
+            return;
         }
         this.plist.push(b);
-        this.list(this.plist)
+        this.list(this.plist);
     },
-    init: function() {
+    init: function () {
         var a = this;
         a.initialized = true;
         a.row = select(a.div).querySelector("li");
@@ -544,24 +558,24 @@ export var PL = {
             url: a.url_list,
             m: "POST",
             data: "dir=" + a.path(""),
-            success: function(c) {
+            success: function (c) {
                 a.plist = [];
                 var b = JSON.parse(c);
-                b.forEach(function(e) {
+                b.forEach(function (e) {
                     if (e.type == "file") {
-                        a.plist.push(e.name)
+                        a.plist.push(e.name);
                     }
                 });
-                a.list(a.plist)
+                a.list(a.plist);
             },
-            fail: function(b) {
+            fail: function (b) {
                 alert("<%= failed %>:" + b);
-            }
-        })
+            },
+        });
     },
-    toggle: function() {
+    toggle: function () {
         if (!this.initialized) {
-            this.init()
+            this.init();
         }
         this.shown = !this.shown;
         if (this.shown) {
@@ -570,149 +584,150 @@ export var PL = {
             select(this.div).style.display = "none";
         }
     },
-    saveas: function() {
-        select("#dlg_saveas").style.display = "block"
+    saveas: function () {
+        select("#dlg_saveas").style.display = "block";
     },
-    cancelSave: function() {
-        select("#dlg_saveas").style.display = "none"
+    cancelSave: function () {
+        select("#dlg_saveas").style.display = "none";
     },
-    doSave: function() {
+    doSave: function () {
         var e = select("#dlg_saveas input").value;
         if (e == "") {
-            return
+            return;
         }
         if (e.match(/[\W]/g)) {
-            return
+            return;
         }
         var g = profileEditor.getProfile();
         if (g === false) {
             alert("<%= script_control_invalid_value_check_again %>");
-            return
+            return;
         }
         var f = this;
-        var c = "path=" + f.path(e) + "&content=" + encodeURIComponent(JSON.stringify(g));
+        var c =
+            "path=" +
+            f.path(e) +
+            "&content=" +
+            encodeURIComponent(JSON.stringify(g));
         s_ajax({
             url: f.url_save,
             m: "POST",
             data: c,
-            success: function(a) {
+            success: function (a) {
                 f.append(e);
-                f.cancelSave()
+                f.cancelSave();
             },
-            fail: function(a) {
+            fail: function (a) {
                 alert("<%= failed %>:" + a);
-            }
-        })
-    }
+            },
+        });
+    },
 };
 /* end of PL*/
 var BrewPiSetting = {
     valid: false,
     maxDegree: 30,
     minDegree: 0,
-    tempUnit: 'C'
+    tempUnit: "C",
 };
-
 
 var ControlChart = {
     unit: "C",
-    init: function(div, data, unit) {
+    init: function (div, data, unit) {
         var t = this;
         t.data = data;
         t.unit = unit;
 
-        var dateFormatter = function(v) {
+        var dateFormatter = function (v) {
             const d = new Date(v);
             return d.shortLocalizedString();
         };
-        var shortDateFormatter = function(v) {
+        var shortDateFormatter = function (v) {
             const d = new Date(v);
             var y = d.getYear() + 1900;
-            var re = new RegExp('[^\d]?' + y + '[^\d]?');
+            var re = new RegExp("[^\d]?" + y + "[^\d]?");
             var n = d.toLocaleDateString();
             return n.replace(re, "");
         };
 
-        var temperatureFormatter = function(v) {
+        var temperatureFormatter = function (v) {
             return v.toFixed(1) + "&deg;" + t.unit;
         };
 
-        t.chart = new Dygraph(
-            byId(div), t.data, {
-                colors: ['rgb(89, 184, 255)'],
-                axisLabelFontSize: 12,
-                gridLineColor: '#ccc',
-                gridLineWidth: '0.1px',
-                labels: ["<%= script_control_time %>", "<%= script_control_temperature %>"],
-                labelsDiv: byId(div + "-label"),
-                legend: 'always',
-                labelsDivStyles: {
-                    'textAlign': 'right'
+        t.chart = new Dygraph(byId(div), t.data, {
+            colors: ["rgb(89, 184, 255)"],
+            axisLabelFontSize: 12,
+            gridLineColor: "#ccc",
+            gridLineWidth: "0.1px",
+            labels: [
+                "<%= script_control_time %>",
+                "<%= script_control_temperature %>",
+            ],
+            labelsDiv: byId(div + "-label"),
+            legend: "always",
+            labelsDivStyles: {
+                textAlign: "right",
+            },
+            strokeWidth: 1,
+            //        xValueParser: function(x) { return profileTable.parseDate(x); },
+            //        underlayCallback: updateCurrentDateLine,
+            //        "Temperature" : {},
+            axes: {
+                y: {
+                    valueFormatter: temperatureFormatter,
+                    pixelsPerLabel: 20,
+                    axisLabelWidth: 35,
                 },
-                strokeWidth: 1,
-                //        xValueParser: function(x) { return profileTable.parseDate(x); },
-                //        underlayCallback: updateCurrentDateLine,
-                //        "Temperature" : {},
-                axes: {
-                    y: {
-                        valueFormatter: temperatureFormatter,
-                        pixelsPerLabel: 20,
-                        axisLabelWidth: 35
-                    },
-                    //            x : { axisLabelFormatter:dateFormatter, valueFormatter: dateFormatter, pixelsPerLabel: 30, axisLabelWidth:40 }
-                    x: {
-                        axisLabelFormatter: shortDateFormatter,
-                        valueFormatter: dateFormatter,
-                        pixelsPerLabel: 30,
-                        axisLabelWidth: 40
-                    }
-
+                //            x : { axisLabelFormatter:dateFormatter, valueFormatter: dateFormatter, pixelsPerLabel: 30, axisLabelWidth:40 }
+                x: {
+                    axisLabelFormatter: shortDateFormatter,
+                    valueFormatter: dateFormatter,
+                    pixelsPerLabel: 30,
+                    axisLabelWidth: 40,
                 },
-                highlightCircleSize: 2,
-                highlightSeriesOpts: {
-                    strokeWidth: 1.5,
-                    strokeBorderWidth: 1,
-                    highlightCircleSize: 5
-                },
-
-            }
-        );
+            },
+            highlightCircleSize: 2,
+            highlightSeriesOpts: {
+                strokeWidth: 1.5,
+                strokeBorderWidth: 1,
+                highlightCircleSize: 5,
+            },
+        });
     },
-    update: function(data, unit) {
+    update: function (data, unit) {
         if (data.length == 0) return;
         this.unit = unit;
         this.data = data;
         this.chart.updateOptions({
-            'file': this.data
+            file: this.data,
         });
-    }
+    },
 };
-
 
 var modekeeper = {
     initiated: false,
     modes: ["profile", "beer", "fridge", "off"],
     cmode: 0,
-    dselect: function(m) {
+    dselect: function (m) {
         var d = byId(m + "-m");
-        var nc = byId(m + "-m").className.replace(/\snav-selected/, '');
+        var nc = byId(m + "-m").className.replace(/\snav-selected/, "");
         d.className = nc;
 
         byId(m + "-s").style.display = "none";
     },
-    select: function(m) {
-        byId(m + "-m").className += ' nav-selected';
+    select: function (m) {
+        byId(m + "-m").className += " nav-selected";
         byId(m + "-s").style.display = "block";
     },
-    init: function() {
+    init: function () {
         var me = this;
         if (me.initiated) return;
         me.initiated = true;
         for (var i = 0; i < 4; i++) {
             var m = me.modes[i];
             byId(m + "-s").style.display = "none";
-            byId(m + "-m").onclick = function() {
-                var tm = this.id.replace(/-m/, '');
+            byId(m + "-m").onclick = function () {
+                var tm = this.id.replace(/-m/, "");
                 me.dselect(me.cmode);
                 me.select(tm);
                 me.cmode = tm;
@@ -722,14 +737,19 @@ var modekeeper = {
         me.cmode = "profile";
         me.select(me.cmode);
     },
-    apply: function() {
+    apply: function () {
         if (!BrewPiSetting.valid) {
             alert("<%= script_control_not_conected_to_controller %>");
             //		return;
         }
-        if ((this.cmode == "beer") || (this.cmode == "fridge")) {
+        if (this.cmode == "beer" || this.cmode == "fridge") {
             var v = byId(this.cmode + "-t").value;
-            if (v == '' || isNaN(v) || (v > BrewPiSetting.maxDegree || v < BrewPiSetting.minDegree)) {
+            if (
+                v == "" ||
+                isNaN(v) ||
+                v > BrewPiSetting.maxDegree ||
+                v < BrewPiSetting.minDegree
+            ) {
                 alert("<%= script_control_invalid_temperature %>" + v);
                 return;
             }
@@ -750,38 +770,46 @@ var modekeeper = {
                 return;
             }
             //console.log("j{mode:p}");
-            byId('dlg_beerprofilereminder').style.display = "block";
-            byId('dlg_beerprofilereminder').querySelector("button.ok").onclick = function() {
-                byId('dlg_beerprofilereminder').style.display = "none";
-                var gravity = parseFloat(select("#dlg_beerprofilereminder input").value);
-                if (typeof updateOriginGravity == "function") updateOriginGravity(gravity);
-                var data = {
-                    name: "webjs",
-                    og: 1,
-                    gravity: gravity
+            byId("dlg_beerprofilereminder").style.display = "block";
+            byId("dlg_beerprofilereminder").querySelector("button.ok").onclick =
+                function () {
+                    byId("dlg_beerprofilereminder").style.display = "none";
+                    var gravity = parseFloat(
+                        select("#dlg_beerprofilereminder input").value,
+                    );
+                    if (typeof updateOriginGravity == "function")
+                        updateOriginGravity(gravity);
+                    var data = {
+                        name: "webjs",
+                        og: 1,
+                        gravity: gravity,
+                    };
+                    s_ajax({
+                        url: "gravity",
+                        m: "POST",
+                        mime: "application/json",
+                        data: JSON.stringify(data),
+                        success: function (d) {
+                            BWF.send("j{mode:p}");
+                        },
+                        fail: function (d) {
+                            alert("<%= failed %>:" + d);
+                        },
+                    });
                 };
-                s_ajax({
-                    url: "gravity",
-                    m: "POST",
-                    mime: "application/json",
-                    data: JSON.stringify(data),
-                    success: function(d) {
-                        BWF.send("j{mode:p}");
-                    },
-                    fail: function(d) {
-                        alert("<%= failed %>:" + d);
-                    }
-                });
-            };
-            byId('dlg_beerprofilereminder').querySelector("button.oknog").onclick = function() {
-                byId('dlg_beerprofilereminder').style.display = "none";
+            byId("dlg_beerprofilereminder").querySelector(
+                "button.oknog",
+            ).onclick = function () {
+                byId("dlg_beerprofilereminder").style.display = "none";
                 BWF.send("j{mode:p}");
             };
-            byId('dlg_beerprofilereminder').querySelector("button.cancel").onclick = function() {
-                byId('dlg_beerprofilereminder').style.display = "none";
+            byId("dlg_beerprofilereminder").querySelector(
+                "button.cancel",
+            ).onclick = function () {
+                byId("dlg_beerprofilereminder").style.display = "none";
             };
         }
-    }
+    },
 };
 
 export function saveprofile() {
@@ -799,13 +827,13 @@ export function saveprofile() {
         m: "POST",
         mime: "application/x-www-form-urlencoded",
         data: "data=" + encodeURIComponent(json),
-        success: function(d) {
+        success: function (d) {
             profileEditor.markdirty(false);
-            alert("<%= done %>")
+            alert("<%= done %>");
         },
-        fail: function(d) {
+        fail: function (d) {
             alert("<%= script_control_failed_to_save %>");
-        }
+        },
     });
 }
 
@@ -821,8 +849,8 @@ function ccparameter(s) {
         valid: true,
         minDegree: s.tempSetMin,
         maxDegree: s.tempSetMax,
-        tempUnit: s.tempFormat
-    };    
+        tempUnit: s.tempFormat,
+    };
     if (setting.tempUnit != BrewPiSetting.tempUnit) {
         updateTempUnit(setting.tempUnit);
         profileEditor.setTempUnit(setting.tempUnit);
@@ -839,7 +867,7 @@ function rcvBeerProfile(p) {
 }
 
 function communicationError() {
-    var div = select('.error');
+    var div = select(".error");
     if (div) {
         div.innerHTML = "Failed to connect to server.";
         div.style.display = "block";
@@ -854,32 +882,33 @@ export function initctrl() {
     openDlgLoading();
 
     BWF.init({
-        onconnect: function() {
+        onconnect: function () {
             BWF.send("c");
         },
-        error: function(e) {
+        error: function (e) {
             //console.log("error");
             closeDlgLoading();
             communicationError();
         },
         handlers: {
-            A: function(c) {
+            A: function (c) {
                 if (typeof c["nn"] != "undefined") {
                     select("#hostname").innerHTML = c["nn"];
                 }
                 if (typeof c["ver"] != "undefined") {
-                    if (JSVERSION != c["ver"]) alert("<%= script_control_version_mismatched %>");
+                    if (JSVERSION != c["ver"])
+                        alert("<%= script_control_version_mismatched %>");
                 }
-                if (typeof c["cap"] != "undefined")
-                    Capper.status(c["cap"]);
-                if (typeof c["ptc"] != "undefined")
-                    PTC.config(c.ptc);
+                if (typeof c["cap"] != "undefined") Capper.status(c["cap"]);
+                if (typeof c["ptc"] != "undefined") PTC.config(c.ptc);
             },
-            C: function(c) { ccparameter(c); },
-            B: rcvBeerProfile
-        }
+            C: function (c) {
+                ccparameter(c);
+            },
+            B: rcvBeerProfile,
+        },
     });
 }
 
-window.saveprofile = saveprofile
-window.PL = PL
+window.saveprofile = saveprofile;
+window.PL = PL;

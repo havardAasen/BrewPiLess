@@ -1,9 +1,9 @@
 import { select, s_ajax } from "./shared";
 
-var saveurl = "/ptc"
+var saveurl = "/ptc";
 
 export var PTC = {
-    fill: function(setting) {
+    fill: function (setting) {
         for (var name in setting) {
             var ele = select("input[name=" + name + "]");
             if (ele) {
@@ -12,7 +12,7 @@ export var PTC = {
         }
     },
 
-    apply: function() {
+    apply: function () {
         var inputs = this.div.querySelectorAll("input");
         var setting = {};
         for (var i = 0; i < inputs.length; i++) {
@@ -27,23 +27,23 @@ export var PTC = {
             m: "POST",
             mime: "application/x-www-form-urlencoded",
             data: "c=" + encodeURI(JSON.stringify(setting)),
-            success: function() {
+            success: function () {
                 alert("done.");
             },
-            fail: function(a) {
-                alert("failed updating data:" + a)
-            }
+            fail: function (a) {
+                alert("failed updating data:" + a);
+            },
         });
     },
 
-    config: function(a) {
+    config: function (a) {
         if (a.enabled) {
             this.div.style.display = "block";
             this.fill(a);
         }
     },
-    init: function(div) {
+    init: function (div) {
         div.style.display = "none";
         this.div = div;
-    }
+    },
 };

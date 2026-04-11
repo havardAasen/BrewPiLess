@@ -178,6 +178,13 @@ export function formatDateForPicker(date: Date) {
     );
 }
 
+export function showPlatoUnit(): void {
+    const units = document.querySelectorAll<HTMLElement>(".platounit");
+    for (const unit of units) {
+        unit.style.display = "inline-block";
+    }
+}
+
 export function updateGravity(sg: number): void {
     window.sg = sg;
 

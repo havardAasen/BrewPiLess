@@ -17,7 +17,7 @@ import {
 import { gravityFilter } from "./chart/GravityFilter";
 import { gravityTracker } from "./chart/GravityTracker";
 import { checkfgstate } from "./chart/common";
-import { BrewChart } from "./chart/BrewChart";
+import { BChart as BrewChartWrapper } from "./chart/BrewChartWrapper";
 import { Capper } from "./capper";
 import { BWF } from "./vendor/bwf";
 
@@ -31,11 +31,9 @@ const T_BWF_RECONNECT = 10000;
 const T_BWF_LCD = 10000;
 
 var BChart = {
+    ...BrewChartWrapper,
     offset: 0,
     url: "chart.php",
-    toggle: function (line) {
-        this.chart.toggleLine(line);
-    },
     updateFormula: function () {
         var coeff = this.chart.coefficients;
         var npt = (this.chart.npt << 24) | (this.chart.cal_igmask & 0xffffff);
@@ -81,23 +79,6 @@ var BChart = {
             checkfgstate();
         }
         t.chart.updateChart();
-    },
-    setIgnoredMask: function (m) {
-        var t = this;
-        if (t.chart.cal_igmask == m) return;
-
-        t.chart.calculateSG = false;
-        t.reprocesData();
-        // the data will be updated by the "data"
-        t.chart.cal_igmask = m;
-        t.chart.getFormula();
-
-        t.reprocesData();
-
-        t.updateChartResult();
-        // the data will be updated by the "data",again
-        t.chart.cal_igmask = m;
-        t.updateFormula();
     },
     reqdata: function () {
         var t = this;
@@ -201,10 +182,6 @@ var BChart = {
         t.timer = setInterval(function () {
             t.reqdata();
         }, t.chart.interval * 1000);
-    },
-    init: function (id, y1, y2) {
-        this.chart = new BrewChart(id);
-        this.chart.setLabels(y1, y2);
     },
     timer: null,
     start: function () {

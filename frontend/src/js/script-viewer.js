@@ -1,32 +1,7 @@
 import { select, showPlatoUnit } from "./shared";
 import { Labels } from "./chart/constants";
 import { testData, STATES } from "./chart/common";
-import { BrewChart } from "./chart/BrewChart";
-
-var BChart = {
-    toggle: function (type) {
-        this.chart.toggleLine(type);
-    },
-    init: function (id, y1, y2) {
-        this.chart = new BrewChart(id);
-        this.chart.setLabels(y1, y2);
-    },
-    setIgnoredMask: function (m) {
-        var t = this;
-        if (t.chart.cal_igmask == m) return;
-        t.chart.calculateSG = false;
-        t.chart.process(t.raw);
-        // the data will be updated by the "data"
-        t.chart.cal_igmask = m;
-        t.chart.getFormula();
-
-        t.chart.process(t.raw);
-
-        t.chart.updateChart();
-        // the data will be updated by the "data",again
-        t.chart.cal_igmask = m;
-    },
-};
+import { BChart } from "./chart/BrewChartWrapper";
 
 export function loaded() {
     function openfile(f) {

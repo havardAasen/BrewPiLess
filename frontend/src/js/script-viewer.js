@@ -1,4 +1,4 @@
-import { select } from "./shared";
+import { select, showPlatoUnit } from "./shared";
 import { Labels } from "./chart/constants";
 import { testData, STATES } from "./chart/common";
 import { BrewChart } from "./chart/BrewChart";
@@ -27,13 +27,6 @@ var BChart = {
         t.chart.cal_igmask = m;
     },
 };
-
-function showPlatoUnit() {
-    var units = document.querySelectorAll(".platounit");
-    for (var i = 0; i < units.length; i++) {
-        units[i].style.display = "inline-block";
-    }
-}
 
 export function loaded() {
     function openfile(f) {

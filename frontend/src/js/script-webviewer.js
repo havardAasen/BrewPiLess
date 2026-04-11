@@ -1,4 +1,4 @@
-import { select } from "./shared";
+import { select, showPlatoUnit } from "./shared";
 import { testData } from "./chart/common";
 import { BrewChart } from "./chart/BrewChart";
 
@@ -61,13 +61,6 @@ function getFilename() {
     var matches = re.exec(log);
     if (matches) return matches[1];
     return log;
-}
-
-function showPlatoUnit() {
-    var units = document.querySelectorAll(".platounit");
-    for (var i = 0; i < units.length; i++) {
-        units[i].style.display = "inline-block";
-    }
 }
 
 export function loaded() {

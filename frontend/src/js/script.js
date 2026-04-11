@@ -1,17 +1,18 @@
 import {
-    byId,
-    select,
-    s_ajax,
-    openDlgLoading,
-    C2F,
     BrewMath,
-    closeDlgLoading,
+    C2F,
     JSVERSION,
     ModeString,
     StateText,
-    updateOriginGravity,
+    byId,
+    closeDlgLoading,
+    openDlgLoading,
+    s_ajax,
+    select,
+    showPlatoUnit,
     updateGravity,
     updateNavbarVersion,
+    updateOriginGravity,
 } from "./shared";
 import { gravityFilter } from "./chart/GravityFilter";
 import { gravityTracker } from "./chart/GravityTracker";
@@ -741,13 +742,6 @@ function ptcshow(msg) {
         var ts = select("#ptc-set");
         if (ts)
             ts.innerHTML = msg.ptclo / 100 + " ~ " + msg.ptcup / 100 + "&deg;C";
-    }
-}
-
-function showPlatoUnit() {
-    var units = document.querySelectorAll(".platounit");
-    for (let i = 0; i < units.length; i++) {
-        units[i].style.display = "inline-block";
     }
 }
 

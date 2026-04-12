@@ -898,7 +898,7 @@ export class BrewChart {
         this.anno.push({
             series: "beerTemp",
             x: x,
-            shortText: s.toUpperCase,
+            shortText: s.toUpperCase(),
             text: ModeMap[s],
             attachAtBottom: true,
         });

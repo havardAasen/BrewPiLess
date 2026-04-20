@@ -46,10 +46,9 @@ void BrewPiProxy::loop()
 	while(brewPiTxBuffer.available()){
 		char ch=brewPiTxBuffer.read();
 		 if(ch == '\n'){
-			_lastLineBuff[_readPtr]='\0';
-			memcpy(_lastLineBuff,_buff,_readPtr);
+			_buff[_readPtr]='\0';
+			_readString(_buff);
 			_readPtr=0;
-			_readString(_lastLineBuff);
 		}
 		else
 		if(ch == 0xB0){

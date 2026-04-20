@@ -21,8 +21,6 @@ public:
 
 	void putLine(const char* str);
 
-	char* getLastLine(){return _lastLineBuff;}
-
 	void getTemperature(float *pBeerTemp,float *pBeerSet,float *pFridgeTemp, float *pFridgeSet);
 	void getTemperatureSetting(char *pUnit,float *pMinSetTemp,float *pMaxSetTemp);
 	void getControlParameter(char *pUnit,Mode *pMode,float *pBeerSet, float *pFridgeSet);
@@ -33,7 +31,6 @@ public:
 
 protected:
 	char _unit{'C'};
-	char _lastLineBuff[BUFF_SIZE]{};
 	int  _lastLineLength{};
 	char _buff[BUFF_SIZE]{};
 	int   _readPtr{};

@@ -14,7 +14,7 @@ enum State : uint8_t;
 
 class BrewPiProxy{
 public:
-	void begin(void (*readString)(const char*));
+	void begin(const std::function<void(const char*)> &readString);
 
 	void loop();
 	void write(char ch);
@@ -38,7 +38,7 @@ protected:
 	char _buff[BUFF_SIZE]{};
 	int   _readPtr{};
 
-	void (*_readString)(const char*){};
+	std::function<void(const char*)> _readString;
 };
 extern BrewPiProxy brewPi;
 #endif

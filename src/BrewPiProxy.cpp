@@ -36,9 +36,9 @@ void BrewPiProxy::putLine(const char* str)
 	brewPiRxBuffer.print('\n');
 }
 
-void BrewPiProxy::begin(void (*readString)(const char*))
+void BrewPiProxy::begin(const std::function<void(const char*)> &readString)
 {
-	_readString=readString;
+	_readString = readString;
 }
 
 void BrewPiProxy::loop()
@@ -49,7 +49,7 @@ void BrewPiProxy::loop()
 			_lastLineBuff[_readPtr]='\0';
 			memcpy(_lastLineBuff,_buff,_readPtr);
 			_readPtr=0;
-			(*_readString)(_lastLineBuff);
+			_readString(_lastLineBuff);
 		}
 		else
 		if(ch == 0xB0){

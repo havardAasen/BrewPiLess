@@ -338,14 +338,19 @@ void PiLink::receive(){
 			break;
 		case 'l': // Display content requested
 			openListResponse('L');
-			char stringBuffer[21];
+			char line[21];
 			for(uint8_t i=0;i<4;i++){
-				display.getLine(i, stringBuffer);
-				print_P(PSTR("\"%s\""), stringBuffer);
-				char close = (i<3) ? ',':']';
-				print(close);
+				display.getLine(i, line);
+
+				print('"');
+				print(line);
+				print('"');
+
+				if (i < 3) {
+				    print(',');
+				}
 			}
-			printNewLine();
+			closeListResponse();
 			break;
 		case 'j': // Receive settings as json
 			receiveJson();

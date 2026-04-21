@@ -394,7 +394,7 @@ bool BPLSettings::dejsonBeerProfile(String json)
 			    step->attSpecified=false;
     			    const char* attStr=entry["g"];
     			    float att=atof(attStr);
-    			    if( strchr ( attStr, '%' ) > 0){
+    			    if( strchr ( attStr, '%' ) != nullptr){
 	    			    DBG_PRINTF(" att:%s sg:%d ",attStr,step->gravity.sg);
 						step->attSpecified=true;
 						step->gravity.attenuation =(uint8_t) att;

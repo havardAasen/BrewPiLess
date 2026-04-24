@@ -95,64 +95,59 @@ export const BWF = {
     },
 
     connect() {
-        const me = this;
-
-        if (typeof WebSocket !== "undefined") {
-            const ws = new WebSocket("ws://" + document.location.host + "/ws");
-            me.ws = ws;
-
-            ws.onopen = function () {
-                console.log("Connected");
-                me.onconnect();
-            };
-
-            ws.onclose = function () {
-                if (me.reconnecting) return;
-                console.log("WS close");
-                me.error(-2);
-
-                if (me.auto) {
-                    setTimeout(function () {
-                        me.reconnect();
-                    }, 5000);
-                }
-            };
-
-            ws.onmessage = function (e: MessageEvent) {
-                me.process(e.data);
-            };
-        } else {
-            alert("Error! WebSocket Not Supported!");
+        try {
+            this.ws = new WebSocket("ws://" + document.location.host + "/ws");
+        } catch (err) {
+            console.error("WebSocket creation failed", err);
+           return;
         }
+
+        this.ws.onopen = () => {
+            console.log("Connected");
+            this.onconnect();
+        };
+
+        this.ws.onclose = () => {
+            if (this.reconnecting) return;
+            console.log("WS close");
+            this.error(-2);
+
+            if (this.auto) {
+                setTimeout(() => {
+                    this.reconnect();
+                }, 5000);
+            }
+        };
+
+        this.onmessage = (e: MessageEvent) => {
+            this.process(e.data);
+        };
     },
 
     reconnect(forced?: boolean) {
-        forced = typeof forced === "undefined" ? false : true;
-        const me = this;
+        forced = forced ?? false;
 
-        if (me.reconnecting) return;
-        if (!forced && me.ws && me.ws.readyState === WebSocket.OPEN) return;
+        if (this.reconnecting) return;
+        if (!forced && this.ws && this.ws.readyState === WebSocket.OPEN) return;
 
         console.log(
-            "reconnect forced:" + forced + " state:" + me.ws?.readyState,
+            "reconnect forced:" + forced + " state:" + this.ws?.readyState,
         );
 
-        me.reconnecting = true;
-        me.ws?.close();
-        me.connect();
-        me.reconnecting = false;
+        this.reconnecting = true;
+        this.ws?.close();
+        this.connect();
+        this.reconnecting = false;
     },
 
     init(arg: BWFInitOptions) {
-        const b = this;
+        this.error = arg.error ?? (() => {});
+        this.handlers = arg.handlers ?? {};
+        this.raw = arg.raw ?? null;
+        this.onconnect = arg.onconnect ?? (() => {});
+        this.auto = arg.reconnect ?? true;
 
-        b.error = arg.error ?? (() => {});
-        b.handlers = arg.handlers ?? {};
-        b.raw = arg.raw ?? null;
-        b.onconnect = arg.onconnect ?? (() => {});
-        b.auto = arg.reconnect ?? true;
-
-        b.connect();
+        this.connect();
     },
 
     save(

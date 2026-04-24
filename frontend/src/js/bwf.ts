@@ -43,6 +43,22 @@ function invoke(arg: InvokeArgs): void {
     }
 }
 
+type JSONValue = string | number | boolean | null | JSONObject | JSONValue[];
+
+interface JSONObject {
+    [key: string]: JSONValue;
+}
+
+function parseMessage(msg: string): Record<string, JSONValue> {
+    const idx = msg.indexOf(":");
+    if (idx === -1) throw new Error("Invalid message: no colon");
+
+    const key = msg.slice(0, idx);
+    const value = msg.slice(idx + 1);
+
+    return { [key]: JSON.parse(value) };
+}
+
 interface BWFHandlers {
     [key: string]: (value: any) => void;
 }
@@ -74,12 +90,11 @@ export const BWF = {
             return;
         }
 
-        let m: Record<string, any> = {};
-        eval("m={" + msg + "}");
+        const json: Record<string, JSONValue> = parseMessage(msg);
 
-        for (const key in m) {
+        for (const key in json) {
             if (typeof this.handlers[key] !== "undefined") {
-                this.handlers[key](m[key]);
+                this.handlers[key](json[key]);
             }
         }
     },

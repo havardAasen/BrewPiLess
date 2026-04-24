@@ -1,5 +1,5 @@
 import { byId, ModeString } from "./shared";
-import { BWF } from "./vendor/bwf";
+import { BWF } from "./bwf";
 
 var roomOfridge = false;
 

@@ -1,5 +1,5 @@
 import { byId, updateNavbarVersion } from "./shared";
-import { BWF } from "./vendor/bwf";
+import { BWF } from "./bwf";
 
 var BackupFile = "/device.cfg";
 var devices = {

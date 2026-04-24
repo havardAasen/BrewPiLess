@@ -1,5 +1,5 @@
 import { byId, select, s_ajax, updateNavbarVersion } from "./shared";
-import { BWF } from "./vendor/bwf";
+import { BWF } from "./bwf";
 
 function formatIP(ip: string): string {
     return ip === "0.0.0.0" ? "" : ip;

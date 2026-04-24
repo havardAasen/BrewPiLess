@@ -19,7 +19,7 @@ import { gravityTracker } from "./chart/GravityTracker";
 import { checkfgstate } from "./chart/common";
 import { BChart as BrewChartWrapper } from "./chart/BrewChartWrapper";
 import { Capper } from "./capper";
-import { BWF } from "./vendor/bwf";
+import { BWF } from "./bwf";
 
 const T_CHART_REQUEST = 12000;
 const T_CHART_RETRYTO = 6000;

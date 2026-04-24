@@ -13,7 +13,7 @@ import {
     updateNavbarVersion,
 } from "./shared";
 import { Capper } from "./capper";
-import { BWF } from "./vendor/bwf";
+import { BWF } from "./bwf";
 import { PTC } from "./ptc";
 import Dygraph from "dygraphs";
 

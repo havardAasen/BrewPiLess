@@ -71,20 +71,20 @@ interface BWFInitOptions {
     reconnect?: boolean;
 }
 
-export const BWF = {
-    BrewProfile: "/brewing.json",
+class BWFClient {
+    private ws: WebSocket | null = null;
+    private raw: ((msg: string) => void) | null = null;
+    private auto = true;
+    private reconnecting = false;
 
-    ws: null as WebSocket | null,
-    handlers: {} as BWFHandlers,
-    raw: null as ((msg: string) => void) | null,
-    onconnect: (() => {}) as () => void,
-    error: (code: number) => {},
-    auto: true,
-    reconnecting: false,
-    gotMsg: false,
-    rcCount: 0,
+    public handlers: BWFHandlers = {};
+    public onconnect: (() => void) | null = null;
+    public error: ((code: number) => void) | null = null;
+    public gotMsg = false;
+    public rcCount = 0;
 
-    process(msg: string) {
+
+    public process(msg: string) {
         if (this.raw != null) {
             this.raw(msg);
             return;
@@ -97,19 +97,19 @@ export const BWF = {
                 this.handlers[key](json[key]);
             }
         }
-    },
+    }
 
-    on(label: string, handler: (value: any) => void) {
+    public on(label: string, handler: (value: any) => void) {
         this.handlers[label] = handler;
-    },
+    }
 
-    send(data: string) {
+    public send(data: string) {
         if (this.ws && this.ws.readyState === WebSocket.OPEN) {
             this.ws.send(data);
         }
-    },
+    }
 
-    connect() {
+    public connect() {
         try {
             this.ws = new WebSocket("ws://" + document.location.host + "/ws");
         } catch (err) {
@@ -119,13 +119,17 @@ export const BWF = {
 
         this.ws.onopen = () => {
             console.log("Connected");
-            this.onconnect();
+            if (this.onconnect) {
+                this.onconnect();
+            }
         };
 
         this.ws.onclose = () => {
             if (this.reconnecting) return;
             console.log("WS close");
-            this.error(-2);
+            if (this.error) {
+                this.error(-2);
+            }
 
             if (this.auto) {
                 setTimeout(() => {
@@ -134,12 +138,12 @@ export const BWF = {
             }
         };
 
-        this.onmessage = (e: MessageEvent) => {
+        this.ws.onmessage = (e: MessageEvent) => {
             this.process(e.data);
         };
-    },
+    }
 
-    reconnect(forced?: boolean) {
+    public reconnect(forced?: boolean) {
         forced = forced ?? false;
 
         if (this.reconnecting) return;
@@ -153,19 +157,19 @@ export const BWF = {
         this.ws?.close();
         this.connect();
         this.reconnecting = false;
-    },
+    }
 
-    init(arg: BWFInitOptions) {
+    public init(arg: BWFInitOptions) {
         this.error = arg.error ?? (() => {});
-        this.handlers = arg.handlers ?? {};
+        this.handlers = arg.handlers;
         this.raw = arg.raw ?? null;
         this.onconnect = arg.onconnect ?? (() => {});
         this.auto = arg.reconnect ?? true;
 
         this.connect();
-    },
+    }
 
-    save(
+    public save(
         file: string,
         data: string,
         success: () => void,
@@ -182,9 +186,9 @@ export const BWF = {
                 fail(e);
             },
         });
-    },
+    }
 
-    load(
+    public load(
         file: string,
         success: (d: string) => void,
         fail: (e: ProgressEvent | number) => void,
@@ -199,5 +203,7 @@ export const BWF = {
                 fail(e);
             },
         });
-    },
-};
+    }
+}
+
+export const BWF = new BWFClient();

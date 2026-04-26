@@ -70,7 +70,7 @@ interface BWFInitOptions {
     onconnect?: () => void;
     onclose?: () => void;
     onNoMessage?: () => void;
-    error?: (code: number) => void;
+    error?: () => void;
 }
 
 enum WSState {
@@ -157,7 +157,7 @@ class BWFClient {
 
         this.ws.onerror = () => {
             if (this.error) {
-                this.error(-2);
+                this.error();
             }
         };
 

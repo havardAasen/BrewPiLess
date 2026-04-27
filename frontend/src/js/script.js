@@ -27,8 +27,6 @@ const T_CHART_ZERODATA = 10000;
 const T_CHART_REFRESH = 2500;
 const T_CHART_RETRY = 10000;
 const T_LOAD_CHART = 150;
-const T_BWF_RECONNECT = 10000;
-const T_BWF_LCD = 10000;
 
 var BChart = {
     ...BrewChartWrapper,
@@ -723,8 +721,6 @@ function ptcshow(msg) {
 }
 
 function BPLMsg(c) {
-    BWF.gotMsg = true;
-
     if (typeof c["rssi"] != "undefined") {
         displayrssi(c["rssi"]);
     }
@@ -773,56 +769,17 @@ function BPLMsg(c) {
 
 function connBWF() {
     BWF.init({
-        //            reconnect: false,
         onconnect: function () {
             BWF.send("c");
-            if (window.lcdTimer) clearInterval(window.lcdTimer);
-            window.lcdTimer = setInterval(function () {
-                if (!BWF.gotMsg) {
-                    if (window.rcTimeout) {
-                        // reconnect timer is running.
-                        BWF.rcCount++;
-                        console.log("rcTimeout failed.");
-                        // let the reconnecting timer has more chances to do its job
-                        if (BWF.rcCount < 3) return;
-                        // restart reconect timer
-                        clearTimeout(window.rcTimeout);
-                    }
-                    // once connected.
-                    //  no data for 5 seconds
-                    controllerError();
-                    window.rcTimeout = setTimeout(function () {
-                        window.rcTimeout = null;
-                        if (!BWF.gotMsg) BWF.reconnect(true);
-                    }, T_BWF_RECONNECT);
-                    BWF.rcCount = 0;
-                    // setTimer might not be reliable. when the computer enter suspended state.
-                    // keep this timer for saftey.
-                    // clearInterval(window.lcdTimer);
-                    //window.lcdTimer = null;
-                    return;
-                }
-                //gotMsg==true, set flag and send
-                BWF.gotMsg = false;
-                //BWF.send("l");
-            }, T_BWF_LCD);
+        },
+        onNoMessage() {
+            controllerError();
         },
         error: function () {
-            //console.log("error");
-            // when connection establishment fails
-            // or connection broken
             communicationError();
-            // do nothing, let BWF do the resconnection.
-            //              setTimeout(function() {
-            //                   if (!BWF.gotMsg) BWF.reconnect();
-            //              }, 12000);
             closeDlgLoading();
         },
         handlers: {
-            /*                L: function(lines) {
-                                    BWF.gotMsg = true;
-                                    processLcdText(lines);
-                            },*/
             A: BPLMsg,
             G: function (c) {
                 gravityDevice(c);
@@ -848,7 +805,6 @@ export function init() {
     );
     initRssi();
     Capper.init();
-    BWF.gotMsg = true;
     connBWF();
     setTimeout(function () {
         BChart.start();

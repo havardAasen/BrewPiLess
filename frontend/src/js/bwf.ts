@@ -66,25 +66,143 @@ interface BWFHandlers {
 interface BWFInitOptions {
     handlers: BWFHandlers;
     raw?: ((msg: string) => void) | null;
-    onconnect?: () => void;
-    error?: (code: number) => void;
     reconnect?: boolean;
+    onconnect?: () => void;
+    onclose?: () => void;
+    onNoMessage?: () => void;
+    error?: (code: number) => void;
+}
+
+enum WSState {
+    Idle,
+    Connecting,
+    Connected,
+    Reconnecting,
+    Closed,
 }
 
 class BWFClient {
     private ws: WebSocket | null = null;
+    private state: WSState = WSState.Idle;
+
+    private reconnectTimer: number | null = null;
+    private watchdogTimer: number | null = null;
+
+    private retryCount = 0;
+    private readonly maxRetryDelay = 30000; // 30s cap
+
+    private gotMsg = false;
     private raw: ((msg: string) => void) | null = null;
-    private auto = true;
-    private reconnecting = false;
 
-    public handlers: BWFHandlers = {};
     public onconnect: (() => void) | null = null;
-    public error: ((code: number) => void) | null = null;
-    public gotMsg = false;
-    public rcCount = 0;
+    public onclose: (() => void) | null = null;
+    public onNoMessage: (() => void) | null = null;
+    public error: (() => void) | null = null;
+    public handlers: BWFHandlers = {};
 
+    public on(label: string, handler: (value: any) => void) {
+        this.handlers[label] = handler;
+    }
 
-    public process(msg: string) {
+    public send(data: string) {
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+            this.ws.send(data);
+        }
+    }
+
+    public init(arg: BWFInitOptions) {
+        this.onconnect = arg.onconnect ?? (() => {});
+        this.onclose = arg.onclose ?? (() => {});
+        this.onNoMessage = arg.onNoMessage ?? (() => {});
+        this.error = arg.error ?? (() => {});
+        this.handlers = arg.handlers;
+        this.raw = arg.raw ?? null;
+
+        this.connect();
+    }
+
+    private connect() {
+        if (
+            this.state === WSState.Connecting ||
+            this.state === WSState.Connected
+        ) {
+            return;
+        }
+        try {
+            this.ws = new WebSocket("ws://" + document.location.host + "/ws");
+        } catch (err) {
+            console.error("WebSocket creation failed", err);
+            return;
+        }
+
+        this.ws.onopen = () => {
+            console.log("WS connected");
+            this.state = WSState.Connected;
+            this.retryCount = 0;
+            this.clearReconnectTimer();
+            this.startWatchdog();
+            if (this.onconnect) {
+                this.onconnect();
+            }
+        };
+
+        this.ws.onclose = () => {
+            console.log("WS close");
+            this.state = WSState.Reconnecting;
+            if (this.onclose) {
+                this.onclose();
+            }
+            this.scheduleReconnect();
+        };
+
+        this.ws.onerror = () => {
+            if (this.error) {
+                this.error(-2);
+            }
+        };
+
+        this.ws.onmessage = (e: MessageEvent) => {
+            this.gotMsg = true;
+            this.process(e.data);
+        };
+    }
+
+    private scheduleReconnect() {
+        if (this.reconnectTimer !== null) return;
+
+        const delay = Math.min(this.maxRetryDelay, 1000 * 2 ** this.retryCount);
+        this.retryCount++;
+
+        this.reconnectTimer = window.setTimeout(() => {
+            this.reconnectTimer = null;
+            this.connect();
+        }, delay);
+    }
+
+    private clearReconnectTimer() {
+        if (this.reconnectTimer !== null) {
+            clearTimeout(this.reconnectTimer);
+            this.reconnectTimer = null;
+        }
+    }
+
+    private startWatchdog() {
+        if (this.watchdogTimer) {
+            clearInterval(this.watchdogTimer);
+        }
+
+        this.watchdogTimer = window.setInterval(() => {
+            if (!this.gotMsg) {
+                this.onNoMessage?.();
+                this.scheduleReconnect();
+                return;
+            }
+
+            this.gotMsg = false;
+        }, 10000);
+    }
+
+    private process(msg: string) {
         if (this.raw != null) {
             this.raw(msg);
             return;
@@ -97,76 +215,6 @@ class BWFClient {
                 this.handlers[key](json[key]);
             }
         }
-    }
-
-    public on(label: string, handler: (value: any) => void) {
-        this.handlers[label] = handler;
-    }
-
-    public send(data: string) {
-        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-            this.ws.send(data);
-        }
-    }
-
-    public connect() {
-        try {
-            this.ws = new WebSocket("ws://" + document.location.host + "/ws");
-        } catch (err) {
-            console.error("WebSocket creation failed", err);
-           return;
-        }
-
-        this.ws.onopen = () => {
-            console.log("Connected");
-            if (this.onconnect) {
-                this.onconnect();
-            }
-        };
-
-        this.ws.onclose = () => {
-            if (this.reconnecting) return;
-            console.log("WS close");
-            if (this.error) {
-                this.error(-2);
-            }
-
-            if (this.auto) {
-                setTimeout(() => {
-                    this.reconnect();
-                }, 5000);
-            }
-        };
-
-        this.ws.onmessage = (e: MessageEvent) => {
-            this.process(e.data);
-        };
-    }
-
-    public reconnect(forced?: boolean) {
-        forced = forced ?? false;
-
-        if (this.reconnecting) return;
-        if (!forced && this.ws && this.ws.readyState === WebSocket.OPEN) return;
-
-        console.log(
-            "reconnect forced:" + forced + " state:" + this.ws?.readyState,
-        );
-
-        this.reconnecting = true;
-        this.ws?.close();
-        this.connect();
-        this.reconnecting = false;
-    }
-
-    public init(arg: BWFInitOptions) {
-        this.error = arg.error ?? (() => {});
-        this.handlers = arg.handlers;
-        this.raw = arg.raw ?? null;
-        this.onconnect = arg.onconnect ?? (() => {});
-        this.auto = arg.reconnect ?? true;
-
-        this.connect();
     }
 
     public save(

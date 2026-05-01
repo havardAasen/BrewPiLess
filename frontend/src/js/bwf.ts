@@ -1,5 +1,5 @@
 interface InvokeArgs {
-    m: string; // HTTP method
+    m: "GET" | "POST" | "PUT" | "DELETE";
     url: string;
     data?: string;
     mime?: string;

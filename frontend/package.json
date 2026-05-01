@@ -35,7 +35,7 @@
     "sass": "^1.98.0",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.58.0"
+    "typescript-eslint": "^8.59.1"
   },
   "dependencies": {
     "dygraphs": "^1.1.1",

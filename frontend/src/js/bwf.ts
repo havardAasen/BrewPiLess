@@ -23,11 +23,11 @@ function invoke(arg: InvokeArgs): void {
 
     xhttp.ontimeout = function () {
         if (arg.timeout) arg.timeout();
-        else arg.fail?.(-1);
+        else arg.fail?.(0);
     };
 
-    xhttp.onerror = function (a: any) {
-        if (arg.fail) arg.fail(typeof a === "number" ? a : -1);
+    xhttp.onerror = function () {
+        arg.fail?.(0);
     };
 
     xhttp.open(arg.m, arg.url, true);
@@ -221,35 +221,27 @@ class BWFClient {
         file: string,
         data: string,
         success: () => void,
-        fail: (e: ProgressEvent | number) => void,
+        fail: (status: number) => void,
     ) {
         invoke({
             m: "POST",
             url: "/fputs",
             data: "path=" + file + "&content=" + encodeURIComponent(data),
-            success: function () {
-                success();
-            },
-            fail: function (e: ProgressEvent | number) {
-                fail(e);
-            },
+            success: () => success(),
+            fail: (status) => fail(status),
         });
     }
 
     public load(
         file: string,
         success: (d: string) => void,
-        fail: (e: ProgressEvent | number) => void,
+        fail: (status: number) => void,
     ) {
         invoke({
             m: "GET",
             url: file,
-            success: function (d: string) {
-                success(d);
-            },
-            fail: function (e: ProgressEvent | number) {
-                fail(e);
-            },
+            success: (d: string) => success(d),
+            fail: (status: number) => fail(status),
         });
     }
 }

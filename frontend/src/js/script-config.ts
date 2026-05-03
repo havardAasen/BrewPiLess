@@ -179,7 +179,10 @@ export const Net = {
     setupEvent(): void {
         BWF.init({
             handlers: {
-                W: (ev: NetworkEntry) => this.nwevent(ev),
+                W: (value: string) => {
+                    const ev = value as unknown as NetworkEntry;
+                    this.nwevent(ev);
+                },
             },
         });
     },

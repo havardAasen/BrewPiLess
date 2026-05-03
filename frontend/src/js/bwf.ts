@@ -49,7 +49,7 @@ interface JSONObject {
     [key: string]: JSONValue;
 }
 
-function parseMessage(msg: string): Record<string, JSONValue> {
+function parseMessage(msg: string): Record<string, string> {
     const idx = msg.indexOf(":");
     if (idx === -1) throw new Error("Invalid message: no colon");
 
@@ -60,7 +60,7 @@ function parseMessage(msg: string): Record<string, JSONValue> {
 }
 
 interface BWFHandlers {
-    [key: string]: (value: any) => void;
+    [key: string]: (value: string) => void;
 }
 
 interface BWFInitOptions {
@@ -100,7 +100,7 @@ class BWFClient {
     public error: (() => void) | null = null;
     public handlers: BWFHandlers = {};
 
-    public on(label: string, handler: (value: any) => void) {
+    public on(label: string, handler: (value: JSONValue) => void) {
         this.handlers[label] = handler;
     }
 
@@ -208,7 +208,7 @@ class BWFClient {
             return;
         }
 
-        const json: Record<string, JSONValue> = parseMessage(msg);
+        const json: Record<string, string> = parseMessage(msg);
 
         for (const key in json) {
             if (typeof this.handlers[key] !== "undefined") {

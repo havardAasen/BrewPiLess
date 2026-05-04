@@ -910,5 +910,6 @@ export function initctrl() {
     });
 }
 
+window.modekeeper = modekeeper;
 window.saveprofile = saveprofile;
 window.PL = PL;

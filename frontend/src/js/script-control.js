@@ -16,10 +16,13 @@ import { communicationError } from "./shared";
 import { Capper } from "./capper";
 import { BWF } from "./bwf";
 import { PTC } from "./ptc";
-import Dygraph from "dygraphs";
+import { ProfileChart } from "./chart/ProfileChart";
 
 var BPURL = "/tschedule";
 var MAX_STEP = 7;
+
+/** @type ProfileChart */
+var profileChart;
 
 /* profile.js */
 var profileEditor = {
@@ -59,7 +62,7 @@ var profileEditor = {
         this.setStartDate(d);
         this.reorg();
         this.markdirty(true);
-        ControlChart.update(this.chartdata(), this.tempUnit);
+        profileChart.update(this.chartdata(), this.tempUnit);
     },
     rowList: function () {
         var tb = byId("profile_t").getElementsByTagName("tbody")[0];
@@ -82,14 +85,14 @@ var profileEditor = {
         else {
             this.markdirty(true);
             this.reorg();
-            ControlChart.update(this.chartdata(), this.tempUnit);
+            profileChart.update(this.chartdata(), this.tempUnit);
         }
     },
     tempChange: function (td) {
         if (td.innerHTML == "" || isNaN(td.innerHTML)) td.innerHTML = td.saved;
         else {
             this.markdirty(true);
-            ControlChart.update(this.chartdata(), this.tempUnit);
+            profileChart.update(this.chartdata(), this.tempUnit);
         }
     },
     stableChange: function (td) {
@@ -288,7 +291,7 @@ var profileEditor = {
 
         this.reorg();
         this.markdirty(true);
-        ControlChart.update(this.chartdata(), this.tempUnit);
+        profileChart.update(this.chartdata(), this.tempUnit);
     },
     delRow: function () {
         // delete last row
@@ -304,7 +307,7 @@ var profileEditor = {
         last.parentNode.removeChild(last);
 
         this.markdirty(true);
-        ControlChart.update(this.chartdata(), this.tempUnit);
+        profileChart.update(this.chartdata(), this.tempUnit);
     },
     rowTemp: function (row) {
         return parseFloat(
@@ -449,7 +452,7 @@ var profileEditor = {
         this.tempUnit = a.u;
         this.clear();
         this.renderRows(a.t);
-        ControlChart.update(this.chartdata(), this.tempUnit);
+        profileChart.update(this.chartdata(), this.tempUnit);
     },
     initProfile: function (p) {
         if (typeof p != "undefined") {
@@ -471,7 +474,7 @@ var profileEditor = {
             if (!isNaN(temp))
                 tcell.innerHTML = u == "C" ? F2C(temp) : C2F(temp);
         }
-        ControlChart.update(this.chartdata(), this.tempUnit);
+        profileChart.update(this.chartdata(), this.tempUnit);
     },
 };
 
@@ -630,79 +633,6 @@ var BrewPiSetting = {
     maxDegree: 30,
     minDegree: 0,
     tempUnit: "C",
-};
-
-var ControlChart = {
-    unit: "C",
-    init: function (div, data, unit) {
-        var t = this;
-        t.data = data;
-        t.unit = unit;
-
-        var dateFormatter = function (v) {
-            const d = new Date(v);
-            return d.shortLocalizedString();
-        };
-        var shortDateFormatter = function (v) {
-            const d = new Date(v);
-            var y = d.getYear() + 1900;
-            var re = new RegExp("[^\d]?" + y + "[^\d]?");
-            var n = d.toLocaleDateString();
-            return n.replace(re, "");
-        };
-
-        var temperatureFormatter = function (v) {
-            return v.toFixed(1) + "&deg;" + t.unit;
-        };
-
-        t.chart = new Dygraph(byId(div), t.data, {
-            colors: ["rgb(89, 184, 255)"],
-            axisLabelFontSize: 12,
-            gridLineColor: "#ccc",
-            gridLineWidth: "0.1px",
-            labels: [
-                "<%= script_control_time %>",
-                "<%= script_control_temperature %>",
-            ],
-            labelsDiv: byId(div + "-label"),
-            legend: "always",
-            labelsDivStyles: {
-                textAlign: "right",
-            },
-            strokeWidth: 1,
-            //        xValueParser: function(x) { return profileTable.parseDate(x); },
-            //        underlayCallback: updateCurrentDateLine,
-            //        "Temperature" : {},
-            axes: {
-                y: {
-                    valueFormatter: temperatureFormatter,
-                    pixelsPerLabel: 20,
-                    axisLabelWidth: 35,
-                },
-                //            x : { axisLabelFormatter:dateFormatter, valueFormatter: dateFormatter, pixelsPerLabel: 30, axisLabelWidth:40 }
-                x: {
-                    axisLabelFormatter: shortDateFormatter,
-                    valueFormatter: dateFormatter,
-                    pixelsPerLabel: 30,
-                    axisLabelWidth: 40,
-                },
-            },
-            highlightCircleSize: 2,
-            highlightSeriesOpts: {
-                strokeWidth: 1.5,
-                strokeBorderWidth: 1,
-                highlightCircleSize: 5,
-            },
-        });
-    },
-    update: function (data, unit) {
-        if (data.length == 0) return;
-        this.unit = unit;
-        this.data = data;
-        this.chart.updateOptions({
-            file: this.data,
-        });
-    },
 };
 
 var modekeeper = {
@@ -864,7 +794,7 @@ function rcvBeerProfile(p) {
     updateTempUnit(p.u); // using profile temp before we get from controller
     BrewPiSetting.tempUnit = p.u;
     profileEditor.initProfile(p);
-    ControlChart.init("tc_chart", profileEditor.chartdata(), p.u);
+    profileChart = new ProfileChart("tc_chart", profileEditor.chartdata(), p.u);
 }
 
 export function initctrl() {

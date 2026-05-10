@@ -911,5 +911,6 @@ export function initctrl() {
 }
 
 window.modekeeper = modekeeper;
+window.profileEditor = profileEditor;
 window.saveprofile = saveprofile;
 window.PL = PL;

@@ -2,6 +2,7 @@ import { select, showPlatoUnit } from "./shared";
 import { Labels } from "./chart/constants";
 import { testData, STATES } from "./chart/common";
 import { BChart } from "./chart/BrewChartWrapper";
+import { registerChartControls } from "./chart/ChartControl";
 
 export function loaded() {
     function openfile(f) {
@@ -41,6 +42,7 @@ export function loaded() {
         select("#ylabel").innerHTML,
         select("#y2label").innerHTML,
     );
+    registerChartControls();
 
     if (select("#dropfile")) {
         select("#dropfile").ondragover = function (e) {

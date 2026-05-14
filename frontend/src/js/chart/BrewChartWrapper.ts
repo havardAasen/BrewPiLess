@@ -4,7 +4,7 @@ export interface BChartType {
     chart: BrewChart | null;
     raw?: unknown;
 
-    toggle(type: string): void;
+    toggle(type: number): void;
     init(id: string, y1: string, y2: string): void;
     setIgnoredMask(mask: number): void;
 }
@@ -12,7 +12,7 @@ export interface BChartType {
 export const BChart: BChartType = {
     chart: null,
 
-    toggle(type: string): void {
+    toggle(type: number): void {
         this.chart?.toggleLine(type);
     },
     init(id: string, y1: string, y2: string): void {

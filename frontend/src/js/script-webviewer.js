@@ -1,6 +1,7 @@
 import { select, showPlatoUnit } from "./shared";
 import { testData } from "./chart/common";
 import { BChart } from "./chart/BrewChartWrapper";
+import { registerChartControls } from "./chart/ChartControl";
 
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
@@ -49,6 +50,8 @@ export function loaded() {
         select("#ylabel").innerHTML,
         select("#y2label").innerHTML,
     );
+    registerChartControls();
+
     select("#div_g").oncontextmenu = function (ev) {
         ev = ev || window.event;
 

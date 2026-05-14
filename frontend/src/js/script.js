@@ -17,6 +17,7 @@ import { gravityFilter } from "./chart/GravityFilter";
 import { gravityTracker } from "./chart/GravityTracker";
 import { checkfgstate } from "./chart/common";
 import { BChart as BrewChartWrapper } from "./chart/BrewChartWrapper";
+import { registerChartControls } from "./chart/ChartControl";
 import { communicationError, displayLcdText, hideErrorMsgs } from "./shared";
 import { Capper } from "./capper";
 import { BWF } from "./bwf";
@@ -782,6 +783,8 @@ export function init() {
         select("#ylabel").innerHTML,
         select("#y2label").innerHTML,
     );
+    registerChartControls();
+
     initRssi();
     Capper.init();
     connBWF();

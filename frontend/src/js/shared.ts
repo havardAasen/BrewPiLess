@@ -231,6 +231,39 @@ export function updateNavbarVersion(): void {
     }
 }
 
+export function hideErrorMsgs() {
+    const msgs = document.querySelectorAll<HTMLElement>(".errormsg");
+    msgs.forEach((msg) => {
+        msg.style.display = "none";
+    });
+}
+
+export function displayLcdText(lines: string[]): void {
+    for (let i = 0; i < 4; i++) {
+        const d = byId(`lcd-line-${i}`);
+        if (d) {
+            d.innerHTML = lines[i];
+        }
+    }
+}
+
+export function communicationError(): void {
+    const div = select(".error");
+
+    if (div) {
+        hideErrorMsgs();
+
+        const connect = select("#error_connect");
+        if (connect) {
+            connect.style.display = "block";
+        }
+
+        div.style.display = "block";
+    } else {
+        displayLcdText(["Failed to", "connect to", "Server", ""]);
+    }
+}
+
 export const ModeString = {
     o: "<%= mode_off %>",
     b: "<%= mode_beer_const %>",

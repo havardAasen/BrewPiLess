@@ -4,7 +4,6 @@ import {
     JSVERSION,
     ModeString,
     StateText,
-    byId,
     closeDlgLoading,
     openDlgLoading,
     s_ajax,
@@ -18,6 +17,7 @@ import { gravityFilter } from "./chart/GravityFilter";
 import { gravityTracker } from "./chart/GravityTracker";
 import { checkfgstate } from "./chart/common";
 import { BChart as BrewChartWrapper } from "./chart/BrewChartWrapper";
+import { communicationError, displayLcdText, hideErrorMsgs } from "./shared";
 import { Capper } from "./capper";
 import { BWF } from "./bwf";
 
@@ -345,33 +345,12 @@ function simLcd(info) {
     return lines;
 }
 
-function displayLcdText(lines) {
-    for (let i = 0; i < 4; i++) {
-        var d = byId("lcd-line-" + i);
-        if (d) d.innerHTML = lines[i];
-    }
-}
-
 function displayLcd(info) {
     // classic interface
     window.tempUnit = info.tu;
     displayLcdText(simLcd(info));
     // new interface
     renderLcdText(info);
-}
-
-function hideErrorMsgs() {
-    var msgs = document.querySelectorAll(".errormsg");
-    for (let i = 0; i < msgs.length; i++) msgs[i].style.display = "none";
-}
-
-function communicationError() {
-    var div = select(".error");
-    if (div) {
-        hideErrorMsgs();
-        select("#error_connect").style.display = "block";
-        div.style.display = "block";
-    } else displayLcdText(["Failed to", "connect to", "Server", ""]);
 }
 
 function controllerError() {

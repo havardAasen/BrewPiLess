@@ -1,4 +1,4 @@
-import { byId, ModeString } from "./shared";
+import { byId, communicationError, displayLcdText, ModeString } from "./shared";
 import { BWF } from "./bwf";
 
 var roomOfridge = false;
@@ -42,17 +42,6 @@ function simLcd(info) {
     roomOfridge = !roomOfridge;
     lines[3] = info.sl;
     return lines;
-}
-
-function displayLcdText(lines) {
-    for (var i = 0; i < 4; i++) {
-        var d = byId("lcd-line-" + i);
-        if (d) d.innerHTML = lines[i];
-    }
-}
-
-function communicationError() {
-    displayLcdText(["Failed to", "connect to", "Server", ""]);
 }
 
 function resize() {

@@ -12,6 +12,7 @@ import {
     updateOriginGravity,
     updateNavbarVersion,
 } from "./shared";
+import { communicationError } from "./shared";
 import { Capper } from "./capper";
 import { BWF } from "./bwf";
 import { PTC } from "./ptc";
@@ -864,14 +865,6 @@ function rcvBeerProfile(p) {
     BrewPiSetting.tempUnit = p.u;
     profileEditor.initProfile(p);
     ControlChart.init("tc_chart", profileEditor.chartdata(), p.u);
-}
-
-function communicationError() {
-    var div = select(".error");
-    if (div) {
-        div.innerHTML = "Failed to connect to server.";
-        div.style.display = "block";
-    }
 }
 
 export function initctrl() {

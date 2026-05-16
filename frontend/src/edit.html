@@ -11,9 +11,7 @@
                 background-color: #f5f5f5;
                 display: none;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-                font-size: 12px;
-                font-family: sans-serif;
-                font-weight: 700;
+                font: 700 12px sans-serif;
             }
             .cm ul {
                 list-style: none;
@@ -53,8 +51,6 @@
                     normal 12px Verdana,
                     Arial,
                     Sans-serif;
-                -moz-user-select: none;
-                -webkit-user-select: none;
                 user-select: none;
                 color: #444;
                 line-height: 16px;
@@ -72,20 +68,6 @@
             }
             .tvu span:hover {
                 text-decoration: underline;
-            }
-            @media screen and (-webkit-min-device-pixel-ratio: 0) {
-                .tvu {
-                    -webkit-animation: webkit-adjacent-element-selector-bugfix
-                        infinite 1s;
-                }
-            }
-            @-webkit-keyframes webkit-adjacent-element-selector-bugfix {
-                from {
-                    padding: 0;
-                }
-                to {
-                    padding: 0;
-                }
             }
             #uploader {
                 position: absolute;

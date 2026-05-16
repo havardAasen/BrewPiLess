@@ -20,7 +20,9 @@ jobs:
 
       - name: Run Prettier
         working-directory: frontend
-        run: npm run pretty
+        run: |
+          npm run pretty
+          npx prettier --check src/{edit,lcd,testcmd}.html
 
 
   ts-eslint:

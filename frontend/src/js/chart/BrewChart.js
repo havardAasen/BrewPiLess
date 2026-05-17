@@ -45,7 +45,6 @@ export class BrewChart {
     // UI
     ylabel;
     y2label;
-    shownlist;
     chart;
     cid;
 
@@ -60,8 +59,6 @@ export class BrewChart {
         this.laststat = [NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN];
         this.sg = NaN;
         this.og = NaN;
-
-        this.shownlist = [true, true, true, true, true, true, true, true, true];
     }
 
     getModeBeforeTime(start) {
@@ -492,20 +489,10 @@ export class BrewChart {
         this.dateLabel = select(".beer-chart-legend-time").innerHTML;
     }
 
-    toggleLine(line) {
-        this.shownlist[line] = !this.shownlist[line];
-        let divclass = ClassLabels[line];
-        if (this.shownlist[line]) {
-            if (select("." + divclass + " .toggle"))
-                select("." + divclass + " .toggle").style.backgroundColor =
-                    select(".chart-legend-row." + divclass).style.color;
-            this.chart.setVisibility(line - 1, true);
-        } else {
-            if (select("." + divclass + " .toggle"))
-                select("." + divclass + " .toggle").style.backgroundColor =
-                    "transparent";
-            this.chart.setVisibility(line - 1, false);
-        }
+    /** @param {number} index */
+    toggleLine(index) {
+        const visibleSeries = this.chart.visibility();
+        this.chart.setVisibility(index - 1, !visibleSeries[index - 1]);
     }
 
     setLabels(y1, y2) {
@@ -516,7 +503,6 @@ export class BrewChart {
     createChart() {
         var t = this;
         t.initLegend();
-        t.shownlist = [true, true, true, true, true, true, true, true, true];
 
         var ldiv = document.createElement("div");
         ldiv.className = "hide";

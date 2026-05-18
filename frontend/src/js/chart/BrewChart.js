@@ -19,7 +19,9 @@ export class BrewChart {
     data = [];
     anno = [];
     state = [];
+    /** @type number[] */
     angles = [];
+    /** @type number[] */
     rawSG = [];
 
     // working state
@@ -34,12 +36,13 @@ export class BrewChart {
 
     // calibration / sg
     calculateSG = false;
-    sgByTilt = null;
+    /** @type {(x: number) => number} */
+    sgByTilt = () => NaN;
     calibrationPoints = [];
     tiltInWater = 0;
     readingInWater = 0;
     og = NaN;
-    filterSg = null;
+    filterSg = NaN;
     sg = NaN;
 
     // UI
@@ -74,17 +77,17 @@ export class BrewChart {
     }
 
     getTiltAround(idx) {
-        if (this.angles[idx] != null)
+        if (!isNaN(this.angles[idx]))
             return [this.angles[idx], this.data[idx][LineIndex.AuxTemp]];
         let left = -1,
             right = -1;
         for (let i = idx - 1; i >= 0; i--)
-            if (this.angles[i] != null) {
+            if (!isNaN(this.angles[idx])) {
                 left = i;
                 break;
             }
         for (let i = idx + 1; i < this.angles.length; i++)
-            if (this.angles[i] != null) {
+            if (!isNaN(this.angles[idx])) {
                 right = i;
                 break;
             }
@@ -197,7 +200,7 @@ export class BrewChart {
         let i = 0;
         let newchart = false;
         let sgPoint = false;
-        this.filterSg = null;
+        this.filterSg = NaN;
 
         const data = Array.from(bytes);
 
@@ -258,8 +261,8 @@ export class BrewChart {
                         NaN,
                     ]);
                     this.state.push(null);
-                    this.angles.push(null);
-                    this.rawSG.push(null);
+                    this.angles.push(NaN);
+                    this.rawSG.push(NaN);
                     this.ctime =
                         ntime - this.ctime > this.interval
                             ? ntime
@@ -350,7 +353,7 @@ export class BrewChart {
                     const temp = this.celsius
                         ? C2F(dataset[LineIndex.AuxTemp])
                         : dataset[LineIndex.AuxTemp];
-                    sg = this.sgByTilt ? this.sgByTilt(this.dataset[8]) : NaN;
+                    sg = this.sgByTilt(this.dataset[8]);
                     if (this.plato)
                         sg = BrewMath.sg2pla(
                             BrewMath.tempCorrectionF(
@@ -381,8 +384,8 @@ export class BrewChart {
 
             this.data.push(dataset);
             this.state.push(this.cstate);
-            this.angles.push(this.dataset[8] ?? null);
-            this.rawSG.push(rawSG ?? null);
+            this.angles.push(this.dataset[8] ?? NaN);
+            this.rawSG.push(rawSG ?? NaN);
             this.ctime += this.interval;
         }
     }
@@ -404,16 +407,19 @@ export class BrewChart {
         return d.toLocaleDateString() + " " + T(HH) + ":" + T(MM) + ":" + T(SS);
     }
 
+    /**
+     * @param {number} elapsed Seconds
+     * @returns {string}
+     */
     formatDuration(elapsed) {
-        var str = "";
-        var days = Math.floor(elapsed / 86400);
-        if (days > 0) {
-            str = days + "d";
-            elapsed -= days * 86400;
-        }
-        var hours = elapsed / 3600;
-        str = str + hours.toFixed(1) + "h";
-        return str;
+        const days = Math.floor(elapsed / 86400);
+        const hours = (elapsed % 86400) / 3600;
+
+        let result = "";
+        if (days > 0) result += days + "d";
+        result += hours.toFixed(1) + "h";
+
+        return result;
     }
 
     showLegend(date, row) {
@@ -468,11 +474,16 @@ export class BrewChart {
         select(".beer-chart-state").innerHTML = "<%= chart_state_label %>";
     }
 
-    tempFormat(y) {
-        var v = parseFloat(y);
-        if (isNaN(v)) return "--";
-        var DEG = this.celsius ? "&deg;C" : "&deg;F";
-        return parseFloat(v).toFixed(2) + DEG;
+    /**
+     * @param {string} temperature
+     * @returns {string}
+     */
+    tempFormat(temperature) {
+        const value = parseFloat(temperature);
+        if (isNaN(value)) return "--";
+
+        const unit = this.celsius ? "&deg;C" : "&deg;F";
+        return `${value.toFixed(2)}${unit}`;
     }
 
     initLegend() {
@@ -605,25 +616,28 @@ export class BrewChart {
         t.chart.setAnnotations(t.anno);
     }
 
+    /**
+     * @param {Dygraph} g
+     * @param {number} time
+     * @returns {number}
+     */
     findNearestRow(g, time) {
-        "use strict";
-        var low = 0,
-            high = g.numRows() - 1;
-        var mid, comparison;
+        let low = 0;
+        let high = g.numRows() - 1;
 
         while (low < high) {
-            mid = Math.floor((low + high) / 2);
-            comparison = g.getValue(mid, 0) - time;
-            if (comparison < 0) {
+            let mid = Math.floor((low + high) / 2);
+            let diff = g.getValue(mid, 0) - time;
+
+            if (diff < 0) {
                 low = mid + 1;
-                continue;
-            }
-            if (comparison > 0) {
+            } else if (diff > 0) {
                 high = mid - 1;
-                continue;
+            } else {
+                return mid;
             }
-            return mid;
         }
+
         return low;
     }
 

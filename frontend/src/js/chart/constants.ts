@@ -9,6 +9,8 @@ export const LineIndex = {
     FilteredSg: 8,
 } as const;
 
+export type LineIndex = (typeof LineIndex)[keyof typeof LineIndex];
+
 export const ModeMap = {
     b: "Beer Constant",
     f: "Fridge Constant",

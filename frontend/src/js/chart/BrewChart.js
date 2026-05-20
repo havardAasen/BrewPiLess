@@ -422,44 +422,39 @@ export class BrewChart {
         return result;
     }
 
+    /**
+     * @param {Date} date
+     * @param {number} row
+     */
     showLegend(date, row) {
-        var d = new Date(date);
+        const d = new Date(date);
         select(".beer-chart-legend-time").innerHTML = this.formatDate(d);
-        if (select(".beer-chart-legend-elapse"))
-            select(".beer-chart-legend-elapse").innerHTML = this.formatDuration(
+
+        const elapseEl = select(".beer-chart-legend-elapse");
+        if (elapseEl)
+            elapseEl.innerHTML = this.formatDuration(
                 d.getTime() / 1000 - this.starttime,
             );
 
-        select(".chart-legend-row.beer-temp .legend-value").innerHTML =
-            this.tempFormat(this.chart.getValue(row, LineIndex.BeerTemp));
-        select(".chart-legend-row.beer-set .legend-value").innerHTML =
-            this.tempFormat(this.chart.getValue(row, LineIndex.BeerSet));
-        select(".chart-legend-row.fridge-temp .legend-value").innerHTML =
-            this.tempFormat(this.chart.getValue(row, LineIndex.FridgeTemp));
-        select(".chart-legend-row.fridge-set .legend-value").innerHTML =
-            this.tempFormat(this.chart.getValue(row, LineIndex.FridgeSet));
-        select(".chart-legend-row.room-temp .legend-value").innerHTML =
-            this.tempFormat(this.chart.getValue(row, LineIndex.RoomTemp));
+        ClassLabels.forEach((label, i) => {
+            if (i === 0) return;
 
-        select(".chart-legend-row.aux-temp .legend-value").innerHTML =
-            this.tempFormat(this.chart.getValue(row, LineIndex.AuxTemp));
+            const value = this.chart.getValue(row, i);
+            const el = select(`.chart-legend-row.${label} .legend-value`);
+            if (!el) return;
 
-        var g = this.chart.getValue(row, LineIndex.Gravity);
-        select(".chart-legend-row.gravity .legend-value").innerHTML =
-            !g || isNaN(g)
-                ? "--"
-                : this.plato
-                  ? g.toFixed(2) + "&deg;P"
-                  : g.toFixed(4);
-        var filteredG = this.chart.getValue(row, LineIndex.FilteredSg);
-        select(".chart-legend-row.filtersg .legend-value").innerHTML =
-            !filteredG || isNaN(filteredG)
-                ? "--"
-                : this.plato
-                  ? filteredG.toFixed(2) + "&deg;P"
-                  : filteredG.toFixed(4);
+            if (label === "gravity" || label === "filtersg") {
+                el.innerHTML = Number.isFinite(value)
+                    ? this.plato
+                        ? `${value.toFixed(2)}&deg;P`
+                        : value.toFixed(4)
+                    : "--";
+            } else {
+                el.innerHTML = this.tempFormat(value);
+            }
+        });
 
-        var state = parseInt(this.state[row]);
+        const state = parseInt(this.state[row]);
         if (!isNaN(state)) {
             select(".beer-chart-state").innerHTML = STATES[state].text;
         }
@@ -475,28 +470,29 @@ export class BrewChart {
     }
 
     /**
-     * @param {string} temperature
+     * @param {string | number} temperature
      * @returns {string}
      */
     tempFormat(temperature) {
-        const value = parseFloat(temperature);
-        if (isNaN(value)) return "--";
+        const value = Number(temperature);
+        if (!Number.isFinite(value)) return "--";
 
         const unit = this.celsius ? "&deg;C" : "&deg;F";
         return `${value.toFixed(2)}${unit}`;
     }
 
     initLegend() {
-        // init color
-        if (select(".beer-temp .toggle")) {
-            for (var i = 1; i < ClassLabels.length; i++) {
-                var label = ClassLabels[i];
-                select(".chart-legend-row." + label).style.color =
-                    Colors[i - 1];
-                select("." + label + ".toggle").style.backgroundColor =
-                    Colors[i - 1];
-            }
+        const toggle = select(".beer-temp .toggle");
+        if (!toggle) return;
+
+        for (var i = 1; i < ClassLabels.length; i++) {
+            const label = ClassLabels[i];
+            const color = Colors[i - 1];
+
+            select(`.chart-legend-row.${label}`).style.color = color;
+            select(`.${label}.toggle`).style.backgroundColor = color;
         }
+
         this.dateLabel = select(".beer-chart-legend-time").innerHTML;
     }
 

@@ -1,13 +1,13 @@
-export enum LineIndex {
-    BeerSet = 1,
-    BeerTemp = 2,
-    FridgeTemp = 3,
-    FridgeSet = 4,
-    RoomTemp = 5,
-    AuxTemp = 6,
-    Gravity = 7,
-    FilteredSg = 8,
-}
+export const LineIndex = {
+    BeerSet: 1,
+    BeerTemp: 2,
+    FridgeTemp: 3,
+    FridgeSet: 4,
+    RoomTemp: 5,
+    AuxTemp: 6,
+    Gravity: 7,
+    FilteredSg: 8,
+} as const;
 
 export const ModeMap = {
     b: "Beer Constant",

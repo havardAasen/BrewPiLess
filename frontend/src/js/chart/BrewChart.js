@@ -508,19 +508,20 @@ export class BrewChart {
     }
 
     createChart() {
-        var t = this;
-        t.initLegend();
+        this.initLegend();
 
-        var ldiv = document.createElement("div");
+        const ldiv = document.createElement("div");
         ldiv.className = "hide";
-        var ylabel =
-            (t.ylabel ? t.ylabel : "Temperature") +
-            "(&deg;" +
-            (t.celsius ? "C" : "F") +
-            ")";
-        var y2label = t.y2label ? t.y2label : "Gravity";
         document.body.appendChild(ldiv);
-        var opt = {
+
+        const ylabel =
+            (this.ylabel || "Temperature") +
+            "(&deg;" +
+            (this.celsius ? "C" : "F") +
+            ")";
+        const y2label = this.y2label || "Gravity";
+
+        const opt = {
             labels: Labels,
             colors: Colors,
             connectSeparatedPoints: true,
@@ -550,43 +551,48 @@ export class BrewChart {
             strokeWidth: 1,
             axes: {
                 y: {
-                    valueFormatter: function (y) {
-                        return t.tempFormat(y);
-                    },
+                    valueFormatter: (y) => this.tempFormat(y),
                 },
                 y2: {
-                    valueFormatter: function (y) {
-                        return t.plato ? y.toFixed(1) : y.toFixed(3);
-                    },
+                    valueFormatter: (y) =>
+                        this.plato ? y.toFixed(1) : y.toFixed(3),
+
                     axisLabelFormatter: function (y) {
-                        var range = this.yAxisRange(1);
-                        if (t.plato)
+                        const range = this.yAxisRange(1);
+                        if (this.plato) {
                             return range[1] - range[0] > 1
                                 ? y.toFixed(1)
                                 : y.toFixed(2);
+                        }
 
-                        if (range[1] - range[0] > 0.002)
+                        if (range[1] - range[0] > 0.002) {
                             return y.toFixed(3).substring(1);
-                        else return y.toFixed(4).substring(2);
+                        }
+
+                        return y.toFixed(4).substring(2);
                     },
                 },
             },
+
             highlightCircleSize: 2,
             highlightSeriesOpts: {
                 strokeWidth: 1.5,
                 strokeBorderWidth: 1,
                 highlightCircleSize: 5,
             },
-            highlightCallback: function (e, x, pts, row) {
-                t.showLegend(x, row);
+
+            highlightCallback: (e, x, pts, row) => {
+                this.showLegend(x, row);
             },
-            unhighlightCallback: function () {
-                t.hideLegend();
+
+            unhighlightCallback: () => {
+                this.hideLegend();
             },
-            underlayCallback: function (ctx, area, graph) {
+
+            underlayCallback: (ctx, area, graph) => {
                 ctx.save();
                 try {
-                    t.drawBackground(ctx, area, graph);
+                    this.drawBackground(ctx, area, graph);
                 } finally {
                     ctx.restore();
                 }
@@ -599,7 +605,7 @@ export class BrewChart {
 									}
 								}*/
         };
-        t.chart = new Dygraph(byId(t.cid), t.data, opt);
+        this.chart = new Dygraph(byId(this.cid), this.data, opt);
     }
 
     updateChart() {

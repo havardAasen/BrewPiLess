@@ -1,5 +1,5 @@
 import regression from "regression";
-import { BrewMath, byId, C2F, select } from "../shared";
+import { BrewMath, byId, dd, C2F, select } from "../shared";
 import { ClassLabels, Colors, Labels, LineIndex, ModeMap } from "./constants";
 import { gravityFilter } from "./GravityFilter";
 import { gravityTracker } from "./GravityTracker";
@@ -396,15 +396,16 @@ export class BrewChart {
         //	console.log("incTime:"+ this.ctime/this.interval);
     }
 
+    /**
+     * @param {Date} d
+     * @returns {string}
+     */
     formatDate(d) {
-        var HH = d.getHours();
-        var MM = d.getMinutes();
-        var SS = d.getSeconds();
+        const hours = d.getHours();
+        const minutes = d.getMinutes();
+        const seconds = d.getSeconds();
 
-        function T(x) {
-            return x > 9 ? x : "0" + x;
-        }
-        return d.toLocaleDateString() + " " + T(HH) + ":" + T(MM) + ":" + T(SS);
+        return `${d.toLocaleDateString()} ${dd(hours)}:${dd(minutes)}:${dd(seconds)}`;
     }
 
     /**

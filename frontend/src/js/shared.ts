@@ -150,7 +150,7 @@ export function getActiveNavItem() {
     if (element) element.className += "active";
 }
 
-function dd(n: number): string {
+export function dd(n: number): string {
     return n < 10 ? "0" + n : n.toString();
 }
 

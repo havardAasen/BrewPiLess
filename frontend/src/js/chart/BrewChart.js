@@ -609,13 +609,13 @@ export class BrewChart {
     }
 
     updateChart() {
-        var t = this;
-        if (typeof t.chart == "undefined") t.createChart();
-        else
-            t.chart.updateOptions({
-                file: t.data,
-            });
-        t.chart.setAnnotations(t.anno);
+        if (!this.chart) {
+            this.createChart();
+        } else {
+            this.chart.updateOptions({ file: this.data });
+        }
+
+        this.chart.setAnnotations(this.anno);
     }
 
     /**
@@ -733,134 +733,136 @@ export class BrewChart {
     }
 
     partial(start, end) {
-        var me = this;
+        const srow = this.findNearestRow(this.chart, start);
+        const erow = this.findNearestRow(this.chart, end);
 
-        var srow = me.findNearestRow(this.chart, start);
-        var erow = me.findNearestRow(this.chart, end);
-        var data = [];
-        var VERTAG = 5;
-        var st = Math.round(start / 1000);
+        const data = [];
+        const VERTAG = 5;
+        const startSeconds = Math.round(start / 1000);
 
         // create a header
         // header
-        var tag = VERTAG | (me.celsius ? 0xe0 : 0xf0);
-        if (me.calibrating) tag = tag ^ 0x20;
+        let tag = VERTAG | (this.celsius ? 0xe0 : 0xf0);
+        if (this.calibrating) tag ^= 0x20;
         // headerx4
-        var header = new Uint8Array([
+        const header = new Uint8Array([
             0xff,
             tag,
-            me.interval >> 8,
-            me.interval & 0xff,
-            (st >> 24) & 0xff,
-            (st >> 16) & 0xff,
-            (st >> 8) & 0xff,
-            st & 0xff,
+            this.interval >> 8,
+            this.interval & 0xff,
+            (startSeconds >> 24) & 0xff,
+            (startSeconds >> 16) & 0xff,
+            (startSeconds >> 8) & 0xff,
+            startSeconds & 0xff,
         ]);
 
-        //  Period Record x 2
         data.push(header);
-        function encodeTemp(t) {
+
+        //  Period Record x 2
+        const encodeTemp = (t) => {
             // valid temp range, 225 ~ -100
             // 0 ~ 225:
             // -100 ~ 0 :  226  - t  , maximum 32500 ( max uint16 32767)
             if (isNaN(t)) return [0x7f, 0xff];
-            var it = parseInt(t * 100);
+            let it = Math.round(t * 100);
             if (it < 0) it = 22500 - it;
             return [(it >> 8) & 0x7f, it & 0xff];
-        }
+        };
 
-        function encodeGravity(g) {
+        const encodeGravity = (g) => {
             if (isNaN(g)) return [0x7f, 0xff];
-            var sgint = Math.round(g * 10000);
-            return [(sgint >> 8) & 0xff, sgint & 0xff];
-        }
+            const sg = Math.round(g * 10000);
+            return [(sg >> 8) & 0xff, sg & 0xff];
+        };
 
-        function encodeTilt(tlt) {
+        const encodeTilt = (tlt) => {
             //        if(isNaN(tlt)) return [0x7F,0xFF];
-            var tltInt = tlt * 100;
-            return [(tltInt >> 8) & 0xff, tltInt & 0xff];
-        }
-        var values = [null, null, null, null, null, null, null, null];
+            const tilt = Math.round(tlt * 100);
+            return [(tilt >> 8) & 0xff, tilt & 0xff];
+        };
 
-        function periodRecord(row) {
-            var rec = [0xf0, 0x00];
-            var currentValues = [
-                me.chart.getValue(row, LineIndex.BeerSet),
-                me.chart.getValue(row, LineIndex.BeerTemp),
-                me.chart.getValue(row, LineIndex.FridgeTemp),
-                me.chart.getValue(row, LineIndex.FridgeSet),
-                me.chart.getValue(row, LineIndex.RoomTemp),
-                me.chart.getValue(row, LineIndex.AuxTemp),
-                me.rawSG[row],
-                me.angles[row],
+        let values = Array(8).fill(NaN);
+
+        const periodRecord = (row) => {
+            const rec = [0xf0, 0x00];
+            const currentValues = [
+                this.chart.getValue(row, LineIndex.BeerSet),
+                this.chart.getValue(row, LineIndex.BeerTemp),
+                this.chart.getValue(row, LineIndex.FridgeTemp),
+                this.chart.getValue(row, LineIndex.FridgeSet),
+                this.chart.getValue(row, LineIndex.RoomTemp),
+                this.chart.getValue(row, LineIndex.AuxTemp),
+                this.rawSG[row],
+                this.angles[row],
             ];
-            var mask = 0;
+            let mask = 0;
 
-            for (var i = 0; i < 8; i++) {
-                if (values[i] != currentValues[i]) {
-                    mask = mask | (1 << i);
-                    if (i < 5) {
-                        rec = rec.concat(encodeTemp(currentValues[i]));
-                    } else {
-                        if (i == 5) {
-                            var auxtemp = currentValues[5];
-                            if (auxtemp && !isNaN(auxtemp)) {
-                                rec = rec.concat(encodeTemp(auxtemp));
-                            }
-                        } else if (i == 6) {
-                            // gravity
-                            // The gravity data is user-input or calculated by BPL.
-                            var sg = currentValues[6];
-                            if (sg && !isNaN(sg)) {
-                                rec = rec.concat(encodeGravity(sg));
-                            }
-                        } else {
-                            var tilt = currentValues[7];
-                            if (tilt && !isNaN(tilt)) {
-                                rec = rec.concat(encodeTilt(tilt));
-                            }
-                        }
-                        currentValues[i] = null;
-                    }
+            for (let i = 0; i < currentValues.length; i++) {
+                const prev = values[i];
+                const curr = currentValues[i];
+
+                if (prev === curr) continue;
+
+                mask |= 1 << i;
+
+                if (i < 5) {
+                    rec.push(...encodeTemp(curr));
+                    continue;
                 }
+
+                // Aux temperature
+                if (i === 5 && Number.isFinite(curr)) {
+                    rec.push(...encodeTemp(curr));
+                    continue;
+                }
+
+                // Gravity
+                if (i === 6 && Number.isFinite(curr)) {
+                    rec.push(...encodeGravity(curr));
+                    continue;
+                }
+
+                // Tilt angle
+                if (i === 7 && Number.isFinite(curr)) {
+                    rec.push(...encodeTilt(curr));
+                    continue;
+                }
+
+                currentValues[i] = NaN;
             }
+
             rec[1] = mask;
             values = currentValues;
             return rec;
-        }
+        };
+
         data.push(new Uint8Array(periodRecord(srow)));
-        // mode y state
-        var brewpistate = me.state[srow];
+
+        let state = this.state[srow];
         data.push(
-            new Uint8Array([
-                0xf4,
-                me.getModeBeforeTime(start),
-                0xf1,
-                brewpistate,
-            ]),
+            new Uint8Array([0xf4, this.getModeBeforeTime(start), 0xf1, state]),
         );
+
         // OG, if exists
-        if (!isNaN(me.og)) {
-            var og = [0xf8, 0];
-            data.push(new Uint8Array(og.concat(encodeGravity(me.og))));
+        if (!isNaN(this.og)) {
+            data.push(new Uint8Array(0xf8, 0, ...encodeGravity(this.og)));
         }
+
         // tilt in water
-        if (me.calibrating) {
-            var twa = [0xf9, 0];
-            data.push(new Uint8Array(twa.concat(encodeTilt(me.tiltInWater))));
+        if (this.calibrating) {
+            data.push(new Uint8Array(0xf9, 0, ...encodeTilt(this.tiltInWater)));
         }
-        var anno = this.anno;
-        var aidx = 0;
+        let aidx = 0;
 
-        while (aidx < anno.length && anno[aidx].x <= start) aidx++;
+        while (aidx < this.anno.length && this.anno[aidx].x <= start) aidx++;
 
-        for (var r = srow + 1; r <= erow; r++) {
+        for (let r = srow + 1; r <= erow; r++) {
             // check annotation.
-            var time = me.data[r][0].getTime();
+            const time = this.data[r][0].getTime();
             if (
-                aidx < anno.length &&
-                time >= anno[aidx].x &&
-                anno[aidx].shortText == "R"
+                aidx < this.anno.length &&
+                time >= this.anno[aidx].x &&
+                this.anno[aidx].shortText == "R"
             ) {
                 const tdiff = Math.round((time - start) / 1000);
                 data.push(
@@ -875,19 +877,22 @@ export class BrewChart {
             }
 
             data.push(new Uint8Array(periodRecord(r)));
-            if (brewpistate != me.state[r]) {
-                brewpistate = me.state[r];
-                data.push(new Uint8Array([0xf1, brewpistate]));
+            if (state !== this.state[r]) {
+                state = this.state[r];
+                data.push(new Uint8Array([0xf1, state]));
             }
 
             if (
-                aidx < anno.length &&
-                time >= anno[aidx].x &&
-                anno[aidx].shortText != "R"
+                aidx < this.anno.length &&
+                time >= this.anno[aidx].x &&
+                this.anno[aidx].shortText != "R"
             ) {
                 // mode
                 data.push(
-                    new Uint8Array([0xf4, anno[aidx].shortText.charCodeAt(0)]),
+                    new Uint8Array([
+                        0xf4,
+                        this.anno[aidx].shortText.charCodeAt(0),
+                    ]),
                 );
                 aidx++;
             }

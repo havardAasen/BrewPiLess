@@ -466,7 +466,7 @@ export class BrewChart {
         v.forEach(function (val) {
             val.innerHTML = "--";
         });
-        select(".beer-chart-legend-time").innerHTML = this.dateLabel; //"Date/Time";
+        select(".beer-chart-legend-time").innerHTML = "<%= legend_date %>";
         select(".beer-chart-state").innerHTML = "<%= chart_state_label %>";
     }
 
@@ -493,8 +493,6 @@ export class BrewChart {
             select(`.chart-legend-row.${label}`).style.color = color;
             select(`.${label}.toggle`).style.backgroundColor = color;
         }
-
-        this.dateLabel = select(".beer-chart-legend-time").innerHTML;
     }
 
     /** @param {number} index */

@@ -17,7 +17,7 @@ export class BrewChart {
 
     // data store
     data = [];
-    anno = [];
+    annotations = [];
     state = [];
     /** @type number[] */
     angles = [];
@@ -65,14 +65,18 @@ export class BrewChart {
     }
 
     getModeBeforeTime(start) {
-        if (!this.anno || this.anno.length === 0) return "p".charCodeAt(0);
-        let mode = this.anno[0].shortText;
-        const allmode = "OBPF";
-        for (let i = 0; i < this.anno.length; i++) {
-            if (this.anno[i].x > start) break;
-            if (allmode.indexOf(this.anno[i].shortText) >= 0)
-                mode = this.anno[i].shortText;
+        if (this.annotations.length === 0) {
+            return "p".charCodeAt(0);
         }
+
+        const validModes = "OBPF";
+        let mode = this.annotations[0].shortText;
+        for (const annotation of this.annotations) {
+            if (annotation.x > start) break;
+            if (validModes.includes(annotation.shortText))
+                mode = annotation.shortText;
+        }
+
         return mode.charCodeAt(0);
     }
 
@@ -224,7 +228,7 @@ export class BrewChart {
                 this.ctime = this.starttime;
                 i += 4;
                 this.data = [];
-                this.anno = [];
+                this.annotations = [];
                 this.state = [];
                 this.angles = [];
                 this.rawSG = [];
@@ -268,7 +272,7 @@ export class BrewChart {
                             ? ntime
                             : this.ctime + this.interval;
                 }
-                this.anno.push({
+                this.annotations.push({
                     series: "beerTemp",
                     x: this.ctime * 1000,
                     shortText: "R",
@@ -614,7 +618,7 @@ export class BrewChart {
             this.chart.updateOptions({ file: this.data });
         }
 
-        this.chart.setAnnotations(this.anno);
+        this.chart.setAnnotations(this.annotations);
     }
 
     /**
@@ -712,7 +716,7 @@ export class BrewChart {
     }
 
     addResume() {
-        this.anno.push({
+        this.annotations.push({
             series: "beerTemp",
             x: this.ctime * 1000,
             shortText: "R",
@@ -853,15 +857,19 @@ export class BrewChart {
         }
         let aidx = 0;
 
-        while (aidx < this.anno.length && this.anno[aidx].x <= start) aidx++;
+        while (
+            aidx < this.annotations.length &&
+            this.annotations[aidx].x <= start
+        )
+            aidx++;
 
         for (let r = srow + 1; r <= erow; r++) {
             // check annotation.
             const time = this.data[r][0].getTime();
             if (
-                aidx < this.anno.length &&
-                time >= this.anno[aidx].x &&
-                this.anno[aidx].shortText == "R"
+                aidx < this.annotations.length &&
+                time >= this.annotations[aidx].x &&
+                this.annotations[aidx].shortText == "R"
             ) {
                 const tdiff = Math.round((time - start) / 1000);
                 data.push(
@@ -882,15 +890,15 @@ export class BrewChart {
             }
 
             if (
-                aidx < this.anno.length &&
-                time >= this.anno[aidx].x &&
-                this.anno[aidx].shortText != "R"
+                aidx < this.annotations.length &&
+                time >= this.annotations[aidx].x &&
+                this.annotations[aidx].shortText != "R"
             ) {
                 // mode
                 data.push(
                     new Uint8Array([
                         0xf4,
-                        this.anno[aidx].shortText.charCodeAt(0),
+                        this.annotations[aidx].shortText.charCodeAt(0),
                     ]),
                 );
                 aidx++;
@@ -901,7 +909,7 @@ export class BrewChart {
 
     addMode(m, x) {
         const s = String.fromCharCode(m);
-        this.anno.push({
+        this.annotations.push({
             series: "beerTemp",
             x: x,
             shortText: s.toUpperCase(),

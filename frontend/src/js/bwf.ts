@@ -73,7 +73,7 @@ interface BWFInitOptions {
     error?: () => void;
 }
 
-enum WSState {
+const enum WSState {
     Idle,
     Connecting,
     Connected,

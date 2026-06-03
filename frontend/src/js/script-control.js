@@ -18,6 +18,9 @@ import { BWF } from "./bwf";
 import { PTC } from "./ptc";
 import { ProfileChart } from "./chart/ProfileChart";
 
+/** @typedef {("C" | "F")} TempUnit */
+/** @typedef {"profile" | "beer" | "fridge" | "off"} TemperatureControlMode */
+
 var BPURL = "/tschedule";
 var MAX_STEP = 7;
 
@@ -27,9 +30,14 @@ var profileChart;
 /* profile.js */
 var profileEditor = {
     dirty: false,
+    /** @type TempUnit */
     tempUnit: "C",
+
+    sd: new Date(),
     C_startday_Id: "#startdate",
     C_savebtn_Id: "savebtn",
+
+    /** @param {boolean} d */
     markdirty: function (d) {
         this.dirty = d;
         byId(this.C_savebtn_Id).innerHTML = d ? "Save*" : "Save";
@@ -37,6 +45,8 @@ var profileEditor = {
     getStartDate: function () {
         return this.sd;
     },
+
+    /** @param {Date} d */
     setStartDate: function (d) {
         this.sd = d;
         var date_in = select(this.C_startday_Id);
@@ -185,7 +195,7 @@ var profileEditor = {
             <option value="w" 9>ALL</option>
             <option value="e" 10>Either</option>
         */
-        var condtionIndex = {
+        var conditionIndex = {
             t: 0,
             g: 1,
             a: 3,
@@ -203,13 +213,17 @@ var profileEditor = {
             conSel.style.display = "none";
         } else {
             conSel.value = stage.c;
-            conSel.selectedIndex = condtionIndex[stage.c];
+            conSel.selectedIndex = conditionIndex[stage.c];
 
             forTime.style.display = "none";
             conSel.style.display = "block";
         }
     },
 
+    /**
+     * @param {number} diff
+     * @returns {string}
+     */
     datestr: function (diff) {
         var dt = new Date(this.sd.getTime() + Math.round(diff * 86400) * 1000);
         return formatDate(dt);
@@ -464,6 +478,8 @@ var profileEditor = {
             profileEditor.initable([], new Date());
         }
     },
+
+    /** @param {TempUnit} u */
     setTempUnit: function (u) {
         if (u == this.tempUnit) return;
         this.tempUnit = u;
@@ -637,8 +653,12 @@ var BrewPiSetting = {
 
 var modekeeper = {
     initiated: false,
+    /** @type TemperatureControlMode[] */
     modes: ["profile", "beer", "fridge", "off"],
-    cmode: 0,
+    /** @type TemperatureControlMode */
+    cmode: "off",
+
+    /** @param {TemperatureControlMode} m */
     dselect: function (m) {
         var d = byId(m + "-m");
         var nc = byId(m + "-m").className.replace(/\snav-selected/, "");
@@ -646,6 +666,8 @@ var modekeeper = {
 
         byId(m + "-s").style.display = "none";
     },
+
+    /** @param {TemperatureControlMode} m */
     select: function (m) {
         byId(m + "-m").className += " nav-selected";
         byId(m + "-s").style.display = "block";
@@ -654,10 +676,9 @@ var modekeeper = {
         var me = this;
         if (me.initiated) return;
         me.initiated = true;
-        for (var i = 0; i < 4; i++) {
-            var m = me.modes[i];
-            byId(m + "-s").style.display = "none";
-            byId(m + "-m").onclick = function () {
+        for (const mode of me.modes) {
+            byId(mode + "-s").style.display = "none";
+            byId(mode + "-m").onclick = function () {
                 var tm = this.id.replace(/-m/, "");
                 me.dselect(me.cmode);
                 me.select(tm);

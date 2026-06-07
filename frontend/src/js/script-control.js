@@ -32,10 +32,15 @@ var profileEditor = {
     dirty: false,
     /** @type TempUnit */
     tempUnit: "C",
+    /** @type HTMLTableRowElement | null */
+    row: null,
 
     sd: new Date(),
     C_startday_Id: "#startdate",
     C_savebtn_Id: "savebtn",
+
+    /** @type HTMLTableSectionElement | null */
+    tableBody: null,
 
     /** @param {boolean} d */
     markdirty: function (d) {
@@ -74,9 +79,10 @@ var profileEditor = {
         this.markdirty(true);
         profileChart.update(this.chartdata(), this.tempUnit);
     },
-    rowList: function () {
-        var tb = byId("profile_t").getElementsByTagName("tbody")[0];
-        return tb.getElementsByTagName("tr");
+
+    /** @returns HTMLTableRowElement[] */
+    getRows: function () {
+        return Array.from(this.tableBody.getElementsByTagName("tr"));
     },
     sgChange: function (td) {
         if (
@@ -229,7 +235,7 @@ var profileEditor = {
         return formatDate(dt);
     },
     reorg: function () {
-        var rowlist = this.rowList();
+        var rowlist = this.getRows();
         var utime = this.sd.getTime();
         for (var i = 0; i < rowlist.length; i++) {
             var row = rowlist[i];
@@ -241,7 +247,7 @@ var profileEditor = {
         }
     },
     chartdata: function () {
-        var rowlist = this.rowList();
+        var rowlist = this.getRows();
         if (rowlist.length == 0) return [];
 
         var utime = this.sd.getTime();
@@ -265,8 +271,7 @@ var profileEditor = {
         return list;
     },
     addRow: function () {
-        var tb = byId("profile_t").getElementsByTagName("tbody")[0];
-        var rowlist = tb.getElementsByTagName("tr");
+        var rowlist = this.getRows();
 
         if (rowlist.length >= MAX_STEP) {
             alert("<%= script_control_too_many_steps %>");
@@ -290,7 +295,7 @@ var profileEditor = {
                 c: "r",
                 d: 1,
             });
-            tb.appendChild(tr);
+            this.tableBody.appendChild(tr);
             stage = {
                 c: "t",
                 t: this.rowTemp(lastRow),
@@ -301,7 +306,7 @@ var profileEditor = {
 
         let tr = this.row.cloneNode(true);
         this.initrow(tr, stage);
-        tb.appendChild(tr);
+        this.tableBody.appendChild(tr);
 
         this.reorg();
         this.markdirty(true);
@@ -309,7 +314,7 @@ var profileEditor = {
     },
     delRow: function () {
         // delete last row
-        var list = this.rowList();
+        var list = this.getRows();
         if (list.length == 0) return;
         var last = list[list.length - 1];
 
@@ -361,28 +366,32 @@ var profileEditor = {
     },
     renderRows: function (g) {
         if (typeof g.length == "undefined") console.log("error!");
-        var e = byId("profile_t").getElementsByTagName("tbody")[0];
         for (var f = 0; f < g.length; f++) {
             var c = this.row.cloneNode(true);
             this.initrow(c, g[f]);
-            e.appendChild(c);
+            this.tableBody.appendChild(c);
         }
         this.reorg();
     },
 
     initable: function (c, e) {
+        const table = document.getElementById("profile_t");
+        if (!table) throw new Error("Table was not found");
+
+        this.tableBody = table.getElementsByTagName("tbody")[0];
+        if (!this.tableBody) throw new Error("Table has no <tbody>");
+
         this.setStartDate(e);
+
         if (!this.row) {
-            var b = byId("profile_t").getElementsByTagName("tbody")[0];
-            this.row = b.getElementsByTagName("tr")[0];
-            b.removeChild(this.row);
+            this.row = this.getRows()[0];
         } else {
             this.clear();
         }
         this.renderRows(c);
     },
     clear: function () {
-        var rl = this.rowList();
+        var rl = this.getRows();
 
         for (var i = rl.length - 1; i >= 0; i--) {
             var tr = rl[i];
@@ -391,7 +400,7 @@ var profileEditor = {
         this.markdirty(true);
     },
     getProfile: function () {
-        var rl = this.rowList();
+        var rl = this.getRows();
         var temps = [];
         for (let i = 0; i < rl.length; i++) {
             var tr = rl[i];
@@ -483,7 +492,7 @@ var profileEditor = {
     setTempUnit: function (u) {
         if (u == this.tempUnit) return;
         this.tempUnit = u;
-        var rl = this.rowList();
+        var rl = this.getRows();
         for (let i = 0; i < rl.length; i++) {
             var tcell = rl[i].querySelector("td.stage-temp");
             var temp = parseFloat(tcell.innerHTML);

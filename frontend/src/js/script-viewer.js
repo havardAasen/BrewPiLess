@@ -1,8 +1,11 @@
 import { select, showPlatoUnit } from "./shared";
 import { Labels } from "./chart/constants";
 import { testData, STATES } from "./chart/common";
-import { BChart } from "./chart/BrewChartWrapper";
+import { BrewChart } from "./chart/BrewChart";
 import { registerChartControls } from "./chart/ChartControl";
+
+/** @type BrewChart */
+var bChart;
 
 export function loaded() {
     function openfile(f) {
@@ -13,20 +16,19 @@ export function loaded() {
                 //chart.clear();
                 var data = new Uint8Array(e.target.result);
                 if (testData(data) !== false) {
-                    BChart.raw = data;
-                    BChart.chart.process(data);
-                    if (BChart.chart.calibrating) {
-                        BChart.chart.getFormula();
+                    bChart.raw = data;
+                    bChart.process(data);
+                    if (bChart.calibrating) {
+                        bChart.getFormula();
                         //  do it again
-                        BChart.chart.process(data);
-                        if (BChart.chart.calculateSG)
+                        bChart.process(data);
+                        if (bChart.calculateSG)
                             select("#formula-btn").style.display = "block";
                     }
-                    BChart.chart.updateChart();
-                    var date = new Date(BChart.chart.starttime * 1000);
-                    select("#log-start").innerHTML =
-                        BChart.chart.formatDate(date);
-                    if (BChart.chart.plato) showPlatoUnit();
+                    bChart.updateChart();
+                    var date = new Date(bChart.starttime * 1000);
+                    select("#log-start").innerHTML = bChart.formatDate(date);
+                    if (bChart.plato) showPlatoUnit();
                 } else {
                     alert("<%= script_viewer_invalid_log %>");
                 }
@@ -37,12 +39,12 @@ export function loaded() {
         }
     }
 
-    BChart.init(
+    bChart = new BrewChart(
         "div_g",
         select("#ylabel").innerHTML,
         select("#y2label").innerHTML,
     );
-    registerChartControls();
+    registerChartControls(bChart);
 
     if (select("#dropfile")) {
         select("#dropfile").ondragover = function (e) {
@@ -62,7 +64,6 @@ export function loaded() {
         //Retrieve the first (and only!) File from the FileList object
         var f = evt.target.files[0];
         openfile(f);
-        BChart.chart.dataset;
     };
 }
 
@@ -93,9 +94,9 @@ function exportcsv() {
     }
     csv = csv + ",Tilt,state\n";
 
-    for (var row = 0; row < BChart.chart.data.length; row++) {
+    for (var row = 0; row < bChart.data.length; row++) {
         for (let i = 0; i < Labels.length; i++) {
-            var v = BChart.chart.chart.getValue(row, i);
+            var v = bChart.chart.getValue(row, i);
             if (v === null) v = "";
             else if (isNaN(v)) v = "";
             if (i == 0) {
@@ -103,9 +104,9 @@ function exportcsv() {
                 csv = csv + d.toISOString() + "," + v / 1000;
             } else csv = csv + "," + v;
         }
-        csv = csv + "," + BChart.chart.angles[row];
+        csv = csv + "," + bChart.angles[row];
 
-        var state = parseInt(BChart.chart.state[row]);
+        var state = parseInt(bChart.state[row]);
         var st = !isNaN(state) ? STATES[state].text : "";
         csv = csv + "," + st + "\n";
     }
@@ -118,8 +119,8 @@ function exportcsv() {
 
 function cutrange() {
     if (typeof window.file == "undefined") return;
-    var ranges = BChart.chart.chart.xAxisRange();
-    var data = BChart.chart.partial(ranges[0], ranges[1]);
+    var ranges = bChart.chart.xAxisRange();
+    var data = bChart.partial(ranges[0], ranges[1]);
     download(
         new Blob(data, { type: "octet/stream" }),
         window.file.name + "-partial",

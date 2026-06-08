@@ -44,6 +44,10 @@ export class BrewChart {
     og = NaN;
     filterSg = NaN;
     sg = NaN;
+    /** @type number[] */
+    coefficients;
+    /** @type number */
+    npt;
 
     // UI
     ylabel;
@@ -51,8 +55,15 @@ export class BrewChart {
     chart;
     cid;
 
-    constructor(cid) {
+    /**
+     * @param {string} cid
+     * @param {string} ylabel
+     * @param {string} y2label
+     */
+    constructor(cid, ylabel, y2label) {
         this.cid = cid;
+        this.ylabel = ylabel;
+        this.y2label = y2label;
         this.clearData();
         gravityFilter.reset();
         gravityTracker.init();
@@ -503,11 +514,6 @@ export class BrewChart {
     toggleLine(index) {
         const visibleSeries = this.chart.visibility();
         this.chart.setVisibility(index - 1, !visibleSeries[index - 1]);
-    }
-
-    setLabels(y1, y2) {
-        this.ylabel = y1;
-        this.y2label = y2;
     }
 
     createChart() {

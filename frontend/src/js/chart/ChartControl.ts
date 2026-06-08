@@ -1,4 +1,4 @@
-import { BChart } from "./BrewChartWrapper";
+import { BrewChart } from "./BrewChart";
 import { ClassLabels, LineIndex } from "./constants";
 
 function bind(id: string, handler: () => void): void {
@@ -11,11 +11,11 @@ function bind(id: string, handler: () => void): void {
     el.checked = true;
 }
 
-export function registerChartControls(): void {
+export function registerChartControls(bChart: BrewChart): void {
     // Start at second element to match LineIndex
     for (let i = 1; i < ClassLabels.length; i++) {
         const id = ClassLabels[i];
         const line = i as LineIndex;
-        bind(id, () => BChart.toggle(line));
+        bind(id, () => bChart.toggleLine(line));
     }
 }

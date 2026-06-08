@@ -1,7 +1,10 @@
 import { select, showPlatoUnit } from "./shared";
 import { testData } from "./chart/common";
-import { BChart } from "./chart/BrewChartWrapper";
+import { BrewChart } from "./chart/BrewChart";
 import { registerChartControls } from "./chart/ChartControl";
+
+/** @type BrewChart */
+var bChart;
 
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
@@ -45,12 +48,13 @@ export function loaded() {
     if (range) {
         window.iniRange = range.split("-");
     }
-    BChart.init(
+
+    bChart = new BrewChart(
         "div_g",
         select("#ylabel").innerHTML,
         select("#y2label").innerHTML,
     );
-    registerChartControls();
+    registerChartControls(bChart);
 
     select("#div_g").oncontextmenu = function (ev) {
         ev = ev || window.event;
@@ -69,7 +73,7 @@ export function loaded() {
     });
 
     select("#open-selection").onclick = function () {
-        var ranges = BChart.chart.getXRange();
+        var ranges = bChart.getXRange();
         console.log("range:" + ranges[0] + "-" + ranges[1]);
         window.open(getRangeURL(ranges), "_blank");
         return false;
@@ -91,21 +95,21 @@ export function loaded() {
         var data = new Uint8Array(this.response);
 
         if (testData(data) !== false) {
-            BChart.raw = data;
-            BChart.chart.process(data);
-            if (BChart.chart.calibrating) {
-                BChart.chart.getFormula();
+            bChart.raw = data;
+            bChart.process(data);
+            if (bChart.calibrating) {
+                bChart.getFormula();
                 //  do it again
-                BChart.chart.process(data);
-                if (BChart.chart.calculateSG)
+                bChart.process(data);
+                if (bChart.calculateSG)
                     select("#formula-btn").style.display = "block";
             }
-            BChart.chart.updateChart();
-            var date = new Date(BChart.chart.starttime * 1000);
-            select("#log-start").innerHTML = BChart.chart.formatDate(date);
+            bChart.updateChart();
+            var date = new Date(bChart.starttime * 1000);
+            select("#log-start").innerHTML = bChart.formatDate(date);
             if (typeof window.iniRange !== "undefined")
-                BChart.chart.setXRange(window.iniRange);
-            if (BChart.chart.plato) showPlatoUnit();
+                bChart.setXRange(window.iniRange);
+            if (bChart.plato) showPlatoUnit();
         } else {
             alert("<%= script_viewer_invalid_log %>");
         }

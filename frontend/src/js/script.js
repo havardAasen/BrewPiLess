@@ -16,11 +16,11 @@ import {
 import { gravityFilter } from "./chart/GravityFilter";
 import { gravityTracker } from "./chart/GravityTracker";
 import { checkfgstate } from "./chart/common";
-import { BChart as BrewChartWrapper } from "./chart/BrewChartWrapper";
 import { registerChartControls } from "./chart/ChartControl";
 import { communicationError, displayLcdText, hideErrorMsgs } from "./shared";
 import { Capper } from "./capper";
 import { BWF } from "./bwf";
+import { BrewChart } from "./chart/BrewChart";
 
 const T_CHART_REQUEST = 12000;
 const T_CHART_RETRYTO = 6000;
@@ -29,13 +29,18 @@ const T_CHART_REFRESH = 2500;
 const T_CHART_RETRY = 10000;
 const T_LOAD_CHART = 150;
 
+/** @type BrewChart */
+var bChart;
+
 var BChart = {
-    ...BrewChartWrapper,
     offset: 0,
     url: "chart.php",
+    bdata: [],
+    timer: null,
+
     updateFormula: function () {
-        var coeff = this.chart.coefficients;
-        var npt = (this.chart.npt << 24) | (this.chart.cal_igmask & 0xffffff);
+        var coeff = bChart.coefficients;
+        var npt = (bChart.npt << 24) | (bChart.cal_igmask & 0xffffff);
         var changed = true;
         if (typeof window.npt != "undefined" && window.npt == npt) {
             changed = false;
@@ -64,20 +69,18 @@ var BChart = {
             },
         });
     },
-    reprocesData: function () {
-        // recalcualte data
-        // re process data to get correct calibration points
-        var t = this;
-        for (let i = 0; i < t.bdata.length; i++) t.chart.process(t.bdata[i]);
+    reprocessData: function () {
+        if (!Array.isArray(this.bdata) || this.bdata.length === 0) return;
+        this.bdata.forEach((entry) => bChart.process(entry));
     },
+
     updateChartResult: function () {
-        var t = this;
-        if (t.chart.sg && !isNaN(t.chart.sg)) {
-            updateGravity(t.chart.sg);
-            t.chart.sg = NaN;
+        if (bChart.sg && !isNaN(bChart.sg)) {
+            updateGravity(bChart.sg);
+            bChart.sg = NaN;
             checkfgstate();
         }
-        t.chart.updateChart();
+        bChart.updateChart();
     },
     reqdata: function () {
         var t = this;
@@ -111,17 +114,17 @@ var BChart = {
                 }, T_CHART_ZERODATA);
                 return;
             }
-            var res = t.chart.process(data);
+            var res = bChart.process(data);
             if (res.nc) {
                 t.offset = data.length;
                 t.startOff = xhr.getResponseHeader("LogOffset");
                 //t.getLogName();
                 //console.log("new chart, offset="+t.startOff);
-                if (t.chart.calibrating) {
-                    t.chart.getFormula();
+                if (bChart.calibrating) {
+                    bChart.getFormula();
                     //  do it again
-                    t.chart.process(data);
-                    if (t.chart.calculateSG) {
+                    bChart.process(data);
+                    if (bChart.calculateSG) {
                         select("#formula-btn").style.display = "block";
                         // update formula
                         t.updateFormula();
@@ -129,31 +132,31 @@ var BChart = {
                 }
             } else {
                 t.offset += data.length;
-                if (t.chart.calibrating && res.sg) {
+                if (bChart.calibrating && res.sg) {
                     // new calibration data available.
                     //force to reload and re-process the data
                     console.log("New SG availbe. reprocess");
-                    t.chart.calculateSG = false;
-                    t.reprocesData();
+                    bChart.calculateSG = false;
+                    t.reprocessData();
                     // the data will be updated by the "data"
-                    t.chart.getFormula(); // derive the formula
+                    bChart.getFormula(); // derive the formula
                     // this time, the gravity is calculated.
-                    t.reprocesData();
+                    t.reprocessData();
                     t.updateChartResult();
                     t.updateFormula();
                     return;
                 }
             }
 
-            t.chart.updateChart();
+            bChart.updateChart();
 
-            if (!isNaN(t.chart.og)) {
-                updateOriginGravity(t.chart.og);
-                t.chart.og = NaN;
+            if (!isNaN(bChart.og)) {
+                updateOriginGravity(bChart.og);
+                bChart.og = NaN;
             }
-            if (t.chart.sg && !isNaN(t.chart.sg)) {
-                updateGravity(t.chart.sg);
-                t.chart.sg = NaN;
+            if (bChart.sg && !isNaN(bChart.sg)) {
+                updateGravity(bChart.sg);
+                bChart.sg = NaN;
                 checkfgstate();
             }
             if (t.timer == null) t.settimer();
@@ -180,9 +183,8 @@ var BChart = {
         //console.log("start timer at "+ t.chart.interval);
         t.timer = setInterval(function () {
             t.reqdata();
-        }, t.chart.interval * 1000);
+        }, bChart.interval * 1000);
     },
-    timer: null,
     start: function () {
         if (this.running) return;
         this.running = true;
@@ -437,11 +439,7 @@ function gravityDevice(msg) {
     if (select("#iSpindel-last"))
         select("#iSpindel-last").innerHTML = lu.shortLocalizedString();
 
-    if (
-        !BChart.chart.calibrating &&
-        typeof msg["sg"] != "undefined" &&
-        msg.sg > 0
-    )
+    if (!bChart.calibrating && typeof msg["sg"] != "undefined" && msg.sg > 0)
         updateGravity(msg.sg);
 
     if (typeof msg["angle"] != "undefined") {
@@ -563,7 +561,7 @@ function inputgravity() {
             closeDlgLoading();
             setTimeout(function () {
                 // request to
-                if (BChart.chart.calibrating) BChart.reqnow();
+                if (bChart.calibrating) BChart.reqnow();
             }, T_CHART_REFRESH);
         },
         fail: function (d) {
@@ -778,12 +776,12 @@ function connBWF() {
 export function init() {
     select("#pressure-info-pane").style.display = "none";
     window.plato = false;
-    BChart.init(
+    bChart = new BrewChart(
         "div_g",
         select("#ylabel").innerHTML,
         select("#y2label").innerHTML,
     );
-    registerChartControls();
+    registerChartControls(bChart);
 
     initRssi();
     Capper.init();

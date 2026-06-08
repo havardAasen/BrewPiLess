@@ -6,5 +6,6 @@
 .vscode/
 .DS_Store
 cheader/
+compile_commands.json
 dist/
 node_modules/

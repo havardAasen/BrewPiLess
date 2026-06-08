@@ -1,0 +1,14 @@
+Checks: >
+  bugprone-*,
+  clang-analyzer-*
+  cppcoreguidelines-*,
+  modernize-avoid-c-arrays
+  modernize-deprecated-headers
+  modernize-macro-to-enum
+  modernize-raw-string-literal
+  modernize-use-auto
+  modernize-use-bool-literals
+  portability-*,
+  readability-identifier-naming
+
+HeaderFilterRegex: '^(src|lib)/.*'

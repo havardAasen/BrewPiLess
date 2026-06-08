@@ -45,16 +45,16 @@ jobs:
         run: npx eslint src/js/*ts src/js/**/*ts
 
 
-  cppcheck:
+  clang-tidy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install cppcheck
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cppcheck
+      - name: Install PlatformIO Core
+        run: pip install --upgrade platformio
 
-      - name: Run cppcheck
-        run: |
-          cppcheck --language=c++ --enable=all --force ./src
+      - name: Generate compile database
+        run: pio run -t compiledb -e clangtidy_native
+
+      - name: Run clang-tidy
+        run: pio check -e clangtidy_native

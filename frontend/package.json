@@ -8,6 +8,7 @@
     "lint": "eslint src/js",
     "pretty": "prettier --check  src/js",
     "test": "node --require tsx --test tests/*.test.ts",
+    "debug-target": "grunt debug && ./output.sh",
     "build": "grunt build && ./output.sh"
   },
   "author": "",

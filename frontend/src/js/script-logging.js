@@ -59,7 +59,7 @@ var logs = {
                 s_ajax({
                     url: t.stopurl + n,
                     m: "GET",
-                    success: function (d) {
+                    success: function () {
                         location.reload();
                     },
                     fail: function (d) {
@@ -111,7 +111,7 @@ var logs = {
                 s_ajax({
                     url: t.starturl + name + arg,
                     m: "GET",
-                    success: function (d) {
+                    success: function () {
                         location.reload();
                     },
                     fail: function (d) {
@@ -477,7 +477,7 @@ function update() {
         url: logurl,
         m: "POST",
         data: "data=" + JSON.stringify(r),
-        success: function (d) {
+        success: function () {
             alert("<%= done %>");
         },
         fail: function (e) {

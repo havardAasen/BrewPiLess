@@ -525,7 +525,7 @@ export var PL = {
             url: f.url_del,
             m: "DELETE",
             data: c,
-            success: function (a) {
+            success: function () {
                 f.plist.splice(e, 1);
                 f.list(f.plist);
             },
@@ -544,12 +544,12 @@ export var PL = {
                 var a = JSON.parse(b);
                 profileEditor.loadProfile(a);
             },
-            fail: function (a) {
-                //alert("failed:" + a);
+            fail: function (err) {
+                console.warning(`Failed to load profile: ${err}`);
             },
         });
     },
-    list: function (i) {
+    list: function () {
         var a = this;
         var h = select(a.div).querySelector(".profile-list");
         var lis = h.querySelectorAll("li");
@@ -642,7 +642,7 @@ export var PL = {
             url: f.url_save,
             m: "POST",
             data: c,
-            success: function (a) {
+            success: function () {
                 f.append(e);
                 f.cancelSave();
             },
@@ -750,7 +750,7 @@ var modekeeper = {
                         m: "POST",
                         mime: "application/json",
                         data: JSON.stringify(data),
-                        success: function (d) {
+                        success: function () {
                             BWF.send("j{mode:p}");
                         },
                         fail: function (d) {
@@ -788,11 +788,11 @@ export function saveprofile() {
         m: "POST",
         mime: "application/x-www-form-urlencoded",
         data: "data=" + encodeURIComponent(json),
-        success: function (d) {
+        success: function () {
             profileEditor.markdirty(false);
             alert("<%= done %>");
         },
-        fail: function (d) {
+        fail: function () {
             alert("<%= script_control_failed_to_save %>");
         },
     });
@@ -838,7 +838,7 @@ export function initctrl() {
         onconnect: function () {
             BWF.send("c");
         },
-        error: function (e) {
+        error: function () {
             //console.log("error");
             closeDlgLoading();
             communicationError();

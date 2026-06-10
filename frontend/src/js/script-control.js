@@ -858,7 +858,9 @@ export function initctrl() {
             C: function (c) {
                 ccparameter(c);
             },
-            B: rcvBeerProfile,
+            B: function (c) {
+                rcvBeerProfile(c);
+            },
         },
     });
 }

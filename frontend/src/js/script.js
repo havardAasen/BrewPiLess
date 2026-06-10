@@ -762,13 +762,6 @@ function connBWF() {
             G: function (c) {
                 gravityDevice(c);
             },
-            // for control page.
-            C: function (c) {
-                if (typeof ccparameter != "undefined") ccparameter(c);
-            },
-            B: function (c) {
-                if (typeof rcvBeerProfile != "undefined") rcvBeerProfile(c);
-            },
         },
     });
 }

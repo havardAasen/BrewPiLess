@@ -799,7 +799,7 @@ export function initctrl() {
     updateNavbarVersion();
     Capper.init();
     modekeeper.init();
-    PTC.init(select("#ptc-control"));
+    let ptc = new PTC(select("#ptc-control"));
     openDlgLoading();
 
     BWF.init({
@@ -821,7 +821,7 @@ export function initctrl() {
                         alert("<%= script_control_version_mismatched %>");
                 }
                 if (typeof c["cap"] != "undefined") Capper.status(c["cap"]);
-                if (typeof c["ptc"] != "undefined") PTC.config(c.ptc);
+                if (typeof c["ptc"] != "undefined") ptc.config(c.ptc);
             },
             C: function (c) {
                 ccparameter(c);

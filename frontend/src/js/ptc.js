@@ -14,14 +14,12 @@ export var PTC = {
     },
 
     apply: async function () {
-        var inputs = this.div.querySelectorAll("input");
-        var setting = {};
-        for (var i = 0; i < inputs.length; i++) {
-            var ele = inputs[i];
-            if (ele.name && ele.name != "") {
-                setting[ele.name] = parseFloat(ele.value);
-            }
-        }
+        const form = new FormData(this.div)
+        const setting = {};
+
+        form.forEach((value, key) => {
+            setting[key] = parseFloat(value);
+        });
 
         const payload = `c=${encodeURIComponent(JSON.stringify(setting))}`;
         try {
@@ -41,5 +39,10 @@ export var PTC = {
     init: function (div) {
         div.style.display = "none";
         this.div = div;
+
+        this.div.addEventListener("submit", (ev) => {
+            ev.preventDefault();
+            this.apply();
+        });
     },
 };

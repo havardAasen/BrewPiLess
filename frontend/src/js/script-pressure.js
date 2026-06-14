@@ -1,30 +1,29 @@
+import { get } from "./httpClient";
 import { select, s_ajax, updateNavbarVersion } from "./shared";
 
 var PCTRL = {
-    init: function () {
-        // get values from BPL
-        s_ajax({
-            url: "psi",
-            m: "GET",
-            success: function (json) {
-                var d = JSON.parse(json);
-                if (d.mode == 1) {
-                    select("#pt-enabled").checked = true;
-                    select("#pt-control").checked = false;
-                } else if (d.mode == 2) {
-                    select("#pt-enabled").checked = true;
-                    select("#pt-control").checked = true;
-                } else {
-                    select("#pt-enabled").checked = false;
-                    select("#pt-control").checked = false;
-                }
-                select("#fpb").value = d.b;
-                select("#fpa").value = d.a;
-            },
-            fail: function () {
-                alert("failed to connect to BPL.");
-            },
-        });
+    init: async function () {
+        let json;
+        try {
+            json = await get("psi");
+        } catch (error) {
+            alert(error);
+            return;
+        }
+
+        const data = JSON.parse(json);
+        if (data.mode == 1) {
+            select("#pt-enabled").checked = true;
+            select("#pt-control").checked = false;
+        } else if (data.mode == 2) {
+            select("#pt-enabled").checked = true;
+            select("#pt-control").checked = true;
+        } else {
+            select("#pt-enabled").checked = false;
+            select("#pt-control").checked = false;
+        }
+        select("#fpb").value = data.b;
+        select("#fpa").value = data.a;
     },
     apply: function () {
         // save data to BPL
@@ -56,32 +55,23 @@ var PCTRL = {
     xcal: function () {
         select("#dlg_calibrate").style.display = "none";
     },
-    cal0: function () {
-        s_ajax({
-            url: "psi?r=1",
-            m: "GET",
-            success: function (json) {
-                var d = JSON.parse(json);
-                //                Q("#cal1").disabled = false;
-                select("#fpb").value = d.a0;
-            },
-            fail: function () {
-                alert("failed to connect to BPL.");
-            },
-        });
+    cal0: async function () {
+        try {
+            const json = await get("psi?r=1");
+            const data = JSON.parse(json);
+            select("#fpb").value = data.a0;
+        } catch (error) {
+            alert(error);
+        }
     },
-    cal1: function () {
-        s_ajax({
-            url: "psi?r=1",
-            m: "GET",
-            success: function (json) {
-                var d = JSON.parse(json);
-                select("#fpa").value = PCTRL.conv(d.a0);
-            },
-            fail: function () {
-                alert("failed to connect to BPL.");
-            },
-        });
+    cal1: async function () {
+        try {
+            const json = await get("psi?r=1");
+            const data = JSON.parse(json);
+            select("#fpa").value = PCTRL.conv(data.a0);
+        } catch (error) {
+            alert(error);
+        }
     },
     conv: function (a0) {
         var b = parseFloat(select("#fpb").value);

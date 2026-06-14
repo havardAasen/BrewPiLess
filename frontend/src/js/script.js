@@ -21,6 +21,7 @@ import { communicationError, displayLcdText, hideErrorMsgs } from "./shared";
 import { Capper } from "./capper";
 import { BWF } from "./bwf";
 import { BrewChart } from "./chart/BrewChart";
+import { get } from "./httpClient";
 
 const T_CHART_REQUEST = 12000;
 const T_CHART_RETRYTO = 6000;
@@ -38,7 +39,7 @@ var BChart = {
     bdata: [],
     timer: null,
 
-    updateFormula: function () {
+    updateFormula: async function () {
         var coeff = bChart.coefficients;
         var npt = (bChart.npt << 24) | (bChart.cal_igmask & 0xffffff);
         var changed = true;
@@ -58,16 +59,13 @@ var BChart = {
             coeff[3].toFixed(9) +
             "&pt=" +
             npt;
-        s_ajax({
-            url: url,
-            m: "GET",
-            success: function () {
-                window.npt = npt;
-            },
-            fail: function (d) {
-                alert("<%= script_fail_update_formula %>" + d);
-            },
-        });
+
+        try {
+            await get(url);
+            window.npt = npt;
+        } catch (error) {
+            alert(`<%= script_fail_update_formula %>: ${error}`);
+        }
     },
     reprocessData: function () {
         if (!Array.isArray(this.bdata) || this.bdata.length === 0) return;

@@ -1,5 +1,6 @@
 import { select, s_ajax, C2F, BrewMath, updateNavbarVersion } from "./shared";
 import { mqttLoadSetting } from "./mqtt";
+import { get } from "./httpClient";
 
 var logurl = "log";
 
@@ -49,76 +50,71 @@ var logs = {
         select("#fsused").innerHTML = u.format(0, 3, ",");
         select("#fsfree").innerHTML = (s - u).format(0, 3, ",");
     },
-    stoplog: function () {
-        var t = this;
-        if (t.logging) {
-            // stop
-            if (confirm("<%= script_logging_stop_current_logging %>")) {
-                //console.log("Stop logging");
-                var n = select("#logname").value.trim();
-                s_ajax({
-                    url: t.stopurl + n,
-                    m: "GET",
-                    success: function () {
-                        location.reload();
-                    },
-                    fail: function (d) {
-                        alert("<%= script_logging_failed_stop_for %>" + d);
-                    },
-                });
-            }
+    stoplog: async function () {
+        if (!this.logging) {
+            return;
+        }
+
+        if (!confirm("<%= script_logging_stop_current_logging %>")) {
+            return;
+        }
+
+        const logName = select("#logname").value.trim();
+        try {
+            await get(`${this.stopurl}${logName}`);
+            location.reload();
+        } catch (error) {
+            alert("<%= script_logging_failed_stop_for %>" + error);
         }
     },
-    startlog: function () {
-        var t = this;
-        if (!t.logging) {
-            if (t.ll.length >= 10) {
-                alert("<%= script_logging_too_many_logs %>");
-                return;
-            }
-            if (t.fs.size - t.fs.used <= t.fs.block * 2) {
-                alert("<%= script_logging_not_free_space %>");
-                return;
-            }
-            var name = select("#logname").value.trim();
-            if (t.vname(name) === false) {
-                alert("<%= script_logging_invalid_file_name %>");
-                return;
-            }
-            if (t.dupname(name)) {
-                alert("<%= script_logging_duplicated_name %>");
-                return;
-            }
-            var arg = "";
-            var calispindel = select("#calispindel").checked;
-            if (calispindel) {
-                var tilt = parseFloat(select("#tiltinw").value.trim());
-                var reading = parseFloat(select("#hydrometer").value.trim());
-                if (window.plato) reading = 0;
-                if (isNaN(tilt)) {
-                    alert("<%= script_logging_tilt_value_necessary %>");
-                } else if (!window.plato && (isNaN(tilt) || isNaN(reading))) {
-                    alert(
-                        "<%= script_logging_tilt_value_and_hydrometer_necessary %>",
-                    );
-                    return;
-                }
-                arg = "&tw=" + tilt + "&hr=" + reading;
-            }
+    startlog: async function () {
+        if (this.logging) {
+            return;
+        }
 
-            if (confirm("<%= script_logging_start_new_log %>")) {
-                //console.log("Start logging");
-                s_ajax({
-                    url: t.starturl + name + arg,
-                    m: "GET",
-                    success: function () {
-                        location.reload();
-                    },
-                    fail: function (d) {
-                        alert("<%= script_logging_failed_start_for %>" + d);
-                    },
-                });
+        if (this.ll.length >= 10) {
+            alert("<%= script_logging_too_many_logs %>");
+            return;
+        }
+        if (this.fs.size - this.fs.used <= this.fs.block * 2) {
+            alert("<%= script_logging_not_free_space %>");
+            return;
+        }
+        var name = select("#logname").value.trim();
+        if (this.vname(name) === false) {
+            alert("<%= script_logging_invalid_file_name %>");
+            return;
+        }
+        if (this.dupname(name)) {
+            alert("<%= script_logging_duplicated_name %>");
+            return;
+        }
+        var arg = "";
+        var calispindel = select("#calispindel").checked;
+        if (calispindel) {
+            var tilt = parseFloat(select("#tiltinw").value.trim());
+            var reading = parseFloat(select("#hydrometer").value.trim());
+            if (window.plato) reading = 0;
+            if (isNaN(tilt)) {
+                alert("<%= script_logging_tilt_value_necessary %>");
+            } else if (!window.plato && (isNaN(tilt) || isNaN(reading))) {
+                alert(
+                    "<%= script_logging_tilt_value_and_hydrometer_necessary %>",
+                );
+                return;
             }
+            arg = "&tw=" + tilt + "&hr=" + reading;
+        }
+
+        if (!confirm("<%= script_logging_start_new_log %>")) {
+            return;
+        }
+
+        try {
+            await get(`${this.starturl}${name}${arg}`);
+            location.reload();
+        } catch (error) {
+            alert("<%= script_logging_failed_start_for %>" + error);
         }
     },
     recording: function (n, t) {
@@ -138,24 +134,23 @@ var logs = {
     //	alert("View " + this.ll[n].name);
     //	window.open(this.vurl+ n);
     //},
-    rm: function (n) {
-        var t = this;
-        if (confirm("<%= script_logging_delete_the_log %> " + t.ll[n].name)) {
-            console.log("rm " + t.ll[n].name);
-            s_ajax({
-                url: t.rmurl + n,
-                m: "GET",
-                success: function (d) {
-                    var r = JSON.parse(d);
-                    t.fs = r;
-                    t.fsinfo(r.size, r.used);
-                    t.ll.splice(n, 1);
-                    t.list(t.ll);
-                },
-                fail: function (d) {
-                    alert("<%= script_logging_failed_delete_for %>" + d);
-                },
-            });
+    rm: async function (n) {
+        if (
+            !confirm("<%= script_logging_delete_the_log %> " + this.ll[n].name)
+        ) {
+            return;
+        }
+
+        console.log("rm " + this.ll[n].name);
+        try {
+            const json = await get(`${this.rmurl}${n}`);
+            const r = JSON.parse(json);
+            this.fs = r;
+            this.fsinfo(r.size, r.used);
+            this.ll.splice(n, 1);
+            this.list(this.ll);
+        } catch (error) {
+            alert("<%= script_logging_failed_delete_for %>" + error);
         }
     },
     dl: function (n) {
@@ -185,38 +180,38 @@ var logs = {
             tb.appendChild(nr);
         });
     },
-    init: function () {
-        var t = this;
-        select("#startlogbutton").onclick = function () {
-            t.startlog();
+    init: async function () {
+        select("#startlogbutton").onclick = () => {
+            this.startlog();
         };
-        select("#stoplogbutton").onclick = function () {
-            t.stoplog();
+        select("#stoplogbutton").onclick = () => {
+            this.stoplog();
         };
 
-        t.row = select("#loglist").querySelector("tr:nth-of-type(2)");
-        t.row.parentNode.removeChild(t.row);
-        s_ajax({
-            url: t.url,
-            m: "GET",
-            success: function (d) {
-                var r = JSON.parse(d);
-                t.fs = r.fs;
-                if (r.rec) t.recording(r.log, r.start);
-                t.ll = r.list;
-                t.list(r.list);
-                t.fsinfo(r.fs.size, r.fs.used);
-                if (typeof r["plato"] != "undefined" && r.plato) {
-                    window.plato = true;
-                    var th = document.querySelectorAll(".tiltwatercorrect");
-                    for (var i = 0; i < th.length; i++)
-                        th[i].style.display = "none";
-                } else window.plato = false;
-            },
-            fail: function (e) {
-                alert("<%= failed %>:" + e);
-            },
-        });
+        this.row = select("#loglist").querySelector("tr:nth-of-type(2)");
+        this.row.parentNode.removeChild(this.row);
+
+        let json;
+        try {
+            json = await get(this.url);
+        } catch (error) {
+            alert(error);
+            return;
+        }
+
+        const r = JSON.parse(json);
+        this.fs = r.fs;
+        if (r.rec) this.recording(r.log, r.start);
+        this.ll = r.list;
+        this.list(r.list);
+        this.fsinfo(r.fs.size, r.fs.used);
+        if (typeof r["plato"] != "undefined" && r.plato) {
+            window.plato = true;
+            var th = document.querySelectorAll(".tiltwatercorrect");
+            for (var i = 0; i < th.length; i++) th[i].style.display = "none";
+        } else {
+            window.plato = false;
+        }
     },
 };
 // for remote logging
@@ -486,7 +481,7 @@ function update() {
     });
 }
 
-function remote_init() {
+async function remote_init() {
     var MinPeriod = {
         generichttp: 1,
         thingspeak: 15,
@@ -500,21 +495,19 @@ function remote_init() {
 
     serviceOption("generichttp");
 
-    s_ajax({
-        url: logurl + "?data=1",
-        m: "GET",
-        success: function (d) {
-            var r = JSON.parse(d);
-            if (typeof r.enabled == "undefined") return;
-            select("#enabled").checked = r.enabled;
-            select("#period").value = r.period === undefined ? 300 : r.period;
-            service_set(r);
-        },
-        /*,
-                fail:function(d){
-                        alert("error :"+d);
-                  }*/
-    });
+    let json;
+    try {
+        json = await get(`${logurl}?data=1`);
+    } catch (error) {
+        console.warn(error);
+        return;
+    }
+
+    const r = JSON.parse(json);
+    if (typeof r.enabled == "undefined") return;
+    select("#enabled").checked = r.enabled;
+    select("#period").value = r.period === undefined ? 300 : r.period;
+    service_set(r);
 }
 
 function showformat(lab) {

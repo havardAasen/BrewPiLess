@@ -1,5 +1,6 @@
 import { byId, updateNavbarVersion } from "./shared";
 import { BWF } from "./bwf";
+import { get } from "./httpClient";
 
 var BackupFile = "/device.cfg";
 var devices = {
@@ -144,28 +145,30 @@ export function backup() {
     );
 }
 
-export function restore() {
+export async function restore() {
     blockscreen("<%= script_setup_restoring %>");
-    BWF.load(
-        BackupFile,
-        function (c) {
-            var b = JSON.parse(c);
-            var a = 0;
-            BWF.on("U", function () {
-                if (++a >= b.length) {
-                    BWF.on("U", null);
-                    unblockscreen();
-                    return;
-                }
-                BWF.send("U" + JSON.stringify(b[a]));
-            });
-            BWF.send("U" + JSON.stringify(b[a]));
-        },
-        function (a) {
-            alert("<%= script_setup_error_load %>" + a);
+
+    let json;
+    try {
+        json = await get(BackupFile);
+    } catch (error) {
+        alert(`<%= script_setup_error_load %>: ${error}`);
+        unblockscreen();
+        return;
+    }
+
+    const obj = JSON.parse(json);
+
+    let a = 0;
+    BWF.on("U", function () {
+        if (++a >= obj.length) {
+            BWF.on("U", null);
             unblockscreen();
-        },
-    );
+            return;
+        }
+    });
+    BWF.send("U" + JSON.stringify(obj[a]));
+    unblockscreen();
 }
 
 export function list() {

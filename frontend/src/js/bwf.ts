@@ -231,19 +231,6 @@ class BWFClient {
             fail: (status) => fail(status),
         });
     }
-
-    public load(
-        file: string,
-        success: (d: string) => void,
-        fail: (status: number) => void,
-    ) {
-        invoke({
-            m: "GET",
-            url: file,
-            success: (d: string) => success(d),
-            fail: (status: number) => fail(status),
-        });
-    }
 }
 
 export const BWF = new BWFClient();

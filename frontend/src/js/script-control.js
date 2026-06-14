@@ -17,6 +17,7 @@ import { Capper } from "./capper";
 import { BWF } from "./bwf";
 import { PTC } from "./ptc";
 import { ProfileChart } from "./chart/ProfileChart";
+import { get } from "./httpClient";
 
 /** @typedef {("C" | "F")} TempUnit */
 /** @typedef {"profile" | "beer" | "fridge" | "off"} TemperatureControlMode */
@@ -534,20 +535,15 @@ export var PL = {
             },
         });
     },
-    load: function (e) {
-        var f = this;
-        var c = f.path(f.plist[e]);
-        s_ajax({
-            url: c,
-            m: "GET",
-            success: function (b) {
-                var a = JSON.parse(b);
-                profileEditor.loadProfile(a);
-            },
-            fail: function (err) {
-                console.warning(`Failed to load profile: ${err}`);
-            },
-        });
+    load: async function (e) {
+        const c = this.path(this.plist[e]);
+        try {
+            const json = await get(c);
+            const a = JSON.parse(json);
+            profileEditor.loadProfile(a);
+        } catch (error) {
+            console.warning(`Failed to load profile: ${error}`);
+        }
     },
     list: function () {
         var a = this;

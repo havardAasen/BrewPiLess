@@ -1,10 +1,5 @@
-import {
-    byId,
-    select,
-    s_ajax,
-    formatDate,
-    formatDateForPicker,
-} from "./shared";
+import { get } from "./httpClient";
+import { byId, select, formatDate, formatDateForPicker } from "./shared";
 
 function TabPane(modes) {
     var t = this;
@@ -125,18 +120,14 @@ export var Capper = {
             };
         }
     },
-    send: function (arg) {
+    send: async function (arg) {
         console.log("send " + arg);
-        s_ajax({
-            url: "cap?" + arg,
-            m: "GET",
-            success: function () {
-                alert("<%= done %>!");
-            },
-            fail: function () {
-                alert("<%= capper_failed_set_capper %>");
-            },
-        });
+        try {
+            await get(`cap?${arg}`);
+            alert("<%= done %>!");
+        } catch (error) {
+            alert(`<%= capper_failed_set_capper %>: ${error}`);
+        }
     },
     setcap: function (capped) {
         if (!select("#capstate-open")) return;

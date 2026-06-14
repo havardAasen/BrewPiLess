@@ -1,4 +1,5 @@
 import { select, s_ajax, updateNavbarVersion } from "./shared";
+import { get } from "./httpClient";
 
 const gdcurl = "/gdc";
 
@@ -44,19 +45,15 @@ function save(): void {
     });
 }
 
-export function init(): void {
+export async function init(): Promise<void> {
     updateNavbarVersion();
 
-    s_ajax({
-        url: gdcurl + "?data",
-        m: "GET",
-        success: function (a: string) {
-            fill(JSON.parse(a));
-        },
-        fail: function () {
-            //alert("failed getting data:" + a)
-        },
-    });
+    try {
+        const json = await get(`${gdcurl}?data`);
+        fill(JSON.parse(json));
+    } catch (error) {
+        console.warn(error);
+    }
 }
 
 window.Save = save;

@@ -1,5 +1,6 @@
 import { byId, select, s_ajax, updateNavbarVersion } from "./shared";
 import { BWF } from "./bwf";
+import { get } from "./httpClient";
 
 function formatIP(ip: string): string {
     return ip === "0.0.0.0" ? "" : ip;
@@ -15,28 +16,27 @@ function updateInput(input: HTMLInputElement, value: string | boolean): void {
     }
 }
 
-function loadSetting() {
-    s_ajax({
-        url: "config?cfg=1",
-        m: "GET",
-        success: (data: string) => {
-            const json: Record<string, string> = JSON.parse(data);
-            window.oridata = json;
+async function loadSetting() {
+    let json;
+    try {
+        json = await get("config?cfg=1");
+    } catch (error) {
+        alert(`<%= script_config_error_getting_data %>: ${error}`);
+        return;
+    }
 
-            Object.entries(json).forEach(([key, value]) => {
-                const input = select<HTMLInputElement>(`input[id=${key}]`);
-                const wifiMode = select<HTMLInputElement>(`select[id=${key}]`);
+    const data: Record<string, string> = JSON.parse(json);
+    window.oridata = data;
 
-                if (input) {
-                    updateInput(input, value);
-                } else if (wifiMode) {
-                    wifiMode.value = value;
-                }
-            });
-        },
-        fail: (err) => {
-            alert(`<%= script_config_error_getting_data %>: ${err}`);
-        },
+    Object.entries(data).forEach(([key, value]) => {
+        const input = select<HTMLInputElement>(`input[id=${key}]`);
+        const wifiMode = select<HTMLInputElement>(`select[id=${key}]`);
+
+        if (input) {
+            updateInput(input, value);
+        } else if (wifiMode) {
+            wifiMode.value = value;
+        }
     });
 }
 
@@ -190,10 +190,7 @@ export const Net = {
     scan(): boolean {
         byId<HTMLElement>("networks")!.innerHTML = "Scanning...";
 
-        s_ajax({
-            m: "GET",
-            url: "/wifiscan",
-        });
+        get("/wifiscan").catch(() => {});
         return false;
     },
 

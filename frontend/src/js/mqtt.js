@@ -1,23 +1,22 @@
 import { s_ajax, select } from "./shared";
+import { get } from "./httpClient";
 
-export function mqttLoadSetting() {
-    s_ajax({
-        url: "mqtt",
-        m: "GET",
-        success: function (data) {
-            var j = JSON.parse(data);
-            Object.keys(j).map(function (key) {
-                var name = "mqtt_" + key;
-                var div = select(".mqtt-input[name=" + name + "]");
-                if (div) {
-                    if (div.type == "checkbox") div.checked = j[key] != 0;
-                    else div.value = j[key];
-                }
-            });
-        },
-        fail: function (d) {
-            alert("<%= script_config_error_getting_data %>:" + d);
-        },
+export async function mqttLoadSetting() {
+    let json;
+    try {
+        json = await get("mqtt");
+    } catch (error) {
+        alert(`<%= script_config_error_getting_data %>: ${error}`);
+        return;
+    }
+
+    const data = JSON.parse(json);
+    Object.keys(data).map(function (key) {
+        var div = select(`.mqtt-input[name=mqtt_${key}]`);
+        if (div) {
+            if (div.type == "checkbox") div.checked = data[key] != 0;
+            else div.value = data[key];
+        }
     });
 }
 

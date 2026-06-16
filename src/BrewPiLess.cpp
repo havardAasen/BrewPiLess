@@ -222,15 +222,15 @@ class BrewPiWebHandler: public AsyncWebHandler
 
     static void handleFileDelete(AsyncWebServerRequest *request)
     {
-        if (!request->hasParam("path", true)) {
-            request->send(400, asyncsrv::T_text_plain, "BAD ARGS");
+        if (!request->hasParam("path")) {
+            request->send(400);
             return;
         }
 
         EspClass::wdtDisable();
-        LittleFS.remove(request->getParam("path", true)->value());
+        LittleFS.remove(request->getParam("path")->value());
         EspClass::wdtEnable(10);
-        request->send(200, asyncsrv::T_text_plain, "DELETE: " + request->getParam("path", true)->value());
+        request->send(204);
     }
 
 

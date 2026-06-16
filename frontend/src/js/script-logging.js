@@ -1,6 +1,6 @@
 import { select, s_ajax, C2F, BrewMath, updateNavbarVersion } from "./shared";
 import { mqttLoadSetting } from "./mqtt";
-import { get } from "./httpClient";
+import { del, get } from "./httpClient";
 
 var logurl = "log";
 
@@ -142,16 +142,19 @@ var logs = {
         }
 
         console.log("rm " + this.ll[n].name);
+        let json;
         try {
-            const json = await get(`${this.rmurl}${n}`);
-            const r = JSON.parse(json);
-            this.fs = r;
-            this.fsinfo(r.size, r.used);
-            this.ll.splice(n, 1);
-            this.list(this.ll);
+            json = await del(`${this.rmurl}${n}`);
         } catch (error) {
             alert("<%= script_logging_failed_delete_for %>" + error);
+            return;
         }
+
+        const r = JSON.parse(json);
+        this.fs = r;
+        this.fsinfo(r.size, r.used);
+        this.ll.splice(n, 1);
+        this.list(this.ll);
     },
     dl: function (n) {
         //console.log("DL " +this.ll[n].name);

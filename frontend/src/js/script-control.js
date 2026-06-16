@@ -17,7 +17,7 @@ import { Capper } from "./capper";
 import { BWF } from "./bwf";
 import { PTC } from "./ptc";
 import { ProfileChart } from "./chart/ProfileChart";
-import { get } from "./httpClient";
+import { del, get } from "./httpClient";
 
 /** @typedef {("C" | "F")} TempUnit */
 /** @typedef {"profile" | "beer" | "fridge" | "off"} TemperatureControlMode */
@@ -519,21 +519,15 @@ export var PL = {
     path: function (a) {
         return "/" + this.pl_path + "/" + a;
     },
-    rm: function (e) {
-        var f = this;
-        var c = "path=" + f.path(f.plist[e]);
-        s_ajax({
-            url: f.url_del,
-            m: "DELETE",
-            data: c,
-            success: function () {
-                f.plist.splice(e, 1);
-                f.list(f.plist);
-            },
-            fail: function (a) {
-                alert("<%= failed %>:" + a);
-            },
-        });
+    rm: async function (e) {
+        const url = `${this.url_del}?path=${this.path(this.plist[e])}`;
+        try {
+            await del(url);
+            this.plist.splice(e, 1);
+            this.list(this.plist);
+        } catch (error) {
+            alert(error);
+        }
     },
     load: async function (e) {
         const c = this.path(this.plist[e]);

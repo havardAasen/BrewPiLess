@@ -1,6 +1,6 @@
-import { byId, select, s_ajax, updateNavbarVersion } from "./shared";
+import { byId, select, updateNavbarVersion } from "./shared";
 import { BWF } from "./bwf";
-import { get } from "./httpClient";
+import { get, post } from "./httpClient";
 
 function formatIP(ip: string): string {
     return ip === "0.0.0.0" ? "" : ip;
@@ -49,7 +49,7 @@ function waitrestart() {
     }, 15000);
 }
 
-export function saveSystemSettings(): void {
+export async function saveSystemSettings(): Promise<void> {
     const inputs = document.querySelectorAll<
         HTMLInputElement | HTMLSelectElement
     >("#sysconfig input, #sysconfig select");
@@ -81,18 +81,15 @@ export function saveSystemSettings(): void {
         }
     });
 
-    const url = "config" + (reboot ? "" : "?nb");
-    s_ajax({
-        url: url,
-        m: "POST",
-        data: "data=" + encodeURIComponent(JSON.stringify(json)),
-        success: function () {
-            if (reboot) waitrestart();
-        },
-        fail(err): void {
-            alert(`%= script_config_error_saving_data %>: ${err}`);
-        },
-    });
+    const url = `config${reboot ? "" : "?nb"}`;
+    const payload = `data=${encodeURIComponent(JSON.stringify(json))}`;
+
+    try {
+        await post(url, payload, "form");
+        if (reboot) waitrestart();
+    } catch (error) {
+        alert(`%= script_config_error_saving_data %>: ${error}`);
+    }
 }
 
 export function load(): void {
@@ -194,7 +191,7 @@ export const Net = {
         return false;
     },
 
-    save(): boolean {
+    async save(): Promise<boolean> {
         let data =
             "nw=" + encodeURIComponent(byId<HTMLInputElement>("ssid")!.value);
         const pass = byId<HTMLInputElement>("nwpass")!.value;
@@ -210,11 +207,12 @@ export const Net = {
             if (dns) data += `&dns=${dns}`;
         }
 
-        s_ajax({
-            m: "POST",
-            url: "/wificon",
-            data: data,
-        });
+        try {
+            await post("/wificon", data, "form");
+        } catch (error) {
+            console.warn(error);
+        }
+
         this.hide();
         return false;
     },

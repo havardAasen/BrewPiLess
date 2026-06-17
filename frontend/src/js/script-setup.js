@@ -1,6 +1,6 @@
 import { byId, updateNavbarVersion } from "./shared";
 import { BWF } from "./bwf";
-import { get } from "./httpClient";
+import { get, post } from "./httpClient";
 
 var BackupFile = "/device.cfg";
 var devices = {
@@ -108,7 +108,7 @@ function device_apply(a) {
     BWF.send(c);
 }
 
-export function backup() {
+export async function backup() {
     if (installed_list.length == 0) {
         alert("<%= script_setup_no_installed_devices %>");
         return;
@@ -131,18 +131,15 @@ export function backup() {
         }
         c.push(e);
     }
-    var b = JSON.stringify(c);
-    console.log(b);
-    BWF.save(
-        BackupFile,
-        b,
-        function () {
-            alert("<%= done %>");
-        },
-        function (d) {
-            alert("<%= script_setup_error_saving %>" + d);
-        },
-    );
+
+    const url = `/fputs?path=${BackupFile}`;
+    const payload = `content=${encodeURIComponent(JSON.stringify(c))}`;
+    try {
+        await post(url, payload, "form");
+        alert("<%= done %>");
+    } catch (error) {
+        alert(`<%= script_setup_error_saving %> ${error}`);
+    }
 }
 
 export async function restore() {

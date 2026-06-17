@@ -1,7 +1,6 @@
 import {
     byId,
     select,
-    s_ajax,
     formatDate,
     formatDateForPicker,
     openDlgLoading,
@@ -17,7 +16,7 @@ import { Capper } from "./capper";
 import { BWF } from "./bwf";
 import { PTC } from "./ptc";
 import { ProfileChart } from "./chart/ProfileChart";
-import { del, get } from "./httpClient";
+import { del, get, post } from "./httpClient";
 
 /** @typedef {("C" | "F")} TempUnit */
 /** @typedef {"profile" | "beer" | "fridge" | "off"} TemperatureControlMode */
@@ -568,29 +567,28 @@ export var PL = {
         this.plist.push(b);
         this.list(this.plist);
     },
-    init: function () {
-        var a = this;
-        a.initialized = true;
-        a.row = select(a.div).querySelector("li");
-        a.row.parentNode.removeChild(a.row);
-        s_ajax({
-            url: a.url_list,
-            m: "POST",
-            data: "dir=" + a.path(""),
-            success: function (c) {
-                a.plist = [];
-                var b = JSON.parse(c);
-                b.forEach(function (e) {
-                    if (e.type == "file") {
-                        a.plist.push(e.name);
-                    }
-                });
-                a.list(a.plist);
-            },
-            fail: function (b) {
-                alert("<%= failed %>:" + b);
-            },
+    init: async function () {
+        this.initialized = true;
+        this.row = select(this.div).querySelector("li");
+        this.row.parentNode.removeChild(this.row);
+
+        const payload = `dir=${this.path("")}`;
+        let json;
+        try {
+            json = await post(this.url_list, payload, "form");
+        } catch (error) {
+            alert(error);
+            return;
+        }
+
+        this.plist = [];
+        const b = JSON.parse(json);
+        b.forEach(function (e) {
+            if (e.type == "file") {
+                this.plist.push(e.name);
+            }
         });
+        this.list(this.plist);
     },
     toggle: function () {
         if (!this.initialized) {
@@ -609,7 +607,7 @@ export var PL = {
     cancelSave: function () {
         select("#dlg_saveas").style.display = "none";
     },
-    doSave: function () {
+    doSave: async function () {
         var e = select("#dlg_saveas input").value;
         if (e == "") {
             return;
@@ -617,29 +615,21 @@ export var PL = {
         if (e.match(/[\W]/g)) {
             return;
         }
-        var g = profileEditor.getProfile();
+        const g = profileEditor.getProfile();
         if (g === false) {
             alert("<%= script_control_invalid_value_check_again %>");
             return;
         }
-        var f = this;
-        var c =
-            "path=" +
-            f.path(e) +
-            "&content=" +
-            encodeURIComponent(JSON.stringify(g));
-        s_ajax({
-            url: f.url_save,
-            m: "POST",
-            data: c,
-            success: function () {
-                f.append(e);
-                f.cancelSave();
-            },
-            fail: function (a) {
-                alert("<%= failed %>:" + a);
-            },
-        });
+
+        const url = `${this.url_save}?path=${this.path(e)}`;
+        const payload = `content=${encodeURIComponent(JSON.stringify(g))}`;
+        try {
+            await post(url, payload, "form");
+            this.append(e);
+            this.cancelSave();
+        } catch (error) {
+            alert(error);
+        }
     },
 };
 /* end of PL*/
@@ -723,7 +713,7 @@ var modekeeper = {
             //console.log("j{mode:p}");
             byId("dlg_beerprofilereminder").style.display = "block";
             byId("dlg_beerprofilereminder").querySelector("button.ok").onclick =
-                function () {
+                async function () {
                     byId("dlg_beerprofilereminder").style.display = "none";
                     var gravity = parseFloat(
                         select("#dlg_beerprofilereminder input").value,
@@ -735,18 +725,12 @@ var modekeeper = {
                         og: 1,
                         gravity: gravity,
                     };
-                    s_ajax({
-                        url: "gravity",
-                        m: "POST",
-                        mime: "application/json",
-                        data: JSON.stringify(data),
-                        success: function () {
-                            BWF.send("j{mode:p}");
-                        },
-                        fail: function (d) {
-                            alert("<%= failed %>:" + d);
-                        },
-                    });
+                    try {
+                        await post("gravity", JSON.stringify(data), "json");
+                        BWF.send("j{mode:p}");
+                    } catch (error) {
+                        alert(`<%= failed %>: ${error}`);
+                    }
                 };
             byId("dlg_beerprofilereminder").querySelector(
                 "button.oknog",
@@ -763,29 +747,23 @@ var modekeeper = {
     },
 };
 
-export function saveprofile() {
+export async function saveprofile() {
     //console.log("save");
     var r = profileEditor.getProfile();
     if (r === false) {
         alert("<%= script_control_invalid_value_check_again %>");
         return;
     }
-    var json = JSON.stringify(r);
+    const json = JSON.stringify(r);
     console.log("result=" + json);
 
-    s_ajax({
-        url: BPURL,
-        m: "POST",
-        mime: "application/x-www-form-urlencoded",
-        data: "data=" + encodeURIComponent(json),
-        success: function () {
-            profileEditor.markdirty(false);
-            alert("<%= done %>");
-        },
-        fail: function () {
-            alert("<%= script_control_failed_to_save %>");
-        },
-    });
+    try {
+        await post(BPURL, `data=${encodeURIComponent(json)}`, "form");
+        profileEditor.markdirty(false);
+        alert("<%= done %>");
+    } catch (error) {
+        alert(`<%= script_control_failed_to_save %>: ${error}`);
+    }
 }
 
 function updateTempUnit(u) {

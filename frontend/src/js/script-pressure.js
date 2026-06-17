@@ -1,5 +1,5 @@
-import { get } from "./httpClient";
-import { select, s_ajax, updateNavbarVersion } from "./shared";
+import { get, post } from "./httpClient";
+import { select, updateNavbarVersion } from "./shared";
 
 var PCTRL = {
     init: async function () {
@@ -25,7 +25,7 @@ var PCTRL = {
         select("#fpb").value = data.b;
         select("#fpa").value = data.a;
     },
-    apply: function () {
+    apply: async function () {
         // save data to BPL
         var data = {};
         if (select("#pt-enabled").checked) {
@@ -34,19 +34,14 @@ var PCTRL = {
         } else data.mode = 0;
         data.a = parseFloat(select("#fpa").value);
         data.b = parseFloat(select("#fpb").value);
-        var json = JSON.stringify(data);
-        s_ajax({
-            url: "psi",
-            m: "POST",
-            mime: "application/x-www-form-urlencoded",
-            data: "data=" + encodeURIComponent(json),
-            success: function () {
-                alert("<%= done %>");
-            },
-            fail: function () {
-                alert("<%= script_control_failed_to_save %>");
-            },
-        });
+
+        const payload = `data=${encodeURIComponent(JSON.stringify(data))}`;
+        try {
+            await post("psi", payload, "form");
+            alert("<%= done %>");
+        } catch (error) {
+            alert(`<%= script_control_failed_to_save %>: f${error}`);
+        }
     },
     cal: function () {
         select("#dlg_calibrate").style.display = "block";

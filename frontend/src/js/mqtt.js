@@ -1,5 +1,5 @@
-import { s_ajax, select } from "./shared";
-import { get } from "./httpClient";
+import { select } from "./shared";
+import { get, post } from "./httpClient";
 
 export async function mqttLoadSetting() {
     let json;
@@ -20,7 +20,7 @@ export async function mqttLoadSetting() {
     });
 }
 
-function mqttSave() {
+async function mqttSave() {
     var ins = document.querySelectorAll(".mqtt-input");
     var json = {};
     Object.keys(ins).map(function (key, i) {
@@ -34,17 +34,13 @@ function mqttSave() {
     });
 
     console.log(JSON.stringify(json));
-    s_ajax({
-        url: "mqtt",
-        data: "data=" + encodeURIComponent(JSON.stringify(json)),
-        m: "POST",
-        success: function () {
-            alert("<%= done %>!");
-        },
-        fail: function (d) {
-            alert("<%= script_config_error_saving_data %>:" + d);
-        },
-    });
+    const payload = `data=${encodeURIComponent(JSON.stringify(json))}`;
+    try {
+        await post("mqtt", payload, "form");
+        alert("<%= done %>!");
+    } catch (error) {
+        alert(`<%= script_config_error_saving_data %>: ${error}`);
+    }
 }
 
 window.mqttSave = mqttSave;

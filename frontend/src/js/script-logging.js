@@ -1,6 +1,6 @@
-import { select, s_ajax, C2F, BrewMath, updateNavbarVersion } from "./shared";
+import { select, C2F, BrewMath, updateNavbarVersion } from "./shared";
 import { mqttLoadSetting } from "./mqtt";
-import { del, get } from "./httpClient";
+import { del, get, post } from "./httpClient";
 
 var logurl = "log";
 
@@ -453,7 +453,7 @@ function service_set(r) {
     }
 }
 
-function update() {
+async function update() {
     var service = select("#service-type").value;
     var r;
     var enabled = select("#enabled").checked;
@@ -471,17 +471,14 @@ function update() {
     r.enabled = enabled;
     r.period = select("#period").value;
     if (r.period < 60) r.period = 60;
-    s_ajax({
-        url: logurl,
-        m: "POST",
-        data: "data=" + JSON.stringify(r),
-        success: function () {
-            alert("<%= done %>");
-        },
-        fail: function (e) {
-            alert("<%= failed %>:" + e);
-        },
-    });
+
+    const payload = `data=${JSON.stringify(r)}`;
+    try {
+        await post(logurl, payload, "form");
+        alert("<%= done %>");
+    } catch (error) {
+        alert(`<%= failed %>: ${error}`);
+    }
 }
 
 async function remote_init() {

@@ -1,48 +1,3 @@
-interface InvokeArgs {
-    m: "GET" | "POST" | "PUT" | "DELETE";
-    url: string;
-    data?: string;
-    mime?: string;
-    success: (response: string) => void;
-    fail?: (status: number) => void;
-    timeout?: () => void;
-}
-
-function invoke(arg: InvokeArgs): void {
-    const xhttp = new XMLHttpRequest();
-
-    xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4) {
-            if (xhttp.status === 200) {
-                arg.success(xhttp.responseText);
-            } else {
-                arg.fail?.(xhttp.status);
-            }
-        }
-    };
-
-    xhttp.ontimeout = function () {
-        if (arg.timeout) arg.timeout();
-        else arg.fail?.(0);
-    };
-
-    xhttp.onerror = function () {
-        arg.fail?.(0);
-    };
-
-    xhttp.open(arg.m, arg.url, true);
-
-    if (arg.data !== undefined) {
-        xhttp.setRequestHeader(
-            "Content-Type",
-            arg.mime ?? "application/x-www-form-urlencoded",
-        );
-        xhttp.send(arg.data);
-    } else {
-        xhttp.send();
-    }
-}
-
 type JSONValue = string | number | boolean | null | JSONObject | JSONValue[];
 
 interface JSONObject {
@@ -215,21 +170,6 @@ class BWFClient {
                 this.handlers[key](json[key]);
             }
         }
-    }
-
-    public save(
-        file: string,
-        data: string,
-        success: () => void,
-        fail: (status: number) => void,
-    ) {
-        invoke({
-            m: "POST",
-            url: "/fputs",
-            data: "path=" + file + "&content=" + encodeURIComponent(data),
-            success: () => success(),
-            fail: (status) => fail(status),
-        });
     }
 }
 

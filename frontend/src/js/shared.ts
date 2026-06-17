@@ -10,55 +10,6 @@ export function byId<T extends Element = HTMLElement>(id: string): T | null {
     return document.getElementById(id) as T | null;
 }
 
-interface AjaxOptions {
-    url: string;
-    m: string; // HTTP method: "GET", "POST", etc.
-    data?: Document | XMLHttpRequestBodyInit | null | undefined;
-    mime?: string;
-    success?: (response: string) => void;
-    error?: (status: number, statusText: string, response: string) => void;
-    timeout?: () => void;
-    fail?: (event: ProgressEvent | number) => void;
-}
-
-export function s_ajax(b: AjaxOptions) {
-    const c = new XMLHttpRequest();
-
-    c.onreadystatechange = () => {
-        if (c.readyState == 4) {
-            if (c.status >= 200 && c.status < 300) {
-                b.success?.(c.responseText);
-            } else if (typeof b.error === "function") {
-                b.error(c.status, c.statusText, c.responseText);
-            }
-        }
-    };
-
-    c.ontimeout = () => {
-        if (typeof b.timeout === "function") {
-            b.timeout();
-        } else if (typeof b.fail === "function") {
-            b.fail(-1);
-        }
-    };
-
-    c.onerror = (a: ProgressEvent) => {
-        if (typeof b.fail === "function") {
-            b.fail(a);
-        }
-    };
-
-    c.open(b.m, b.url, true);
-
-    if (typeof b.data !== "undefined") {
-        const contentType = b.mime ?? "application/x-www-form-urlencoded";
-        c.setRequestHeader("Content-Type", contentType);
-        c.send(b.data);
-    } else {
-        c.send();
-    }
-}
-
 export function C2F(c: number) {
     return Math.round((c * 1.8 + 32) * 10) / 10;
 }

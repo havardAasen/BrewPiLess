@@ -1,4 +1,5 @@
-import { select, s_ajax } from "./shared";
+import { select } from "./shared";
+import { post } from "./httpClient";
 
 var saveurl = "/ptc";
 
@@ -12,7 +13,7 @@ export var PTC = {
         }
     },
 
-    apply: function () {
+    apply: async function () {
         var inputs = this.div.querySelectorAll("input");
         var setting = {};
         for (var i = 0; i < inputs.length; i++) {
@@ -21,19 +22,14 @@ export var PTC = {
                 setting[ele.name] = parseFloat(ele.value);
             }
         }
-        console.log("result=" + JSON.stringify(setting));
-        s_ajax({
-            url: saveurl,
-            m: "POST",
-            mime: "application/x-www-form-urlencoded",
-            data: "c=" + encodeURI(JSON.stringify(setting)),
-            success: function () {
-                alert("done.");
-            },
-            fail: function (a) {
-                alert("failed updating data:" + a);
-            },
-        });
+
+        const payload = `c=${encodeURIComponent(JSON.stringify(setting))}`;
+        try {
+            await post(saveurl, payload, "form");
+            alert("<%= done %>!");
+        } catch (error) {
+            alert(error);
+        }
     },
 
     config: function (a) {

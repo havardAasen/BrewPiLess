@@ -6,7 +6,6 @@ import {
     StateText,
     closeDlgLoading,
     openDlgLoading,
-    s_ajax,
     select,
     showPlatoUnit,
     updateGravity,
@@ -21,7 +20,7 @@ import { communicationError, displayLcdText, hideErrorMsgs } from "./shared";
 import { Capper } from "./capper";
 import { BWF } from "./bwf";
 import { BrewChart } from "./chart/BrewChart";
-import { get } from "./httpClient";
+import { get, post } from "./httpClient";
 
 const T_CHART_REQUEST = 12000;
 const T_CHART_RETRYTO = 6000;
@@ -392,14 +391,13 @@ function syncClientTimeIfNeeded(serverTime, serverOffset) {
  * @param time Current client time in seconds.
  * @param offset Current timezone offset in seconds.
  */
-function sendTimeUpdate(time, offset) {
-    s_ajax({
-        url: "time",
-        m: "POST",
-        mime: "application/x-www-form-urlencoded",
-        data: `time=${time}&off=${offset}`,
-        success: () => {},
-    });
+async function sendTimeUpdate(time, offset) {
+    const payload = `time=${time}&off=${offset}`;
+    try {
+        await post("time", payload, "form");
+    } catch (error) {
+        console.warn(error);
+    }
 }
 
 function gravityDevice(msg) {
@@ -533,7 +531,7 @@ function inputsg_change() {
     }
 }
 
-function inputgravity() {
+async function inputgravity() {
     var gravity = parseFloat(select("#sginput-hmc").innerHTML);
 
     if (!window.plato && (gravity < 0.8 || gravity > 1.25)) return;
@@ -550,23 +548,18 @@ function inputgravity() {
     };
     if (window.isog) data.og = 1;
     if (window.plato) data.plato = 1;
-    s_ajax({
-        url: "gravity",
-        m: "POST",
-        mime: "application/json",
-        data: JSON.stringify(data),
-        success: function () {
-            closeDlgLoading();
-            setTimeout(function () {
-                // request to
-                if (bChart.calibrating) BChart.reqnow();
-            }, T_CHART_REFRESH);
-        },
-        fail: function (d) {
-            alert("<%= failed %>:" + d);
-            closeDlgLoading();
-        },
-    });
+
+    try {
+        await post("gravity", JSON.stringify(data), "json");
+        setTimeout(function () {
+            // request to
+            if (bChart.calibrating) BChart.reqnow();
+        }, T_CHART_REFRESH);
+    } catch (error) {
+        alert(`<%= failed %>: ${error}`);
+    }
+
+    closeDlgLoading();
 }
 
 function inputSG() {

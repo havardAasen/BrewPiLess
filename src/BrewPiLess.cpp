@@ -236,16 +236,16 @@ class BrewPiWebHandler: public AsyncWebHandler
 
     static void handleFilePuts(AsyncWebServerRequest *request)
     {
-        if (!request->hasParam("path", true) && !request->hasParam("content", true)) {
-            request->send(400, asyncsrv::T_text_plain, "BAD ARGS");
+        if (!request->hasParam("path") && !request->hasParam("content", true)) {
+            request->send(400);
             return;
         }
 
         EspClass::wdtDisable();
-        const String file = request->getParam("path", true)->value();
+        const String file = request->getParam("path")->value();
         File fh = LittleFS.open(file, "w");
         if (!fh) {
-            request->send(500);
+            request->send(404);
             return;
         }
         fh.print(request->getParam("content", true)->value());

@@ -1,4 +1,4 @@
-import { select, updateNavbarVersion } from "./shared";
+import { byId, select, updateNavbarVersion } from "./shared";
 import { get, post } from "./httpClient";
 
 const gdcurl = "/gdc";
@@ -41,6 +41,12 @@ async function save(): Promise<void> {
 export async function init(): Promise<void> {
     updateNavbarVersion();
 
+    const form = byId<HTMLFormElement>("gravity-form")!;
+    form.addEventListener("submit", (ev) => {
+        ev.preventDefault();
+        save();
+    });
+
     try {
         const json = await get(`${gdcurl}?data`);
         fill(JSON.parse(json));
@@ -48,5 +54,3 @@ export async function init(): Promise<void> {
         console.warn(error);
     }
 }
-
-window.Save = save;

@@ -10,10 +10,7 @@
 #include <utility>
 
 #include "Config.h"
-#include "ExternalData.h"
 #include "BPLSettings.h"
-
-#define EXTERNALDATA_ON_SYNC_SERVER false
 
 #if SerialDebug == true
 #define DBG_PRINT(...) DebugPort.print(__VA_ARGS__)
@@ -295,29 +292,6 @@ void ESPUpdateServer_setup(const char* user, const char* pass){
   });
 
 #endif
-
-#if EXTERNALDATA_ON_SYNC_SERVER
-     server.on("/gravity",HTTP_POST, [](){
-        if (server.hasArg("plain")== false){ //Check if body received
-            server.send(200, asyncsrv::T_text_plain, "");
-            return;
-        }
-        uint8_t error;
-        String json=server.arg("plain");
-        char *data=(char*)malloc(json.length() +1);
-        if(!data){
-            server.send(500);
-            return;
-        }
-        strcpy(data,json.c_str());
-		if(externalData.processGravityReport(data,json.length(),false,error)){
-    		server.send(200,asyncsrv::T_application_json,"{}");
-		}else{
-		     server.send(500);
-		}
-     });
-#endif
-
 
 #if DEVELOPMENT_OTA == true
  // Flash update server

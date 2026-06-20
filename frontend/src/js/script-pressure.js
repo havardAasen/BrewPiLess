@@ -1,5 +1,5 @@
 import { get, post } from "./httpClient";
-import { select, updateNavbarVersion } from "./shared";
+import { byId, select, updateNavbarVersion } from "./shared";
 
 var PCTRL = {
     init: async function () {
@@ -80,4 +80,10 @@ var PCTRL = {
 export function loaded() {
     updateNavbarVersion();
     PCTRL.init();
+
+    byId("calibrate-btn").addEventListener("click", PCTRL.cal);
+    byId("transducer-control").addEventListener("submit", (ev) => {
+        ev.preventDefault();
+        PCTRL.apply();
+    });
 }

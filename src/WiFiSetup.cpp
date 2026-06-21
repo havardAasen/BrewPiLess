@@ -14,12 +14,8 @@ WiFiSetupClass WiFiSetup;
 
 
 #if SerialDebug
-#define DebugOut(a) DebugPort.print(a)
-#define DBG_PRINTF(...) DebugPort.printf(__VA_ARGS__)
 #define wifi_info(a)	DBG_PRINTF("%s,SSID:%s IP:%s, gw:%s\n",(a),WiFi.SSID().c_str(),WiFi.localIP().toString().c_str(),WiFi.gatewayIP().toString().c_str())
 #else
-#define DebugOut(a)
-#define DBG_PRINTF(...)
 #define wifi_info(a)
 #endif
 

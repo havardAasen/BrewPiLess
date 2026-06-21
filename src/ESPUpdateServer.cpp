@@ -12,14 +12,6 @@
 #include "Config.h"
 #include "BPLSettings.h"
 
-#if SerialDebug == true
-#define DBG_PRINT(...) DebugPort.print(__VA_ARGS__)
-#define DBG_PRINTLN(...) DebugPort.println(__VA_ARGS__)
-#else
-#define DBG_PRINT(...)
-#define DBG_PRINTLN(...)
-#endif
-
 #if (DEVELOPMENT_OTA == true) || (DEVELOPMENT_FILEMANAGER == true)
 static ESP8266WebServer server(UPDATE_SERVER_PORT);
 #endif
@@ -147,7 +139,7 @@ String getResponseContentType(String filename){
 }
 
 static bool handleFileRead(String path){
-  DBG_PRINTLN("handleFileRead: " + path);
+  DBG_PRINTF("handleFileRead: %s\n", path.c_str());
   if(path.endsWith("/")) path += "index.htm";
   String contentType = getResponseContentType(path);
   String pathWithGz = path + asyncsrv::T__gz;
@@ -168,7 +160,7 @@ static void handleFileUpload(){
   if(upload.status == UPLOAD_FILE_START){
     String filename = upload.filename;
     if(!filename.startsWith("/")) filename = "/"+filename;
-    DBG_PRINT("handleFileUpload Name: "); DBG_PRINTLN(filename);
+    DBG_PRINTF("handleFileUpload Name: %s\n", filename.c_str());
     fsUploadFile = LittleFS.open(filename, "w");
     filename = String();
   } else if(upload.status == UPLOAD_FILE_WRITE){
@@ -178,14 +170,14 @@ static void handleFileUpload(){
   } else if(upload.status == UPLOAD_FILE_END){
     if(fsUploadFile)
       fsUploadFile.close();
-    DBG_PRINT("handleFileUpload Size: "); DBG_PRINTLN(upload.totalSize);
+    DBG_PRINTF("handleFileUpload Size: %d\n", upload.totalSize);
   }
 }
 
 static void handleFileDelete(){
   if(server.args() == 0) return server.send(500, asyncsrv::T_text_plain, "BAD ARGS");
   String path = server.arg(0);
-  DBG_PRINTLN("handleFileDelete: " + path);
+  DBG_PRINTF("handleFileDelete: %s\n", path.c_str());
   if(path == "/")
     return server.send(500, asyncsrv::T_text_plain, "BAD PATH");
   if(!LittleFS.exists(path))
@@ -199,7 +191,7 @@ static void handleFileCreate(){
   if(server.args() == 0)
     return server.send(500, asyncsrv::T_text_plain, "BAD ARGS");
   String path = server.arg(0);
-  DBG_PRINTLN("handleFileCreate: " + path);
+  DBG_PRINTF("handleFileCreate: %s\n", path.c_str());
   if(path == "/")
     return server.send(500, asyncsrv::T_text_plain, "BAD PATH");
   if(LittleFS.exists(path))
@@ -221,7 +213,7 @@ static void handleFileList()
     }
 
     const String path = server.arg("dir");
-    DBG_PRINTLN("handleFileList: " + path);
+    DBG_PRINTF("handleFileList: %s\n", path.c_str());
     Dir dir = LittleFS.openDir(path);
 
     JsonDocument doc;
@@ -300,8 +292,7 @@ void ESPUpdateServer_setup(const char* user, const char* pass){
 
 
   server.begin();
-  DBG_PRINTLN("HTTP Update server started\n");
-
+  DBG_PRINTF("HTTP Update server started\n\n");
 }
 
 

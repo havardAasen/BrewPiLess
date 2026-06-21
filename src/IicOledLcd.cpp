@@ -20,13 +20,6 @@
 #define STATUS_BAR_HEIGHT 12
 #define STATUS_BAR_WIDTH  128
 
-#if SerialDebug == true
-#define DebugPort Serial
-#define DBG_PRINTF(...) DebugPort.printf(__VA_ARGS__)
-#else
-#define DBG_PRINTF(...)
-#endif
-
 IICOledLcd::IICOledLcd(uint8_t lcd_Addr,uint8_t sda,uint8_t scl)
 :_display(lcd_Addr,sda,scl)
 {

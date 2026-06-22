@@ -196,12 +196,12 @@ class BrewPiWebHandler: public AsyncWebHandler
 {
     static void handleFileList(AsyncWebServerRequest *request)
     {
-        if (!request->hasParam("dir", true)) {
-            request->send(400, asyncsrv::T_text_plain, "BAD ARGS");
+        if (!request->hasParam("dir")) {
+            request->send(400);
             return;
         }
 
-        const String path = request->getParam("dir", true)->value();
+        const String path = request->getParam("dir")->value();
         Dir dir = LittleFS.openDir(path);
 
         String output = "[";
@@ -423,7 +423,7 @@ public:
 	        return request->requestAuthentication();
 		 	request->send(200,asyncsrv::T_text_html,"Done, restarting..");
 			requestRestart(true);
-	 	}else if(request->method() == HTTP_POST &&  request->url() == FLIST_PATH){
+	 	}else if(request->method() == HTTP_GET &&  request->url() == FLIST_PATH){
 	 	    if(!request->authenticate(syscfg->username, syscfg->password))
 	        return request->requestAuthentication();
 
@@ -604,9 +604,10 @@ public:
 
 	bool canHandle(AsyncWebServerRequest *request) const override{
 	 	if(request->method() == HTTP_GET){
-	 		if( request->url() == CONFIG_PATH || request->url() == TIME_PATH
-
-			 || request->url() == RESETWIFI_PATH  
+	 		if( request->url() == CONFIG_PATH
+	 		 || request->url() == TIME_PATH
+			 || request->url() == FLIST_PATH
+			 || request->url() == RESETWIFI_PATH
 			 || request->url() == GETSTATUS_PATH
 			 || request->url() == BEER_PROFILE_PATH
 			 || request->url() == MQTT_PATH
@@ -636,7 +637,7 @@ public:
 				return true;
 	 	}else if(request->method() == HTTP_POST){
 	 		if(request->url() == CONFIG_PATH
-	 			|| request->url() ==  FPUTS_PATH || request->url() == FLIST_PATH
+	 			|| request->url() ==  FPUTS_PATH
 	 			|| request->url() == TIME_PATH
 				|| request->url() == BEER_PROFILE_PATH
 				|| request->url() == MQTT_PATH

@@ -572,18 +572,18 @@ export var PL = {
         this.row = select(this.div).querySelector("li");
         this.row.parentNode.removeChild(this.row);
 
-        const payload = `dir=${this.path("")}`;
-        let json;
+        const url = `${this.url_list}?dir=${this.path("")}`;
+        let data;
         try {
-            json = await post(this.url_list, payload, "form");
+            const json = await get(url);
+            data = JSON.parse(json);
         } catch (error) {
             alert(error);
             return;
         }
 
         this.plist = [];
-        const b = JSON.parse(json);
-        b.forEach(function (e) {
+        data.forEach((e) => {
             if (e.type == "file") {
                 this.plist.push(e.name);
             }

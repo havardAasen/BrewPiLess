@@ -254,7 +254,7 @@ var profileEditor = {
         let row = rowlist[0];
         var start = this.rowTemp(row);
 
-        var list = [];
+        let list = [];
         list.push([new Date(utime), start]);
 
         for (var i = 0; i < rowlist.length; i++) {
@@ -314,7 +314,7 @@ var profileEditor = {
     },
     delRow: function () {
         // delete last row
-        var list = this.getRows();
+        let list = this.getRows();
         if (list.length == 0) return;
         var last = list[list.length - 1];
 
@@ -523,7 +523,7 @@ export var PL = {
         try {
             await del(url);
             this.plist.splice(e, 1);
-            this.list(this.plist);
+            this.list();
         } catch (error) {
             alert(error);
         }
@@ -565,7 +565,7 @@ export var PL = {
             return;
         }
         this.plist.push(b);
-        this.list(this.plist);
+        this.list();
     },
     init: async function () {
         this.initialized = true;
@@ -588,7 +588,7 @@ export var PL = {
                 this.plist.push(e.name);
             }
         });
-        this.list(this.plist);
+        this.list();
     },
     toggle: function () {
         if (!this.initialized) {

@@ -5,7 +5,6 @@
 #include <ESP8266mDNS.h>
 #include <FS.h>
 #include <LittleFS.h>
-#include <ArduinoJson.h>
 #include <literals.h>
 #include <utility>
 
@@ -208,7 +207,7 @@ static void handleFileCreate(){
 static void handleFileList()
 {
     if (!server.hasArg("dir")) {
-        server.send(400, asyncsrv::T_text_plain, "BAD ARGS");
+        server.send(400);
         return;
     }
 
@@ -216,16 +215,18 @@ static void handleFileList()
     DBG_PRINTF("handleFileList: %s\n", path.c_str());
     Dir dir = LittleFS.openDir(path);
 
-    JsonDocument doc;
+    String output = "[";
     while (dir.next()) {
-        auto array = doc.add<JsonObject>();
-        array["type"] = dir.isDirectory() ? "dir" : "file";
-        array["name"] = dir.fileName();
+      if (output != "[") {
+        output += ',';
+      }
+      output += R"({"type":")";
+      output += dir.isDirectory() ? "dir" : "file";
+      output += R"(","name":")";
+      output += dir.fileName();
+      output += "\"}";
     }
-
-    String output;
-    doc.shrinkToFit();
-    serializeJson(doc, output);
+    output += "]";
 
     server.send(200, asyncsrv::T_application_json, output);
 }

@@ -7,7 +7,7 @@ jobs:
   prettier:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up Node
         uses: actions/setup-node@v6
@@ -29,7 +29,7 @@ jobs:
     name: ESLint TypeScript files
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up Node
         uses: actions/setup-node@v6
@@ -48,7 +48,7 @@ jobs:
   clang-tidy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio

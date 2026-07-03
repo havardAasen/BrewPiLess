@@ -22,10 +22,10 @@
     <div viewport>
         <div class="navbar corner-top corner-bottom">
             <span class="bar-title"><%= setup_device_list %></span>
-            <button onclick=backup()><%= setup_backup %></button>
-            <button onclick=restore()><%= setup_restore %></button>
-            <button onclick=erase()><%= setup_erase_eeprom %></button>
-            <button onclick=list()><%= setup_refresh %></button>
+            <button id="btnBackup"><%= setup_backup %></button>
+            <button id="btnRestore"><%= setup_restore %></button>
+            <button id="btnErase"><%= setup_erase_eeprom %></button>
+            <button id="btnList"><%= setup_refresh %></button>
         </div>
         <div id="device-list">
             <div id="installed-device">

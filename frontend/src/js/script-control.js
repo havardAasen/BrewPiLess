@@ -505,7 +505,7 @@ var profileEditor = {
 
 /* end of profile.js */
 /* PL: profle list */
-export var PL = {
+var PL = {
     pl_path: "P",
     url_list: "/list",
     url_save: "/fputs",
@@ -747,7 +747,7 @@ var modekeeper = {
     },
 };
 
-export async function saveprofile() {
+async function saveprofile() {
     //console.log("save");
     var r = profileEditor.getProfile();
     if (r === false) {
@@ -831,9 +831,19 @@ export function initctrl() {
             },
         },
     });
-}
 
-window.modekeeper = modekeeper;
-window.profileEditor = profileEditor;
-window.saveprofile = saveprofile;
-window.PL = PL;
+    byId("modekeeper-apply").addEventListener("click", modekeeper.apply);
+    byId("startdate").addEventListener("click", profileEditor.startDayChange);
+    byId("btnSetTime").addEventListener("click", profileEditor.startnow);
+    byId("btnAddRow").addEventListener("click", profileEditor.addRow);
+    byId("btnDelRow").addEventListener("click", profileEditor.delRow);
+    byId("btnClear").addEventListener("click", profileEditor.clear);
+
+    byId("savebtn").addEventListener("click", saveprofile);
+    byId("saveasbtn").addEventListener("click", PL.saveas);
+    byId("loadbtn").addEventListener("click", PL.toggle);
+
+    byId("btnCancel").addEventListener("click", PL.toggle);
+    byId("btnCancelSave").addEventListener("click", PL.cancelSave);
+    byId("btnDoSave").addEventListener("click", PL.doSave);
+}

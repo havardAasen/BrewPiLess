@@ -38,7 +38,7 @@
                         <%= control_off %>
                     </a>
                 </div>
-                <button id="modekeeper-apply" class="btn btn--raised" style="max-width: 200px;" onclick="modekeeper.apply()"><%= control_apply %></button>
+                <button id="modekeeper-apply" class="btn btn--raised" style="max-width: 200px;"><%= control_apply %></button>
             </div>
 
             <div id="profile-s" layout horizontal>
@@ -47,15 +47,15 @@
                         <div layout horizontal main-justified cross-center>
                             <div layout horizontal cross-center>
                                 <span class="start-date"><%= control_startdate %></span>
-                                <input type="datetime-local" style="max-width: 200px;margin: 8px 0 16px;" id="startdate" onchange="profileEditor.startDayChange();">
-                                <button id="setnow" class="btn" onclick="profileEditor.startnow();"><%= control_now %></button>
+                                <input type="datetime-local" style="max-width: 200px;margin: 8px 0 16px;" id="startdate">
+                                <button id="btnSetTime" class="btn" ><%= control_now %></button>
                             </div>
                         </div>
                         <div layout horizontal main-justified cross-center class="spacing">
-                            <button id="addbutton" onclick="profileEditor.addRow();" class="btn btn--raised"><%= control_add %></button>
+                            <button id="btnAddRow" class="btn btn--raised"><%= control_add %></button>
                             <div layout horizontal>
-                                <button id="delbtn" class="btn" onclick="profileEditor.delRow();"><%= control_del_last_item %></button>
-                                <button id="clearbtn" class="btn" onclick="profileEditor.clear()"><%= control_clear_all %></button>
+                                <button id="btnDelRow" class="btn"><%= control_del_last_item %></button>
+                                <button id="btnClear" class="btn"><%= control_clear_all %></button>
                             </div>
                         </div>
                         <table class="profileTable" id="profile_t">
@@ -111,10 +111,10 @@
                         </table>
                         <div layout horizontal main-justified cross-center class="spacing">
                             <div layout horizontal>
-                                <button id="savebtn" class="btn btn--raised" onclick="saveprofile()"><%= control_save %></button>
-                                <button id="saveasbtn" class="btn" onclick="PL.saveas()"><%= control_saveas %></button>
+                                <button id="savebtn" class="btn btn--raised"><%= control_save %></button>
+                                <button id="saveasbtn" class="btn"><%= control_saveas %></button>
                             </div>
-                            <button id="loadbtn" class="btn" onclick="PL.toggle()"><%= control_load %></button>
+                            <button id="loadbtn" class="btn"><%= control_load %></button>
                         </div>
                     </div>
                     <div id="tc_chart"></div>
@@ -253,7 +253,7 @@
                     <button class="btn rmbutton" style="color:red">DEL</button>
                 </li>
             </ul>
-            <button class="btn" onclick="PL.toggle()"><%= dlg_cancel %></button>
+            <button id="btnCancel" class="btn"><%= dlg_cancel %></button>
         </div>
     </div>
 
@@ -275,8 +275,8 @@
             <br><input type="text" size="32">
             <br>
             <%= dlg_saveas_2 %>
-                <button onclick="PL.cancelSave()"><%= dlg_cancel %></button>
-                <button onclick="PL.doSave()"><%= dlg_ok %></button>
+                <button id="btnCancelSave"><%= dlg_cancel %></button>
+                <button id="btnDoSave"><%= dlg_ok %></button>
         </div>
     </div>
 

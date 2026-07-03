@@ -211,6 +211,11 @@ export function init() {
     );
     window.owContainer = detachNode(".device-container.ow-device");
 
+    byId("btnBackup").addEventListener("click", backup);
+    byId("btnRestore").addEventListener("click", restore);
+    byId("btnErase").addEventListener("click", erase);
+    byId("btnList").addEventListener("click", list);
+
     BWF.init({
         error: function () {
             //                alert("error communication between server")
@@ -235,8 +240,3 @@ function blockscreen(a) {
 function unblockscreen() {
     byId("blockscreen").style.display = "none";
 }
-
-window.list = list;
-window.restore = restore;
-window.backup = backup;
-window.erase = erase;

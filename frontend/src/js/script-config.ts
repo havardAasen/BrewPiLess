@@ -97,11 +97,13 @@ export function load(): void {
     loadSetting();
     Net.init();
 
+    byId("connected-ssid")!.addEventListener("click", Net.show);
     byId("btnSaveSystemSettings")!.addEventListener(
         "click",
         saveSystemSettings,
     );
 
+    byId("btnSsidScan")!.addEventListener("click", Net.scan);
     byId("btnNetworkCancel")!.addEventListener("click", Net.hide);
     byId("formNetworkSettings")!.addEventListener("submit", (ev) => {
         ev.preventDefault();
@@ -132,7 +134,7 @@ interface NetworkItem {
 
 type NetworkEntry = { list: NetworkItem[] } | { ssid?: string; ip?: string };
 
-export const Net = {
+const Net = {
     litem: null as HTMLElement | null,
 
     select(l: HTMLElement): boolean {
@@ -182,6 +184,10 @@ export const Net = {
             }
             nws.appendChild(nl);
         }
+
+        byId("btnSsidSelect")!.addEventListener("click", (ev) => {
+            Net.select(ev.currentTarget as HTMLElement);
+        });
     },
 
     setupEvent(): void {
@@ -234,5 +240,3 @@ export const Net = {
         byId<HTMLElement>("networkselection")!.style.display = "none";
     },
 };
-
-window.Net = Net;

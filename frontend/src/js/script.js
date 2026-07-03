@@ -772,6 +772,8 @@ export function init() {
         ev.preventDefault();
         inputgravity();
     });
+    byId("gravity-og").addEventListener("click", inputOG);
+    byId("gravity-sg").addEventListener("click", inputSG);
     byId("btnDismissGravity").addEventListener("click", dismissgravity);
     byId("sgInput").addEventListener("change", inputsg_change);
     byId("tempInput").addEventListener("change", inputsg_change);
@@ -784,6 +786,3 @@ export function init() {
     }, T_LOAD_CHART);
     updateNavbarVersion();
 }
-
-window.inputOG = inputOG;
-window.inputSG = inputSG;

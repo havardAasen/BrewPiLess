@@ -49,7 +49,7 @@ function waitrestart() {
     }, 15000);
 }
 
-export async function saveSystemSettings(): Promise<void> {
+async function saveSystemSettings(): Promise<void> {
     const inputs = document.querySelectorAll<
         HTMLInputElement | HTMLSelectElement
     >("#sysconfig input, #sysconfig select");
@@ -96,6 +96,18 @@ export async function load(): Promise<void> {
     updateNavbarVersion();
     await loadSetting();
     Net.init();
+
+    byId("connected-ssid")!.addEventListener("click", Net.show);
+    byId("btnNetworkCancel")!.addEventListener("click", Net.hide);
+    byId("btnSaveSystemSettings")!.addEventListener("submit", (ev) => {
+        ev.preventDefault();
+        saveSystemSettings();
+    });
+
+    byId("formNetworkSettings")!.addEventListener("submit", (ev) => {
+        ev.preventDefault();
+        Net.save();
+    });
 }
 
 function validIP(ip: string): false | string {
@@ -225,4 +237,3 @@ export const Net = {
 };
 
 window.Net = Net;
-window.saveSystemSettings = saveSystemSettings;

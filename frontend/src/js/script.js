@@ -4,6 +4,7 @@ import {
     JSVERSION,
     ModeString,
     StateText,
+    byId,
     closeDlgLoading,
     openDlgLoading,
     select,
@@ -429,7 +430,7 @@ function showgravitydlg(msg) {
             window.celsius = true;
             defaultTemp = 20;
         }
-        select("#dlg_addgravity .tempinput").value = defaultTemp;
+        byId("tempInput").value = defaultTemp;
 
         var tus = document.querySelectorAll("#dlg_addgravity .temp-unit");
         for (let i = 0; i < tus.length; i++) tus[i].innerHTML = window.tempUnit;
@@ -441,8 +442,8 @@ function dismissgravity() {
 }
 
 function inputsg_change() {
-    var gravity = parseFloat(select("#dlg_addgravity .sginput").value);
-    var temp = parseFloat(select("#dlg_addgravity .tempinput").value);
+    const gravity = parseFloat(byId("sgInput").value);
+    const temp = parseFloat(byId("tempInput").value);
     if (isNaN(gravity) || isNaN(temp)) return;
     // if calibration info is avilable
     var caltemp = typeof window.caltemp != "undefined" ? window.caltemp : 20;
@@ -725,6 +726,14 @@ export function init() {
     );
     registerChartControls(bChart);
 
+    select("#dlg_addgravity").addEventListener("submit", (ev) => {
+        ev.preventDefault();
+        inputgravity();
+    });
+    byId("btnDismissGravity").addEventListener("click", dismissgravity);
+    byId("sgInput").addEventListener("change", inputsg_change);
+    byId("tempInput").addEventListener("change", inputsg_change);
+
     initRssi();
     Capper.init();
     connBWF();
@@ -736,5 +745,3 @@ export function init() {
 
 window.inputOG = inputOG;
 window.inputSG = inputSG;
-window.inputgravity = inputgravity;
-window.inputsg_change = inputsg_change;

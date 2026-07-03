@@ -198,7 +198,7 @@
     </div>
 
 
-    <div id="dlg_addgravity" class="modal">
+    <form id="dlg_addgravity" class="modal">
         <div class="modal-content">
             <span class="message sg">
                 <%= dlg_addgravity_sg %>
@@ -211,8 +211,8 @@
             </p>
             <ul style="list-style-type: none">
                 <li>
-                    <input class=sginput type="text" size="6" onchange=inputsg_change()><span class=platounit>&deg;P</span> @
-                    <input class=tempinput type="text" size="6" value="20" onchange=inputsg_change()>
+                    <input id=sgInput type="text" size="6" pattern="^(\d+|\d*\.\d+)$" required><span class=platounit>&deg;P</span> @
+                    <input id=tempInput type="text" size="6" value="20" pattern="^(\d+|\d*\.\d+)$" required>
                     <span class=temp-unit>&deg;C</span>
                 </li>
                 <li>
@@ -226,11 +226,11 @@
             </ul>
 
             <div class="dialog-buttons">
-                <button class="btn btn--rise" onclick="dismissgravity()"><%= dlg_cancel %></button>
-                <button class="btn btn--rise" onclick="inputgravity()"><%= dlg_ok %></button>
+                <button class="btn btn--rise" type="button" id="btnDismissGravity"><%= dlg_cancel %></button>
+                <button class="btn btn--rise" type="submit"><%= dlg_ok %></button>
             </div>
         </div>
-    </div>
+    </form>
 
     <div id="polynomialpane" class="modal">
         <div class="modal-content">

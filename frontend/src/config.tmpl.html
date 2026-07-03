@@ -23,62 +23,59 @@
     <div viewport layout vertical>
         <div id="inputform" main>
 
-            <div id="sysconfig" class="card">
-                <form onsubmit="saveSystemSettings(); return false;">
-                    <h5><%= config_page_title %></h5>
-                    <div layout horizontal cross-center>
-                        <label for="aoff" class="inline-header h6"><%= config_lcd_auto_off %></label>
-                        <input id="aoff" type="number" min="0" class="nb">
-                    </div>
-                    <div layout horizontal cross-center>
-                        <label for="title" class="inline-header h6"><%= config_title %></label>
-                        <input id="title" type="text"  maxlength="31">
-                    </div>
-                    <div layout horizontal cross-center>
-                        <label for="name" class="inline-header h6"><%= config_host_network_name %></label>
-                        <input id="name" type="text" maxlength="31">
-                    </div>
-                    <div layout horizontal cross-center>
-                        <label for="port" class="inline-header h6"><%= config_http_port %></label>
-                        <input id="port" type="number" min="1" max="65535">
-                    </div>
-                    <div layout horizontal cross-center>
-                        <label for="user" class="inline-header h6"><%= config_username %></label>
-                        <input id="user" type="text" maxlength="31">
-                    </div>
-                    <div layout horizontal cross-center>
-                        <label for="pass" class="inline-header h6"><%= config_password %></label>
-                        <input id="pass" type="password" maxlength="31">
-                    </div>
-                    <div layout horizontal cross-center>
-                        <label class="inline-header h6"><%= config_always_password %></label>
-                        <input type="checkbox" id="protect" name="protect" class="switch-input" checked>
-                        <label for="protect" class="switch-label" style="min-width: 0;"></label>
-                    </div>
+            <form id="sysconfig" class="card">
+                <h5><%= config_page_title %></h5>
+                <div layout horizontal cross-center>
+                    <label for="aoff" class="inline-header h6"><%= config_lcd_auto_off %></label>
+                    <input id="aoff" type="number" min="0" class="nb">
+                </div>
+                <div layout horizontal cross-center>
+                    <label for="title" class="inline-header h6"><%= config_title %></label>
+                    <input id="title" type="text"  maxlength="31">
+                </div>
+                <div layout horizontal cross-center>
+                    <label for="name" class="inline-header h6"><%= config_host_network_name %></label>
+                    <input id="name" type="text" maxlength="31">
+                </div>
+                <div layout horizontal cross-center>
+                    <label for="port" class="inline-header h6"><%= config_http_port %></label>
+                    <input id="port" type="number" min="1" max="65535">
+                </div>
+                <div layout horizontal cross-center>
+                    <label for="user" class="inline-header h6"><%= config_username %></label>
+                    <input id="user" type="text" maxlength="31">
+                </div>
+                <div layout horizontal cross-center>
+                    <label for="pass" class="inline-header h6"><%= config_password %></label>
+                    <input id="pass" type="password" maxlength="31">
+                </div>
+                <div layout horizontal cross-center>
+                    <label class="inline-header h6"><%= config_always_password %></label>
+                    <input type="checkbox" id="protect" name="protect" class="switch-input" checked>
+                    <label for="protect" class="switch-label" style="min-width: 0;"></label>
+                </div>
 
-                    <div layout horizontal cross-center>
-                        <label for="wifi" class="inline-header h6"><%= config_network_mode %></label>
-                        <select id="wifi">
-                            <option value=1><%= config_station %></option>
-                            <option value=2><%= config_ap %></option>
-                            <option value=3><%= config_stationap %></option>
-                        </select>
-                    </div>
-                    <div layout horizontal cross-center>
-                        <label class="inline-header h6"><%= config_network %></label>
-                        <button id="connected-ssid" class="btn" onclick="Net.show();return false;">...</button>
-                    </div>
-                    <div layout horizontal cross-center>
-                        <label class="inline-header h6"><%= config_ip %></label>
-                        <span id="sta-ip"></span>
-                    </div>
+                <div layout horizontal cross-center>
+                    <label for="wifi" class="inline-header h6"><%= config_network_mode %></label>
+                    <select id="wifi">
+                        <option value=1><%= config_station %></option>
+                        <option value=2><%= config_ap %></option>
+                        <option value=3><%= config_stationap %></option>
+                    </select>
+                </div>
+                <div layout horizontal cross-center>
+                    <label class="inline-header h6"><%= config_network %></label>
+                    <button id="connected-ssid" class="btn" type="button">...</button>
+                </div>
+                <div layout horizontal cross-center>
+                    <label class="inline-header h6"><%= config_ip %></label>
+                    <span id="sta-ip"></span>
+                </div>
 
-                    <div class="card-footer">
-                        <button class="btn"><%= config_save_change %></button>
-                    </div>
-                </form>
-            </div>
-
+                <div class="card-footer">
+                    <button id="btnSaveSystemSettings" type="submit" class="btn"><%= config_save_change %></button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -97,15 +94,15 @@
                     <%= config_scan %>
                 </a>
             </div>
-            <form method="get" action="#">
+            <form id="formNetworkSettings">
                 <input id="ssid" length="32" placeholder="SSID"><br>
                 <input id="nwpass" length="64" type="password" placeholder="password"><br><br>
                 <input id="ip" length="1" placeholder="<%= config_fixedip %>" class="nb iptype"><br>
                 <input id="gw" length="1" placeholder="<%= config_gateway %>" class="nb iptype"><br>
                 <input id="mask" length="1" placeholder="<%= config_netmask %>" class="nb iptype"><br>
                 <input id="dns" length="1" placeholder="<%= config_dns %>" class="nb iptype"><br><br>
-                <button type="button" onclick="return Net.save()"><%= config_save_change %></button>
-                <button onclick="Net.hide();return false;"><%= dlg_cancel %></button>
+                <button id="btnNetworkCancel" type="button"><%= dlg_cancel %></button>
+                <button type="submit"><%= config_save_change %></button>
             </form>
         </div>
     </div>

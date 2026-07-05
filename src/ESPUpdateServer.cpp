@@ -21,8 +21,6 @@ static ESP8266HTTPUpdateServer httpUpdater;
 
 #if DEVELOPMENT_FILEMANAGER == true
 
-#include "edit_html_gz.h"
-
 #define SPIFFS_FORMAT_PATH     "/format-spiffs"
 #define SPIFFS_FORMATTING_PATH "/exeformat-spiffs"
 
@@ -242,9 +240,9 @@ void ESPUpdateServer_setup(const char* user, const char* pass){
   server.on("/list", HTTP_GET, handleFileList);
   //load editor
   server.on(FILE_MANAGEMENT_PATH, HTTP_GET, [](){
-//    if(!handleFileRead("/edit.htm")) server.send(404, asyncsrv::T_text_plain, "FileNotFound");
 	  server.sendHeader(asyncsrv::T_Content_Encoding, asyncsrv::T_gzip);
-	   server.send_P(200,asyncsrv::T_text_html,reinterpret_cast<const char*>(edit_htm_gz),dist_edit_htm_gz_len);
+	  server.sendHeader(asyncsrv::T_Content_Type, asyncsrv::T__html);
+	   server.serveStatic(FILE_MANAGEMENT_PATH, LittleFS, "/www/edit.htm");
   });
   //create file
   server.on("/edit", HTTP_PUT, handleFileCreate);

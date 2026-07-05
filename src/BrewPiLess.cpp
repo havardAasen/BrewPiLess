@@ -173,9 +173,6 @@ DataLogger dataLogger;
 #endif
 
 
-
-extern const uint8_t* getEmbeddedFile(const char* filename,bool &gzip, unsigned int &size);
-
 void requestRestart(bool disc);
 
 void initTime(bool apmode)
@@ -257,30 +254,18 @@ class BrewPiWebHandler: public AsyncWebHandler
     bool fileExists(const String& path) const
     {
 	    if(LittleFS.exists(path)) return true;
-	    bool dum;
-	    unsigned int dum2;
 
-	    if(getEmbeddedFile(path.c_str(),dum,dum2)) return true;
 		String pathWithGz = path + asyncsrv::T__gz;
 		if(LittleFS.exists(pathWithGz)) return true;
+
+		String webAssetPath = "/www" + path;
+		if(LittleFS.exists(webAssetPath)) return true;
+
 		return false;
     }
 
 	void sendFile(AsyncWebServerRequest *request,const String& path)
 	{
-		String pathWithGz = path + asyncsrv::T__gz;
-		if(LittleFS.exists(pathWithGz)) {
-			File file=LittleFS.open(pathWithGz,"r");
-			if(!file){
-				request->send(500);
-				return;
-			}
-			AsyncWebServerResponse * response = request->beginResponse(file, path,getContentType(path));
-			response->addHeader(asyncsrv::T_Cache_Control,"max-age=2592000");
-			request->send(response);
-			return;
-		}
-		  
 		if(LittleFS.exists(path)){
 			//request->send(LittleFS, path);
 			const bool nocache = std::any_of(std::cbegin(nocache_list),
@@ -296,19 +281,8 @@ class BrewPiWebHandler: public AsyncWebHandler
 			request->send(response);
 			return;
 		}
-
-		// Embedded HTML or JS file
-		bool gzip;
-		uint32_t size;
-		if (const uint8_t *file = getEmbeddedFile(path.c_str(), gzip, size)) {
-			assert(gzip == true && "All files must be gzipped");
-			DBG_PRINTF("using embedded file: '%s'\n",path.c_str());
-			AsyncWebServerResponse *response = request->beginResponse_P(200, getContentType(path), file, size);
-			response->addHeader(asyncsrv::T_Cache_Control,"max-age=2592000");
-			response->addHeader(asyncsrv::T_Content_Encoding, asyncsrv::T_gzip);
-			request->send(response);
-		}
 	}	  
+
 public:
 	bool isRequestHandlerTrivial() const final {return false;}
 
@@ -545,26 +519,20 @@ public:
 				}
 			}
 		}else if(request->method() == HTTP_GET){
-
 			String path=request->url();
 	 		if(path.endsWith("/")) path +=DEFAULT_INDEX_FILE;
 
-	 		if(request->url().equals("/")){
-		 		if(!syscfg->passwordLcd){
-		 			sendFile(request,path); //request->send(LittleFS, path);
-		 			return;
-		 		}
-		 	}
-			/*
-			bool auth=true;
-
-			for(byte i=0;i< sizeof(public_list)/sizeof(const char*);i++){
-				if(path.equals(public_list[i])){
-						auth=false;
-						break;
-					}
+			// All files in '/www' is gzipped, these files does not contain any
+			// sensitive information and therefore does not require authentication.
+			String webAssetPath = "/www" + path;
+			if(LittleFS.exists(webAssetPath)) {
+				AsyncWebServerResponse * response = request->beginResponse(LittleFS, webAssetPath, getContentType(webAssetPath));
+				response->addHeader(asyncsrv::T_Content_Encoding, asyncsrv::T_gzip);
+				response->addHeader(asyncsrv::T_Cache_Control,"max-age=2592000");
+				request->send(response);
+				return;
 			}
-			*/
+
 	 	    if(syscfg->passwordLcd && !request->authenticate(syscfg->username, syscfg->password))
 	        return request->requestAuthentication();
 

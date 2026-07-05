@@ -137,7 +137,6 @@ extern "C" {
 #endif
 
 const char *public_list[]={
-"/bwf.js",
 "/brewing.json"
 };
 
@@ -262,50 +261,21 @@ class BrewPiWebHandler: public AsyncWebHandler
 	    unsigned int dum2;
 
 	    if(getEmbeddedFile(path.c_str(),dum,dum2)) return true;
-		// safari workaround.
-		if(path.endsWith(asyncsrv::T__js)){
-			String pathWithJgz = path.substring(0,path.lastIndexOf('.')) + ".jgz";
-			 //DBG_PRINTF("checking with:%s\n",pathWithJgz.c_str());
-			 if(LittleFS.exists(pathWithJgz)) return true;
-		}
 		String pathWithGz = path + asyncsrv::T__gz;
 		if(LittleFS.exists(pathWithGz)) return true;
 		return false;
     }
 
-	void sendProgmem(AsyncWebServerRequest *request,const char* html)
-	{
-		AsyncWebServerResponse *response = request->beginResponse(String(asyncsrv::T_text_html),
-  			strlen_P(html),
-  			[=](uint8_t *buffer, size_t maxLen, size_t alreadySent) -> size_t {
-    			if (strlen_P(html+alreadySent)>maxLen) {
-	      		memcpy_P((char*)buffer, html+alreadySent, maxLen);
-    	  		return maxLen;
-    		}
-    		// Ok, last chunk
-    		memcpy_P((char*)buffer, html+alreadySent, strlen_P(html+alreadySent));
-    		return strlen_P(html+alreadySent); // Return from here to end of indexhtml
- 	 	});
- 	 	response->addHeader(asyncsrv::T_Cache_Control,"max-age=2592000");
-		request->send(response);
-	}
-
 	void sendFile(AsyncWebServerRequest *request,const String& path)
 	{
 		String pathWithGz = path + asyncsrv::T__gz;
-		if(LittleFS.exists(pathWithGz)){
-#if 0
-			AsyncWebServerResponse * response = request->beginResponse(LittleFS, pathWithGz,getContentType(path));
-			// AsyncFileResonse will add "content-disposion" header, result in "download" of Safari, instead of "render" 
-#else
+		if(LittleFS.exists(pathWithGz)) {
 			File file=LittleFS.open(pathWithGz,"r");
 			if(!file){
 				request->send(500);
 				return;
 			}
 			AsyncWebServerResponse * response = request->beginResponse(file, path,getContentType(path));
-#endif
-//			response->addHeader(asyncsrv::T_Content_Encoding, asyncsrv::T_gzip);
 			response->addHeader(asyncsrv::T_Cache_Control,"max-age=2592000");
 			request->send(response);
 			return;

@@ -4,10 +4,11 @@ on:
   push:
 
 jobs:
-  build:
+  filesystem:
+    name: Build Filesystem
     strategy:
       matrix:
-        environment: [d1_mini, nodemcuv2, thorrax]
+        environment: [d1_mini-en, d1_mini-spanish, nodemcuv2-en, nodemcuv2-spanish]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -28,8 +29,7 @@ jobs:
         working-directory: frontend
         run: |
           sudo apt-get update && sudo apt-get install --yes --no-install-recommends \
-              npm \
-              xxd
+              npm
 
           npm ci
           command -v grunt > /dev/null || npm install --global grunt-cli
@@ -38,9 +38,37 @@ jobs:
         working-directory: frontend
         run: npm run build
 
+      - name: Build fs-${{ matrix.environment }}
+        run: pio run -e fs-${{ matrix.environment }}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: littlefs-${{ matrix.environment }}.bin
+          path: .pio/build/fs-${{ matrix.environment }}/littlefs.bin
+
+  firmware:
+    name: Build firmware
+    strategy:
+      matrix:
+        environment: [d1_mini, nodemcuv2, thorrax]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ${{ runner.os }}-pio
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install PlatformIO Core
+        run: pip install --upgrade platformio
+
       - name: Build ${{ matrix.environment }}
         run: pio run -e ${{ matrix.environment }}
       - uses: actions/upload-artifact@v7
         with:
-          name: ${{ matrix.environment }}.bin
+          name: firmware-${{ matrix.environment }}.bin
           path: .pio/build/${{ matrix.environment }}/firmware.bin

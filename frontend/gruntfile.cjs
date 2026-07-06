@@ -126,14 +126,12 @@ module.exports = function(grunt) {
               'dist/testcmd.htm',
               'dist/edit.htm'
             ],
-            dest: '.',
-            ext: '.htm.gz'
+            dest: '.'
           },
           {
             expand: true,
             src: ['dist/**/*.js'],
             dest: '.',
-            ext: '.js'  // keep the same name for consistent HTML reference
           },
           {
             expand: true,
@@ -180,7 +178,10 @@ module.exports = function(grunt) {
           {'config.htm': ['config.tmpl.htm']},
           {'pressure.htm': ['pressure.tmpl.htm']},
           {'BPLog.htm': ['BPLog.tmpl.htm']},
-          {'BPLLogViewer.htm': ['BPLLogViewer.tmpl.htm']}
+          {'BPLLogViewer.htm': ['BPLLogViewer.tmpl.htm']},
+          {'edit.htm': ['edit.htm']},
+          {'testcmd.htm': ['testcmd.htm']},
+          {'lcd.htm': ['lcd.htm']}
         ]
       }
     },

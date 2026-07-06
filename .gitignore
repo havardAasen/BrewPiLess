@@ -7,5 +7,7 @@
 .DS_Store
 cheader/
 compile_commands.json
+data/*
+!data/.gitkeep
 dist/
 node_modules/

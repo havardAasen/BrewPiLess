@@ -8,7 +8,7 @@
     "lint": "eslint src/js",
     "pretty": "prettier --check  src/js",
     "test": "node --require tsx --test tests/*.test.ts",
-    "build": "grunt build && ./output.sh"
+    "build": "grunt build"
   },
   "author": "",
   "license": "ISC",

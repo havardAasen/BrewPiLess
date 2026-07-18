@@ -213,17 +213,17 @@ static void handleFileList()
 
     const String path = server.arg("dir");
     DBG_PRINTF("handleFileList: %s\n", path.c_str());
-    Dir dir = LittleFS.openDir(path);
+    File file = LittleFS.open(path, "r");
 
     String output = "[";
-    while (dir.next()) {
+    while (file.openNextFile()) {
       if (output != "[") {
         output += ',';
       }
       output += R"({"type":")";
-      output += dir.isDirectory() ? "dir" : "file";
+      output += file.isDirectory() ? "dir" : "file";
       output += R"(","name":")";
-      output += dir.fileName();
+      output += file.name();
       output += "\"}";
     }
     output += "]";

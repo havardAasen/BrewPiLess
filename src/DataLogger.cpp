@@ -1,7 +1,5 @@
 #include <ESP8266WiFi.h>
-#include <WiFiClientSecure.h>
 #include <ESP8266HTTPClient.h>
-#include <ArduinoJson.h>
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include "DataLogger.h"
@@ -10,10 +8,6 @@
 #if SupportPressureTransducer
 #include "PressureMonitor.h"
 #endif
-
-#define GSLOG_JSON_BUFFER_SIZE 256
-#define MAX_GSLOG_CONFIG_LEN 1024
-
 
 
 void DataLogger::reportNow()

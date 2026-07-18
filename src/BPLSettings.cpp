@@ -3,6 +3,7 @@
 #include <string.h>
 #include <IPAddress.h>
 #include <FS.h>
+#include <cstring>
 #include <literals.h>
 #include <LittleFS.h>
 #include <ESP8266WiFi.h>

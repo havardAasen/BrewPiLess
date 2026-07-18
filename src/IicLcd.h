@@ -130,7 +130,7 @@ public:
 
   using Print::write;
 
-  void setAutoOffPeriod(uint32 period){ backlightAutoOffPeriod = period; }
+  void setAutoOffPeriod(uint32_t period){ backlightAutoOffPeriod = period; }
 
 private:
   void init_priv();

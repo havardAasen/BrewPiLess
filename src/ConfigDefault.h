@@ -158,15 +158,7 @@
 
 #ifndef BREWPI_BOARD
 
-#if !ARDUINO
-        #define BREWPI_BOARD BREWPI_BOARD_UNKNOWN
-#elif defined(__AVR_ATmega32U4__)
-        #define BREWPI_BOARD BREWPI_BOARD_LEONARDO
-#elif defined(__AVR_ATmega328P__)
-        #define BREWPI_BOARD BREWPI_BOARD_STANDARD
-#elif defined(__AVR_ATmega2560__)
-        #define BREWPI_BOARD BREWPI_BOARD_MEGA
-#elif defined(ESP8266)
+#if defined(ESP8266)
 		#define BREWPI_BOARD BREWPI_BOARD_ESP8266
 #else
         #error Unknown processor type!

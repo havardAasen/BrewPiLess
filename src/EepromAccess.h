@@ -22,26 +22,9 @@
 #define EEPROM_ACCESS_H
 
 #include "EepromTypes.h"
-
-#ifdef ARDUINO
-// ARDUINO is defined for the ESP8266 implementation as well. Specifically break out
-// the ESP8266 implementation, then default to Arduino if we don't use it.
-
-#ifdef ESP8266
 #include "ESPEepromAccess.h"
+
 typedef ESPEepromAccess EepromAccess;
-#else
-#include "ArduinoEepromAccess.h"
-typedef ArduinoEepromAccess EepromAccess;
-#endif
-
-#else
-
-#include "ArrayEepromAccess.h"
-
-typedef ArrayEepromAccess EepromAccess;
-
-#endif
 
 extern EepromAccess eepromAccess;
 

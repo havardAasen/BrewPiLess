@@ -30,6 +30,7 @@
 #include "Ticks.h"
 #include "TempSensorMock.h"
 #include "EepromManager.h"
+#include "ESPEepromAccess.h"
 #include "TempSensorDisconnected.h"
 #include "RotaryEncoder.h"
 
@@ -539,23 +540,23 @@ void TempControl::loadDefaultSettings(){
 }
 
 void TempControl::storeConstants(eptr_t offset){
-	EepromAccess::writeControlConstants(offset,  cc, sizeof(ControlConstants));
+	bpl::EspEepromAccess::writeControlConstants(offset,  cc);
 }
 
 void TempControl::loadConstants(eptr_t offset){
-	EepromAccess::readControlConstants(cc, offset, sizeof(ControlConstants));
+	bpl::EspEepromAccess::readControlConstants(cc, offset);
 	initFilters();
 }
 
 // write new settings to EEPROM to be able to reload them after a reset
 // The update functions only write to EEPROM if the value has changed
 void TempControl::storeSettings(eptr_t offset){
-	EepromAccess::writeControlSettings(offset, cs, sizeof(ControlSettings));
+	bpl::EspEepromAccess::writeControlSettings(offset, cs);
 	storedBeerSetting = cs.beerSetting;
 }
 
 void TempControl::loadSettings(eptr_t offset){
-	EepromAccess::readControlSettings(cs, offset, sizeof(ControlSettings));
+	bpl::EspEepromAccess::readControlSettings(cs, offset);
 	logDebug("loaded settings");
 	storedBeerSetting = cs.beerSetting;
 	setMode(cs.mode, true);		// force the mode update

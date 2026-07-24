@@ -18,57 +18,52 @@
 #ifndef ESP_EEPROM_ACCESS_H
 #define ESP_EEPROM_ACCESS_H
 
-#ifndef ESP8266
-// Generate an error if we have been incorrectly included in an Arduino build
-#error Incorrect processor type!
-#endif
-
 #include <EEPROM.h>
 #include "EepromStructs.h"
+#include "EepromTypes.h"
 
 
-//TODO - Clean this up
-class ESPEepromAccess
+namespace bpl::EspEepromAccess
 {
-public:
-	static uint8_t readByte(eptr_t offset) {
+	inline uint8_t readByte(eptr_t offset) {
 		return EEPROM.read(offset);
 	}
-	static void writeByte(eptr_t offset, uint8_t value) {
+
+	inline void writeByte(eptr_t offset, uint8_t value) {
 		EEPROM.write(offset, value);
 	}
 
-	static void readControlSettings(ControlSettings& target, eptr_t offset, uint16_t size) {
+	inline void readControlSettings(ControlSettings& target, eptr_t offset) {
 		EEPROM.get(offset, target);
 	}
 
-	static void readControlConstants(ControlConstants& target, eptr_t offset, uint16_t size) {
+	inline void readControlConstants(ControlConstants& target, eptr_t offset) {
 		EEPROM.get(offset, target);
 	}
 
-	static void readDeviceDefinition(DeviceConfig& target, eptr_t offset, uint16_t size) {
+	inline void readDeviceDefinition(DeviceConfig& target, eptr_t offset) {
 		EEPROM.get(offset, target);
 	}
 
-	static void writeControlSettings(eptr_t target, ControlSettings& source, uint16_t size) {
+	inline void writeControlSettings(eptr_t target, ControlSettings& source) {
 		EEPROM.put(target, source);
 
 		EEPROM.commit();
 	}
 
-	static void writeControlConstants(eptr_t target, ControlConstants& source, uint16_t size) {
+	inline void writeControlConstants(eptr_t target, ControlConstants& source) {
 		EEPROM.put(target, source);
 
 		EEPROM.commit();
 	}
 
-	static void writeDeviceDefinition(eptr_t target, const DeviceConfig& source, uint16_t size) {
+	inline void writeDeviceDefinition(eptr_t target, const DeviceConfig& source) {
 		EEPROM.put(target, source);
 
 		EEPROM.commit();
 	}
 
-	static void commit() {
+	inline void commit() {
 		EEPROM.commit();
 	}
 };

@@ -22,27 +22,27 @@
 #include <stddef.h>
 
 #include "EepromManager.h"
+#include "ESPEepromAccess.h"
 #include "TempControl.h"
 #include "EepromFormat.h"
 #include "PiLink.h"
 
 EepromManager eepromManager;
-EepromAccess eepromAccess;
 
 #define pointerOffset(x) offsetof(EepromFormat, x)
 
 
 bool EepromManager::hasSettings()
 {
-	return EepromAccess::readByte(pointerOffset(version)) == EEPROM_FORMAT_VERSION;
+	return bpl::EspEepromAccess::readByte(pointerOffset(version)) == EEPROM_FORMAT_VERSION;
 }
 
 void EepromManager::resetEeprom()
 {
 	for (uint16_t offset=0; offset<EepromFormat::MAX_EEPROM_SIZE; offset++)
-		EepromAccess::writeByte(offset, 0xFF);
+		bpl::EspEepromAccess::writeByte(offset, 0xFF);
 
-	EepromAccess::commit();
+	bpl::EspEepromAccess::commit();
 }
 
 
@@ -69,13 +69,13 @@ void EepromManager::initializeEeprom()
 	}
 
 	// set the version flag - so that storeDevice will work
-	EepromAccess::writeByte(0, EEPROM_FORMAT_VERSION);
+	bpl::EspEepromAccess::writeByte(0, EEPROM_FORMAT_VERSION);
 
 	// set state to startup
 	tempControl.init();
 
 #ifdef ESP8266
-	EepromAccess::commit();
+	bpl::EspEepromAccess::commit();
 #endif
 }
 
@@ -134,7 +134,7 @@ bool EepromManager::fetchDevice(DeviceConfig& config, uint8_t deviceIndex)
 {
 	bool ok = (hasSettings() && deviceIndex<EepromFormat::MAX_DEVICES);
 	if (ok)
-		EepromAccess::readDeviceDefinition(config, pointerOffset(devices)+sizeof(DeviceConfig)*deviceIndex, sizeof(DeviceConfig));
+		bpl::EspEepromAccess::readDeviceDefinition(config, pointerOffset(devices)+sizeof(DeviceConfig)*deviceIndex);
 	return ok;
 }
 
@@ -142,7 +142,7 @@ bool EepromManager::storeDevice(const DeviceConfig& config, uint8_t deviceIndex)
 {
 	bool ok = (hasSettings() && deviceIndex<EepromFormat::MAX_DEVICES);
 	if (ok)
-		EepromAccess::writeDeviceDefinition(pointerOffset(devices)+sizeof(DeviceConfig)*deviceIndex, config, sizeof(DeviceConfig));
+		bpl::EspEepromAccess::writeDeviceDefinition(pointerOffset(devices)+sizeof(DeviceConfig)*deviceIndex, config);
 	return ok;
 }
 

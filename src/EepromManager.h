@@ -22,10 +22,7 @@
 #define EEPROM_MANAGER_H
 
 #include "Brewpi.h"
-
-#include "ESPEepromAccess.h"
 #include "EepromStructs.h"
-#include "EepromTypes.h"
 
 
 void fill(int8_t* p, uint8_t size);
@@ -70,33 +67,6 @@ public:
 
 	static bool fetchDevice(DeviceConfig& config, uint8_t deviceIndex);
 	static bool storeDevice(const DeviceConfig& config, uint8_t deviceIndex);
-};
-
-class EepromStream
-{
-	eptr_t pv{};
-
-	void writeByte(uint8_t value) {
-		bpl::EspEepromAccess::writeByte(pv++, value);
-	}
-	// TODO - Clean this up
-/*	void writeBlock(void* source, uint16_t size)
-	{
-		eepromAccess.writeBlock(pv, source, size);
-		pv += size;
-	}*/
-	// Breaking this out into three functions so that we can have better control
-	void writeControlSettings(ControlSettings& source, uint16_t size) {
-		bpl::EspEepromAccess::writeControlSettings(pv, source);
-	}
-
-	void writeControlConstants(ControlConstants& source, uint16_t size) {
-		bpl::EspEepromAccess::writeControlConstants(pv, source);
-	}
-
-	void writeDeviceDefinition(const DeviceConfig& source, uint16_t size) {
-		bpl::EspEepromAccess::writeDeviceDefinition(pv, source);
-	}
 };
 
 extern EepromManager eepromManager;

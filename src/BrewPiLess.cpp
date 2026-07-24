@@ -6,6 +6,7 @@
 #include <ESPmDNS.h>
 #endif
 #include <ArduinoOTA.h>
+#include <EEPROM.h>
 #include <FS.h>
 #include <LittleFS.h>
 #include <literals.h>

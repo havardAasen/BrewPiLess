@@ -25,10 +25,11 @@
 #include "TempSensor.h"
 #include "Pins.h"
 #include "Actuator.h"
+#include "ActuatorAutoOff.h"
 #include "Sensor.h"
 #include "EepromManager.h"
-#include "ActuatorAutoOff.h"
 #include "EepromStructs.h"
+#include "EepromTypes.h"
 
 #include <TemperatureFormats.h>
 

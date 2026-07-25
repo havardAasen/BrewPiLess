@@ -25,6 +25,10 @@
 
 namespace bpl::EspEepromAccess
 {
+	inline void begin(size_t size) {
+		EEPROM.begin(size);
+	}
+
 	inline uint8_t readByte(eptr_t offset) {
 		return EEPROM.read(offset);
 	}

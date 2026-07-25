@@ -23,141 +23,145 @@
 
 #include <cstdint>
 
-//////////////////////////////////////////////////////////////////////////
-//
 // Set verbosity of debug messages 0-3
 // 0: means no debug messages
 // 1: is typical debug messages required for end users
 // 2-3: more verbose debug messages
-//
-// #ifndef BREWPI_DEBUG
-// #define BREWPI_DEBUG 1
-// #endif
-//
-//////////////////////////////////////////////////////////////////////////
+#ifndef BREWPI_DEBUG
+#define BREWPI_DEBUG 0
+#endif
+
+#if BREWPI_DEBUG>0
+	#define DEBUG_ONLY(x) x
+#else
+	#define DEBUG_ONLY(x)
+#endif
 
 
-//////////////////////////////////////////////////////////////////////////
-//
+// Set which debug messages are printed
+#ifndef BREWPI_LOG_ERRORS
+#define BREWPI_LOG_ERRORS 1
+#endif
+
+#ifndef BREWPI_LOG_WARNINGS
+#define BREWPI_LOG_WARNINGS 1
+#endif
+
+#ifndef BREWPI_LOG_INFO
+#define BREWPI_LOG_INFO 1
+#endif
+
+#ifndef BREWPI_LOG_DEBUG
+#define BREWPI_LOG_DEBUG 0
+#endif
+
+
 // Define which brewpi shield is used.
 // BREWPI_SHIELD_REV_A The RevA shield (ca. Feb 2013), two OneWire buses, door, heat, cool.
 // BREWPI_SHIELD_REV_C The RevC shield (ca. May 2013). One common ONeWire bus, 4 actuators. Dynaconfig.
 //
 #ifndef BREWPI_STATIC_CONFIG
-// #define BREWPI_STATIC_CONFIG BREWPI_SHIELD_REV_A
 #define BREWPI_STATIC_CONFIG BREWPI_SHIELD_DIY
 #endif
-//
-//////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////
-//
-// Enable the simulator. Real sensors/actuators are replaced with simulated versions. In particular, the values reported by
-// temp sensors are based on a model of the fridge/beer.
-//
-// #ifndef BREWPI_SIMULATE
-// #define BREWPI_SIMULATE 0
-// #endif
-//
-//////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////
-//
-// Enable DS2413 Actuators.
-//
-// #ifndef BREWPI_DS2413
-// #define BREWPI_DS2413 0
-// #endif
-//
-//////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////
-//
-// Enable External temperature Sensor
-//
-#ifndef BREWPI_EXTERNAL_SENSOR
-#define BREWPI_EXTERNAL_SENSOR true
+/**
+ * LCD Display using a shift register.
+ * For diy-shields prior to the revA shield, this should be set to 0.
+ */
+#ifndef BREWPI_SHIFT_LCD
+#if BREWPI_STATIC_CONFIG != BREWPI_SHIELD_DIY
+	#define BREWPI_SHIFT_LCD 1
+#else
+	#define BREWPI_SHIFT_LCD 0
 #endif
-//
-//////////////////////////////////////////////////////////////////////////
+#endif
 
-//////////////////////////////////////////////////////////////////////////
-//
-// This flag virtualizes as much of the hardware as possible, so the code can be run in the AvrStudio simulator, which
-// only emulates the microcontroller, not any attached peripherals.
-//
-// #ifndef BREWPI_EMULATE
-// #define BREWPI_EMULATE 0
-// #endif
-//
-//////////////////////////////////////////////////////////////////////////
+#ifndef BREWPI_BOARD
 
-//////////////////////////////////////////////////////////////////////////
-//
-// Flag to control use of cascaded filter
-//
-// #ifndef TEMP_SENSOR_CASCADED_FILTER
-// #define TEMP_SENSOR_CASCADED_FILTER 1
-// #endif
-//
-//////////////////////////////////////////////////////////////////////////
+#if defined(ESP8266)
+		#define BREWPI_BOARD BREWPI_BOARD_ESP8266
+#else
+        #error Unknown processor type!
+        #define BREWPI_BOARD BREWPI_BOARD_UNKNOWN
+#endif
 
-//////////////////////////////////////////////////////////////////////////
-//
-// Flag to control implementation of TempControl as a static class.
-// Should normally be left alone unles you are experimenting with multi-instancing.
-//
-// #ifndef TEMP_CONTROL_STATIC
-// #define TEMP_CONTROL_STATIC 1
-// #endif
-//
-//////////////////////////////////////////////////////////////////////////
+#endif // ifndef BREWPI_BOARD
 
-//////////////////////////////////////////////////////////////////////////
-//
-// Flag to control use of Fast digital pin functions
-//
-// #ifndef FAST_DIGITAL_PIN
-// #define FAST_DIGITAL_PIN 0
-// #endif
-//
-//////////////////////////////////////////////////////////////////////////
+/**
+ * Enable the simulator. Real sensors/actuators are replaced with simulated versions. In particular, the values reported by
+ * temp sensors are based on a model of the fridge/beer.
+ */
+#ifndef BREWPI_SIMULATE
+#define BREWPI_SIMULATE 0
+#endif
 
-//////////////////////////////////////////////////////////////////////////
-//
-// Enable the LCD menu.
-//
-// #ifndef BREWPI_MENU
-// #define BREWPI_MENU 1
-// #endif
-//
-//////////////////////////////////////////////////////////////////////////
+/**
+ * This flag virtualizes as much of the hardware as possible, so the code can be run in the AvrStudio simulator, which
+ * only emulates the microcontroller, not any attached peripherals.
+ */
+#ifndef BREWPI_EMULATE
+#define BREWPI_EMULATE 0
+#endif
 
-//////////////////////////////////////////////////////////////////////////
-//
-// Enable the LCD display. Without this, a NullDisplay is used
-//
+/**
+ * Enable DS2413 Actuators.
+ */
+#ifndef BREWPI_DS2413
+#define BREWPI_DS2413 0
+#endif
+
+/**
+ * Enable the LCD menu.
+ */
+#ifndef BREWPI_MENU
+#define BREWPI_MENU 1
+#endif
+
+/**
+ * Enable External temperature Sensor
+ */
+#ifndef BREWPI_EXTERNAL_SENSOR
+#define BREWPI_EXTERNAL_SENSOR 1
+#endif
+
+
+/**
+ * Flag to control use of cascaded filter
+ */
+#ifndef TEMP_SENSOR_CASCADED_FILTER
+#define TEMP_SENSOR_CASCADED_FILTER 1
+#endif
+
+/**
+ * Flag to control implementation of TempControl as a static class.
+ * Should normally be left alone unless you are experimenting with multi-instancing.
+ */
+#ifndef TEMP_CONTROL_STATIC
+#define TEMP_CONTROL_STATIC 1
+#endif
+
+/**
+ * Flag to control use of Fast digital pin functions
+ */
+#ifndef FAST_DIGITAL_PIN
+#define FAST_DIGITAL_PIN 0
+#endif
+
+/**
+ * Enable the LCD display. Without this, a NullDisplay is used
+ */
 #ifndef BREWPI_LCD
 #define BREWPI_LCD 1
 #endif
-//
-//////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////
-//
+
 #ifndef BREWPI_BUZZER
 #define BREWPI_BUZZER 1
 #endif
-//
-//////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////
-//
 #ifndef BREWPI_ROTARY_ENCODER
 #define BREWPI_ROTARY_ENCODER 0
 #endif
-//
-//////////////////////////////////////////////////////////////////////////
 
 // default supports 2 buttons
 #ifndef BREWPI_BUTTONS
@@ -169,13 +173,9 @@
 #endif
 
 
-//////////////////////////////////////////////////////////////////////////
-//
-// #ifndef BREWPI_EEPROM_HELPER_COMMANDS
-// #define BREWPI_EEPROM_HELPER_COMMANDS BREWPI_DEBUG || BREWPI_SIMULATE
-// #endif
-//
-//////////////////////////////////////////////////////////////////////////
+#ifndef BREWPI_EEPROM_HELPER_COMMANDS
+#define BREWPI_EEPROM_HELPER_COMMANDS BREWPI_DEBUG || BREWPI_SIMULATE
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -453,6 +453,55 @@ constexpr std::uint8_t max_config_string_length = 32;
 
 #ifndef AUTO_CAP
 #define  AUTO_CAP true
+#endif
+
+#ifndef OPTIMIZE_GLOBAL
+#define OPTIMIZE_GLOBAL 1
+#endif
+
+/*
+ * Disable onewire crc table - it takes up 256 bytes of progmem.
+ */
+#ifndef ONEWIRE_CRC8_TABLE
+#define ONEWIRE_CRC8_TABLE 0
+#endif
+
+/**
+ * @def ONEWIRE_PARASITE_SUPPORT
+ * @brief Enable *parasite power* mode for 1‑Wire devices.
+ *
+ * Connecting 1-Wire devices in parasite power mode is not recommended due to
+ * weaker signal integrity and less reliable timing.
+ *
+ * @note If this macro is **not** defined, we expect all 1-Wire devices to be
+ * powered from a separate VCC line (`ONEWIRE_POWER_PIN` or similar). A warning
+ * is logged if a 1-Wire device is found when not defined.
+ */
+#ifndef ONEWIRE_PARASITE_SUPPORT
+#define ONEWIRE_PARASITE_SUPPORT 0
+#endif
+
+/**
+ * Flag to disable alarm in DallasTemperature library
+ */
+#ifndef REQUIRESALARMS
+#define REQUIRESALARMS false
+#endif
+
+#ifndef BUILD_NUMBER
+#define BUILD_NUMBER 0
+#endif
+
+#ifndef BUILD_NAME
+#define BUILD_NAME "00000000"
+#endif
+
+#ifndef DISPLAY_TIME_HMS
+#define DISPLAY_TIME_HMS 1
+#endif
+
+#ifndef DS2413_SUPPORT_SENSE
+#define DS2413_SUPPORT_SENSE 0
 #endif
 
 #endif

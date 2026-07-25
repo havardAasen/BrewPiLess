@@ -829,16 +829,16 @@ void DeviceManager::enumerateOneWireDevices(EnumerateHardware& h, EnumDevicesCal
 						break;
 		#endif
 					case DeviceHardware::onewireTemp:
-		#if !ONEWIRE_PARASITE_SUPPORT
-						{	// check that device is not parasite powered
+						{
 							DallasTemperature sensor(wire);
-							if(!sensor.readPowerSupply(config.hw.address)){
-								handleEnumeratedDevice(config, h, callback, output);
+							if(sensor.isParasitePowerMode()){
+								logWarning(WARNING_TEMP_SENSOR_PARASITE_MODE);
+								break;
 							}
+
+							handleEnumeratedDevice(config, h, callback, output);
 						}
-		#else
-						handleEnumeratedDevice(config, h, callback, output);
-		#endif
+
 						break;
 					default:
 						handleEnumeratedDevice(config, h, callback, output);

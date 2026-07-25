@@ -466,10 +466,6 @@ constexpr std::uint8_t max_config_string_length = 32;
 #define ONEWIRE_CRC8_TABLE 0
 #endif
 
-#ifndef ONEWIRE_PARASITE_SUPPORT
-#define ONEWIRE_PARASITE_SUPPORT 0
-#endif
-
 /**
  * Flag to disable alarm in DallasTemperature library
  */

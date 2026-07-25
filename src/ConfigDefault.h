@@ -145,11 +145,6 @@
 #define BREWPI_EEPROM_HELPER_COMMANDS BREWPI_DEBUG || BREWPI_SIMULATE
 #endif
 
-// BREWPI_SENSOR_PINS - can be disabled if only using onewire devices
-#ifndef BREWPI_SENSOR_PINS
-#define BREWPI_SENSOR_PINS 1
-#endif
-
 // BREWPI_ACTUATOR_PINS - can be disabled if only using onewire devices
 #ifndef BREWPI_ACTUATOR_PINS
 #define BREWPI_ACTUATOR_PINS 1

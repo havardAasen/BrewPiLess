@@ -169,10 +169,8 @@ public:
 	}
 
 	int8_t enumerateSensorPins(const uint8_t offset) {
-#if BREWPI_SENSOR_PINS && defined(ARDUINO)
 		if (offset==0)
 			return doorPin;
-#endif
 		return -1;
 	}
 

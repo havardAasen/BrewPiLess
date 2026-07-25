@@ -18,6 +18,14 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+/**
+ * Defines global config for the brewpi project. This file is included in every file in the project to ensure conditional
+ * compilation directives are recognized.
+ *
+ * To customize the build, users may add settings to Config.h, or define symbols in the project.
+ */
+
 #ifndef BREWPI_H
 #define BREWPI_H
 
@@ -41,24 +49,10 @@
 #endif
 #endif
 
-/*
- * Defines global config for the brewpi project. This file is included in every file in the project to ensure conditional
- * compilation directives are recognized.
- *
- * ConfigDefault.h contains the default settings, and produces a standard Hex file.
- * To customize the build, users may add settings to Config.h, or define symbols in the project.
- */
-
-#ifdef ARDUINO
-#include "Config.h"
-#else
-#include <Config.h>                     // use search path rather than current directory, so that config.h
-#endif
-#include "ConfigDefault.h"
-
 #include <Arduino.h>
 
 #include "Actuator.h"
+#include "Config.h"
 
 extern ValueActuator alarm;
 

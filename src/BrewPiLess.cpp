@@ -6,7 +6,6 @@
 #include <ESPmDNS.h>
 #endif
 #include <ArduinoOTA.h>
-#include <EEPROM.h>
 #include <FS.h>
 #include <LittleFS.h>
 #include <literals.h>
@@ -33,6 +32,7 @@
 #include "Ticks.h"
 #include "Sensor.h"
 #include "SettingsManager.h"
+#include "ESPEepromAccess.h"
 #include "EepromFormat.h"
 
 
@@ -1352,11 +1352,7 @@ void handleReset()
 
 void brewpi_setup()
 {
-
-#if defined(ESP8266)
-	// We need to initialize the EEPROM on ESP8266
-	EEPROM.begin(MAX_EEPROM_SIZE_LIMIT);
-#endif
+	bpl::EspEepromAccess::begin(MAX_EEPROM_SIZE_LIMIT);
 
 #if BREWPI_BUZZER
 	buzzer.init();

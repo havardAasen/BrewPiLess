@@ -1332,12 +1332,6 @@ DisplayType DISPLAY_REF display = realDisplay;
 
 ValueActuator alarm;
 
-#ifdef ESP8266_WiFi
-
-
-WiFiServer server(23);
-WiFiClient serverClient;
-#endif
 void handleReset()
 {
 #if defined(ESP8266)
@@ -1419,12 +1413,6 @@ void brewpiLoop()
 		display.updateBacklight();
 	}
 
-	//listen for incoming serial connections while waiting to update
-#ifdef ESP8266_WiFi
-	yield();
-	connectClients();
-	yield();
-#endif
 	PiLink::receive();
 
 }

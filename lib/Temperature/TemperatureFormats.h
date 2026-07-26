@@ -112,7 +112,6 @@ temperature multiplyFactorTemperature(temperature factor, temperature b);
 temperature multiplyFactorTemperatureDiff(temperature factor, temperature b);
 
 
-//new ESP8266_ONE
 float temperatureFloatValue(temperature t);
 //new
 #define OPTIMIZE_TEMPERATURE_FORMATS 1 && OPTIMIZE_GLOBAL

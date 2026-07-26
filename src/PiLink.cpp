@@ -98,15 +98,9 @@ void PiLink::printNewLine(){
 void PiLink::printNibble(uint8_t n)
 {
 	n &= 0xF;
-#ifdef ESP8266_WiFi
-	if (piStream && piStream.connected()) { // if WiFi client connected
-		print((char)(n >= 10 ? n - 10 + 'A' : n + '0'));
-	}
-#else
 	if (piStream) { // if Serial connected (on Leonardo)
 		print((char)(n >= 10 ? n - 10 + 'A' : n + '0'));
 	}
-#endif
 }
 #endif
 

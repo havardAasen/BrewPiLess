@@ -36,7 +36,6 @@ strchrnul(const char *s, int c_in)
 }
 #endif
 
-//new  ESP8266_ONE
 char * fixedPointToString(char * s, temperature rawValue, uint8_t numDecimals, uint8_t maxLength){
 	return fixedPointToString(s, long_temperature(rawValue), numDecimals, maxLength);
 }

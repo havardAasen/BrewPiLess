@@ -21,11 +21,6 @@
 #ifndef BREWPI_H
 #define BREWPI_H
 
-// have to use two levels of macro expansion to convert a symbol to a string. see http://gcc.gnu.org/onlinedocs/cpp/Stringification.html
-#define stringify(s) _stringifyDo(s)
-#define _stringifyDo(s) #s
-
-
 // Most pins are only conditionally defined here, allowing definitions to be provided in Config.h for
 // local overrides
 #define BREWPI_SHIELD_DIY   0

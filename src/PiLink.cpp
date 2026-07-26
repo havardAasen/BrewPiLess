@@ -43,10 +43,6 @@
 #include <QueueBuffer.h>
 #endif
 
-#ifdef ESP8266_WiFi_Control
-#include <ESP8266WiFi.h>          //ESP8266 Core WiFi Library
-#endif
-
 #ifdef ARDUINO
 #ifndef ESP8266
 #include "util/delay.h"
@@ -399,12 +395,6 @@ void PiLink::receive(){
 			DeviceManager::enumerateHardware();
 			closeListResponse();
 			break;
-
-#ifdef ESP8266_WiFi_Control
-		case 'w': // Reset WiFi settings
-			WiFi.disconnect(true);
-			break;
-#endif
 
 #if (BREWPI_DEBUG > 0)
 		case 'Z': // zap eeprom

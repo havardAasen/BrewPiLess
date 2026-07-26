@@ -39,10 +39,7 @@
 #include "Display.h"
 
 #include <TemperatureFormats.h>
-
-#ifdef ESP8266_ONE
 #include <QueueBuffer.h>
-#endif
 
 #ifdef ARDUINO
 #ifndef ESP8266
@@ -53,60 +50,11 @@
 #if BREWPI_SIMULATE
 #include "Simulator.h"
 #endif
-//#include <VM_DBG/VM_DBG.h>
- // Rename Serial to piStream, to abstract it for later platform independence
-
-#if BREWPI_EMULATE
-	class MockSerial : public Stream
-	{
-		public:
-		void print(char c) {}
-		void print(const char* c) {}
-		void printNewLine() {}
-                void println() {}
-		int read() { return -1; }
-		int available() { return -1; }
-		void begin(unsigned long) {}
-		size_t write(uint8_t w) { return 1; }
-		int peek() { return -1; }
-		void flush() { };
-		operator bool() { return true; }
-	};
-
-	static MockSerial mockSerial;
-	#define piStream mockSerial
-#elif !defined(ARDUINO)
-        StdIO stdIO;
-        #define piStream stdIO
-#elif defined(ESP8266_WiFi)
-// Just use the serverClient object as it supports all the same functions as Serial
-extern WiFiServer server;
-extern WiFiClient serverClient;
-#define piStream serverClient
-#else
-// Not using ESP8266 WiFi
-#define piStream Serial
-#endif
 
 extern ValueActuator alarm;
 
 bool PiLink::firstPair;
 char PiLink::printfBuff[PRINTF_BUFFER_SIZE];
-#ifdef BUFFER_PILINK_PRINTS
-String PiLink::printBuf;
-#endif
-
-void PiLink::init(){
-#ifndef ESP8266_WiFi
-//piStream.begin(57600);
-#endif
-
-#ifdef BUFFER_PILINK_PRINTS
-printBuf.reserve(2048); // Reserve 2kb for our string (waaaay more than we need, and we have space on the ESP!)
-printBuf = "";
-#endif
-
-}
 
 #ifdef ESP8266
 void formatStandardAnnotation(String &annotation, const char* str_1, const char* str_2, const char* str_3);
@@ -114,10 +62,8 @@ void formatStandardAnnotation(String &annotation, const char* str_1, const char*
 
 extern void handleReset();
 
-#ifdef ESP8266_ONE
 extern QueueBuffer brewPiTxBuffer;
 extern QueueBuffer brewPiRxBuffer;
-#endif
 
 // create a printf like interface to the Arduino Serial function. Format string stored in PROGMEM
 void PiLink::print_P(const char *fmt, ... ){
@@ -127,23 +73,7 @@ void PiLink::print_P(const char *fmt, ... ){
 //	vsnprintf(printfBuff, PRINTF_BUFFER_SIZE, fmt, args);
 	va_end (args);
 
-#ifdef ESP8266_ONE
 	brewPiTxBuffer.print(printfBuff);
-#else
-#ifdef ESP8266_WiFi
-	if (piStream && piStream.connected()) { // if WiFi client connected
-#ifdef BUFFER_PILINK_PRINTS
-		printBuf += printfBuff;
-#else
-		piStream.print(printfBuff);
-#endif
-	}
-#else
-	if(piStream){ // if Serial connected (on Leonardo)
-		piStream.print(printfBuff);
-	}
-#endif
-#endif
 }
 
 // create a printf like interface to the Arduino Serial function. Format string stored in RAM
@@ -152,73 +82,16 @@ void PiLink::print(const char *fmt, ... ){
 	va_start (args, fmt );
 	vsnprintf(printfBuff, PRINTF_BUFFER_SIZE, fmt, args);
 	va_end (args);
-#ifdef ESP8266_ONE
+
 	brewPiTxBuffer.print(printfBuff);
-#else
-#ifdef ESP8266_WiFi
-	if (piStream && piStream.connected()) { // if WiFi client connected
-#ifdef BUFFER_PILINK_PRINTS
-		printBuf += printfBuff;
-#else
-		piStream.print(printfBuff);
-#endif
-	}
-#else
-	if (piStream) { // if Serial connected (on Leonardo)
-		piStream.print(printfBuff);
-	}
-#endif
-#endif
 }
 
-#ifndef ARDUINO
-//void PiLink::print(char c) { piStream.print(c); }
-#endif
-
-#ifdef ESP8266
 void PiLink::print(char out) {
-#ifdef ESP8266_ONE
-brewPiTxBuffer.print(out);
-#else
-#ifdef ESP8266_WiFi
-	if (piStream && piStream.connected()) { // if WiFi client connected
-
-#ifdef BUFFER_PILINK_PRINTS
-		printBuf += out;
-#else
-		piStream.print(out);
-#endif
-	}
-#else
-	if (piStream) { // if Serial connected (on Leonardo)
-		piStream.print(out);
-	}
-#endif
-#endif
+	brewPiTxBuffer.print(out);
 }
-#endif
 
 void PiLink::printNewLine(){
-#ifdef ESP8266_ONE
 	brewPiTxBuffer.println();
-#else
-#ifdef ESP8266_WiFi
-	if (piStream && piStream.connected()) { // if WiFi client connected
-#ifdef BUFFER_PILINK_PRINTS
-		if (printBuf.length() > 0)
-			piStream.print(printBuf);
-		printBuf = "";
-#endif
-		piStream.println();
-		yield();
-		delay(100); // Give the controller enough time to transmit the full message
-	}
-#else
-	if (piStream) { // if Serial connected (on Leonardo)
-		piStream.println();
-	}
-#endif
-#endif
 }
 
 #if BREWPI_EEPROM_HELPER_COMMANDS
@@ -237,37 +110,19 @@ void PiLink::printNibble(uint8_t n)
 }
 #endif
 
-// Trying to enforce that the only thing to talk to piStream is piLink
+// Trying to enforce that the only thing to talk to stream is piLink
 int PiLink::read() {
-#ifdef ESP8266_ONE
 	return brewPiRxBuffer.read();
-#else
-	return piStream.read();
-#endif
 }
 
 void PiLink::receive(){
-#ifdef ESP8266_ONE
 	while (brewPiRxBuffer.available() > 0) {
-#else
-	while (piStream.available() > 0) {
-#endif
 		char inByte = read();
 		switch(inByte){
 		case ' ':
 		case '\n':
 		case '\r':
-#ifdef ESP8266_WiFi  // Control characters sent when establishing a telnet session
-		case 1:
-		case 3:
-		case 29:
-		case 31:
-		case '\'':
-		case 251:
-		case 253:
-		case 255:
-#endif
-			break;
+		break;
 
 #if BREWPI_SIMULATE==1
 		case 'y':
@@ -738,11 +593,7 @@ inline void PiLink::printJsonSeparator() {
 void PiLink::sendJsonPair(const char * name, const char * val){
 	printJsonName(name);
 	// TODO - Fix this to use PiLink.print in all cases
-#ifndef ESP8266
-	piStream.print(val);
-#else
 	print_P(val);
-#endif
 }
 
 void PiLink::sendJsonPair(const char * name, char val){
@@ -763,28 +614,11 @@ void PiLink::sendJsonPair(const char * name, uint8_t val) {
 
 int readNext()
 {
-#ifdef ESP8266_ONE
 	return piLink.read();
-#else
-	uint8_t retries = 0;
-	while (piStream.available()==0) {
-#ifdef ESP8266
-		// changing to delay as delayMicroseconds doesn't yield like delay does
-		delay(1);
-		yield();
-#else
-		_delay_us(100);
-#endif
-		retries++;
-		if (retries >= 10) {
-			return -1;
-		}
-	}
-	return piLink.read();
-#endif
 }
+
 /**
- * Parses a token from the piStream.
+ * Parses a token from the stream.
  * \return true if a token was parsed
  */
 bool parseJsonToken(char* val) {

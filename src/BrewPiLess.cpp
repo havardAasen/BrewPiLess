@@ -1360,8 +1360,6 @@ void brewpi_setup()
 	buzzer.beep(2, 500);
 #endif
 
-	PiLink::init();
-
 	logDebug("started");
 	tempControl.init();
 	SettingsManager::loadSettings();

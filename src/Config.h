@@ -370,8 +370,6 @@
 // TODO - FIgure out what the hell this actually does
 #define BREWPI_INVERT_ACTUATORS 0
 
-#define BUFFER_PILINK_PRINTS 1
-
 #define EARLY_DISPLAY 1
 
 //#ifdef EnableGlycolSupport

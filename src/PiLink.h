@@ -36,7 +36,6 @@ class PiLink{
 	public:
 
 	// There can only be one PiLink object, so functions are static
-	static void init();
 	static void receive();
 
 #if 1 //#ifndef ESP8266 // There is a bug in the ESP8266 implementation that causes these not to work.
@@ -52,7 +51,7 @@ class PiLink{
 
 	static void parseJson(ParseJsonCallback fn, void* data=nullptr);
 
-	static int read();  // Adding so we can completely abstract away piStream outside of piLink
+	static int read();
 
 	private:
 
@@ -156,9 +155,6 @@ private:
 	friend class PiLinkTest;
 	friend class Logger;
 	static char printfBuff[PRINTF_BUFFER_SIZE];
-#ifdef BUFFER_PILINK_PRINTS
-	static String printBuf;
-#endif
 };
 
 extern PiLink piLink;

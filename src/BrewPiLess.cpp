@@ -18,6 +18,7 @@
 //{ brewpi
 #include <OneWire.h>
 
+#include "Actuator.h"
 #include "Ticks.h"
 #include "Display.h"
 #include "TempControl.h"

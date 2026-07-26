@@ -24,6 +24,7 @@
 #include "stddef.h"
 #include "PiLink.h"
 
+#include "Actuator.h"
 #include "Version.h"
 #include "TempControl.h"
 #include "TemperatureConversion.h"
@@ -86,6 +87,8 @@ extern WiFiClient serverClient;
 // Not using ESP8266 WiFi
 #define piStream Serial
 #endif
+
+extern ValueActuator alarm;
 
 bool PiLink::firstPair;
 char PiLink::printfBuff[PRINTF_BUFFER_SIZE];

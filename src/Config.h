@@ -351,7 +351,6 @@
 
 #ifdef ESP8266
 //#define ESP8266_WiFi 1			// This disables Serial and enables WiFi support
-//#define ESP8266_WiFi_Control 1	// This adds the headers for WiFi support (so you can disconnect from WiFi via serial)
 #define ESP8266_ONE 1
 #endif
 

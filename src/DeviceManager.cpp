@@ -801,7 +801,7 @@ void DeviceManager::enumerateOneWireDevices(EnumerateHardware& h, EnumDevicesCal
 //		logDebug("Enumerating one-wire devices on pin %d", pin);
 		OneWire* wire = oneWireBus(pin);
 		if (wire!=nullptr) {
-			wire->reset_search();
+			wire->begin(pin);
 			while (wire->search(config.hw.address)) {
 				// hardware device type from OneWire family ID
 				switch (config.hw.address[0]) {

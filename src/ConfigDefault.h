@@ -181,6 +181,17 @@
 #define DISPLAY_TIME_HMS 1
 #endif
 
+/**
+ * @def ONEWIRE_PARASITE_SUPPORT
+ * @brief Enable *parasite power* mode for 1‑Wire devices.
+ *
+ * Connecting 1-Wire devices in parasite power mode is not recommended due to
+ * weaker signal integrity and less reliable timing.
+ *
+ * @note If this macro is **not** defined, we expect all 1-Wire devices to be
+ * powered from a separate VCC line (`ONEWIRE_POWER_PIN` or similar). A warning
+ * is logged if a 1-Wire device is found when not defined.
+ */
 #ifndef ONEWIRE_PARASITE_SUPPORT
 #define ONEWIRE_PARASITE_SUPPORT 0
 #endif

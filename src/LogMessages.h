@@ -30,7 +30,7 @@
 */
 
 /* bump this version number when changing this file and copy the new version to the brewpi-script repository. */
-#define BREWPI_LOG_MESSAGES_VERSION 1
+#define BREWPI_LOG_MESSAGES_VERSION 2
 
 #define MSG(errorID, errorString, ...) errorID
 
@@ -64,7 +64,10 @@ enum warningMessages{
 	MSG(WARNING_TEMP_SENSOR_DISCONNECTED, "Temperature sensor disconnected pin %d, address %s", pinNr, addressString),
 
 // SettingsManager.cpp
-	MSG(WARNING_START_IN_SAFE_MODE, "EEPROM Settings not available. Starting in safe mode.")
+	MSG(WARNING_START_IN_SAFE_MODE, "EEPROM Settings not available. Starting in safe mode."),
+
+// DeviceManager.cpp
+	MSG(WARNING_TEMP_SENSOR_PARASITE_MODE, "Temperature sensor in unsupported parasite power mode")
 }; // END enum warningMessages
 
 // Info messages

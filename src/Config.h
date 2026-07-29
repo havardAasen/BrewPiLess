@@ -55,6 +55,12 @@
 #define BREWPI_LOG_DEBUG 0
 #endif
 
+#define BREWPI_SHIELD_DIY   0
+#define BREWPI_SHIELD_REV_A	1
+#define BREWPI_SHIELD_REV_C	2
+
+#define BREWPI_BOARD_UNKNOWN '?'
+#define BREWPI_BOARD_ESP8266 'e'
 
 // Define which brewpi shield is used.
 // BREWPI_SHIELD_REV_A The RevA shield (ca. Feb 2013), two OneWire buses, door, heat, cool.

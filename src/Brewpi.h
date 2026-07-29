@@ -31,12 +31,6 @@
 
 // Most pins are only conditionally defined here, allowing definitions to be provided in Config.h for
 // local overrides
-#define BREWPI_SHIELD_DIY   0
-#define BREWPI_SHIELD_REV_A	1
-#define BREWPI_SHIELD_REV_C	2
-
-#define BREWPI_BOARD_UNKNOWN '?'
-#define BREWPI_BOARD_ESP8266 'e'
 
 #include <Arduino.h>
 

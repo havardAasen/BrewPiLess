@@ -15,16 +15,38 @@
  */
 
 #include "FilterFixed.h"
-#include <stdlib.h>
-#include <limits.h>
+#include <cstdlib>
 #include <TemperatureFormats.h>
 
-temperature FixedFilter::add(temperature val){
-	temperature_precise returnVal = addDoublePrecision(tempRegularToPrecise(val));
+FixedFilter::FixedFilter()
+{
+    setCoefficients(20); /* default to a b value of 2 */
+}
+
+void FixedFilter::init(const temperature val){
+    xv[0] = val;
+    xv[0] = tempRegularToPrecise(xv[0]); // 16 extra bits are used in the filter for the fraction part
+
+    xv[1] = xv[0];
+    xv[2] = xv[0];
+
+    yv[0] = xv[0];
+    yv[1] = xv[0];
+    yv[2] = xv[0];
+}
+
+void FixedFilter::setCoefficients(uint8_t bValue)
+{
+    a = bValue * 2 + 4;
+    b = bValue;
+}
+
+temperature FixedFilter::add(const temperature val){
+	const temperature_precise returnVal = addDoublePrecision(tempRegularToPrecise(val));
 	return tempPreciseToRegular(returnVal);
 }
 
-temperature_precise FixedFilter::addDoublePrecision(temperature_precise val){
+temperature_precise FixedFilter::addDoublePrecision(const temperature_precise val){
 	xv[2] = xv[1];
 	xv[1] = xv[0];
 	xv[0] = val;
@@ -41,33 +63,40 @@ temperature_precise FixedFilter::addDoublePrecision(temperature_precise val){
 	return yv[0];
 }
 
-
-void FixedFilter::init(temperature val){
-		xv[0] = val;
-		xv[0] = tempRegularToPrecise(xv[0]); // 16 extra bits are used in the filter for the fraction part
-
-		xv[1] = xv[0];
-		xv[2] = xv[0];
-
-		yv[0] = xv[0];
-		yv[1] = xv[0];
-		yv[2] = xv[0];
+temperature FixedFilter::readInput() const
+{
+    return static_cast<temperature>(xv[0] >> 16);
 }
 
-temperature FixedFilter::detectPosPeak(){
+temperature FixedFilter::readOutput() const
+{
+    return static_cast<temperature>(yv[0] >> 16);
+}
+
+temperature_precise FixedFilter::readOutputDoublePrecision() const
+{
+    return yv[0];
+}
+
+temperature_precise FixedFilter::readPrevOutputDoublePrecision() const
+{
+    return yv[1];
+}
+
+temperature FixedFilter::detectPosPeak() const
+{
 	if(yv[0] < yv[1] && yv[1] >= yv[2]){
 		return tempPreciseToRegular(yv[1]);
 	}
-	else{
-		return INVALID_TEMP;
-	}
+
+    return INVALID_TEMP;
 }
 
-temperature FixedFilter::detectNegPeak(){
+temperature FixedFilter::detectNegPeak() const
+{
 	if(yv[0] > yv[1] && yv[1] <= yv[2]){
 		return tempPreciseToRegular(yv[1]);
 	}
-	else{
-		return INVALID_TEMP;
-	}
+
+    return INVALID_TEMP;
 }

@@ -19,50 +19,73 @@
 
 #include "FilterFixed.h"
 #include "FilterCascaded.h"
-#include <stdlib.h>
-#include <limits.h>
+
+#include <cstdlib>
 #include <TemperatureFormats.h>
 
-CascadedFilter::CascadedFilter() {
-	setCoefficients(2); // default to a b value of 2
+CascadedFilter::CascadedFilter()
+{
+    setCoefficients(2);
 }
 
-void CascadedFilter::setCoefficients(uint8_t bValue){
-	for(auto& section : sections){
-		section.setCoefficients(bValue);
-	}
+void CascadedFilter::init(const temperature val)
+{
+    for (auto &section: sections) {
+        section.init(val);
+    }
 }
 
-temperature CascadedFilter::add(temperature val){
-	temperature_precise valDoublePrecision = tempRegularToPrecise(val);
-	valDoublePrecision = addDoublePrecision(valDoublePrecision);
-	// return output, shifted back to single precision
-	return tempPreciseToRegular(valDoublePrecision);
+void CascadedFilter::setCoefficients(const uint8_t bValue)
+{
+    for (auto &section: sections) {
+        section.setCoefficients(bValue);
+    }
 }
 
-temperature_precise CascadedFilter::addDoublePrecision(temperature_precise val){
-	temperature_precise input = val;
-	// input is input for next section, which is the output of the previous section
-	for(auto& section : sections){
-		input = section.addDoublePrecision(input);
-	}
-	return input;
+temperature CascadedFilter::add(const temperature val)
+{
+    temperature_precise valDoublePrecision = tempRegularToPrecise(val);
+    valDoublePrecision = addDoublePrecision(valDoublePrecision);
+    // return output, shifted back to single precision
+    return tempPreciseToRegular(valDoublePrecision);
 }
 
-
-temperature CascadedFilter::readInput(){
-	return sections[0].readInput(); // return input of first section
+temperature_precise CascadedFilter::addDoublePrecision(const temperature_precise val)
+{
+    temperature_precise input = val;
+    // input is input for next section, which is the output of the previous section
+    for (auto &section: sections) {
+        input = section.addDoublePrecision(input);
+    }
+    return input;
 }
 
-temperature_precise CascadedFilter::readOutputDoublePrecision(){
-	return sections[NUM_SECTIONS-1].readOutputDoublePrecision(); // return output of last section
+temperature CascadedFilter::readInput()
+{
+    return sections[0].readInput();
 }
 
-temperature_precise CascadedFilter::readPrevOutputDoublePrecision(){
-	return sections[NUM_SECTIONS-1].readPrevOutputDoublePrecision(); // return previous output of last section
+temperature CascadedFilter::readOutput()
+{
+    return sections[numberOfSections - 1].readOutput();
 }
 
-void CascadedFilter::init(temperature val){
-	for (auto& section : sections)
-		section.init(val);
+temperature_precise CascadedFilter::readOutputDoublePrecision()
+{
+    return sections[numberOfSections - 1].readOutputDoublePrecision();
+}
+
+temperature_precise CascadedFilter::readPrevOutputDoublePrecision()
+{
+    return sections[numberOfSections - 1].readPrevOutputDoublePrecision();
+}
+
+temperature CascadedFilter::detectPosPeak()
+{
+    return sections[numberOfSections - 1].detectPosPeak();
+}
+
+temperature CascadedFilter::detectNegPeak()
+{
+    return sections[numberOfSections - 1].detectNegPeak();
 }

@@ -28,33 +28,32 @@
 // Use 3 filter sections. This gives excellent filtering, without adding too much delay.
 // For 3 sections the stop band attenuation is 3x the single section attenuation in dB.
 // The delay is also tripled.
-#define NUM_SECTIONS 3
 
-class CascadedFilter{
-	public:
-	// CascadedFilter implements a filter that consists of multiple second order secions.
-	FixedFilter sections[NUM_SECTIONS];
+class CascadedFilter {
+public:
+    CascadedFilter();
 
-	public:
-	CascadedFilter();
-	void init(temperature val);
-	void setCoefficients(uint8_t bValue);
-	temperature add(temperature val); // adds a value and returns the most recent filter output
-	temperature_precise addDoublePrecision(temperature_precise val);
-	temperature readInput(); // returns the most recent filter input
+    void init(temperature val);
+    void setCoefficients(uint8_t bValue);
 
-	temperature readOutput(){
-		return sections[NUM_SECTIONS-1].readOutput(); // return output of last section
-	}
-	temperature_precise readOutputDoublePrecision();
-	temperature_precise readPrevOutputDoublePrecision();
+    // adds a value and returns the most recent filter output
+    temperature add(temperature val);
+    temperature_precise addDoublePrecision(temperature_precise val);
 
-	temperature detectPosPeak(){
-		return sections[NUM_SECTIONS-1].detectPosPeak(); // detect peaks in last section
-	}
-	temperature detectNegPeak(){
-		return sections[NUM_SECTIONS-1].detectNegPeak(); // detect peaks in last section
-	}
+    // returns the most recent filter input
+    temperature readInput();
+    temperature readOutput();
+
+    temperature_precise readOutputDoublePrecision();
+    temperature_precise readPrevOutputDoublePrecision();
+
+    // detect peaks in last section
+    temperature detectPosPeak();
+    temperature detectNegPeak();
+
+private:
+    static constexpr uint8_t numberOfSections = 3;
+    FixedFilter sections[numberOfSections];
 };
 
 #endif

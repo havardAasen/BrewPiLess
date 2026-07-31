@@ -26,7 +26,7 @@
 H(z) = 2^-a * -------------------------------------------------
 				1  + (-2 + 2^-b)z^-1  + (1-2^-b + 4* 2^-a)z^-2
 
- All filter coefficients are powers of two, so the filter can be efficiently implemented with bit shifts
+ All filter coefficients are powers of two, so the filter can be efficiently implemented with bit shifts.
  The DC gain is exactly 1.
  For real poles, and therefore no overshoot, use a <= 2b+4.
  To calculate the poles, you can use this wolfram alpha link:
@@ -67,45 +67,45 @@ H(z) = 2^-a * -------------------------------------------------
 
 #include <TemperatureFormats.h>
 
-class FixedFilter{
-	public:
-		// input and output arrays
-		temperature_precise xv[3]{};
-		temperature_precise yv[3]{};
-		uint8_t a{};
-		uint8_t b{};
+class FixedFilter {
+public:
+    FixedFilter();
 
-	public:
-		FixedFilter() { setCoefficients(20); /* default to a b value of 2 */ }
-		void init(temperature val);
+    void init(temperature val);
+    void setCoefficients(uint8_t bValue);
 
-		void setCoefficients(uint8_t bValue) {
-			a = bValue*2+4;
-			b = bValue;
-		}
+    // adds a value and returns the most recent filter output
+    temperature add(temperature val);
+    temperature_precise addDoublePrecision(temperature_precise val);
 
-		temperature add(temperature val); // adds a value and returns the most recent filter output
-		temperature_precise addDoublePrecision(temperature_precise val);
+    /** Returns the latest filter input. */
+    [[nodiscard]] temperature readInput() const;
 
-		temperature readOutput(){
-			return yv[0]>>16; // return 16 most significant bits of most recent output
-		}
+    /** Returns the latest filter output. */
+    [[nodiscard]] temperature readOutput() const;
 
-		temperature readInput(){
-			return xv[0]>>16; // return 16 most significant bits of most recent input
-		}
+    [[nodiscard]] temperature_precise readOutputDoublePrecision() const;
+    [[nodiscard]] temperature_precise readPrevOutputDoublePrecision() const;
 
-		temperature_precise readOutputDoublePrecision(){
-			return yv[0];
-		}
+    /**
+     * @brief Detects the positive temperature peak.
+     * @return The detected positive peak temperature, or @c INVALID_TEMP if no
+     *         peak could be found.
+     */
+    [[nodiscard]] temperature detectPosPeak() const;
 
-		temperature_precise readPrevOutputDoublePrecision(){
-			return yv[1];
-		}
+    /**
+     * @brief Detects the negative temperature peak.
+     * @return The detected negative peak temperature, or @c INVALID_TEMP if no
+     *         peak could be found.
+     */
+    [[nodiscard]] temperature detectNegPeak() const;
 
-		temperature detectPosPeak(); //returns positive peak or INVALID_TEMP when no peak has been found
-		temperature detectNegPeak(); //returns negative peak or INVALID_TEMP when no peak has been found
-
+private:
+    temperature_precise xv[3]{};
+    temperature_precise yv[3]{};
+    uint8_t a{};
+    uint8_t b{};
 };
 
 #endif

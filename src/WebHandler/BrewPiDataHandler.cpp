@@ -10,6 +10,7 @@
 #include "PressureMonitor.h"
 #include "TimeKeeper.h"
 #include "WiFiSetup.h"
+#include "WatchdogTimerHelper.h"
 
 #include <ESPAsyncWebServer.h>
 #include <LittleFS.h>
@@ -205,9 +206,9 @@ void bpl::webHandler::BrewPiDataHandler::handleFileDelete(AsyncWebServerRequest 
         return;
     }
 
-    EspClass::wdtDisable();
+    bpl::watchdog::disable();
     LittleFS.remove(request->getParam("path")->value());
-    EspClass::wdtEnable(10);
+    bpl::watchdog::enable();
     request->send(204);
 }
 
@@ -220,6 +221,7 @@ void bpl::webHandler::BrewPiDataHandler::handleFilePuts(AsyncWebServerRequest *r
     }
 
     EspClass::wdtDisable();
+    bpl::watchdog::disable();
     const String file = request->getParam("path")->value();
     File fh = LittleFS.open(file, "w");
     if (!fh) {
@@ -228,7 +230,7 @@ void bpl::webHandler::BrewPiDataHandler::handleFilePuts(AsyncWebServerRequest *r
     }
     fh.print(request->getParam("content", true)->value());
     fh.close();
-    EspClass::wdtEnable(10);
+    bpl::watchdog::enable();
     request->send(201);
     DBG_PRINTF("fputs path=%s\n", file.c_str());
 }

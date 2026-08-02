@@ -65,7 +65,8 @@ void ExternalData::sseNotify(char *buf){
 					strgravity,
 					strtilt,
 					strRssi,
-					_lastUpdate,slowpassfilter,_cfg->stableThreshold,
+					static_cast<std::int64_t>(_lastUpdate),
+					slowpassfilter,_cfg->stableThreshold,
 					_cfg->numberCalPoints,
                     _cfg->ispindelCalibrationBaseTemp,
 					_cfg->usePlato);

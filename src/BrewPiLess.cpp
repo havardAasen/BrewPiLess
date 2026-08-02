@@ -404,13 +404,13 @@ public:
   			}
 	 	}else if(request->method() == HTTP_GET &&  request->url() == TIME_PATH){
 			AsyncResponseStream *response = request->beginResponseStream(asyncsrv::T_application_json);
-			response->printf("{\"t\":\"%s\",\"e\":%lld,\"o\":%d}",TimeKeeper.getDateTimeStr(),TimeKeeper.getTimeSeconds(),TimeKeeper.getTimezoneOffset());
+			response->printf("{\"t\":\"%s\",\"e\":%lld,\"o\":%d}",TimeKeeper.getDateTimeStr(),static_cast<std::int64_t>(TimeKeeper.getTimeSeconds()),TimeKeeper.getTimezoneOffset());
 			request->send(response);
 		}else if(request->method() == HTTP_POST &&  request->url() == TIME_PATH){
 			if(request->hasParam("time", true)){
 				  const AsyncWebParameter* tvalue = request->getParam("time", true);
 				  time_t time=(time_t)tvalue->value().toInt();
-  				DBG_PRINTF("Set Time:%llu from:%s\n",time,tvalue->value().c_str());
+  				DBG_PRINTF("Set Time:%lld from:%s\n",static_cast<std::int64_t>(time),tvalue->value().c_str());
 	 			TimeKeeper.setCurrentTime(time);
 			 }
 			 if(request->hasParam("off", true)){
@@ -750,21 +750,21 @@ void greeting(const std::function<void(const char*)>& sendFunc)
 
 	sprintf(buf,"A:{\"nn\":\"%s\",\"ver\":\"%s\",\"rssi\":%d,\"tm\":%lld,\"off\":%u,\"log\":\"%s\",\"cap\":{%s},\"ptcs\":%s}"
 		,syscfg->titlelabel,BPL_VERSION,WiFi.RSSI(),
-		TimeKeeper.getTimeSeconds(),TimeKeeper.getTimezoneOffset(),
+		static_cast<std::int64_t>(TimeKeeper.getTimeSeconds()),TimeKeeper.getTimezoneOffset(),
 		logname, capstate.c_str(),ptcstate.c_str());
 
 
 #else
 	sprintf(buf,"A:{\"nn\":\"%s\",\"ver\":\"%s\",\"rssi\":%d,\"tm\":%lld,\"off\":%u,\"log\":\"%s\",\"cap\":{%s}}"
 		,syscfg->titlelabel,BPL_VERSION,WiFi.RSSI(),
-		TimeKeeper.getTimeSeconds(),TimeKeeper.getTimezoneOffset(),
+		static_cast<std::int64_t>(TimeKeeper.getTimeSeconds()),TimeKeeper.getTimezoneOffset(),
 		logname, capstate.c_str());
 #endif
 	
 #else
 	sprintf(buf,"A:{\"nn\":\"%s\",\"ver\":\"%s\",\"rssi\":%d,\"tm\":%lld,\"off\":%u, \"log\":\"%s\"}"
 		,syscfg->titlelabel,BPL_VERSION,WiFi.RSSI(),
-		TimeKeeper.getTimeSeconds(),TimeKeeper.getTimezoneOffset(),
+		static_cast<std::int64_t>(TimeKeeper.getTimeSeconds()),TimeKeeper.getTimezoneOffset(),
 		logname);
 #endif
 

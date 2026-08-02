@@ -82,7 +82,7 @@ size_t dataSprintf(char *buffer,const char *format,const char* invalid)
 				float tilt=externalData.tiltValue();
 				d += printFloat(buffer+d,tilt,2,isTiltAngleValid(tilt),invalid);
 			}else if(ch == 'u'){
-				d += sprintf(buffer+d, "%lld",  externalData.lastUpdate());
+				d += sprintf(buffer+d, "%lld",  static_cast<std::int64_t>(externalData.lastUpdate()));
 			}else if(ch == 'U'){
 				char unit;
 				uint8_t unused1,unused2;

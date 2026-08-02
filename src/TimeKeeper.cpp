@@ -32,7 +32,7 @@ std::time_t TimeKeeperClass::_queryServer()
         secs = sntp_get_current_timestamp();
 #endif
         if (secs > 1546265623) {
-            DBG_PRINTF("TimeKeeper: Time from NTP: %lld\n", secs);
+            DBG_PRINTF("TimeKeeper: Time from NTP: %lld\n", static_cast<std::int64_t>(secs));
             ntp_synced_ = true;
             break;
         }
@@ -60,7 +60,7 @@ void TimeKeeperClass::begin()
     reference_epoc_ += 300; // add 5 minutes.
     reference_system_time_ = millis();
     last_saved_ = reference_epoc_;
-    DBG_PRINTF("Load saved time: %lld\n", reference_epoc_);
+    DBG_PRINTF("Load saved time: %lld\n", static_cast<std::int64_t>(reference_epoc_));
 }
 
 
@@ -85,7 +85,7 @@ void TimeKeeperClass::begin(const char *server1, const char *server2, const char
     delay(500);
     if (secs < 1546265623) {
         secs = loadTime() + 30;
-        DBG_PRINTF("TimeKeeper: Failed to connect to NTP, load time: %lld\n", secs);
+        DBG_PRINTF("TimeKeeper: Failed to connect to NTP, load time: %lld\n", static_cast<std::int64_t>(secs));
     }
     reference_system_time_ = millis();
     reference_epoc_ = secs;

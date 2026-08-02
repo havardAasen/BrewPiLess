@@ -1,11 +1,9 @@
-#include <FS.h>
-#include <ArduinoJson.h>
-
 #include <utility>
+
 #include "ParasiteTempController.h"
 #include "DeviceManager.h"
-
 #include "Config.h"
+
 #define MIN_TEM_DIFF 0.5
 #define MIN_COOL_TIME 180000 //ms
 #define MIN_IDLE_TIME 180000 //ms

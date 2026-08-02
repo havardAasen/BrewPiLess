@@ -14,7 +14,6 @@
 
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
-#include <ArduinoJson.h>
 //{ brewpi
 #include <OneWire.h>
 

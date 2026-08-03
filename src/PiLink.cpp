@@ -41,6 +41,10 @@
 #include <TemperatureFormats.h>
 #include <QueueBuffer.h>
 
+#if BREWPI_EEPROM_HELPER_COMMANDS
+#include "ESPEepromAccess.h"
+#endif
+
 #ifdef ARDUINO
 #ifndef ESP8266
 #include "util/delay.h"
@@ -98,9 +102,7 @@ void PiLink::printNewLine(){
 void PiLink::printNibble(uint8_t n)
 {
 	n &= 0xF;
-	if (piStream) { // if Serial connected (on Leonardo)
-		print((char)(n >= 10 ? n - 10 + 'A' : n + '0'));
-	}
+	print((char)(n >= 10 ? n - 10 + 'A' : n + '0'));
 }
 #endif
 
@@ -212,13 +214,13 @@ void PiLink::receive(){
 					printNewLine();
 					print(',');
 				}
-				piLink.print('\"');
+				print('\"');
 				for (uint8_t j=0; j<64; j++) {
-					uint8_t d = eepromAccess.readByte(i++);
+					const uint8_t d = bpl::EspEepromAccess::readByte(i++);
 					printNibble(d>>4);
 					printNibble(d);
 				}
-				piLink.print('\"');
+				print('\"');
 			}
 			closeListResponse();
 			break;
@@ -250,7 +252,7 @@ void PiLink::receive(){
 
 #if (BREWPI_DEBUG > 0)
 		case 'Z': // zap eeprom
-			eepromManager.zapEeprom();
+			EepromManager::resetEeprom();
 			logInfo(INFO_EEPROM_ZAPPED);
 			break;
 #endif

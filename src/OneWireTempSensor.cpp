@@ -58,7 +58,11 @@ bool OneWireTempSensor::init()
 	// scanning each sensor since this brings things to a halt.
 	logDebug("init onewire sensor");
 	const temperature temp = read();
+#if BREWPI_DEBUG
+	char addressString[17];
+	printBytes(sensorAddress, 8, addressString);
 	DEBUG_ONLY(logInfoIntStringTemp(INFO_TEMP_SENSOR_INITIALIZED, oneWirePin, addressString, temp));
+#endif
 	const bool success = temp!=TEMP_SENSOR_DISCONNECTED;
 
 	logDebug("init onewire sensor complete %d", success);

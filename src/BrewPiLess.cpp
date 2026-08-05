@@ -80,9 +80,6 @@ extern "C" {
 #include "PressureMonitor.h"
 #endif
 
-//WebSocket seems to be unstable, at least on iPhone.
-//Go back to ServerSide Event.
-#define ResponseAppleCNA true
 #define CaptivePortalTimeout 180
 
 /**************************************************************************************/
@@ -659,38 +656,6 @@ public:
 };
 
 BrewPiWebHandler brewPiWebHandler;
-
-#if ResponseAppleCNA == true
-
-class AppleCNAHandler: public AsyncWebHandler
-{
-public:
-	AppleCNAHandler(){}
-	void handleRequest(AsyncWebServerRequest *request) override{
-		request->send(200, asyncsrv::T_text_html, "<HTML><HEAD><TITLE>Success</TITLE></HEAD><BODY>Success</BODY></HTML>");
-	}
-	bool canHandle(AsyncWebServerRequest *request) const override{
-		String host=request->host();
-		//DBG_PRINTF("Request host:");
-		//DBG_PRINTF(host.c_str());
-		//DBG_PRINTF("\n");
-  		if(host.indexOf(String("apple")) >=0
-  		|| host.indexOf(String("itools")) >=0
-  		|| host.indexOf(String("ibook")) >=0
-  		|| host.indexOf(String("airport")) >=0
-  		|| host.indexOf(String("thinkdifferent")) >=0
-  		|| host.indexOf(String("akamai")) >=0 ){
-  			return true;
-  		}
-  		return false;
-	}
-};
-
-
-
-AppleCNAHandler appleCNAHandler;
-#endif //#if ResponseAppleCNA == true
-
 
 #if AUTO_CAP
 String capControlStatus()
@@ -1521,10 +1486,6 @@ void setup(void){
 	// start WEB update pages.
 #if (DEVELOPMENT_OTA == true) || (DEVELOPMENT_FILEMANAGER == true)
 	ESPUpdateServer_setup(syscfg->username,syscfg->password);
-#endif
-
-#if ResponseAppleCNA == true
-	webServer->addHandler(&appleCNAHandler);
 #endif
 
 	ws.onEvent(onWsEvent);

@@ -34,6 +34,7 @@
 #include "SettingsManager.h"
 #include "ESPEepromAccess.h"
 #include "EepromFormat.h"
+#include "WebHandler/NetworkDataHandler.h"
 
 
 #if BREWPI_SIMULATE
@@ -124,10 +125,6 @@ extern "C" {
 #if AUTO_CAP
 #define CAPPER_PATH "/cap"
 #endif
-
-#define WIFI_SCAN_PATH "/wifiscan"
-#define WIFI_CONNECT_PATH "/wificon"
-#define WIFI_DISC_PATH "/wifidisc"
 
 #define MQTT_PATH "/mqtt"
 #if SupportPressureTransducer
@@ -1166,111 +1163,7 @@ public:
 	bool isRequestHandlerTrivial() const final {return false;}
 };
 ExternalDataHandler externalDataHandler;
-
-IPAddress scanIP(char const *str)
-{
-    // DBG_PRINTF("Scan IP length=%d :\"%s\"\n",len,buffer);
-    // this doesn't work. the last byte always 0: ip.fromString(buffer);
-
-    std::array<std::uint8_t, 4> Parts{};
-    std::uint8_t Part = 0;
-    char *ptr = (char *) str;
-    for (; *ptr; ptr++) {
-        char c = *ptr;
-        if (c == '.') {
-            Part++;
-            continue;
-        }
-        Parts[Part] *= 10;
-        Parts[Part] += c - '0';
-    }
-
-    IPAddress sip(Parts[0], Parts[1], Parts[2], Parts[3]);
-    return sip;
-}
-
-class NetworkConfig:public AsyncWebHandler
-{
-public:
-	void handleRequest(AsyncWebServerRequest *request) override{
-		if(request->url() == WIFI_SCAN_PATH) handleNetworkScan(request);
-		else if(request->url() == WIFI_CONNECT_PATH) handleNetworkConnect(request);
-		else if(request->url() == WIFI_DISC_PATH) handleNetworkDisconnect(request);
-	}
-
-	void handleNetworkScan(AsyncWebServerRequest *request){
-		if(WiFiSetup.requestScanWifi())
-			request->send(202);
-		else 
-			request->send(403);
-	}
-
-	void handleNetworkDisconnect(AsyncWebServerRequest *request){
-		theSettings.systemConfiguration()->wifiMode=WIFI_AP;
-		WiFiSetup.setMode(WIFI_AP);
-
-		request->send(202);
-	}
-
-	
-	void handleNetworkConnect(AsyncWebServerRequest *request){
-
-		if(!request->hasParam("nw",true)){
-			request->send(400);
-			return;
-		}
-		
-		SystemConfiguration *syscfg=theSettings.systemConfiguration();
-		
-
-			String ssid=request->getParam("nw",true)->value();
-			const char *pass=nullptr;
-			if(request->hasParam("pass",true)){
-				pass = request->getParam("pass",true)->value().c_str();
-			}
-			if(request->hasParam("ip",true) && request->hasParam("gw",true) && request->hasParam("nm",true)){
-				DBG_PRINTF("static IP\n");
-				IPAddress ip=scanIP(request->getParam("ip",true)->value().c_str());
-				IPAddress gw=scanIP(request->getParam("gw",true)->value().c_str());
-				IPAddress nm=scanIP(request->getParam("nm",true)->value().c_str());
-				
-				IPAddress dns=request->hasParam("dns",true)? scanIP(request->getParam("dns",true)->value().c_str()):IPAddress(0,0,0,0);
-
-				WiFiSetup.connect(ssid.c_str(),pass, 
-							ip,
-							gw,
-							nm,
-							dns
-				);
-				// save to config
-				syscfg->ip = ip;
-				syscfg->gw = gw;
-				syscfg->netmask = nm;
-				theSettings.save();
-			}else{
-				WiFiSetup.connect(ssid.c_str(),pass);
-				DBG_PRINTF("dynamic IP\n");
-			}
-
-		DBG_PRINTF("Saving WiFI credentials for SSID: %s\n",ssid.c_str());
-		theSettings.setWiFiConfiguration(ssid.c_str(),pass);
-		theSettings.save();
-
-		request->send(201);
-	}
-
-	bool canHandle(AsyncWebServerRequest *request) const override{
-		if(request->url() == WIFI_SCAN_PATH) return true; 
-		else if(request->url() == WIFI_CONNECT_PATH) return true;
-		else if(request->url() == WIFI_DISC_PATH) return true;
-
-	 	return false;
-	}
-
-	bool isRequestHandlerTrivial() const final {return false;}
-};
-
-NetworkConfig networkConfig;
+bpl::webHandler::NetworkDataHandler networkConfig;
 
 void wiFiEvent(const char* msg){
 	char *buff=(char*)malloc(strlen(msg) +3);

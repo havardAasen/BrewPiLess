@@ -34,6 +34,7 @@
 #include "SettingsManager.h"
 #include "ESPEepromAccess.h"
 #include "EepromFormat.h"
+#include "WebHandler/ExternalDataHandler.h"
 #include "WebHandler/NetworkDataHandler.h"
 
 
@@ -107,7 +108,6 @@ extern "C" {
 #define FLIST_PATH       "/list"
 #define DELETE_PATH       "/rm"
 
-#define GRAVITY_PATH       "/gravity"
 
 #define BEER_PROFILE_PATH       "/tschedule"
 
@@ -117,10 +117,6 @@ extern "C" {
 #if EanbleParasiteTempControl
 #define ParasiteTempControlPath "/ptc"
 #endif
-
-
-#define GravityDeviceConfigPath "/gdc"
-#define GravityFormulaPath "/coeff"
 
 #if AUTO_CAP
 #define CAPPER_PATH "/cap"
@@ -911,7 +907,6 @@ void sayHello()
 }
 #endif 
 
-#define MAX_DATA_SIZE 256
 
 class LogHandler:public AsyncWebHandler
 {
@@ -1047,122 +1042,7 @@ public:
 LogHandler logHandler;
 
 
-class ExternalDataHandler:public AsyncWebHandler
-{
-private:
-	char _buffer[MAX_DATA_SIZE+2];
-	char *_data;
-
-	size_t _dataLength;
-	bool   _error;
-
-	void processGravity(AsyncWebServerRequest *request,char data[],size_t length){
-		if(length ==0) return request->send(500);;
-		SystemConfiguration *syscfg=theSettings.systemConfiguration();
-        uint8_t error;
-		if(externalData.processGravityReport(data,length,request->authenticate(syscfg->username,syscfg->password),error)){
-    		request->send(202);
-		}else{
-		    if(error == ErrorAuthenticateNeeded) return request->requestAuthentication();
-		    else request->send(500);
-		}
-	}
-
-public:
-
-	ExternalDataHandler(){
-    	_data = &(_buffer[2]);
-    	_buffer[0]='G';
-    	_buffer[1]=':';
-	}
-
-	void loadConfig(){
-		externalData.loadConfig();
-	}
-
-	bool canHandle(AsyncWebServerRequest *request) const override{
-		DBG_PRINTF("req: %s\n", request->url().c_str());
-	 	if(request->url() == GRAVITY_PATH	) return true;
-	 	if(request->url() == GravityDeviceConfigPath) return true;
-	 	if(request->url() == GravityFormulaPath) return true;		
-
-	 	return false;
-	}
-
-	void handleRequest(AsyncWebServerRequest *request) override{
-		if(request->url() == GRAVITY_PATH){
-			if(request->method() != HTTP_POST){
-				request->send(400);
-				return;
-			}
-			stringAvailable(_buffer);
-			processGravity(request,_data,_dataLength);
-			// Process the name
-			externalData.sseNotify(_data);
-			stringAvailable(_data);
-			return;
-		}
-		if(request->url() == GravityFormulaPath){
-			if(request->hasParam("a0") && request->hasParam("a1") 
-				&& request->hasParam("a2") && request->hasParam("a3")
-				&& request->hasParam("pt")){
-				float coeff[4];
-				coeff[0]=request->getParam("a0")->value().toFloat();
-				coeff[1]=request->getParam("a1")->value().toFloat();
-				coeff[2]=request->getParam("a2")->value().toFloat();
-				coeff[3]=request->getParam("a3")->value().toFloat();
-				uint32_t npt=(uint32_t) request->getParam("pt")->value().toInt();
-				externalData.formula(coeff,npt);
-
-				brewLogger.addIgnoredCalPointMask(npt & 0xFFFFFF);
-  				
-				request->send(201);
-			}else{
-				DBG_PRINTF("Invalid parameter\n");
-  				request->send(400);
-			}
-
-			return;
-		}
-		// config
-		if(request->method() == HTTP_POST){
-  			if(externalData.processconfig(_data)){
-		  		request->send(201);
-			}else{
-				request->send(400);
-			}
-		} else {
-		    // get
-		    if(request->hasParam("data")){
-		        request->send(200,asyncsrv::T_application_json,theSettings.jsonGravityConfig());
-		    }else{
-		        // get the HTML
-		        request->redirect(request->url() + asyncsrv::T__htm);
-		        //request->send_P(200, asyncsrv::T_text_html, externalData.html());
-		    }
-		}
-	}
-
-	void handleBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)final{
-		if(!index){
-		    DBG_PRINTF("BodyStart-len:%d total: %u\n",len, total);
-			_dataLength =0;
-			_error=(total >= MAX_DATA_SIZE);
-		}
-
-		if(_error) return;
-		for(size_t i=0; i< len; i++){
-			//Serial.write(data[i]);
-			_data[_dataLength ++] = data[i];
-		}
-		if(index + len >= total){
-			_data[_dataLength]='\0';
-			DBG_PRINTF("Body total%u data:%s\n", total,_data);
-		}
-	}
-	bool isRequestHandlerTrivial() const final {return false;}
-};
-ExternalDataHandler externalDataHandler;
+bpl::webHandler::ExternalDataHandler externalDataHandler;
 bpl::webHandler::NetworkDataHandler networkConfig;
 
 void wiFiEvent(const char* msg){

@@ -49,11 +49,11 @@ protected:
 	BrewProfile _profile;
 	Gravity _lastGravity{INVALID_GRAVITY};
 
-	void (*_write)(const char*);
+	std::function<void(const char*)> _write;
 	void _loadProfile();
 public:
 
-	explicit BrewKeeper(void(*puts)(const char*)):_write(puts){}
+	explicit BrewKeeper(const std::function<void(const char*)> &write) : _write(write){}
 	void updateGravity(float sg);
 	void updateOriginalGravity(float sg);
 

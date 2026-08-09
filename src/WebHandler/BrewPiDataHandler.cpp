@@ -15,36 +15,25 @@
 #include <LittleFS.h>
 
 
-#define CONFIG_PATH		"/config"
-#define TIME_PATH       "/time"
-#define RESETWIFI_PATH       "/erasewifisetting"
+namespace {
+    namespace Local {
+        constexpr char configPath[] = "/config";
+        constexpr char timePath[] = "/time";
+        constexpr char resetWifiPath[] = "/erasewifisetting";
+        constexpr char fputsPath[] = "/fputs";
+        constexpr char flistPath[] = "/list";
+        constexpr char deletePath[] = "/rm";
+        constexpr char beerProfilePath[] = "/tschedule";
+        constexpr char getStatusPath[] = "/getstatus";
+        constexpr char mqttPath[] = "/mqtt";
+        constexpr char parasiteTempControlPath[] = "/ptc";
+        constexpr char loggingPath[] = "/log";
+        constexpr char capperPath[] = "/cap";
+        constexpr char pressurePath[] = "/psi";
 
-#define FPUTS_PATH       "/fputs"
-#define FLIST_PATH       "/list"
-#define DELETE_PATH       "/rm"
-
-#define BEER_PROFILE_PATH       "/tschedule"
-
-#define GETSTATUS_PATH "/getstatus"
-#define DEFAULT_INDEX_FILE     "index.htm"
-
-#define MQTT_PATH "/mqtt"
-
-#if EanbleParasiteTempControl
-#define ParasiteTempControlPath "/ptc"
-#endif
-
-#ifdef ENABLE_LOGGING
-#define LOGGING_PATH	"/log"
-#endif
-
-#if AUTO_CAP
-#define CAPPER_PATH "/cap"
-#endif
-
-#if SupportPressureTransducer
-#define PRESSURE_PATH "/psi"
-#endif
+        constexpr char defaultIndexFile[] = "index.htm";
+    }
+}
 
 const char *public_list[] = {
     "/bwf.js",
@@ -68,51 +57,51 @@ extern void capStatusReport();
 bool bpl::webHandler::BrewPiDataHandler::canHandle(AsyncWebServerRequest *request) const
 {
     if (request->method() == HTTP_GET) {
-        if (request->url() == CONFIG_PATH
-            || request->url() == TIME_PATH
-            || request->url() == FLIST_PATH
-            || request->url() == RESETWIFI_PATH
-            || request->url() == GETSTATUS_PATH
-            || request->url() == BEER_PROFILE_PATH
-            || request->url() == MQTT_PATH
+        if (request->url() == Local::configPath
+            || request->url() == Local::timePath
+            || request->url() == Local::flistPath
+            || request->url() == Local::resetWifiPath
+            || request->url() == Local::getStatusPath
+            || request->url() == Local::beerProfilePath
+            || request->url() == Local::mqttPath
 #ifdef ENABLE_LOGGING
-            || request->url() == LOGGING_PATH
+            || request->url() == Local::loggingPath
 #endif
 #if EanbleParasiteTempControl
-            || request->url() == ParasiteTempControlPath
+            || request->url() == Local::parasiteTempControlPath
 #endif
 #if AUTO_CAP
-            || request->url() == CAPPER_PATH
+            || request->url() == Local::capperPath
 #endif
 #if SupportPressureTransducer
-            || request->url() == PRESSURE_PATH
+            || request->url() == Local::pressurePath
 #endif
         ) {
             return true;
         } else {
             // get file
             String path = request->url();
-            if (path.endsWith("/")) path += DEFAULT_INDEX_FILE;
+            if (path.endsWith("/")) path += Local::defaultIndexFile;
             //DBG_PRINTF("request:%s\n",path.c_str());
             if (fileExists(path)) return true; //if(LittleFS.exists(path)) return true;
             //DBG_PRINTF("request:%s not found\n",path.c_str());
         }
-    } else if (request->method() == HTTP_DELETE && request->url() == DELETE_PATH) {
+    } else if (request->method() == HTTP_DELETE && request->url() == Local::deletePath) {
         return true;
     } else if (request->method() == HTTP_POST) {
-        if (request->url() == CONFIG_PATH
-            || request->url() == FPUTS_PATH
-            || request->url() == TIME_PATH
-            || request->url() == BEER_PROFILE_PATH
-            || request->url() == MQTT_PATH
+        if (request->url() == Local::configPath
+            || request->url() == Local::fputsPath
+            || request->url() == Local::timePath
+            || request->url() == Local::beerProfilePath
+            || request->url() == Local::mqttPath
 #ifdef ENABLE_LOGGING
-            || request->url() == LOGGING_PATH
+            || request->url() == Local::loggingPath
 #endif
 #if EanbleParasiteTempControl
-            || request->url() == ParasiteTempControlPath
+            || request->url() == Local::parasiteTempControlPath
 #endif
 #if SupportPressureTransducer
-            || request->url() == PRESSURE_PATH
+            || request->url() == Local::pressurePath
 #endif
         )
             return true;
@@ -126,10 +115,10 @@ void bpl::webHandler::BrewPiDataHandler::handleRequest(AsyncWebServerRequest *re
     SystemConfiguration *syscfg = theSettings.systemConfiguration();
 
 #if SupportMqttRemoteControl
-    if (request->method() == HTTP_GET && request->url() == MQTT_PATH) {
+    if (request->method() == HTTP_GET && request->url() == Local::mqttPath) {
         request->send(200, asyncsrv::T_application_json,
                       theSettings.jsonMqttRemoteControlSettings());
-    } else if (request->method() == HTTP_POST && request->url() == MQTT_PATH) {
+    } else if (request->method() == HTTP_POST && request->url() == Local::mqttPath) {
         if (!request->authenticate(syscfg->username, syscfg->password))
             return request->requestAuthentication();
 
@@ -150,15 +139,15 @@ void bpl::webHandler::BrewPiDataHandler::handleRequest(AsyncWebServerRequest *re
         }
     } else
 #endif
-        if (request->method() == HTTP_GET && request->url() == CONFIG_PATH) {
-            if (!request->authenticate(syscfg->username, syscfg->password)) return request->
-                    requestAuthentication();
+        if (request->method() == HTTP_GET && request->url() == Local::configPath) {
+            if (!request->authenticate(syscfg->username, syscfg->password))
+                return request->requestAuthentication();
             if (request->hasParam("cfg"))
                 request->send(200, asyncsrv::T_application_json,
                               theSettings.jsonSystemConfiguration());
             else
                 request->redirect(request->url() + asyncsrv::T__htm);
-        } else if (request->method() == HTTP_POST && request->url() == CONFIG_PATH) {
+        } else if (request->method() == HTTP_POST && request->url() == Local::configPath) {
             if (!request->authenticate(syscfg->username, syscfg->password))
                 return request->requestAuthentication();
 
@@ -186,14 +175,14 @@ void bpl::webHandler::BrewPiDataHandler::handleRequest(AsyncWebServerRequest *re
                 request->send(400);
                 DBG_PRINTF("no data in post\n");
             }
-        } else if (request->method() == HTTP_GET && request->url() == TIME_PATH) {
+        } else if (request->method() == HTTP_GET && request->url() == Local::timePath) {
             AsyncResponseStream *response = request->beginResponseStream(
                 asyncsrv::T_application_json);
             response->printf("{\"t\":\"%s\",\"e\":%lld,\"o\":%d}", TimeKeeper.getDateTimeStr(),
                              static_cast<std::int64_t>(TimeKeeper.getTimeSeconds()),
                              TimeKeeper.getTimezoneOffset());
             request->send(response);
-        } else if (request->method() == HTTP_POST && request->url() == TIME_PATH) {
+        } else if (request->method() == HTTP_POST && request->url() == Local::timePath) {
             if (request->hasParam("time", true)) {
                 const AsyncWebParameter *tvalue = request->getParam("time", true);
                 time_t time = (time_t) tvalue->value().toInt();
@@ -207,27 +196,27 @@ void bpl::webHandler::BrewPiDataHandler::handleRequest(AsyncWebServerRequest *re
                 TimeKeeper.setTimezoneOffset(tvalue->value().toInt());
             }
             request->send(202);
-        } else if (request->method() == HTTP_GET && request->url() == RESETWIFI_PATH) {
+        } else if (request->method() == HTTP_GET && request->url() == Local::resetWifiPath) {
             if (!request->authenticate(syscfg->username, syscfg->password))
                 return request->requestAuthentication();
             request->send(200, asyncsrv::T_text_html, "Done, restarting..");
             requestRestart(true);
-        } else if (request->method() == HTTP_GET && request->url() == FLIST_PATH) {
+        } else if (request->method() == HTTP_GET && request->url() == Local::flistPath) {
             if (!request->authenticate(syscfg->username, syscfg->password))
                 return request->requestAuthentication();
 
             handleFileList(request);
-        } else if (request->method() == HTTP_DELETE && request->url() == DELETE_PATH) {
+        } else if (request->method() == HTTP_DELETE && request->url() == Local::deletePath) {
             if (!request->authenticate(syscfg->username, syscfg->password))
                 return request->requestAuthentication();
 
             handleFileDelete(request);
-        } else if (request->method() == HTTP_POST && request->url() == FPUTS_PATH) {
+        } else if (request->method() == HTTP_POST && request->url() == Local::fputsPath) {
             if (!request->authenticate(syscfg->username, syscfg->password))
                 return request->requestAuthentication();
 
             handleFilePuts(request);
-        } else if (request->method() == HTTP_GET && request->url() == GETSTATUS_PATH) {
+        } else if (request->method() == HTTP_GET && request->url() == Local::getStatusPath) {
             Mode mode;
             State state;
             float beerSet, beerTemp, fridgeTemp, fridgeSet, roomTemp;
@@ -245,10 +234,10 @@ void bpl::webHandler::BrewPiDataHandler::handleRequest(AsyncWebServerRequest *re
             request->send(200, asyncsrv::T_application_json, json);
         }
 #ifdef ENABLE_LOGGING
-        else if (request->url() == LOGGING_PATH) {
+        else if (request->url() == Local::loggingPath) {
             if (request->method() == HTTP_POST) {
-                if (!request->authenticate(syscfg->username, syscfg->password)) return request->
-                        requestAuthentication();
+                if (!request->authenticate(syscfg->username, syscfg->password))
+                    return request->requestAuthentication();
                 if (request->hasParam("data", true)) {
                     if (theSettings.dejsonRemoteLogging(request->getParam("data", true)->value())) {
                         request->send(202);
@@ -270,7 +259,7 @@ void bpl::webHandler::BrewPiDataHandler::handleRequest(AsyncWebServerRequest *re
         }
 #endif
 #if EanbleParasiteTempControl
-        else if (request->url() == ParasiteTempControlPath) {
+        else if (request->url() == Local::parasiteTempControlPath) {
             if (request->method() == HTTP_POST) {
                 if (request->hasParam("c", true)) {
                     String content = request->getParam("c", true)->value();
@@ -287,7 +276,7 @@ void bpl::webHandler::BrewPiDataHandler::handleRequest(AsyncWebServerRequest *re
         }
 #endif
 #if AUTO_CAP
-        else if (request->url() == CAPPER_PATH) {
+        else if (request->url() == Local::capperPath) {
             if (!request->authenticate(syscfg->username, syscfg->password))
                 return request->requestAuthentication();
             // auto cap.
@@ -318,7 +307,7 @@ void bpl::webHandler::BrewPiDataHandler::handleRequest(AsyncWebServerRequest *re
         }
 #endif
 #if SupportPressureTransducer
-        else if (request->url() == PRESSURE_PATH) {
+        else if (request->url() == Local::pressurePath) {
             if (!request->authenticate(syscfg->username, syscfg->password))
                 return request->requestAuthentication();
 
@@ -333,8 +322,8 @@ void bpl::webHandler::BrewPiDataHandler::handleRequest(AsyncWebServerRequest *re
                 }
             } else {
                 // post
-                if (!request->authenticate(syscfg->username, syscfg->password)) return request->
-                        requestAuthentication();
+                if (!request->authenticate(syscfg->username, syscfg->password))
+                    return request->requestAuthentication();
 
                 if (request->hasParam("data", true)) {
                     if (theSettings.dejsonPressureMonitorSettings(
@@ -352,14 +341,14 @@ void bpl::webHandler::BrewPiDataHandler::handleRequest(AsyncWebServerRequest *re
             }
         }
 #endif
-        else if (request->url() == BEER_PROFILE_PATH) {
+        else if (request->url() == Local::beerProfilePath) {
             if (request->method() == HTTP_GET) {
                 request->send(200, asyncsrv::T_application_json, theSettings.jsonBeerProfile());
             } else {
                 //if(request->method() == HTTP_POST){
 
-                if (!request->authenticate(syscfg->username, syscfg->password)) return request->
-                        requestAuthentication();
+                if (!request->authenticate(syscfg->username, syscfg->password))
+                    return request->requestAuthentication();
 
                 if (request->hasParam("data", true)) {
                     if (theSettings.dejsonBeerProfile(request->getParam("data", true)->value())) {
@@ -374,7 +363,7 @@ void bpl::webHandler::BrewPiDataHandler::handleRequest(AsyncWebServerRequest *re
             }
         } else if (request->method() == HTTP_GET) {
             String path = request->url();
-            if (path.endsWith("/")) path += DEFAULT_INDEX_FILE;
+            if (path.endsWith("/")) path += Local::defaultIndexFile;
 
             if (request->url().equals("/")) {
                 if (!syscfg->passwordLcd) {

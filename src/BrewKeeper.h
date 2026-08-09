@@ -18,13 +18,10 @@ class BrewProfile
 	char _unit{'U'};
 	uint8_t _stableThreshold{1};
 
-	void _tempConvert();
-
 	void _estimateStep(time_t now,Gravity gravity);
 
 	void _toNextStep(unsigned long time);
 	bool checkCondition(unsigned long time,Gravity gravity);
-	bool _loadProfile(String filename);
 	uint32_t currentStepDuration();
 	void _saveBrewingStatus();
 public:
@@ -50,7 +47,6 @@ protected:
 	Gravity _lastGravity{INVALID_GRAVITY};
 
 	std::function<void(const char*)> _write;
-	void _loadProfile();
 public:
 
 	explicit BrewKeeper(const std::function<void(const char*)> &write) : _write(write){}

@@ -141,10 +141,10 @@ export const Net = {
         if ("list" in data) {
             this.list(data.list);
         } else if (typeof data["ssid"] != "undefined") {
-            if (data.ssid != "") {
+            if (data.ssid) {
                 byId<HTMLElement>("connected-ssid")!.innerHTML = data.ssid;
             }
-            if (typeof data["ip"] !== "undefined" && data.ip !== "") {
+            if (data.ip) {
                 byId("sta-ip")!.innerHTML = data.ip;
             }
         }

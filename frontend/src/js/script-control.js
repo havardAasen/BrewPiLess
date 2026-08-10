@@ -535,7 +535,7 @@ export var PL = {
             const a = JSON.parse(json);
             profileEditor.loadProfile(a);
         } catch (error) {
-            console.warning(`Failed to load profile: ${error}`);
+            console.warn(`Failed to load profile: ${error}`);
         }
     },
     list: function () {

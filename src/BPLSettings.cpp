@@ -244,97 +244,6 @@ String BPLSettings::jsonGravityConfig(){
 //***************************************************************
 // Beer profile
 
-/*
- * Reconstitute "struct tm" elements into a time_t count value.
- * Note that the year argument is offset from 1970.
- */
-#define SECS_PER_MIN  (60UL)
-#define SECS_PER_HOUR (3600UL)
-#define SECS_PER_DAY  (SECS_PER_HOUR * 24UL)
-#define DAYS_PER_WEEK (7UL)
-#define SECS_PER_WEEK (SECS_PER_DAY * DAYS_PER_WEEK)
-#define SECS_PER_YEAR (SECS_PER_WEEK * 52UL)
-#define SECS_YR_2000  (946684800UL)	// The time_t value at the very start of Y2K.
-static	const uint8_t monthDays[]={31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-#define LEAP_YEAR(Y)		 ( ((1970+Y)>0) && !((1970+Y)%4) && ( ((1970+Y)%100) || !((1970+Y)%400) ) )
-time_t tm_to_timet(struct tm *tm_time){
-
-	int i;
-	time_t seconds;
-
-	seconds= tm_time->tm_year*(SECS_PER_DAY * 365);
-	for (i = 0; i < tm_time->tm_year; i++) {
-		if (LEAP_YEAR(i)) {
-			seconds += SECS_PER_DAY;	// Add extra days for leap years.
-		}
-	}
-	// Add the number of elapsed days for the given year. Months start from 1.
-	for (i = 1; i < tm_time->tm_mon; i++) {
-		if ( (i == 2) && LEAP_YEAR(tm_time->tm_year)) {
-			seconds += SECS_PER_DAY * 29;
-		} else {
-			seconds += SECS_PER_DAY * monthDays[i-1];	// "monthDay" array starts from 0.
-		}
-	}
-	seconds+= (tm_time->tm_mday-1) * SECS_PER_DAY;		// Days...
-	seconds+= tm_time->tm_hour * SECS_PER_HOUR;		// Hours...
-	seconds+= tm_time->tm_min * SECS_PER_MIN;		// Minutes...
-	seconds+= tm_time->tm_sec;				// ...and finally, Seconds.
-	return (time_t)seconds;
-}
-// got from https://github.com/PaulStoffregen/Time
-void makeTime(time_t timeInput, struct tm &tm){
-// break the given time_t into time components
-// this is a more compact version of the C library localtime function
-// note that year is offset from 1970 !!!
-
-  uint8_t year;
-  uint8_t month, monthLength;
-  uint32_t time;
-  unsigned long days;
-
-  time = (uint32_t)timeInput;
-  tm.tm_sec = time % 60;
-  time /= 60; // now it is minutes
-  tm.tm_min = time % 60;
-  time /= 60; // now it is hours
-  tm.tm_hour = time % 24;
-  time /= 24; // now it is days
-  tm.tm_wday = ((time + 4) % 7) + 1;  // Sunday is day 1
-
-  year = 0;
-  days = 0;
-  while((unsigned)(days += (LEAP_YEAR(year) ? 366 : 365)) <= time) {
-    year++;
-  }
-  tm.tm_year = year +1970; // year is offset from 1970
-
-  days -= LEAP_YEAR(year) ? 366 : 365;
-  time  -= days; // now it is days in this year, starting at 0
-
-  days=0;
-  month=0;
-  monthLength=0;
-  for (month=0; month<12; month++) {
-    if (month==1) { // february
-      if (LEAP_YEAR(year)) {
-        monthLength=29;
-      } else {
-        monthLength=28;
-      }
-    } else {
-      monthLength = monthDays[month];
-    }
-
-    if (time >= monthLength) {
-      time -= monthLength;
-    } else {
-        break;
-    }
-  }
-  tm.tm_mon = month + 1;  // jan is month 1
-  tm.tm_mday = time + 1;     // day of month
-}
 
 bool BPLSettings::dejsonBeerProfile(String json)
 {
@@ -343,35 +252,14 @@ bool BPLSettings::dejsonBeerProfile(String json)
 		DBG_PRINTF("ERROR: %s: deserializeJson() failed: %s\n", __func__, error.c_str());
 		return false;
 	}
-	if(!doc["s"].is<const char*>() || !doc["u"].is<const char*>() || !doc["t"].is<JsonArray>()){
+	if(!doc["s"].is<std::int64_t>() || !doc["u"].is<const char*>() || !doc["t"].is<JsonArray>()){
 		DBG_PRINTF("JSON file not include necessary fields\n");
 		return false;
 	}
 	BeerTempSchedule *tempSchedule = & _data.tempSchedule;
-	// get starting time
-	//ISO time:
-	//2016-07-01T05:22:33.351Z
-	//01234567890123456789
-	tm tmStart;
-	char buf[8];
-	const char* sdutc=doc["s"];
 
-	#define GetValue(d,s,l) strncpy(buf,sdutc+s,l);buf[l]='\0';d=atoi(buf)
-	GetValue(tmStart.tm_year,0,4);
-	tmStart.tm_year -= 1970; //1900;
-	GetValue(tmStart.tm_mon,5,2);
-//	tmStart.tm_mon -= 1;
-	GetValue(tmStart.tm_mday,8,2);
-	GetValue(tmStart.tm_hour,11,2);
-	GetValue(tmStart.tm_min,14,2);
-	GetValue(tmStart.tm_sec,17,2);
+	tempSchedule->startDay= doc["s"];
 
-	DBG_PRINTF("%d/%d/%d %d:%d:%d\n",tmStart.tm_year,tmStart.tm_mon,tmStart.tm_mday,
-		tmStart.tm_hour,tmStart.tm_min,tmStart.tm_sec);
-
-	//_startDay = mktime(&tmStart);
-
-	tempSchedule->startDay= tm_to_timet(&tmStart);
 	JsonArray schedule = doc["t"];
 	tempSchedule->numberOfSteps=schedule.size();
 	if(tempSchedule->numberOfSteps > MaximumSteps) tempSchedule->numberOfSteps=MaximumSteps;
@@ -439,16 +327,8 @@ String BPLSettings::jsonBeerProfile()
 {
 	BeerTempSchedule *tempSchedule = & _data.tempSchedule;
 
-	//start date
-	//ISO time:
-	//2016-07-01T05:22:33.351Z
-	struct tm * ptm;
-	ptm = localtime(& tempSchedule->startDay);
-	char timeBuf[128];
-	sprintf(timeBuf,"%d-%02d-%02dT%02d:%02d:%02d.0Z",ptm->tm_year+1900,ptm->tm_mon+1,ptm->tm_mday,
-		ptm->tm_hour,ptm->tm_min,ptm->tm_sec);
 	JsonDocument doc;
-	doc["s"]=timeBuf;
+	doc["s"] = tempSchedule->startDay;
 	// unit, unfortunatly, no "char" type in JSON. "char" will be integer.
 	//doc["u"]=(char)tempSchedule->unit;
 	char unitBuffer[4];

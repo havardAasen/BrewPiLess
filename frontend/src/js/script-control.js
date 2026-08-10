@@ -460,7 +460,7 @@ var profileEditor = {
                 temps.push(stage);
             }
         }
-        var s = this.sd.toISOString();
+        var s = this.sd.getTime();
         var ret = {
             s: s,
             v: 2,

@@ -9,7 +9,7 @@ import { init as lcd } from "./script-lcd";
 import { loaded as logViewer } from "./script-viewer";
 import { loaded as logWebViewer } from "./script-webviewer";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const pageId = document.body.dataset.page;
 
     switch (pageId) {

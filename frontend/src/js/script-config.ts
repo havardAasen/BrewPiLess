@@ -92,9 +92,9 @@ export async function saveSystemSettings(): Promise<void> {
     }
 }
 
-export function load(): void {
+export async function load(): Promise<void> {
     updateNavbarVersion();
-    loadSetting();
+    await loadSetting();
     Net.init();
 }
 

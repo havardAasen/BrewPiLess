@@ -11,6 +11,7 @@ import {
     updateGravity,
     updateNavbarVersion,
     updateOriginGravity,
+    simLcd,
 } from "./shared";
 import { gravityFilter } from "./chart/GravityFilter";
 import { gravityTracker } from "./chart/GravityTracker";
@@ -300,49 +301,6 @@ function renderLcdText(info) {
         var temp = tempRE.exec(status.BeerTemp);
         if (temp.length > 0) window.beerTemp = temp[0];
     }
-}
-
-var roomOfridge = false;
-
-function simLcd(info) {
-    function showTemp(tp) {
-        // always takes 5 chars
-        if (tp < -10000) return " --.-";
-        var text = (tp / 100.0).toFixed(1);
-        var spaces = "";
-        var i = text.length;
-        for (; i < 5; i++) spaces += " ";
-        return spaces + text;
-    }
-
-    var lines = [];
-    lines[0] = "Mode   " + ModeString[info.md];
-    lines[1] =
-        "Beer  " +
-        showTemp(info.bt) +
-        " " +
-        showTemp(info.bs) +
-        " &deg;" +
-        info.tu;
-    if (info.rt > -10000 && roomOfridge)
-        lines[2] =
-            "Room  " +
-            showTemp(info.rt) +
-            " " +
-            showTemp(-20000) +
-            " &deg;" +
-            info.tu;
-    else
-        lines[2] =
-            "Fridge" +
-            showTemp(info.ft) +
-            " " +
-            showTemp(info.fs) +
-            " &deg;" +
-            info.tu;
-    roomOfridge = !roomOfridge;
-    lines[3] = info.sl;
-    return lines;
 }
 
 function displayLcd(info) {

@@ -189,6 +189,60 @@ export function hideErrorMsgs() {
     });
 }
 
+type LcdInfo = {
+    bt: number; // Beer temperature
+    bs: number; // Beer set temperature
+    ft: number; // Fridge temperature
+    fs: number; // Fridge set temperature
+    rt: number; // Room temperature
+    rs: number; // Room set temperature
+    tu: string; // Temperature unit
+    md: ModeKey; // Temperature control mode
+    sl: string; // Status
+};
+
+let roomOfridge = false;
+
+export function simLcd(info: LcdInfo): string[] {
+    function showTemp(tp: number): string {
+        // always takes 5 chars
+        if (tp < -10000) return " --.-";
+        const text = (tp / 100.0).toFixed(1);
+        let spaces = "";
+        for (let i = text.length; i < 5; i++) spaces += " ";
+        return spaces + text;
+    }
+
+    const lines = [];
+    lines[0] = "Mode   " + ModeString[info.md];
+    lines[1] =
+        "Beer  " +
+        showTemp(info.bt) +
+        " " +
+        showTemp(info.bs) +
+        " &deg;" +
+        info.tu;
+    if (info.rt > -10000 && roomOfridge)
+        lines[2] =
+            "Room  " +
+            showTemp(info.rt) +
+            " " +
+            showTemp(-20000) +
+            " &deg;" +
+            info.tu;
+    else
+        lines[2] =
+            "Fridge" +
+            showTemp(info.ft) +
+            " " +
+            showTemp(info.fs) +
+            " &deg;" +
+            info.tu;
+    roomOfridge = !roomOfridge;
+    lines[3] = info.sl;
+    return lines;
+}
+
 export function displayLcdText(lines: string[]): void {
     for (let i = 0; i < 4; i++) {
         const d = byId(`lcd-line-${i}`);
@@ -221,7 +275,8 @@ export const ModeString = {
     f: "<%= mode_fridge_const %>",
     p: "<%= mode_beer_profile %>",
     i: "Invalid",
-};
+} as const;
+export type ModeKey = keyof typeof ModeString;
 
 export const StateText = [
     "<%= state_text_idle %>",

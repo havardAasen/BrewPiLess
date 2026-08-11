@@ -1,48 +1,5 @@
-import { byId, communicationError, displayLcdText, ModeString } from "./shared";
+import { byId, communicationError, displayLcdText, simLcd } from "./shared";
 import { BWF } from "./bwf";
-
-var roomOfridge = false;
-
-function simLcd(info) {
-    function showTemp(tp) {
-        // always takes 4 chars
-        if (tp < -10000) return " --.-";
-        var text = (tp / 100.0).toFixed(1);
-        var spaces = "";
-        var i = text.length;
-        for (; i < 5; i++) spaces += " ";
-        return spaces + text;
-    }
-
-    var lines = [];
-    lines[0] = "Mode   " + ModeString[info.md];
-    lines[1] =
-        "Beer  " +
-        showTemp(info.bt) +
-        " " +
-        showTemp(info.bs) +
-        " &deg;" +
-        info.tu;
-    if (info.rt > -10001 && roomOfridge)
-        lines[2] =
-            "Room  " +
-            showTemp(info.rt) +
-            " " +
-            showTemp(-20000) +
-            " &deg;" +
-            info.tu;
-    else
-        lines[2] =
-            "Fridge" +
-            showTemp(info.ft) +
-            " " +
-            showTemp(info.fs) +
-            " &deg;" +
-            info.tu;
-    roomOfridge = !roomOfridge;
-    lines[3] = info.sl;
-    return lines;
-}
 
 function resize() {
     var width = document.documentElement.clientWidth - 20;

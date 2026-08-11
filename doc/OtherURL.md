@@ -1,6 +1,6 @@
 Replace "brewpiless.local" by your domain name, or IP.
 
-* http://brewpiless.local/lcd
+* http://brewpiless.local/lcd.htm
 
 LCD page. The LCD display of BrewPi. Clicking the LCD brings out the pop menu to other functions. This page is good for mobile device or when temperature chart is not necessary.
 

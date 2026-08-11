@@ -45,7 +45,7 @@ struct EmbeddedFileMapEntry{
 constexpr char file_testcmd_htm [] PROGMEM="/testcmd.htm";
 
 
-constexpr char file_lcd_htm [] PROGMEM="/lcd";
+constexpr char file_lcd_htm [] PROGMEM="/lcd.htm";
 constexpr char file_styles_min_css [] PROGMEM="/styles.min.css";
 
 #include "lcd_htm.h"

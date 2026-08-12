@@ -18,7 +18,7 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Brewpi.h"
+#include "Config.h"
 #include <stdarg.h>
 
 #include "stddef.h"
@@ -31,7 +31,6 @@
 #include "Display.h"
 #include "JsonKeys.h"
 #include "Ticks.h"
-#include "Brewpi.h"
 #include "EepromManager.h"
 #include "EepromFormat.h"
 #include "SettingsManager.h"

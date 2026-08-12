@@ -17,7 +17,7 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Brewpi.h"
+#include "Config.h"
 
 #if BREWPI_LCD
 #include "OLEDFourBit.h"

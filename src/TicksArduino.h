@@ -23,7 +23,7 @@
 
 #ifdef ARDUINO
 
-#include "Brewpi.h"
+#include <Arduino.h>
 
 /*
  * The Ticks class provides the time period since the device was powered up.

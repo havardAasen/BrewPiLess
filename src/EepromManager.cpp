@@ -18,7 +18,6 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Brewpi.h"
 #include <stddef.h>
 
 #include "EepromManager.h"

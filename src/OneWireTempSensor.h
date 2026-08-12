@@ -21,7 +21,6 @@
 #ifndef ONEWIRE_TEMP_SENSOR_H
 #define ONEWIRE_TEMP_SENSOR_H
 
-#include "Brewpi.h"
 #include "TempSensor.h"
 #include "FastDigitalPin.h"
 #include "Ticks.h"

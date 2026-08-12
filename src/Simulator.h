@@ -21,7 +21,6 @@
 #ifndef SIMULATOR_H
 #define SIMULATOR_H
 
-#include "Brewpi.h"
 #include "TempSensorExternal.h"
 #include "Logger.h"
 #include "DeviceManager.h"

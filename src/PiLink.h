@@ -21,7 +21,7 @@
 #ifndef PILINK_H
 #define PILINK_H
 
-#include "Brewpi.h"
+#include "Config.h"
 #include "DeviceManager.h"
 #include "Logger.h"
 

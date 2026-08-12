@@ -21,6 +21,8 @@
 #ifndef BREWPI_STRINGS_H
 #define BREWPI_STRINGS_H
 
+#include <cstdint>
+
 extern const char STR_FMT_S_RAM[];
 extern const char STR_FMT_S_PROGMEM[];
 extern const char STR_FMT_U[];

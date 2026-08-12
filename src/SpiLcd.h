@@ -25,7 +25,7 @@
 #ifndef SPI_LCD_H
 #define SPI_LCD_H
 
-#include "Brewpi.h"
+#include "Config.h"
 #include "BrewpiStrings.h"
 #include <stdint.h>
 #include <Print.h>

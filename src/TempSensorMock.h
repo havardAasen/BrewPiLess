@@ -21,7 +21,6 @@
 #ifndef TEMP_SENSOR_MOCK_H
 #define TEMP_SENSOR_MOCK_H
 
-#include "Brewpi.h"
 #include "ITempSensor.h"
 #include "TempControl.h"
 #include "TempSensor.h"

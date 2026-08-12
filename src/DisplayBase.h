@@ -21,7 +21,7 @@
 #ifndef DISPLAY_BASE_H
 #define DISPLAY_BASE_H
 
-#include "Brewpi.h"
+#include "Config.h"
 
 #include <TemperatureFormats.h>
 

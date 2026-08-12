@@ -2,7 +2,7 @@
 #ifndef LIC_LCD_H
 #define LIC_LCD_H
 
-#include "Brewpi.h"
+#include "Config.h"
 #include "BrewpiStrings.h"
 #include <inttypes.h>
 #include <Print.h>

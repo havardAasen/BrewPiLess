@@ -18,8 +18,10 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Brewpi.h"
 #include "BrewpiStrings.h"
+
+#include <cstdint>
+#include <pgmspace.h>
 
 // some useful strings
 const char STR_FMT_S_RAM[] PROGMEM = "%s"; // RAM string

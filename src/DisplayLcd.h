@@ -20,7 +20,7 @@
 #ifndef DISPLAY_LCD_H
 #define DISPLAY_LCD_H
 
-#include "Brewpi.h"
+#include "Config.h"
 #include "DisplayBase.h"
 //#include "SpiLcd.h"
 #include "NullLcdDriver.h"

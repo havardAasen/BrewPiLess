@@ -18,7 +18,7 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Brewpi.h"
+#include "Config.h"
 #include "OneWireTempSensor.h"
 #include "OneWire.h"
 #include "OneWireDevices.h"

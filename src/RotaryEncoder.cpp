@@ -17,14 +17,13 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Brewpi.h"
+#include "Config.h"
 #include "RotaryEncoder.h"
 
 #include "Pins.h"
 #include <limits.h>
 #include "Ticks.h"
 #include "Display.h"
-#include "Brewpi.h"
 #include "TempControl.h"
 
 #if RotaryViaPCF8574 || ButtonViaPCF8574

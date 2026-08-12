@@ -1,7 +1,6 @@
 #ifndef AUTO_CAP_CONTROL_H
 #define AUTO_CAP_CONTROL_H
 
-#include "Brewpi.h"
 #include "Actuator.h"
 #include "BPLSettings.h"
 

@@ -21,8 +21,9 @@
 #ifndef EEPROM_MANAGER_H
 #define EEPROM_MANAGER_H
 
-#include "Brewpi.h"
 #include "EepromStructs.h"
+
+#include <Arduino.h>
 
 
 void fill(int8_t* p, uint8_t size);

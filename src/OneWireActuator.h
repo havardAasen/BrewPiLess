@@ -23,7 +23,7 @@
 
 #ifdef ARDUINO
 
-#include "Brewpi.h"
+#include "Config.h"
 #include "Actuator.h"
 #include "DS2413.h"
 #include "PiLink.h"

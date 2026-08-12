@@ -20,7 +20,7 @@
 #ifndef TEMP_CONTROL_H
 #define TEMP_CONTROL_H
 
-#include "Brewpi.h"
+#include "Config.h"
 #include "ITempSensor.h"
 #include "TempSensor.h"
 #include "Pins.h"

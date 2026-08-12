@@ -1,6 +1,6 @@
 #include "IicOledLcd.h"
 
-#include "Brewpi.h"
+#include "Config.h"
 #include <stdio.h>
 #include <string.h>
 #include <inttypes.h>

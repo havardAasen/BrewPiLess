@@ -17,7 +17,6 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Brewpi.h"
 #include "BrewpiStrings.h"
 #include "Logger.h"
 #include "PiLink.h"

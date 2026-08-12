@@ -9,12 +9,12 @@
 
 #include "IicLcd.h"
 
-#include "Brewpi.h"
+#include "Config.h"
 #include <stdio.h>
 #include <string.h>
 #include <inttypes.h>
 #include <inttypes.h>
-#include "Arduino.h"
+#include <Arduino.h>
 
 #ifdef ESP8266
 #include <Wire.h>

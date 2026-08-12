@@ -21,7 +21,6 @@
 #ifndef TEMP_SENSOR_EXTERNAL_H
 #define TEMP_SENSOR_EXTERNAL_H
 
-#include "Brewpi.h"
 #include "ITempSensor.h"
 #include "TempSensor.h"
 

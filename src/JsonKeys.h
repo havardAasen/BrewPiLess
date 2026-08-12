@@ -20,8 +20,6 @@
 #ifndef JSON_KEYS_H
 #define JSON_KEYS_H
 
-#include "Brewpi.h"
-
 #ifdef ARDUINO
 #if defined(ESP8266)
 // There is no concept of PROGMEM with the ESP8266

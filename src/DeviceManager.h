@@ -21,9 +21,9 @@
 #ifndef DEVICE_MANAGER_H
 #define DEVICE_MANAGER_H
 
-#include "Brewpi.h"
 
 #include "Actuator.h"
+#include "Config.h"
 #include "Sensor.h"
 #include "ITempSensor.h"
 #include "TempSensor.h"

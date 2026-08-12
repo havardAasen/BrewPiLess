@@ -21,8 +21,6 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-#include "Brewpi.h"
-
 template<class T> class Sensor
 {
 	public:

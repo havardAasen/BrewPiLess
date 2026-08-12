@@ -1,7 +1,7 @@
 #ifndef IIC_OLED_LCD_H
 #define IIC_OLED_LCD_H
 
-#include "Brewpi.h"
+#include "Config.h"
 #include "BrewpiStrings.h"
 #include <inttypes.h>
 #include <Print.h>

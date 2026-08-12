@@ -21,7 +21,6 @@
 #ifndef EEPROM_FORMAT_H
 #define EEPROM_FORMAT_H
 
-#include "Brewpi.h"
 #include "DeviceManager.h"
 #include "TempControl.h"
 

@@ -10,9 +10,11 @@
 
 #ifdef ARDUINO
 
-#include "Brewpi.h"
+#include "Sensor.h"
 #include "FastDigitalPin.h"
 #include "Pins.h"
+
+#include <Arduino.h>
 
 /* A SwitchSensor whose state is provided by a hardware pin.
   By using a template, the compiler can inline and optimize the call to digitalRead to a single instruction.

@@ -20,7 +20,7 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include "Brewpi.h"
+#include "Config.h"
 
 
 #if BREWPI_MENU

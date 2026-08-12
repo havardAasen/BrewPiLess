@@ -20,7 +20,9 @@
 #ifndef ROTARY_ENCODER_H
 #define ROTARY_ENCODER_H
 
-#include "Brewpi.h"
+#include "Config.h"
+
+#include <cstdint>
 
 // Values returned by 'process'
 // No complete step yet.

@@ -21,7 +21,6 @@
 #ifndef ONEWIRE_DEVICES_H
 #define ONEWIRE_DEVICES_H
 
-#include "Brewpi.h"
 
 void parseBytes(uint8_t* data, const char* s, uint8_t len);
 void printBytes(const uint8_t* data, uint8_t len, char* buf);

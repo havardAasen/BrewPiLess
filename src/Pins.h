@@ -20,7 +20,7 @@
 #ifndef PINS_H
 #define PINS_H
 
-#include "Brewpi.h"
+#include "Config.h"
 
 #if BREWPI_STATIC_CONFIG==BREWPI_SHIELD_REV_A
 #ifndef beerSensorPin

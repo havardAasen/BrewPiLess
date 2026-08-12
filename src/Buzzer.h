@@ -20,7 +20,7 @@
 #ifndef BUZZER_H
 #define BUZZER_H
 
-#include "Brewpi.h"
+#include "Config.h"
 #include "Actuator.h"
 
 #if BREWPI_BUZZER

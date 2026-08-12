@@ -17,7 +17,6 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Brewpi.h"
 #include "ITempSensor.h"
 #include "Pins.h"
 #include <algorithm>

@@ -21,7 +21,7 @@
 #ifndef TEMP_SENSOR_H
 #define TEMP_SENSOR_H
 
-#include "Brewpi.h"
+#include "Config.h"
 #include "ITempSensor.h"
 
 #include <stdlib.h>

@@ -23,7 +23,6 @@
 #ifndef NULL_LCD_DRIVER_H
 #define NULL_LCD_DRIVER_H
 
-#include "Brewpi.h"
 #include "BrewpiStrings.h"
 #include <stdint.h>
 #include <Print.h>

@@ -29,6 +29,8 @@
 #include "Print.h"
 #include "Pins.h"
 
+#include <array>
+
 // commands
 #define LCD_CLEARDISPLAY 0x01
 #define LCD_RETURNHOME 0x02

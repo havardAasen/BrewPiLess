@@ -95,14 +95,14 @@
                 </a>
             </div>
             <form id="formNetworkSettings">
-                <input id="ssid" length="32" placeholder="SSID"><br>
-                <input id="nwpass" length="64" type="password" placeholder="password"><br><br>
-                <input id="ip" length="1" placeholder="<%= config_fixedip %>" class="nb iptype"><br>
-                <input id="gw" length="1" placeholder="<%= config_gateway %>" class="nb iptype"><br>
-                <input id="mask" length="1" placeholder="<%= config_netmask %>" class="nb iptype"><br>
-                <input id="dns" length="1" placeholder="<%= config_dns %>" class="nb iptype"><br><br>
-                <button id="btnNetworkCancel" type="button"><%= dlg_cancel %></button>
-                <button type="submit"><%= config_save_change %></button>
+                <input id="ssid" maxLength="31" placeholder="SSID"><br>
+                <input id="nwpass" maxlength="31" type="password" placeholder="password"><br><br>
+                <input id="ip" pattern="^(\d{1,3}\.){3}\d{1,3}$" placeholder="<%= config_fixedip %>" class="nb iptype"><br>
+                <input id="gw" pattern="^(\d{1,3}\.){3}\d{1,3}$" placeholder="<%= config_gateway %>" class="nb iptype"><br>
+                <input id="mask" pattern="^(\d{1,3}\.){3}\d{1,3}$" placeholder="<%= config_netmask %>" class="nb iptype"><br>
+                <input id="dns" pattern="^(\d{1,3}\.){3}\d{1,3}$" placeholder="<%= config_dns %>" class="nb iptype"><br><br>
+                <button id="btnNetworkCancel" type="button" class="btn btn--raised"><%= dlg_cancel %></button>
+                <button type="submit" class="btn btn--raised"><%= config_save_change %></button>
             </form>
         </div>
     </div>

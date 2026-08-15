@@ -501,15 +501,6 @@ void brewpiLoop()
 
 }
 
-//}brewpi
-
-
-#ifdef STATUS_LINE
-extern void makeTime(time_t timeInput, struct tm &tm);
-time_t _displayTime;
-#endif
-
-
 enum class SystemState {
     operating,
     restartPending,
@@ -714,17 +705,6 @@ void loop(void){
 	}
 #endif
 
-#ifdef STATUS_LINE
-	if(_displayTime < now){
-		_displayTime=now;
-
-		struct tm t;
-		makeTime(TimeKeeper.getLocalTimeSeconds(),t);
-		char buf[21];
-		sprintf(buf,"%d/%02d/%02d %02d:%02d:%02d",t.tm_year,t.tm_mon,t.tm_mday,t.tm_hour,t.tm_min,t.tm_sec);
-		display.printStatus(buf);
-	}
-#endif
 	if( (now - _rssiReportTime) > RssiReportPeriod){
 		_rssiReportTime =now;
 		reportRssi();

@@ -21,60 +21,11 @@
                 overflow-wrap: break-word;
             }
         </style>
-        <script>
-            function escapeHtml(unsafe) {
-                return unsafe
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/"/g, "&quot;")
-                    .replace(/'/g, "&#039;");
-            }
-
-            function log(d, m) {
-                var log = document.getElementById("log");
-                var t = new Date();
-                var tstr =
-                    t.getHours() + ":" + t.getMinutes() + ":" + t.getSeconds();
-                log.innerHTML =
-                    log.innerHTML +
-                    tstr +
-                    " " +
-                    (d == "D" ? "&darr;" : "&uarr;") +
-                    " " +
-                    escapeHtml(m) +
-                    "<br>";
-            }
-
-            function sendCmd() {
-                var f = document.getElementById("command");
-                var data = f.value.trim();
-                if (data.length == 0) return;
-                BWF.send(data);
-                log("U", data);
-                return false;
-            }
-
-            function clearLogs() {
-                document.getElementById("log").innerHTML = "";
-            }
-
-            function init() {
-                BWF.init({
-                    error: function (e) {
-                        alert(e);
-                    },
-                    raw: function (m) {
-                        log("D", m);
-                    },
-                });
-            }
-        </script>
     </head>
-    <body onload="init()">
+    <body data-page="testcmd">
         <div id="log"></div>
         <input id="command" type="text" size="60" />
-        <button onclick="sendCmd()">Send</button>
-        <button onclick="clearLogs()">Clear</button>
+        <button id="sendCmd">Send</button>
+        <button id="clearLog">Clear</button>
     </body>
 </html>

@@ -8,6 +8,7 @@ import { loaded as pressure } from "./script-pressure";
 import { init as lcd } from "./script-lcd";
 import { loaded as logViewer } from "./script-viewer";
 import { loaded as logWebViewer } from "./script-webviewer";
+import { init as testCmd } from "./script-testcmd";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const pageId = document.body.dataset.page;
@@ -42,6 +43,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             break;
         case "logWebViewer":
             logWebViewer();
+            break;
+        case "testcmd":
+            testCmd();
             break;
         default:
             console.warn("No page initializer found");

@@ -509,7 +509,7 @@ async function inputgravity() {
     if (window.plato) data.plato = 1;
 
     try {
-        await post("gravity", JSON.stringify(data), "json");
+        await post("gravity", data, "json");
         setTimeout(function () {
             // request to
             if (bChart.calibrating) BChart.reqnow();

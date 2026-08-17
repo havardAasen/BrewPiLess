@@ -31,7 +31,7 @@ async function save(): Promise<void> {
     });
 
     try {
-        await post(gdcurl, JSON.stringify(setting), "json");
+        await post(gdcurl, setting, "json");
         alert("<%= done %>");
     } catch (error) {
         alert(`<%= script_control_failed_updating_data %>: ${error}`);

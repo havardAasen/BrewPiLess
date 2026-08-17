@@ -726,7 +726,7 @@ var modekeeper = {
                         gravity: gravity,
                     };
                     try {
-                        await post("gravity", JSON.stringify(data), "json");
+                        await post("gravity", data, "json");
                         BWF.send("j{mode:p}");
                     } catch (error) {
                         alert(`<%= failed %>: ${error}`);

@@ -464,14 +464,10 @@ bool bpl::webHandler::BrewPiDataHandler::fileExists(const String &path) const
     unsigned int dum2;
 
     if (getEmbeddedFile(path.c_str(), dum, dum2)) return true;
-    // safari workaround.
-    if (path.endsWith(asyncsrv::T__js)) {
-        String pathWithJgz = path.substring(0, path.lastIndexOf('.')) + ".jgz";
-        //DBG_PRINTF("checking with:%s\n",pathWithJgz.c_str());
-        if (LittleFS.exists(pathWithJgz)) return true;
-    }
-    String pathWithGz = path + asyncsrv::T__gz;
+
+    const String pathWithGz = path + asyncsrv::T__gz;
     if (LittleFS.exists(pathWithGz)) return true;
+
     return false;
 }
 
@@ -507,18 +503,12 @@ void bpl::webHandler::BrewPiDataHandler::sendFile(AsyncWebServerRequest *request
 {
     String pathWithGz = path + asyncsrv::T__gz;
     if (LittleFS.exists(pathWithGz)) {
-#if 0
-        AsyncWebServerResponse *response = request->beginResponse(
-            LittleFS, pathWithGz, getContentType(path));
-        // AsyncFileResonse will add "content-disposion" header, result in "download" of Safari, instead of "render"
-#else
         File file = LittleFS.open(pathWithGz, "r");
         if (!file) {
             request->send(500);
             return;
         }
         AsyncWebServerResponse *response = request->beginResponse(file, path, getContentType(path));
-#endif
         //			response->addHeader(asyncsrv::T_Content_Encoding, asyncsrv::T_gzip);
         response->addHeader(asyncsrv::T_Cache_Control, "max-age=2592000");
         request->send(response);

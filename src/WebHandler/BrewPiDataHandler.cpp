@@ -114,278 +114,55 @@ void bpl::webHandler::BrewPiDataHandler::handleRequest(AsyncWebServerRequest *re
 {
     SystemConfiguration *syscfg = theSettings.systemConfiguration();
 
+    if (request->url() == Local::configPath) handleConfig(request, *syscfg);
+    else if (request->url() == Local::timePath) handleTime(request);
+    else if (request->url() == Local::beerProfilePath) handleBeerProfile(request, *syscfg);
+    else if (request->method() == HTTP_GET && request->url() == Local::getStatusPath)
+        handleStatus(request);
 #if SupportMqttRemoteControl
-    if (request->method() == HTTP_GET && request->url() == Local::mqttPath) {
-        request->send(200, asyncsrv::T_application_json,
-                      theSettings.jsonMqttRemoteControlSettings());
-    } else if (request->method() == HTTP_POST && request->url() == Local::mqttPath) {
-        if (!request->authenticate(syscfg->username, syscfg->password))
-            return request->requestAuthentication();
-
-        if (request->hasParam("data", true)) {
-            if (theSettings.dejsonMqttRemoteControlSettings(
-                request->getParam("data", true)->value())) {
-                theSettings.save();
-                request->send(201);
-                mqttRemoteControl.reset();
-            } else {
-                request->send(500);
-                DBG_PRINTF("json format error\n");
-                return;
-            }
-        } else {
-            request->send(400);
-            DBG_PRINTF("no data in post\n");
-        }
-    } else
+    else if (request->url() == Local::mqttPath) handleMqtt(request, *syscfg);
 #endif
-        if (request->method() == HTTP_GET && request->url() == Local::configPath) {
-            if (!request->authenticate(syscfg->username, syscfg->password))
-                return request->requestAuthentication();
-            if (request->hasParam("cfg"))
-                request->send(200, asyncsrv::T_application_json,
-                              theSettings.jsonSystemConfiguration());
-            else
-                request->redirect(request->url() + asyncsrv::T__htm);
-        } else if (request->method() == HTTP_POST && request->url() == Local::configPath) {
-            if (!request->authenticate(syscfg->username, syscfg->password))
-                return request->requestAuthentication();
-
-            if (request->hasParam("data", true)) {
-                DBG_PRINTF("Config to save: %s\n",
-                           request->getParam("data", true)->value().c_str());
-
-                if (theSettings.
-                    dejsonSystemConfiguration(request->getParam("data", true)->value())) {
-                    theSettings.save();
-                    DBG_PRINT("Config saved\n");
-                    request->send(201);
-                    display.setAutoOffPeriod(theSettings.systemConfiguration()->backlite);
-
-                    WiFiSetup.setMode(
-                        static_cast<WiFiMode>(theSettings.systemConfiguration()->wifiMode));
-
-                    if (!request->hasParam("nb")) {
-                        requestRestart(false);
-                    }
-                } else {
-                    request->send(400, asyncsrv::T_text_plain, "Invalid configuration data.");
-                }
-            } else {
-                request->send(400);
-                DBG_PRINTF("no data in post\n");
-            }
-        } else if (request->method() == HTTP_GET && request->url() == Local::timePath) {
-            AsyncResponseStream *response = request->beginResponseStream(
-                asyncsrv::T_application_json);
-            response->printf("{\"t\":\"%s\",\"e\":%lld,\"o\":%d}", TimeKeeper.getDateTimeStr(),
-                             static_cast<std::int64_t>(TimeKeeper.getTimeSeconds()),
-                             TimeKeeper.getTimezoneOffset());
-            request->send(response);
-        } else if (request->method() == HTTP_POST && request->url() == Local::timePath) {
-            if (request->hasParam("time", true)) {
-                const AsyncWebParameter *tvalue = request->getParam("time", true);
-                time_t time = (time_t) tvalue->value().toInt();
-                DBG_PRINTF("Set Time:%lld from:%s\n", static_cast<std::int64_t>(time),
-                           tvalue->value().c_str());
-                TimeKeeper.setCurrentTime(time);
-            }
-            if (request->hasParam("off", true)) {
-                const AsyncWebParameter *tvalue = request->getParam("off", true);
-                DBG_PRINTF("Set timezone:%ld\n", tvalue->value().toInt());
-                TimeKeeper.setTimezoneOffset(tvalue->value().toInt());
-            }
-            request->send(202);
-        } else if (request->method() == HTTP_GET && request->url() == Local::resetWifiPath) {
-            if (!request->authenticate(syscfg->username, syscfg->password))
-                return request->requestAuthentication();
-            request->send(200, asyncsrv::T_text_html, "Done, restarting..");
-            requestRestart(true);
-        } else if (request->method() == HTTP_GET && request->url() == Local::flistPath) {
-            if (!request->authenticate(syscfg->username, syscfg->password))
-                return request->requestAuthentication();
-
-            handleFileList(request);
-        } else if (request->method() == HTTP_DELETE && request->url() == Local::deletePath) {
-            if (!request->authenticate(syscfg->username, syscfg->password))
-                return request->requestAuthentication();
-
-            handleFileDelete(request);
-        } else if (request->method() == HTTP_POST && request->url() == Local::fputsPath) {
-            if (!request->authenticate(syscfg->username, syscfg->password))
-                return request->requestAuthentication();
-
-            handleFilePuts(request);
-        } else if (request->method() == HTTP_GET && request->url() == Local::getStatusPath) {
-            Mode mode;
-            State state;
-            float beerSet, beerTemp, fridgeTemp, fridgeSet, roomTemp;
-            brewPi.getAllStatus(state, mode, &beerTemp, &beerSet, &fridgeTemp, &fridgeSet,
-                                &roomTemp);
-#define TEMPorNull(a) (IS_FLOAT_TEMP_VALID(a)?  String(a):String("null"))
-            String json = String("{\"mode\":\"") + String((char) mode)
-                          + String("\",\"state\":") + String(state)
-                          + String(",\"beerSet\":") + TEMPorNull(beerSet)
-                          + String(",\"beerTemp\":") + TEMPorNull(beerTemp)
-                          + String(",\"fridgeSet\":") + TEMPorNull(fridgeSet)
-                          + String(",\"fridgeTemp\":") + TEMPorNull(fridgeTemp)
-                          + String(",\"roomTemp\":") + TEMPorNull(roomTemp)
-                          + String("}");
-            request->send(200, asyncsrv::T_application_json, json);
-        }
 #ifdef ENABLE_LOGGING
-        else if (request->url() == Local::loggingPath) {
-            if (request->method() == HTTP_POST) {
-                if (!request->authenticate(syscfg->username, syscfg->password))
-                    return request->requestAuthentication();
-                if (request->hasParam("data", true)) {
-                    if (theSettings.dejsonRemoteLogging(request->getParam("data", true)->value())) {
-                        request->send(202);
-                        theSettings.save();
-                    } else {
-                        request->send(401);
-                    }
-                } else {
-                    request->send(404);
-                }
-            } else {
-                if (request->hasParam("data")) {
-                    request->send(200, asyncsrv::T_application_json,
-                                  theSettings.jsonRemoteLogging());
-                } else {
-                    request->redirect(request->url() + asyncsrv::T__htm);
-                }
-            }
-        }
+    else if (request->url() == Local::loggingPath) handleLogging(request, *syscfg);
 #endif
 #if EanbleParasiteTempControl
-        else if (request->url() == Local::parasiteTempControlPath) {
-            if (request->method() == HTTP_POST) {
-                if (request->hasParam("c", true)) {
-                    String content = request->getParam("c", true)->value();
-                    if (parasiteTempController.updateSettings(content))
-                        request->send(201);
-                    else
-                        request->send(400);
-                } else
-                    request->send(404);
-            } else {
-                String status = parasiteTempController.getSettings();
-                request->send(200, asyncsrv::T_application_json, status);
-            }
-        }
+    else if (request->url() == Local::parasiteTempControlPath) handleParasiteTempControl(request);
 #endif
 #if AUTO_CAP
-        else if (request->url() == Local::capperPath) {
-            if (!request->authenticate(syscfg->username, syscfg->password))
-                return request->requestAuthentication();
-            // auto cap.
-            if (request->hasParam("psi")) {
-                theSettings.pressureMonitorSettings()->psi = request->getParam("psi")->value().
-                        toInt();
-                DBG_PRINTF("set pressure:%d", theSettings.pressureMonitorSettings()->psi);
-            }
-            bool response = true;
-            if (request->hasParam("cap")) {
-                const AsyncWebParameter *value = request->getParam("cap");
-                autoCapControl.capManualSet(value->value().toInt() != 0);
-                // manual
-            } else if (request->hasParam("at")) {
-                // time
-                const AsyncWebParameter *value = request->getParam("at");
-                autoCapControl.capAtTime(value->value().toInt());
-            } else if (request->hasParam("sg")) {
-                // gravity
-                const AsyncWebParameter *value = request->getParam("sg");
-                autoCapControl.catOnGravity(value->value().toFloat());
-            } else {
-                request->send(400);
-                response = false;
-            }
-            if (response) request->send(202);
-            capStatusReport();
-        }
+    else if (request->url() == Local::capperPath) handleCapper(request, *syscfg);
 #endif
 #if SupportPressureTransducer
-        else if (request->url() == Local::pressurePath) {
-            if (!request->authenticate(syscfg->username, syscfg->password))
-                return request->requestAuthentication();
-
-            if (request->method() == HTTP_GET) {
-                if (request->hasParam("r")) {
-                    int reading = PressureMonitor.currentAdcReading();
-                    request->send(200, asyncsrv::T_application_json,
-                                  String("{\"a0\":") + String(reading) + String("}"));
-                } else {
-                    request->send(200, asyncsrv::T_application_json,
-                                  theSettings.jsonPressureMonitorSettings());
-                }
-            } else {
-                // post
-                if (!request->authenticate(syscfg->username, syscfg->password))
-                    return request->requestAuthentication();
-
-                if (request->hasParam("data", true)) {
-                    if (theSettings.dejsonPressureMonitorSettings(
-                        request->getParam("data", true)->value())) {
-                        theSettings.save();
-                        request->send(201);
-                    } else {
-                        DBG_PRINTF("invalid Json\n");
-                        request->send(402);
-                    }
-                } else {
-                    DBG_PRINTF("no data\n");
-                    request->send(401);
-                }
-            }
-        }
+    else if (request->url() == Local::pressurePath) handlePressure(request, *syscfg);
 #endif
-        else if (request->url() == Local::beerProfilePath) {
-            if (request->method() == HTTP_GET) {
-                request->send(200, asyncsrv::T_application_json, theSettings.jsonBeerProfile());
-            } else {
-                //if(request->method() == HTTP_POST){
+    // Every call below this point requires authentication
+    if (!request->authenticate(syscfg->username, syscfg->password))
+        return request->requestAuthentication();
 
-                if (!request->authenticate(syscfg->username, syscfg->password))
-                    return request->requestAuthentication();
+    if (request->method() == HTTP_GET && request->url() == Local::resetWifiPath) {
+        request->send(200, asyncsrv::T_text_html, "Done, restarting..");
+        requestRestart(true);
+    } else if (request->method() == HTTP_GET && request->url() == Local::flistPath) {
+        handleFileList(request);
+    } else if (request->method() == HTTP_DELETE && request->url() == Local::deletePath) {
+        handleFileDelete(request);
+    } else if (request->method() == HTTP_POST && request->url() == Local::fputsPath) {
+        handleFilePuts(request);
+    } else if (request->method() == HTTP_GET) {
+        String path = request->url();
+        if (path.endsWith("/")) path += Local::defaultIndexFile;
 
-                if (request->hasParam("data", true)) {
-                    if (theSettings.dejsonBeerProfile(request->getParam("data", true)->value())) {
-                        theSettings.save();
-                        brewKeeper.profileUpdated();
-                        request->send(201);
-                    } else
-                        request->send(402);
-                } else {
-                    request->send(401);
-                }
+        if (request->url().equals("/")) {
+            if (!syscfg->passwordLcd) {
+                sendFile(request, path);
+                return;
             }
-        } else if (request->method() == HTTP_GET) {
-            String path = request->url();
-            if (path.endsWith("/")) path += Local::defaultIndexFile;
-
-            if (request->url().equals("/")) {
-                if (!syscfg->passwordLcd) {
-                    sendFile(request, path); //request->send(LittleFS, path);
-                    return;
-                }
-            }
-            /*
-            bool auth=true;
-
-            for(byte i=0;i< sizeof(public_list)/sizeof(const char*);i++){
-                if(path.equals(public_list[i])){
-                        auth=false;
-                        break;
-                    }
-            }
-            */
-            if (syscfg->passwordLcd && !request->authenticate(syscfg->username, syscfg->password))
-                return request->requestAuthentication();
-
-            sendFile(request, path); //request->send(LittleFS, path);
         }
+
+        if (syscfg->passwordLcd && !request->authenticate(syscfg->username, syscfg->password))
+            return request->requestAuthentication();
+
+        sendFile(request, path);
+    }
 }
 
 
@@ -457,6 +234,273 @@ void bpl::webHandler::BrewPiDataHandler::handleFilePuts(AsyncWebServerRequest *r
 }
 
 
+void bpl::webHandler::BrewPiDataHandler::handleBeerProfile(AsyncWebServerRequest *request,
+                                                           const SystemConfiguration &sysCfg)
+{
+    if (request->method() == HTTP_GET) {
+        request->send(200, asyncsrv::T_application_json, theSettings.jsonBeerProfile());
+        return;
+    }
+
+    if (!request->authenticate(sysCfg.username, sysCfg.password))
+        return request->requestAuthentication();
+
+    if (request->hasParam("data", true)) {
+        if (theSettings.dejsonBeerProfile(request->getParam("data", true)->value())) {
+            theSettings.save();
+            brewKeeper.profileUpdated();
+            request->send(201);
+        } else
+            request->send(402);
+
+        return;
+    }
+
+    request->send(401);
+}
+
+
+void bpl::webHandler::BrewPiDataHandler::handleCapper(AsyncWebServerRequest *request,
+                                                      const SystemConfiguration &sysCfg)
+{
+    if (!request->authenticate(sysCfg.username, sysCfg.password))
+        return request->requestAuthentication();
+
+    if (request->hasParam("psi")) {
+        theSettings.pressureMonitorSettings()->psi = request->getParam("psi")->value().
+                toInt();
+        DBG_PRINTF("set pressure:%d", theSettings.pressureMonitorSettings()->psi);
+    }
+    bool response = true;
+    if (request->hasParam("cap")) {
+        const AsyncWebParameter *value = request->getParam("cap");
+        autoCapControl.capManualSet(value->value().toInt() != 0);
+        // manual
+    } else if (request->hasParam("at")) {
+        // time
+        const AsyncWebParameter *value = request->getParam("at");
+        autoCapControl.capAtTime(value->value().toInt());
+    } else if (request->hasParam("sg")) {
+        // gravity
+        const AsyncWebParameter *value = request->getParam("sg");
+        autoCapControl.catOnGravity(value->value().toFloat());
+    } else {
+        request->send(400);
+        response = false;
+    }
+    if (response) request->send(202);
+    capStatusReport();
+}
+
+
+void bpl::webHandler::BrewPiDataHandler::handleConfig(AsyncWebServerRequest *request,
+                                                      const SystemConfiguration &sysCfg)
+{
+    if (!request->authenticate(sysCfg.username, sysCfg.password))
+        return request->requestAuthentication();
+
+    if (request->method() == HTTP_GET) {
+        if (request->hasParam("cfg"))
+            request->send(200, asyncsrv::T_application_json,
+                          theSettings.jsonSystemConfiguration());
+        else
+            request->redirect(request->url() + asyncsrv::T__htm);
+
+        return;
+    }
+
+    if (request->method() == HTTP_POST) {
+        if (!request->hasParam("data", true)) {
+            request->send(400);
+            DBG_PRINTF("no data in post\n");
+            return;
+        }
+
+        DBG_PRINTF("Config to save: %s\n",
+                   request->getParam("data", true)->value().c_str());
+
+        if (theSettings.
+            dejsonSystemConfiguration(request->getParam("data", true)->value())) {
+            theSettings.save();
+            DBG_PRINT("Config saved\n");
+            request->send(201);
+            display.setAutoOffPeriod(theSettings.systemConfiguration()->backlite);
+
+            WiFiSetup.setMode(
+                static_cast<WiFiMode>(theSettings.systemConfiguration()->wifiMode));
+
+            if (!request->hasParam("nb")) {
+                requestRestart(false);
+            }
+            return;
+        }
+
+        request->send(400, asyncsrv::T_text_plain, "Invalid configuration data.");
+    }
+}
+
+
+void bpl::webHandler::BrewPiDataHandler::handleLogging(AsyncWebServerRequest *request,
+                                                       const SystemConfiguration &sysCfg)
+{
+    if (request->method() == HTTP_POST) {
+        if (!request->authenticate(sysCfg.username, sysCfg.password))
+            return request->requestAuthentication();
+
+        if (request->hasParam("data", true)) {
+            if (theSettings.dejsonRemoteLogging(request->getParam("data", true)->value())) {
+                request->send(202);
+                theSettings.save();
+            } else {
+                request->send(401);
+            }
+        } else {
+            request->send(404);
+        }
+    } else {
+        if (request->hasParam("data")) {
+            request->send(200, asyncsrv::T_application_json,
+                          theSettings.jsonRemoteLogging());
+        } else {
+            request->redirect(request->url() + asyncsrv::T__htm);
+        }
+    }
+}
+
+
+void bpl::webHandler::BrewPiDataHandler::handleMqtt(AsyncWebServerRequest *request,
+                                                    const SystemConfiguration &sysCfg)
+{
+    if (request->method() == HTTP_GET) {
+        request->send(200, asyncsrv::T_application_json,
+                      theSettings.jsonMqttRemoteControlSettings());
+        return;
+    }
+
+    if (request->method() == HTTP_POST) {
+        if (!request->authenticate(sysCfg.username, sysCfg.password))
+            return request->requestAuthentication();
+
+        if (!request->hasParam("data", true)) {
+            request->send(400);
+            DBG_PRINTF("no data in post\n");
+        }
+
+        if (theSettings.dejsonMqttRemoteControlSettings(request->getParam("data", true)->value())) {
+            theSettings.save();
+            request->send(201);
+            mqttRemoteControl.reset();
+        } else {
+            request->send(500);
+            DBG_PRINTF("json format error\n");
+        }
+    }
+}
+
+
+void bpl::webHandler::BrewPiDataHandler::handleStatus(AsyncWebServerRequest *request)
+{
+    Mode mode;
+    State state;
+    float beerSet, beerTemp, fridgeTemp, fridgeSet, roomTemp;
+    brewPi.getAllStatus(state, mode, &beerTemp, &beerSet, &fridgeTemp, &fridgeSet,
+                        &roomTemp);
+#define TEMPorNull(a) (IS_FLOAT_TEMP_VALID(a)?  String(a):String("null"))
+    String json = String("{\"mode\":\"") + String((char) mode)
+                  + String("\",\"state\":") + String(state)
+                  + String(",\"beerSet\":") + TEMPorNull(beerSet)
+                  + String(",\"beerTemp\":") + TEMPorNull(beerTemp)
+                  + String(",\"fridgeSet\":") + TEMPorNull(fridgeSet)
+                  + String(",\"fridgeTemp\":") + TEMPorNull(fridgeTemp)
+                  + String(",\"roomTemp\":") + TEMPorNull(roomTemp)
+                  + String("}");
+    request->send(200, asyncsrv::T_application_json, json);
+}
+
+
+void bpl::webHandler::BrewPiDataHandler::handleTime(AsyncWebServerRequest *request)
+{
+    if (request->method() == HTTP_GET) {
+        AsyncResponseStream *response = request->beginResponseStream(asyncsrv::T_application_json);
+        response->printf("{\"t\":\"%s\",\"e\":%lld,\"o\":%d}", TimeKeeper.getDateTimeStr(),
+                         static_cast<std::int64_t>(TimeKeeper.getTimeSeconds()),
+                         TimeKeeper.getTimezoneOffset());
+        request->send(response);
+    }
+
+    if (request->method() == HTTP_POST) {
+        if (request->hasParam("time", true)) {
+            const AsyncWebParameter *tvalue = request->getParam("time", true);
+            const auto time = tvalue->value().toInt();
+            DBG_PRINTF("Set Time:%lld from:%s\n", static_cast<std::int64_t>(time),
+                       tvalue->value().c_str());
+            TimeKeeper.setCurrentTime(time);
+        }
+        if (request->hasParam("off", true)) {
+            const AsyncWebParameter *tvalue = request->getParam("off", true);
+            DBG_PRINTF("Set timezone:%ld\n", tvalue->value().toInt());
+            TimeKeeper.setTimezoneOffset(tvalue->value().toInt());
+        }
+        request->send(202);
+    }
+}
+
+
+void bpl::webHandler::BrewPiDataHandler::handleParasiteTempControl(
+    AsyncWebServerRequest *request)
+{
+    if (request->method() == HTTP_POST) {
+        if (request->hasParam("c", true)) {
+            String content = request->getParam("c", true)->value();
+            if (parasiteTempController.updateSettings(content))
+                request->send(201);
+            else
+                request->send(400);
+        } else
+            request->send(404);
+    } else {
+        String status = parasiteTempController.getSettings();
+        request->send(200, asyncsrv::T_application_json, status);
+    }
+}
+
+
+void bpl::webHandler::BrewPiDataHandler::handlePressure(AsyncWebServerRequest *request,
+                                                        const SystemConfiguration &sysCfg)
+{
+    if (!request->authenticate(sysCfg.username, sysCfg.password))
+        return request->requestAuthentication();
+
+    if (request->method() == HTTP_GET) {
+        if (request->hasParam("r")) {
+            int reading = PressureMonitor.currentAdcReading();
+            request->send(200, asyncsrv::T_application_json,
+                          String("{\"a0\":") + String(reading) + String("}"));
+        } else {
+            request->send(200, asyncsrv::T_application_json,
+                          theSettings.jsonPressureMonitorSettings());
+        }
+        return;
+    }
+
+    if (request->method() == HTTP_POST) {
+        if (request->hasParam("data", true)) {
+            if (theSettings.dejsonPressureMonitorSettings(
+                request->getParam("data", true)->value())) {
+                theSettings.save();
+                request->send(201);
+                return;
+            }
+
+            DBG_PRINTF("invalid JSON\n");
+        } else {
+            DBG_PRINTF("no data\n");
+        }
+    request->send(401);
+    }
+}
+
+
 bool bpl::webHandler::BrewPiDataHandler::fileExists(const String &path) const
 {
     if (LittleFS.exists(path)) return true;
@@ -508,7 +552,8 @@ void bpl::webHandler::BrewPiDataHandler::sendFile(AsyncWebServerRequest *request
             request->send(500);
             return;
         }
-        AsyncWebServerResponse *response = request->beginResponse(file, path, getContentType(path));
+        AsyncWebServerResponse *response = request->beginResponse(
+            file, path, getContentType(path));
         //			response->addHeader(asyncsrv::T_Content_Encoding, asyncsrv::T_gzip);
         response->addHeader(asyncsrv::T_Cache_Control, "max-age=2592000");
         request->send(response);

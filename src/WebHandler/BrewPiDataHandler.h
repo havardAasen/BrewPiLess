@@ -1,6 +1,8 @@
 #ifndef BREWPILESS_BREWPIDATAHANDLER_H
 #define BREWPILESS_BREWPIDATAHANDLER_H
 
+#include "BPLSettings.h"
+
 #include <ESPAsyncWebServer.h>
 
 namespace bpl::webHandler {
@@ -14,6 +16,18 @@ namespace bpl::webHandler {
         static void handleFileList(AsyncWebServerRequest *request);
         static void handleFileDelete(AsyncWebServerRequest *request);
         static void handleFilePuts(AsyncWebServerRequest *request);
+        static void handleBeerProfile(AsyncWebServerRequest *request,
+                                      const SystemConfiguration &sysCfg);
+        static void handleCapper(AsyncWebServerRequest *request, const SystemConfiguration &sysCfg);
+        static void handleConfig(AsyncWebServerRequest *request, const SystemConfiguration &sysCfg);
+        static void handleLogging(AsyncWebServerRequest *request,
+                                  const SystemConfiguration &sysCfg);
+        static void handleMqtt(AsyncWebServerRequest *request, const SystemConfiguration &sysCfg);
+        static void handleStatus(AsyncWebServerRequest *request);
+        static void handleTime(AsyncWebServerRequest *request);
+        static void handleParasiteTempControl(AsyncWebServerRequest *request);
+        static void handlePressure(AsyncWebServerRequest *request,
+                                   const SystemConfiguration &sysCfg);
 
         [[nodiscard]] bool fileExists(const String &path) const;
         void sendProgmem(AsyncWebServerRequest *request, const char *html);

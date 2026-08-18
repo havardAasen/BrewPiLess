@@ -156,7 +156,7 @@ void ExternalData::setGravity(float sg, time_t now,bool log){
 
 	if(!IsGravityValid(old_sg)) filter.setInitial(sg);
 #if EnableGravitySchedule
-    float _filteredGravity=filter.addData(sg);
+	_filteredGravity=filter.addData(sg);
 		// use filter data as input to tracker and beer profile.
 	brewKeeper.updateGravity(_filteredGravity);
 	if(_cfg->usePlato)

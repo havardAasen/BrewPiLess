@@ -21,12 +21,6 @@ bpl::webHandler::ExternalDataHandler::ExternalDataHandler()
 }
 
 
-void bpl::webHandler::ExternalDataHandler::loadConfig()
-{
-    externalData.loadConfig();
-}
-
-
 bool bpl::webHandler::ExternalDataHandler::canHandle(AsyncWebServerRequest *request) const
 {
     DBG_PRINTF("req: %s\n", request->url().c_str());

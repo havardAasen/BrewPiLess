@@ -73,12 +73,6 @@ void ExternalData::sseNotify(char *buf){
 }
 
 
-void ExternalData::loadConfig(){
-    _cfg = theSettings.GravityConfig();
-    filter.setBeta(_cfg->lpfBeta);
-}
-
-
 bool ExternalData::processconfig(char* configdata){
    bool ret= theSettings.dejsonGravityConfig(configdata);
    if(ret){
@@ -107,6 +101,14 @@ void ExternalData::setOriginalGravity(float og){
 		brewKeeper.updateOriginalGravity(og);
 #endif
 }
+
+
+ExternalData::ExternalData()
+{
+    _cfg = theSettings.GravityConfig();
+    filter.setBeta(_cfg->lpfBeta);
+}
+
 
 void ExternalData::setTilt(float tilt,float temp,time_t now){
 	_lastUpdate=now;

@@ -47,7 +47,7 @@ struct TimeInformation{
 // gravity device
 //  36
 struct GravityDeviceConfiguration{
-    std::array<float, 4> ispindelCoefficients;
+    std::array<float, 4> ispindelCoefficients{};
     float    lpfBeta{0.1};
     uint32_t numberCalPoints{0};
 

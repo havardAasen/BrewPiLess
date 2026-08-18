@@ -16,8 +16,6 @@ namespace bpl::webHandler {
                         size_t total) override;
         [[nodiscard]] bool isRequestHandlerTrivial() const override;
 
-        void loadConfig();
-
     private:
         void processGravity(AsyncWebServerRequest *request, char data[], size_t length);
 

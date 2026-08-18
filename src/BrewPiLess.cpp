@@ -607,7 +607,6 @@ void setup(void){
 
 	webServer->addHandler(&logHandler);
 
-	externalDataHandler.loadConfig();
 	webServer->addHandler(&externalDataHandler);
 
 	webServer->addHandler(&networkConfig);

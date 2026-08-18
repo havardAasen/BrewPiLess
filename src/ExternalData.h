@@ -71,6 +71,8 @@ protected:
 	void setAuxTemperatureCelsius(float temp);
 	void setOriginalGravity(float og);	
 public:
+	explicit ExternalData();
+
 	float gravity(bool filtered=false);
 	float plato(bool filtered=false);
 
@@ -84,7 +86,6 @@ public:
     void sseNotify(char *buf);
 	//configuration processs
     bool processconfig(char* configdata);
-	void loadConfig();
 	//update formula
 	void formula(float coeff[4],uint32_t npt);
 

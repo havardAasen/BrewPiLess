@@ -2,6 +2,9 @@ name: Unit tests
 on:
   push:
 
+permissions:
+  contents: read
+
 jobs:
   test-platformio:
     name: Test PlatformIO

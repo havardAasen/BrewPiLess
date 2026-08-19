@@ -79,7 +79,7 @@ long_temperature stringToFixedPoint(const char * numberString){
 	long_temperature intPart = 0;
 	long_temperature fracPart = 0;
 
-	char * fractPtr = nullptr; //pointer to the point in the string
+	const char *fractPtr = nullptr; //pointer to the point in the string
 	bool negative = 0;
 	if(numberString[0] == '-'){
 		numberString++;

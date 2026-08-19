@@ -176,7 +176,7 @@ String BPLSettings::jsonSystemConfiguration(){
 #define KeyCoefficientA1 "a1"
 #define KeyCoefficientA2 "a2"
 #define KeyCoefficientA3 "a3"
-#define KeyLPFBeta "lpc"
+#define KeyLPFAlpha "lpc"
 #define KeyStableGravityThreshold "stpt"
 #define KeyNumberCalPoints "npt"
 #define KeyUsePlato "plato"
@@ -200,7 +200,7 @@ String BPLSettings::jsonSystemConfiguration(){
 	gdc->ispindelCoefficients[1]=doc[KeyCoefficientA1];
 	gdc->ispindelCoefficients[2]=doc[KeyCoefficientA2];
 	gdc->ispindelCoefficients[3]=doc[KeyCoefficientA3];
-	gdc->lpfBeta =doc[KeyLPFBeta];
+	gdc->lpfAlpha =doc[KeyLPFAlpha];
 	gdc->stableThreshold=doc[KeyStableGravityThreshold];
 	gdc->numberCalPoints=doc[KeyNumberCalPoints];
 	gdc->usePlato = doc[KeyUsePlato].is<bool>() ? doc[KeyUsePlato] : false;
@@ -226,7 +226,7 @@ String BPLSettings::jsonGravityConfig(){
 
 		doc[KeyCorrectionTemp] = gdc->ispindelCalibrationBaseTemp;
 		doc[KeyCalculateGravity] = gdc->calculateGravity;
-		doc[KeyLPFBeta] =gdc->lpfBeta;
+		doc[KeyLPFAlpha] =gdc->lpfAlpha;
 		doc[KeyStableGravityThreshold] = gdc->stableThreshold;
 
 		doc[KeyCoefficientA0]=gdc->ispindelCoefficients[0];

@@ -106,7 +106,7 @@ void ExternalData::setOriginalGravity(float og){
 ExternalData::ExternalData()
 {
     _cfg = theSettings.GravityConfig();
-    filter.setAlpha(_cfg->lpfBeta);
+    filter.setAlpha(_cfg->lpfAlpha);
 }
 
 

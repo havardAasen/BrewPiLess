@@ -38,7 +38,7 @@ void ExternalData::sseNotify(char *buf){
 		strgravity[len]='\0';
 
 		char slowpassfilter[8];
-		len=sprintf(slowpassfilter, "%.*f", 2, filter.beta());
+		len=sprintf(slowpassfilter, "%.*f", 2, filter.alpha());
 		slowpassfilter[len]='\0';
 
 		char strtilt[8];
@@ -106,7 +106,7 @@ void ExternalData::setOriginalGravity(float og){
 ExternalData::ExternalData()
 {
     _cfg = theSettings.GravityConfig();
-    filter.setBeta(_cfg->lpfBeta);
+    filter.setAlpha(_cfg->lpfBeta);
 }
 
 
@@ -156,7 +156,7 @@ void ExternalData::setGravity(float sg, time_t now,bool log){
 
 	if(!IsGravityValid(old_sg)) filter.setInitial(sg);
 #if EnableGravitySchedule
-	_filteredGravity=filter.addData(sg);
+	_filteredGravity=filter.addSample(sg);
 		// use filter data as input to tracker and beer profile.
 	brewKeeper.updateGravity(_filteredGravity);
 	if(_cfg->usePlato)

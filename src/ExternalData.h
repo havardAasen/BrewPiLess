@@ -10,6 +10,7 @@
 #include "TempSensorWireless.h"
 #endif
 
+#include <ExponentialSmoothing.h>
 #include <TemperatureFormats.h>
 
 #define INVALID_VOLTAGE -1
@@ -30,21 +31,6 @@ inline bool isTiltAngleValid(const float angle) { return angle > 0; }
 #define ErrorUnknownSource 4
 
 
-class SimpleFilter
-{
-	float _y{};
-	float _b{0.1};
-public:
-	void setInitial(float v){ _y=v;}
-	void setBeta(float b) { _b = b; }
-	float beta(){ return _b; }
-
-	float addData(float x){
-		_y = _y + _b * (x - _y);
-		return _y;
-	}
-};
-
 class ExternalData
 {
 protected:
@@ -53,7 +39,7 @@ protected:
 	time_t _lastUpdate{};
 	float  _deviceVoltage{INVALID_VOLTAGE};
 //	float _og;
-	SimpleFilter filter;
+	ExponentialSmoothing filter;
 	char *_ispindelName{};
 	float _ispindelTilt{-1};
 	bool  _calibrating{};

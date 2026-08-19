@@ -3,6 +3,9 @@ name: Linter
 on:
   push:
 
+permissions:
+  contents: read
+
 jobs:
   prettier:
     runs-on: ubuntu-latest

@@ -1,0 +1,29 @@
+PROJECT_NAME           = "BrewPiLess"
+OUTPUT_DIRECTORY       = doc
+CREATE_SUBDIRECTORIES  = YES
+
+INPUT                  = src lib
+RECURSIVE              = YES
+FILE_PATTERNS          = *.cpp *.h
+
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+GENERATE_LATEX         = NO
+USE_MATHJAX            = YES
+
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = NO
+SEARCH_INCLUDES        = YES
+
+HAVE_DOT               = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+UML_GRAPH              = YES
+
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = NO

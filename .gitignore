@@ -8,4 +8,5 @@
 cheader/
 compile_commands.json
 dist/
+doc/html/
 node_modules/

@@ -1,4 +1,4 @@
-import { select, C2F, BrewMath, updateNavbarVersion } from "./shared";
+import { select, C2F, BrewMath, updateNavbarVersion, byId } from "./shared";
 import { mqttLoadSetting } from "./mqtt";
 import { del, get, post } from "./httpClient";
 
@@ -246,7 +246,7 @@ function generichttp_get() {
         alert("<%= script_logging_select_method %>");
         return null;
     }
-    var format = select("#format").value.trim();
+    const format = byId("format").value.trim();
 
     if (window.selectedMethod == "GET") {
         const myRe = /s/g;

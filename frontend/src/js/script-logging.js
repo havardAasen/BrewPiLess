@@ -231,12 +231,12 @@ function checkformat(ta) {
     select("#fmthint").innerHTML = "" + ta.value.length + "/256";
 }
 
-function cmethod(c) {
-    var inputs = document.querySelectorAll('input[name$="method"]');
-    for (var i = 0; i < inputs.length; i++) {
-        if (inputs[i].id != c.id) inputs[i].checked = false;
-    }
-    window.selectedMethod = c.value;
+/**
+ * @param {HTMLInputElement} radioBtn
+ */
+function updateRemoteLogHttpMethod(radioBtn) {
+    const labelEl = select(`label[for="${radioBtn.id}"]`);
+    window.selectedMethod = labelEl.textContent.trim();
 }
 
 //Serivce specif widget processing
@@ -494,6 +494,20 @@ async function remote_init() {
     };
 
     serviceOption("generichttp");
+    const checkedRadioBtn = select('input[name="method"]:checked');
+    if (checkedRadioBtn) {
+        updateRemoteLogHttpMethod(checkedRadioBtn);
+    }
+
+    const radioBtns = document.querySelectorAll('input[name="method"]');
+    radioBtns.forEach((r) => {
+        r.addEventListener("change", () => {
+            // The radio button that fired the event is now the checked one
+            if (r.checked) {
+                updateRemoteLogHttpMethod(r);
+            }
+        });
+    });
 
     let json;
     try {
@@ -562,7 +576,6 @@ export function init() {
 }
 
 window.checkurl = checkurl;
-window.cmethod = cmethod;
 window.hideformat = hideformat;
 window.serviceChange = serviceChange;
 window.showformat = showformat;

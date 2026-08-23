@@ -127,7 +127,7 @@ void initTime(bool apmode)
 		TimeKeeper.begin();
 	}else{
 		DBG_PRINTF("connect to Time server\n");
-		TimeKeeper.begin((char*)"time.google.com",(char*)"pool.ntp.org",(char*)"time.windows.com");
+		TimeKeeper.begin("time.google.com", "pool.ntp.org", "time.windows.com");
 	}
 }
 #if AUTO_CAP

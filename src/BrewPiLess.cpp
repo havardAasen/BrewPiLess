@@ -57,10 +57,6 @@
 #include "DataLogger.h"
 #endif
 
-extern "C" {
-#include <sntp.h>
-}
-
 #include "BPLSettings.h"
 
 #include "ESPUpdateServer.h"

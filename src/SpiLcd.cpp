@@ -26,11 +26,6 @@
 #include "FastDigitalPin.h"
 #include "Pins.h"
 
-#ifndef ESP8266
-#include <util/delay.h>
-#include <util/atomic.h>
-#endif
-
 #if BREWPI_SHIFT_LCD
 
 // MDM - removed the latchPin parameter since it's never changed, and having a compile time constant makes the

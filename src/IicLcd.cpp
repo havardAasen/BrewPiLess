@@ -13,16 +13,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <inttypes.h>
-#include <inttypes.h>
 #include <Arduino.h>
-
-#ifdef ESP8266
 #include <Wire.h>
-#else
-extern "C" {
-  #include "Twi.h"
-}
-#endif
 
 // When the display powers up, it is configured as follows:
 //
@@ -89,15 +81,10 @@ void IIClcd::init(){
 
 void IIClcd::init_priv()
 {
-	#ifdef ESP8266
-
 	Wire.begin(PIN_SDA,PIN_SCL);
 	#if LCD_AUTO_ADDRESSING == true
 	scanForAddress();
 	#endif
-#else
-	twi_init();
-#endif
 	_displayfunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
 	begin(_cols, _rows);
 }
@@ -310,7 +297,6 @@ void IIClcd::write4bits(uint8_t value) {
 }
 
 void IIClcd::expanderWrite(uint8_t _data) {
-#ifdef ESP8266
 #ifdef RotaryViaPCF8574
 	noInterrupts();
 #endif
@@ -319,10 +305,6 @@ void IIClcd::expanderWrite(uint8_t _data) {
 	Wire.endTransmission();
 #ifdef RotaryViaPCF8574
 	interrupts();
-#endif
-#else
-    uint8_t data = ((uint8_t)(_data) | _backlightval);
-    twi_writeTo(_Addr, &data, 1, true, true);
 #endif
 }
 

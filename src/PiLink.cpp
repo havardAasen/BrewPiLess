@@ -44,12 +44,6 @@
 #include "ESPEepromAccess.h"
 #endif
 
-#ifdef ARDUINO
-#ifndef ESP8266
-#include "util/delay.h"
-#endif
-#endif
-
 #if BREWPI_SIMULATE
 #include "Simulator.h"
 #endif

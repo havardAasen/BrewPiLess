@@ -141,16 +141,19 @@ struct FileIndexes
 #define MaximumContentTypeLength 48
 #define MaximumUrlLength 128
 #define MaximumFormatLength 256
-#define mHTTP_GET 0 
-#define mHTTP_POST 1
-#define mHTTP_PUT 2 
+
+enum class HttpMethod : std::uint8_t {
+    get,
+    post,
+    put
+};
 
 struct RemoteLoggingInformation{
 	char url[MaximumUrlLength]{};
 	char format[MaximumFormatLength]{};
 	char contentType[MaximumContentTypeLength]{};
 	time_t period{0};
-	uint8_t method{0};
+	HttpMethod method{HttpMethod::get};
 	uint8_t enabled{0};
 	uint8_t service{0};
 };

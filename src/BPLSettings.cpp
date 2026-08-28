@@ -438,9 +438,9 @@ bool BPLSettings::dejsonRemoteLogging(String json)
 	if(strlen(format) >= MaximumFormatLength) return false;
 	if(strlen(contentType)>=MaximumContentTypeLength) return false;
 
-	if(strcmp(method,asyncsrv::T_GET) ==0) logInfo->method = mHTTP_GET;
-	else if(strcmp(method,asyncsrv::T_POST) ==0) logInfo->method = mHTTP_POST;
-	else if(strcmp(method,asyncsrv::T_PUT) ==0)  logInfo->method = mHTTP_PUT;
+	if(strcmp(method,asyncsrv::T_GET) ==0) logInfo->method = HttpMethod::get;
+	else if(strcmp(method,asyncsrv::T_POST) ==0) logInfo->method = HttpMethod::post;
+	else if(strcmp(method,asyncsrv::T_PUT) ==0)  logInfo->method = HttpMethod::put;
 	else return false;
 	strcpy(logInfo->url,url);
 	strcpy(logInfo->format,format);
@@ -461,9 +461,9 @@ String BPLSettings::jsonRemoteLogging()
 	doc["period"] = logInfo->period;
 	doc["service"] = logInfo->service;
 
-	if(logInfo->method ==mHTTP_GET) doc["method"]=asyncsrv::T_GET;
-	else if(logInfo->method ==mHTTP_PUT) doc["method"]=asyncsrv::T_PUT;
-	else if(logInfo->method ==mHTTP_POST) doc["method"]=asyncsrv::T_POST;
+	if(logInfo->method == HttpMethod::get) doc["method"]=asyncsrv::T_GET;
+	else if(logInfo->method == HttpMethod::put) doc["method"]=asyncsrv::T_PUT;
+	else if(logInfo->method == HttpMethod::post) doc["method"]=asyncsrv::T_POST;
 
 	doc["url"]=(logInfo->url)? logInfo->url:"";
 	doc["format"]=(logInfo->format)? logInfo->format:"";

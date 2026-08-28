@@ -58,10 +58,10 @@ void DataLogger::sendData()
 	HTTPClient _http;
   	_http.setUserAgent(F("ESP8266"));
 
-	DBG_PRINTF("[HTTP] %d...\n",_loggingInfo->method);
+	DBG_PRINTF("[HTTP] %d...\n", static_cast<std::uint8_t>(_loggingInfo->method));
 	DBG_PRINTF("Content-Type:\"%s\"\n", _loggingInfo->contentType);
-	if(_loggingInfo->method == mHTTP_POST
-		|| _loggingInfo->method== mHTTP_PUT ){
+	if(_loggingInfo->method == HttpMethod::post
+		|| _loggingInfo->method== HttpMethod::put ){
 		// post
 
 		_http.begin(wifiClient,_loggingInfo->url);
@@ -72,7 +72,7 @@ void DataLogger::sendData()
   			_http.addHeader(asyncsrv::T_Content_Type, asyncsrv::T_app_xform_urlencoded);
   		}
     // start connection and send HTTP header
-    	code = _http.sendRequest((_loggingInfo->method == mHTTP_POST)? asyncsrv::T_POST:asyncsrv::T_PUT,(uint8_t*)data,len);
+    	code = _http.sendRequest((_loggingInfo->method == HttpMethod::post)? asyncsrv::T_POST:asyncsrv::T_PUT,(uint8_t*)data,len);
     }else{
  			_http.begin(wifiClient,String(_loggingInfo->url) + String("?") + String(data));
     	code = _http.GET();

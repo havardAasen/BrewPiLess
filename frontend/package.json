@@ -31,7 +31,7 @@
     "grunt-sass": "^4.1.0",
     "grunt-shell": "^4.0.0",
     "prettier": "^3.9.6",
-    "rollup": "^4.62.2",
+    "rollup": "^4.63.1",
     "rollup-plugin-typescript2": "^0.37.0",
     "sass": "^1.103.1",
     "tsx": "^4.23.1",

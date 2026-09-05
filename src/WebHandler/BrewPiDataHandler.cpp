@@ -134,18 +134,22 @@ void bpl::webHandler::BrewPiDataHandler::handleRequest(AsyncWebServerRequest *re
 #if SupportPressureTransducer
     else if (request->url() == Local::pressurePath) handlePressure(request, *syscfg);
 #endif
-    // Every call below this point requires authentication
-    if (!request->authenticate(syscfg->username, syscfg->password))
-        return request->requestAuthentication();
-
     if (request->method() == HTTP_GET && request->url() == Local::resetWifiPath) {
+        if (!request->authenticate(syscfg->username, syscfg->password))
+            return request->requestAuthentication();
         request->send(200, asyncsrv::T_text_html, "Done, restarting..");
         requestRestart(true);
     } else if (request->method() == HTTP_GET && request->url() == Local::flistPath) {
+        if (!request->authenticate(syscfg->username, syscfg->password))
+            return request->requestAuthentication();
         handleFileList(request);
     } else if (request->method() == HTTP_DELETE && request->url() == Local::deletePath) {
+        if (!request->authenticate(syscfg->username, syscfg->password))
+            return request->requestAuthentication();
         handleFileDelete(request);
     } else if (request->method() == HTTP_POST && request->url() == Local::fputsPath) {
+        if (!request->authenticate(syscfg->username, syscfg->password))
+            return request->requestAuthentication();
         handleFilePuts(request);
     } else if (request->method() == HTTP_GET) {
         String path = request->url();

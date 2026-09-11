@@ -11,6 +11,33 @@
 #include "Config.h"
 #include "BPLSettings.h"
 
+namespace {
+    namespace Local {
+        String listDirectoryContent(File& directory)
+        {
+            File file = directory.openNextFile();
+
+            String output = "[";
+            while (file) {
+                if (output != "[") {
+                    output += ',';
+                }
+                output += R"({"type":")";
+                output += file.isDirectory() ? "dir" : "file";
+                output += R"(","name":")";
+                output += file.name();
+                output += "\"}";
+
+                file = directory.openNextFile();
+            }
+
+            output += "]";
+            return output;
+        }
+    }
+}
+
+
 #if (DEVELOPMENT_OTA == true) || (DEVELOPMENT_FILEMANAGER == true)
 static ESP8266WebServer server(UPDATE_SERVER_PORT);
 #endif
@@ -213,22 +240,15 @@ static void handleFileList()
 
     const String path = server.arg("dir");
     DBG_PRINTF("handleFileList: %s\n", path.c_str());
-    Dir dir = LittleFS.openDir(path);
+    File directory = LittleFS.open(path, "r");
 
-    String output = "[";
-    while (dir.next()) {
-      if (output != "[") {
-        output += ',';
-      }
-      output += R"({"type":")";
-      output += dir.isDirectory() ? "dir" : "file";
-      output += R"(","name":")";
-      output += dir.fileName();
-      output += "\"}";
+    if (!directory || !directory.isDirectory()) {
+        server.send(404);
+        return;
     }
-    output += "]";
 
-    server.send(200, asyncsrv::T_application_json, output);
+    const String fileList = Local::listDirectoryContent(directory);
+    server.send(200, asyncsrv::T_application_json, fileList);
 }
 #endif
 

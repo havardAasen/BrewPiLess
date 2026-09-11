@@ -32,6 +32,28 @@ namespace {
         constexpr char pressurePath[] = "/psi";
 
         constexpr char defaultIndexFile[] = "index.htm";
+
+        String listDirectoryContent(File& directory)
+        {
+            File file = directory.openNextFile();
+
+            String output = "[";
+            while (file) {
+                if (output != "[") {
+                    output += ',';
+                }
+                output += R"({"type":")";
+                output += file.isDirectory() ? "dir" : "file";
+                output += R"(","name":")";
+                output += file.name();
+                output += "\"}";
+
+                file = directory.openNextFile();
+            }
+
+            output += "]";
+            return output;
+        }
     }
 }
 
@@ -184,23 +206,16 @@ void bpl::webHandler::BrewPiDataHandler::handleFileList(AsyncWebServerRequest *r
     }
 
     const String path = request->getParam("dir")->value();
-    Dir dir = LittleFS.openDir(path);
+    File directory = LittleFS.open(path, "r");
 
-    String output = "[";
-    while (dir.next()) {
-        if (output != "[") {
-            output += ',';
-        }
-        output += R"({"type":")";
-        output += dir.isDirectory() ? "dir" : "file";
-        output += R"(","name":")";
-        output += dir.fileName();
-        output += "\"}";
+    if (!directory || !directory.isDirectory()) {
+        request->send(404);
+        return;
     }
-    output += "]";
-    request->send(200, asyncsrv::T_application_json, output);
-}
 
+    const String fileList = Local::listDirectoryContent(directory);
+    request->send(200, asyncsrv::T_application_json, fileList);
+}
 
 void bpl::webHandler::BrewPiDataHandler::handleFileDelete(AsyncWebServerRequest *request)
 {

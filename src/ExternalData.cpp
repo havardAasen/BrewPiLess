@@ -2,6 +2,7 @@
 #include <cstdio>
 #include "ExternalData.h"
 #include <conversion.h>
+#include <ErrorCode.h>
 
 ExternalData externalData;
 
@@ -198,13 +199,13 @@ float  ExternalData::temperatureCorrection(float sg, float t, float c){
 }
 
 bool ExternalData::processGravityReport(char data[], size_t length, bool authenticated,
-                                        uint8_t &error)
+                                        bpl::ErrorCode &error)
 {
     JsonDocument doc;
     auto jsonerror = deserializeJson(doc, data, length);
     if (jsonerror || !doc["name"].is<String>()) {
         DBG_PRINTF("Invalid JSON\n");
-        error = ErrorJSONFormat;
+        error = bpl::ErrorCode::InvalidJson;
         return false;
     }
 
@@ -212,13 +213,13 @@ bool ExternalData::processGravityReport(char data[], size_t length, bool authent
     // web interface
     if (name.equals("webjs")) {
         if (!authenticated) {
-            error = ErrorAuthenticateNeeded;
+            error = bpl::ErrorCode::AuthenticationRequired;
             return false;
         }
 
         if (!doc["gravity"].is<float>()) {
             DBG_PRINTF("No gravity\n");
-            error = ErrorMissingField;
+            error = bpl::ErrorCode::MissingField;
             return false;
         }
         float gravity = doc["gravity"];
@@ -289,7 +290,7 @@ bool ExternalData::processGravityReport(char data[], size_t length, bool authent
             setGravity(sgreading, TimeKeeper.getTimeSeconds());
         }
     } else {
-        error = ErrorUnknownSource;
+        error = bpl::ErrorCode::UnknownSource;
         return false;
     }
     return true;

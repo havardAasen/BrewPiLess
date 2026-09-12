@@ -10,6 +10,7 @@
 #include "TempSensorWireless.h"
 #endif
 
+#include <ErrorCode.h>
 #include <ExponentialSmoothing.h>
 #include <TemperatureFormats.h>
 
@@ -23,12 +24,6 @@ inline bool isTiltAngleValid(const float angle) { return angle > 0; }
 #define IsGravityInValidRange(g) ((g) > 0.8 && (g) < 1.25)
 #define GavityDeviceConfigFilename "/gdconfig"
 #define MAX_CONFIGDATA_SIZE 256
-
-#define ErrorNone 0
-#define ErrorAuthenticateNeeded 1
-#define ErrorJSONFormat 2
-#define ErrorMissingField 3
-#define ErrorUnknownSource 4
 
 
 class ExternalData
@@ -86,7 +81,7 @@ public:
 	float tiltValue(){return _ispindelTilt;}
 	void invalidateDeviceVoltage() { _deviceVoltage= INVALID_VOLTAGE; }
 
-	bool processGravityReport(char data[],size_t length, bool authenticated, uint8_t& error);
+	bool processGravityReport(char data[],size_t length, bool authenticated, bpl::ErrorCode& error);
 };
 
 extern ExternalData externalData;

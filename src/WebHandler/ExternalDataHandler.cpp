@@ -1,6 +1,7 @@
 #include "Config.h"
 #include "ExternalDataHandler.h"
 
+#include <ErrorCode.h>
 #include <ESPAsyncWebServer.h>
 
 extern void stringAvailable(const char *);
@@ -120,13 +121,13 @@ void bpl::webHandler::ExternalDataHandler::processGravity(AsyncWebServerRequest 
 {
     if (length == 0) return request->send(500);;
     SystemConfiguration *syscfg = theSettings.systemConfiguration();
-    uint8_t error;
+    ErrorCode error;
     if (externalData.processGravityReport(data, length,
                                           request->authenticate(syscfg->username, syscfg->password),
                                           error)) {
         request->send(202);
     } else {
-        if (error == ErrorAuthenticateNeeded) return request->requestAuthentication();
+        if (error == ErrorCode::AuthenticationRequired) return request->requestAuthentication();
         else request->send(500);
     }
 }

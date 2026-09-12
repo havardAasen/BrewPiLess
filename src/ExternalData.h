@@ -14,7 +14,6 @@
 #include <TemperatureFormats.h>
 
 #define INVALID_VOLTAGE -1
-#define INVALID_GRAVITY -1
 
 inline bool isTiltAngleValid(const float angle) { return angle > 0; }
 #define IsVoltageValid(v) ((v) > 0)

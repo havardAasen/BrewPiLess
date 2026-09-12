@@ -8,7 +8,6 @@
 
 #define INVALID_RECOVERY_TIME 0xFF
 #define INVALID_TEMPERATURE -250
-#define INVALID_GRAVITY -1
 
 #define LOG_PATH "/log"
 

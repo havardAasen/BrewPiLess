@@ -5,7 +5,6 @@
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #endif
-#include <ArduinoOTA.h>
 #include <FS.h>
 #include <LittleFS.h>
 #include <literals.h>

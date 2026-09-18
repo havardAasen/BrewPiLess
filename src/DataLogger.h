@@ -2,12 +2,6 @@
 #define DATA_LOGGER_H
 
 #include "BPLSettings.h"
-#define RETRY_TIME 5
-#define MAX_RETRY_NUMBER 3
-
-#define ServiceGenericHttp 0
-#define ServiceNonNullJson 1
-#define ServiceHTTPNullString 2
 
 class DataLogger
 {

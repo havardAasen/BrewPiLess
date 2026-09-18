@@ -9,6 +9,17 @@
 #include "PressureMonitor.h"
 #endif
 
+namespace {
+    namespace Local {
+        constexpr std::uint16_t bufferSize = 512;
+
+        enum ServiceType : std::uint16_t {
+            genericHttp,
+            nonNullJson,
+            httpNullString
+        };
+    }
+}
 
 void DataLogger::reportNow()
 {
@@ -27,18 +38,16 @@ void DataLogger::loop(time_t now)
 }
 
 
-#define BUFFERSIZE 512
-
 void DataLogger::sendData()
 {
-    char data[BUFFERSIZE];
+    char data[Local::bufferSize];
     int len = 0;
 
     switch (_loggingInfo->service) {
-        case ServiceNonNullJson:
-            len = nonNullJson(data,BUFFERSIZE);
+        case Local::nonNullJson:
+            len = nonNullJson(data,Local::bufferSize);
             break;
-        case ServiceHTTPNullString:
+        case Local::httpNullString:
             len = dataSprintf(data, _loggingInfo->format, "\"\"");
             break;
         default:

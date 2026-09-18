@@ -1,16 +1,16 @@
 #ifndef BREW_PI_PROXY_H
 #define BREW_PI_PROXY_H
 
-#include <Arduino.h>
-#include "Config.h"
+#include <cstdint>
+#include <functional>
 
 #define BUFF_SIZE 1024
 
 #define LCD_CMD 'l'
 
 
-enum Mode : uint8_t;
-enum State : uint8_t;
+enum Mode : std::uint8_t;
+enum State : std::uint8_t;
 
 class BrewPiProxy{
 public:

@@ -1,23 +1,12 @@
 #include "BrewPiProxy.h"
-
-#include <stdarg.h>
-
-#include "stddef.h"
-#include "PiLink.h"
-
-#include "Version.h"
-#include "TempControl.h"
 #include "Display.h"
-#include "JsonKeys.h"
-#include "Ticks.h"
 #include "EepromManager.h"
-#include "EepromFormat.h"
-#include "SettingsManager.h"
-#include "Buzzer.h"
-#include "Display.h"
+#include "TempControl.h"
 
-#include <TemperatureFormats.h>
 #include <QueueBuffer.h>
+#include <TemperatureFormats.h>
+
+#include <functional>
 
 QueueBuffer brewPiRxBuffer(2048);
 QueueBuffer brewPiTxBuffer(2048);
@@ -86,11 +75,11 @@ void BrewPiProxy::getTemperatureSetting(char &unit, float &minSetTemp, float &ma
 	maxSetTemp = temperatureFloatValue(tempControl.cc.tempSettingMax);
 }
 
-void BrewPiProxy::getLogInfo(char &unit, uint8_t &mode, uint8_t &state)
+void BrewPiProxy::getLogInfo(char &unit, std::uint8_t &mode, std::uint8_t &state)
 {
 	unit = tempControl.cc.tempFormat;
-	state = (uint8_t) tempControl.getState();
-	mode = (uint8_t) tempControl.getMode();
+	state = (std::uint8_t) tempControl.getState();
+	mode = (std::uint8_t) tempControl.getMode();
 }
 
 void BrewPiProxy::getAllStatus(State& state, Mode& mode, float &beerTemp, float &beerSet, float &fridgeTemp, float &fridgeSet, float

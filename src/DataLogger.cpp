@@ -41,7 +41,7 @@ void DataLogger::loop(time_t now)
 void DataLogger::sendData()
 {
     char data[Local::bufferSize];
-    int len = 0;
+    std::size_t len = 0;
 
     switch (_loggingInfo->service) {
         case Local::nonNullJson:

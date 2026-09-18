@@ -30,9 +30,8 @@ public:
 
 	bool ambientSensorConnected();
 
-protected:
+private:
 	char _unit{'C'};
-	int  _lastLineLength{};
 	char _buff[BUFF_SIZE]{};
 	int   _readPtr{};
 

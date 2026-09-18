@@ -62,44 +62,45 @@ void BrewPiProxy::loop()
 	}
 }
 
-void BrewPiProxy::getTemperature(float *pBeerTemp,float *pBeerSet,float *pFridgeTemp, float *pFridgeSet)
+void BrewPiProxy::getTemperature(float &beerTemp, float &beerSet, float &fridgeTemp, float &fridgeSet)
 {
-	*pBeerTemp=temperatureFloatValue(tempControl.getBeerTemp());
-	*pBeerSet=temperatureFloatValue(tempControl.getBeerSetting());
-	*pFridgeTemp = temperatureFloatValue(tempControl.getFridgeTemp());
-	*pFridgeSet = temperatureFloatValue(tempControl.getFridgeSetting());
+	beerTemp = temperatureFloatValue(tempControl.getBeerTemp());
+	beerSet = temperatureFloatValue(tempControl.getBeerSetting());
+	fridgeTemp = temperatureFloatValue(tempControl.getFridgeTemp());
+	fridgeSet = temperatureFloatValue(tempControl.getFridgeSetting());
 }
 
-void BrewPiProxy::getControlParameter(char *pUnit, Mode *pMode,float *pBeerSet, float *pFridgeSet)
+void BrewPiProxy::getControlParameter(char &unit, Mode &mode, float &beerSet, float &fridgeSet)
 {
-	*pUnit=tempControl.cc.tempFormat;
-	*pMode=tempControl.cs.mode;
-	*pBeerSet=temperatureFloatValue(tempControl.getBeerSetting());
-	*pFridgeSet=temperatureFloatValue(tempControl.getFridgeSetting());
+	unit = tempControl.cc.tempFormat;
+	mode = tempControl.cs.mode;
+	beerSet = temperatureFloatValue(tempControl.getBeerSetting());
+	fridgeSet = temperatureFloatValue(tempControl.getFridgeSetting());
 
 }
 
-void BrewPiProxy::getTemperatureSetting(char *pUnit,float *pMinSetTemp,float *pMaxSetTemp)
+void BrewPiProxy::getTemperatureSetting(char &unit, float &minSetTemp, float &maxSetTemp)
 {
-	*pUnit=tempControl.cc.tempFormat;
-	*pMinSetTemp=temperatureFloatValue(tempControl.cc.tempSettingMin);
-	*pMaxSetTemp=temperatureFloatValue(tempControl.cc.tempSettingMax);
+	unit = tempControl.cc.tempFormat;
+	minSetTemp = temperatureFloatValue(tempControl.cc.tempSettingMin);
+	maxSetTemp = temperatureFloatValue(tempControl.cc.tempSettingMax);
 }
 
-void BrewPiProxy::getLogInfo(char *pUnit,uint8_t *pMode,uint8_t *pState)
+void BrewPiProxy::getLogInfo(char &unit, uint8_t &mode, uint8_t &state)
 {
-	*pUnit=tempControl.cc.tempFormat;
-	*pState = (uint8_t) tempControl.getState();
-	*pMode = (uint8_t) tempControl.getMode();
+	unit = tempControl.cc.tempFormat;
+	state = (uint8_t) tempControl.getState();
+	mode = (uint8_t) tempControl.getMode();
 }
 
-void BrewPiProxy::getAllStatus(State& state, Mode& mode,float *pBeerTemp,float *pBeerSet,float *pFridgeTemp, float *pFridgeSet, float *pRoomTemp)
+void BrewPiProxy::getAllStatus(State& state, Mode& mode, float &beerTemp, float &beerSet, float &fridgeTemp, float &fridgeSet, float
+                               &roomTemp)
 {
-	*pBeerTemp=temperatureFloatValue(tempControl.getBeerTemp());
-	*pBeerSet=temperatureFloatValue(tempControl.getBeerSetting());
-	*pFridgeTemp = temperatureFloatValue(tempControl.getFridgeTemp());
-	*pFridgeSet = temperatureFloatValue(tempControl.getFridgeSetting());
-	*pRoomTemp =temperatureFloatValue(tempControl.getRoomTemp());
+	beerTemp = temperatureFloatValue(tempControl.getBeerTemp());
+	beerSet = temperatureFloatValue(tempControl.getBeerSetting());
+	fridgeTemp = temperatureFloatValue(tempControl.getFridgeTemp());
+	fridgeSet = temperatureFloatValue(tempControl.getFridgeSetting());
+	roomTemp =temperatureFloatValue(tempControl.getRoomTemp());
 	state = tempControl.getState();
 	mode = tempControl.getMode();
 }

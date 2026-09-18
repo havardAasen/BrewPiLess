@@ -39,7 +39,7 @@ void BrewKeeper::keep(time_t now)
 	char unit;
 	Mode mode;
 	float beerSet,fridgeSet;
-	brewPi.getControlParameter(&unit,&mode,&beerSet,&fridgeSet);
+	brewPi.getControlParameter(unit,mode,beerSet,fridgeSet);
 
 	// run in loop()
 	if (mode != 'p') return;
@@ -69,7 +69,7 @@ void BrewKeeper::setModeFromRemote(const Mode mode){
 	char unit;
 	Mode ori_mode;
 	float beerSet,fridgeSet;
-	brewPi.getControlParameter(&unit,&ori_mode,&beerSet,&fridgeSet);
+	brewPi.getControlParameter(unit,ori_mode,beerSet,fridgeSet);
 	if(mode == beer_profile && ori_mode != beer_profile) _profile.setScheduleStartDate(TimeKeeper.getTimeSeconds());
 	char buff[36];
 	sprintf(buff,"j{mode:%c}",mode);

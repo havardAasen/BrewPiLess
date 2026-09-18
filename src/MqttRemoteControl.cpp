@@ -105,7 +105,7 @@ void MqttRemoteControl::_reportData(){
 	    float beerSet,fridgeSet;
 	    float beerTemp,fridgeTemp,roomTemp;
 
-	    brewPi.getAllStatus(state,mode,& beerTemp,& beerSet,& fridgeTemp,& fridgeSet,& roomTemp);
+	    brewPi.getAllStatus(state,mode,beerTemp,beerSet,fridgeTemp,fridgeSet,roomTemp);
 
 	    if(IS_FLOAT_TEMP_VALID(beerTemp)) _publish(KeyBeerTemp, beerTemp,1);
 	    if(IS_FLOAT_TEMP_VALID(beerSet)) _publish(KeyBeerSet, beerSet,1);

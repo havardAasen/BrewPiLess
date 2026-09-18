@@ -21,11 +21,12 @@ public:
 
 	void putLine(const char* str);
 
-	void getTemperature(float *pBeerTemp,float *pBeerSet,float *pFridgeTemp, float *pFridgeSet);
-	void getTemperatureSetting(char *pUnit,float *pMinSetTemp,float *pMaxSetTemp);
-	void getControlParameter(char *pUnit,Mode *pMode,float *pBeerSet, float *pFridgeSet);
-	void getLogInfo(char *pUnit,uint8_t *pMode,uint8_t *pState);
-	void getAllStatus(State&, Mode& ,float *pBeerTemp,float *pBeerSet,float *pFridgeTemp, float *pFridgeSet, float *pRoomTemp);
+	void getTemperature(float &beerTemp, float &beerSet, float &fridgeTemp, float &fridgeSet);
+	void getTemperatureSetting(char &unit, float &minSetTemp, float &maxSetTemp);
+	void getControlParameter(char &unit, Mode &mode, float &beerSet, float &fridgeSet);
+	void getLogInfo(char &unit, std::uint8_t &mode, std::uint8_t &state);
+	void getAllStatus(State &state, Mode &mode, float &beerTemp, float &beerSet, float &fridgeTemp,
+	                  float &fridgeSet, float &roomTemp);
 
 	bool ambientSensorConnected();
 

@@ -173,7 +173,7 @@ void ExternalData::setAuxTemperatureCelsius(float temp){
 	char unit;
 	float max,min;
 
-    brewPi.getTemperatureSetting(&unit,&min,&max);
+    brewPi.getTemperatureSetting(unit,min,max);
 	
     if(unit == 'C'){
 		_auxTemp= temp;

@@ -422,8 +422,8 @@ void bpl::webHandler::BrewPiDataHandler::handleStatus(AsyncWebServerRequest *req
     Mode mode;
     State state;
     float beerSet, beerTemp, fridgeTemp, fridgeSet, roomTemp;
-    brewPi.getAllStatus(state, mode, &beerTemp, &beerSet, &fridgeTemp, &fridgeSet,
-                        &roomTemp);
+    brewPi.getAllStatus(state, mode, beerTemp, beerSet, fridgeTemp, fridgeSet,
+                        roomTemp);
 #define TEMPorNull(a) (IS_FLOAT_TEMP_VALID(a)?  String(a):String("null"))
     String json = String("{\"mode\":\"") + String((char) mode)
                   + String("\",\"state\":") + String(state)

@@ -249,7 +249,7 @@ _resumeLastLogTime = _pFileInfo->starttime;
 	_recording = true;
 
 	char unit;
-	brewPi.getLogInfo(&unit,&_mode,&_state);
+	brewPi.getLogInfo(unit,_mode,_state);
 
 	// add resume tag
 	addResumeTag();
@@ -282,7 +282,7 @@ bool BrewLogger::startSession(const char *filename,bool calibrating){
 	_savedLength=0;
 
 	char unit;
-	brewPi.getLogInfo(&unit,&_mode,&_state);
+	brewPi.getLogInfo(unit,_mode,_state);
 
 	startLog(unit == 'F',calibrating);
 	_calibrating = calibrating;
@@ -343,8 +343,8 @@ void BrewLogger::logData()
     std::array<float, size> fTemps{};
 
 	//brewPi.getAllStatus(&state,&mode,& beerTemp,& beerSet,& fridgeTemp,& fridgeSet,& roomTemp);
-	brewPi.getAllStatus(state,mode,&fTemps[beerTemp],& fTemps[beerSet],
-			& fTemps[fridgeTemp],& fTemps[fridgeSet],& fTemps[roomTemp]);
+	brewPi.getAllStatus(state,mode,fTemps[beerTemp],fTemps[beerSet],
+                        fTemps[fridgeTemp],fTemps[fridgeSet],fTemps[roomTemp]);
 
 
 	uint8_t changeMask=0;
@@ -660,7 +660,7 @@ void BrewLogger::volatileHeader(char *buf)
 	char unit;
 	uint8_t mode,state;
 
-	brewPi.getLogInfo(&unit,&mode,&state);
+	brewPi.getLogInfo(unit,mode,state);
 	bool fahrenheit=(unit == 'F');
 
 	char* ptr=buf;

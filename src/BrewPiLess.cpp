@@ -314,8 +314,8 @@ void reportRssi()
 	float beerSet, beerTemp, fridgeTemp, fridgeSet, roomTemp;
 	float min,max;
 	char statusLine[21];
-	brewPi.getTemperatureSetting(&unit,&min,&max);
-	brewPi.getAllStatus(state, mode, &beerTemp, &beerSet, &fridgeTemp, &fridgeSet, &roomTemp);
+	brewPi.getTemperatureSetting(unit,min,max);
+	brewPi.getAllStatus(state, mode, beerTemp, beerSet, fridgeTemp, fridgeSet, roomTemp);
 	display.getLine(3,statusLine);
 
 #if EanbleParasiteTempControl

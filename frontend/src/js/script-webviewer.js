@@ -79,7 +79,7 @@ export function loaded() {
         return false;
     };
 
-    select("#viewlogname").innerHTML = getFilename();
+    select("#viewlogname").textContent = getFilename();
 
     var xhr = new XMLHttpRequest();
     xhr.open("GET", dataUrl());
